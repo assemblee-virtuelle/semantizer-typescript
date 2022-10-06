@@ -16,11 +16,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import Semanticable from './Semanticable.js'
-import Constant from './Constant.js';
-import Collection from "./Collection.js";
-import Value from './Value.js';
-import Reference from './Reference.js';
-import SemanticObject from './SemanticObject.js';
 import Serializer from './Serializer';
 
 /**
@@ -37,27 +32,33 @@ import Serializer from './Serializer';
  */
 export default class ObjectSerializer implements Serializer<object> {
 
-    /**
-     * This name is used to save as a temporary value the name of 
-     * the current object being processed.
-     */
-    protected currentName: string;
+    public process(subject: Semanticable): object {
+        let result: object = this.exportSemanticObjectIdAndType(subject);
 
-    constructor() {
-        this.currentName = '';
-    }
+        for (let property of subject.getProperties()) {
+            const name: string = property.getName();
+            const value = property.getValue();
+            let current: object = {};
 
-    public process(subject: SemanticObject | Reference | Collection | Constant | Value | Semanticable): object {
-        if (subject instanceof SemanticObject || subject instanceof Reference)
-            return this.exportSemanticObject(subject);
+            if (!value)
+                continue;
 
-        if (subject instanceof Collection)
-            return this.exportCollection(subject);
-        
-        if (subject instanceof Constant || subject instanceof Value)
-            return this.exportConstantOrValue(subject);
-        
-        throw new Error("Specified subject is not serializable.");
+            if (typeof value === "string" || typeof value === "number" || typeof value === "boolean")
+                current = this.exportPrimitive(name, value);
+
+            else if (value && 'getSemanticId' in value)
+                current = this.exportSemanticable(name, value);
+
+            else if (Array.isArray(value))
+                current = this.exportCollection(name, value.values());
+
+            else if ('next' in value)
+                current = this.exportCollection(name, value);
+
+            result = { ...result, ...current };
+        }
+     
+        return result;
     }
 
     /**
@@ -67,11 +68,10 @@ export default class ObjectSerializer implements Serializer<object> {
      * @param semanticObject The object or reference to process.
      * @returns A JavaScript object like { "@id": <id>, "@type": <type>[, other...]}
      */
-    private exportSemanticObject(semanticObject: SemanticObject | Reference): object {
+    private exportSemanticObjectIdAndType(semanticObject: Semanticable): object {
         let result: any = {};
         result['@id'] = semanticObject.getSemanticId();
         result['@type'] = semanticObject.getSemanticType();
-        result = { ...result, ...this.exportChildren(semanticObject) };
         return result;
     }
 
@@ -82,12 +82,31 @@ export default class ObjectSerializer implements Serializer<object> {
      * @param collection The collection of semantic objects to process.
      * @returns A JavaScript object like { <currentName>: [array of objects]}.
      */
-    private exportCollection(collection: Collection): object {
+    private exportCollection(name: string, values: IterableIterator<string | number | boolean | Semanticable>): object {
         let result: any = {};
-        let values = [];
-        for (let child of collection.getChildren())
-            values.push(child.getSemanticId());
-        result[this.currentName] = values;
+        let collection: Array<string | number | boolean | Semanticable> = [];
+
+        let iteratorResult: IteratorResult<string | number | boolean | Semanticable> = values.next();
+        const first: string | number | boolean | Semanticable = iteratorResult.value;
+
+        if (!iteratorResult.done) {
+            if ([ 'string', 'number', 'boolean' ].includes(typeof first)) {
+                collection = Array.from(values);
+            }
+
+            else {
+                // @ts-ignore
+                let item: Semanticable = first;
+
+                while (!iteratorResult.done) {
+                    collection.push(item.getSemanticId() ?? 'unknown');
+                    iteratorResult = values.next();
+                    item = iteratorResult.value;
+                }
+            }
+        }
+
+        result[name] = collection;
         return result;
     }
 
@@ -98,36 +117,15 @@ export default class ObjectSerializer implements Serializer<object> {
      * @param subject The Constant or Value to process.
      * @returns A JavaScript object like { <name>: <value> }.
      */
-    private exportConstantOrValue(subject: Constant | Value): object {
+    private exportPrimitive(name: string, value: string | number | boolean): object {
         let result: any = {};
-        result[this.currentName] = subject.getValue();
+        result[name] = value;
         return result;
     }
 
-    /**
-     * Iterate over the children of the specified object to process each one.
-     * In case of a reference, it only export the "@id" property of the child.
-     * 
-     * @param object The object to iterate over.
-     * @returns A JavaScript object like { <name>: <value> }.
-     */
-    private exportChildren(object: Semanticable): object {
+    private exportSemanticable(name: string, semanticObject: Semanticable): object {
         let result: any = {};
-
-        for (let edge of object.getEdges()) {
-
-            let child: Semanticable = edge.getTarget();
-            this.currentName = edge.getName();
-            
-            // If the child is a reference, we just export the id
-            if (child.isReference()) {
-                try { result[this.currentName] = child.getSemanticId(); }
-                catch(e) { result[this.currentName] = 'unknown'; }
-            }
-
-            else result = { ...result, ...this.process(child) }; // recursive call
-        }
-
+        result[name] = semanticObject.getSemanticId();
         return result;
     }
 

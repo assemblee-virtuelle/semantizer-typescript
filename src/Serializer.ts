@@ -15,12 +15,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Collection from './Collection.js';
-import Constant from './Constant.js';
-import Reference from './Reference.js';
 import Semanticable from './Semanticable';
 import SemanticObject from './SemanticObject.js';
-import Value from './Value.js';
+import Value from './SemanticProperty.js';
 
 /**
  * This interface defines the algorythm used to serialize an object 
@@ -36,6 +33,6 @@ export default interface Serializer<Output> {
      * 
      * @param subject The object to serialize.
      */
-    process(subject: SemanticObject | Reference | Collection | Constant | Value | Semanticable): Output;
+    process(subject: Semanticable): Output;
 
 }

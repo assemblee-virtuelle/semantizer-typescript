@@ -15,7 +15,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Node from "./Node.js";
+import Propertyable from "./Propertyable";
+import Semanticable from "./Semanticable";
 
 /**
  * A Value is a semantic property made to store a value that 
@@ -25,19 +26,25 @@ import Node from "./Node.js";
  * This is possible thanks to a function called when the value is 
  * requested.
  */
-export default class Value extends Node {
+export default class SemanticProperty implements Propertyable {
+
+    private name: string;
 
     /**
      * The function to call when the value is requested.
      */
-    private valueGetter: Function;
+    private valueGetter: () => string | number | boolean | Semanticable | string[] | number[] | boolean[] | IterableIterator<Semanticable>;
 
-    constructor(valueGetter: Function) {
-        super();
+    constructor(name: string, valueGetter: () => string | number | boolean | Semanticable | string[] | number[] | boolean[] | IterableIterator<Semanticable>) {
+        this.name = name;
         this.valueGetter = valueGetter;
     }
 
-    public getValue(): string {
+    public getName(): string {
+        return this.name;
+    }
+
+    public getValue(): string | number | boolean | Semanticable | string[] | number[] | boolean[] | IterableIterator<Semanticable> | undefined {
         return this.valueGetter();
     }
 

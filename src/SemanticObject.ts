@@ -1,7 +1,3 @@
-import Semanticable from "./Semanticable";
-import Constant from "./Constant.js";
-import Collection from "./Collection.js";
-import Value from "./Value.js";
 /*
 Copyright (C) 2022 Maxime Lecoq <maxime@lecoqlibre.fr>
 
@@ -19,10 +15,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Reference from "./Reference.js";
-import Node from "./Node.js";
-import Edge from "./Edge.js";
-import Edgeable from "./Edgeable";
+import Semanticable from "./Semanticable";
+import Propertyable from "./Propertyable";
+import SemanticProperty from "./SemanticProperty.js";
+import Serializer from "./Serializer";
 
 /**
  * The SemanticObject class is the base implementation of the Semanticable 
@@ -36,7 +32,7 @@ import Edgeable from "./Edgeable";
  * @see The registerSemanticConstant() method.
  * @see The registerSemanticValue() method.
  */
-export default class SemanticObject extends Node {
+export default class SemanticObject implements Semanticable {
 
     public static readonly ATTRIBUTES = {
         ID: '@id',
@@ -47,7 +43,7 @@ export default class SemanticObject extends Node {
      * This contains the list of Edges attached to this object. Edges are the 
      * way to store the semantic properties. An Edge 
      */
-    private edges: Edge[];
+    private properties: Propertyable[];
 
     /**
      * Allows to retrieve an Edge by name faster (no need to search). To get the
@@ -61,8 +57,7 @@ export default class SemanticObject extends Node {
     private nameIndex: Map<string, number>;
 
     constructor(semanticId: string | undefined = undefined, semanticType: string | undefined = undefined) {
-        super();
-        this.edges = new Array<Edge>();
+        this.properties = new Array<SemanticProperty>();
         this.nameIndex = new Map<string, number>();
         if (semanticId) this.setSemanticId(semanticId);
         if (semanticType) this.setSemanticType(semanticType);
@@ -78,51 +73,43 @@ export default class SemanticObject extends Node {
      * @see The Edgeable interface.
      * @see The nameIndex property.
      */
-    protected createEdge(name: string, node: Semanticable) {
-        let elementCount: number = this.edges.push(new Edge(name, node));
+    protected createProperty(name: string, valueGetter: () => string | number | boolean | Semanticable | string[] | number[] | boolean[] | IterableIterator<Semanticable>) {
+        let elementCount: number = this.properties.push(new SemanticProperty(name, valueGetter));
         let index: number = elementCount - 1;
         this.nameIndex.set(name, index);
     }
 
-    public getEdges(): IterableIterator<Edgeable> {
-        return this.edges.values();
+    public getProperties(): IterableIterator<Propertyable> {
+        return this.properties.values();
     }
 
-    public getEdgeByName(name: string): Edgeable | undefined {
+    public getPropertyByName(name: string): Propertyable | undefined {
         let index: number | undefined = this.nameIndex.get(name);
-        return index !== undefined ? this.edges[index] : undefined;
+        return index !== undefined ? this.properties[index] : undefined;
     }
 
     public getSemanticId(): string | undefined {
-        return this.getEdgeByName(SemanticObject.ATTRIBUTES.ID)?.getTarget().getValue();
+        return "" + this.getPropertyByName(SemanticObject.ATTRIBUTES.ID)?.getValue();
     }
 
     public getSemanticType(): string | undefined {
-        return this.getEdgeByName(SemanticObject.ATTRIBUTES.TYPE)?.getTarget().getValue();
+        return "" + this.getPropertyByName(SemanticObject.ATTRIBUTES.TYPE)?.getValue();
     }
 
-    public registerSemanticReference(name: string, object: Semanticable): void {
-        this.createEdge(name, new Reference(object));
-    }
-
-    public registerSemanticCollection(name: string, collection: Array<Semanticable>): void {
-        this.createEdge(name, new Collection(collection));
-    }
-
-    public registerSemanticValue(name: string, valueGetter: Function): void {
-        this.createEdge(name, new Value(valueGetter));
-    }
-
-    public registerSemanticConstant(name: string, value: string): void {
-        this.createEdge(name, new Constant(value));
+    public registerSemanticProperty(name: string, valueGetter: () => string | number | boolean | Semanticable | string[] | number[] | boolean[] | IterableIterator<Semanticable>): void {
+        this.createProperty(name, valueGetter);
     }
 
     public setSemanticId(id: string): void {
-        this.registerSemanticConstant(SemanticObject.ATTRIBUTES.ID, id);
+        this.registerSemanticProperty(SemanticObject.ATTRIBUTES.ID, () => id);
     }
 
     public setSemanticType(type: string): void {
-        this.registerSemanticConstant(SemanticObject.ATTRIBUTES.TYPE, type);
+        this.registerSemanticProperty(SemanticObject.ATTRIBUTES.TYPE, () => type);
+    }
+
+    public serialize(serializer: Serializer<any>): object {
+        return serializer.process(this);
     }
     
 }

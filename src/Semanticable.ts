@@ -15,7 +15,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Nodeable from './Nodeable';
+import Propertyable from './Propertyable';
 import Serializable from './Serializable';
 
 /**
@@ -41,19 +41,7 @@ import Serializable from './Serializable';
  * @see the SemanticObject, base implementation class.
  * @see The Serializer interface, to manage serialization.
  */
-export default interface Semanticable extends Nodeable, Serializable {
-
-    /**
-     * Some semantic objects are properties that point to an other object 
-     * and act like it as the Reference class (proxy). In case of a 
-     * reference property, this method gives the object that the property 
-     * points to. If this object is not a reference property, the object 
-     * will reference itself (return this).
-     * 
-     * @see isReference() method.
-     * @see The Reference class.
-     */
-    getReferencedObject(): Semanticable;
+export default interface Semanticable extends Serializable {
 
     /**
      * Getter for the semantic property "@id".
@@ -67,63 +55,8 @@ export default interface Semanticable extends Nodeable, Serializable {
      */
     getSemanticType(): string | undefined;
 
-    /**
-     * This method is dedicated to semantic properties. In that case, 
-     * this method will return the value of the property.
-     * 
-     * @see The Constant and Value classes.
-     * 
-     * @throws Error if that object can't hold semantic properties or
-     * is not valuable. 
-     */
-    getValue(): string;
-    
-    /**
-     * Some semantic objects are properties that point to an other object 
-     * and act like it as the Reference class (proxy). In case of a 
-     * reference property, this method tells if this object is a reference 
-     * to another object (proxy).
-     * 
-     * @see The getReferencedObject() method and the Reference class.
-     */
-    isReference(): boolean;
-    
-    /**
-     * Call this method to add a semantic property of type "Collection". 
-     * Collection are a set of Semanticable objects.
-     * 
-     * @param name The name of the property. It should be an URI.
-     * @param collection The Semanticable objects that the collection contains.
-     * @throws This object can not register a semantic property.
-     * 
-     * @see The Collection class.
-     */
-    registerSemanticCollection(name: string, collection: Array<Semanticable>): void;
-
-    /**
-     * Call this method to add a semantic property of type "Constant". 
-     * Constant are property that can't be unchanged.
-     * 
-     * @param name The name of the property. It should be an URI.
-     * @param value The value of the property.
-     * @throws This object can not register a semantic property.
-     * 
-     * @see The Constant class.
-     */
-    registerSemanticConstant(name: string, value: string): void;
-
-    /**
-     * Call this method to add a semantic property of type "Reference". 
-     * A Reference is a property that points to an other object and act 
-     * like it (proxy).
-     * 
-     * @param name The name of the property. It should be an URI.
-     * @param object The Semanticable object the property points to.
-     * @throws This object can not register a semantic property.
-     * 
-     * @see The Reference class.
-     */
-    registerSemanticReference(name: string, object: Semanticable): void;
+    getProperties(): IterableIterator<Propertyable>;
+    getPropertyByName(name: string): Propertyable | undefined;
 
     /**
      * Call this method to add a semantic property of type "Value". 
@@ -136,7 +69,7 @@ export default interface Semanticable extends Nodeable, Serializable {
      * 
      * @see The Value class.
      */
-    registerSemanticValue(name: string, valueGetter: Function): void;
+    registerSemanticProperty(name: string, valueGetter: () => string | number | boolean | Semanticable | string[] | number[] | boolean[] | IterableIterator<Semanticable>): void;
     
     /**
      * Setter for the semantic property "@id". It registers a property 
