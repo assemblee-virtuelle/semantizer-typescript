@@ -16,14 +16,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import Semanticable from './Semanticable';
-import SemanticObject from './SemanticObject.js';
-import Value from './SemanticProperty.js';
 
 /**
- * This interface defines the algorythm used to serialize an object 
- * that implements the Serializable interface.
+ * This interface defines the object that will effectively 
+ * serialize an object that implements the Serializable interface.
+ * 
+ * The process method runs the particular algorythm used to 
+ * serialize the object. It generaly iterates thougth the semantic 
+ * properties of the object.
+ * 
+ * For instance, the ObjectSerializer serializes a Semanticable as 
+ * a plain object.
  * 
  * @see The Serializable interface.
+ * @see The ObjectSerializer class.
  */
 export default interface Serializer<Output> {
 

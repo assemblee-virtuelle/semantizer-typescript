@@ -19,23 +19,38 @@ import Propertyable from "./Propertyable";
 import Semanticable from "./Semanticable";
 
 /**
- * A Value is a semantic property made to store a value that 
- * does change over the time. That means that its value will 
- * be automatically updated when its original value has changed.
+ * The SemanticPropety class is the base implementation of the Propertyable 
+ * interface.
  * 
- * This is possible thanks to a function called when the value is 
- * requested.
+ * It uses a function to get the value of the property. This way 
+ * we can use a getter function to reflect the property value at the time it 
+ * is processed.
+ * 
+ * For instance, a Person object with a getName method would have the following 
+ * property value getter: "() => getName".
  */
 export default class SemanticProperty implements Propertyable {
 
+    /**
+     * The name of the property.
+     * @see The Propertyable:getName method.
+     */
     private name: string;
 
     /**
-     * The function to call when the value is requested.
+     * The function to call when the value is requested. It is used by the getValue method.
+     * @see The getValue method.
      */
-    private valueGetter: () => string | number | boolean | Semanticable | string[] | number[] | boolean[] | IterableIterator<Semanticable>;
+    private valueGetter: () => string | number | boolean | Semanticable | Array<string | number | boolean | Semanticable> | IterableIterator<string | number | boolean | Semanticable> | undefined;
 
-    constructor(name: string, valueGetter: () => string | number | boolean | Semanticable | string[] | number[] | boolean[] | IterableIterator<Semanticable>) {
+    /**
+     * 
+     * @param name The name of the property, like "http://xmlns.com/foaf/0.1/name" or "@id" 
+     * for instance.
+     * @param valueGetter A function used to retrieve the value of the property when requested. 
+     * Could be a getter function for instance like "() => getName".
+     */
+    constructor(name: string, valueGetter: () => string | number | boolean | Semanticable | Array<string | number | boolean | Semanticable> | IterableIterator<string | number | boolean | Semanticable> | undefined) {
         this.name = name;
         this.valueGetter = valueGetter;
     }
@@ -44,7 +59,7 @@ export default class SemanticProperty implements Propertyable {
         return this.name;
     }
 
-    public getValue(): string | number | boolean | Semanticable | string[] | number[] | boolean[] | IterableIterator<Semanticable> | undefined {
+    public getValue(): string | number | boolean | Semanticable | Array<string | number | boolean | Semanticable> | IterableIterator<string | number | boolean | Semanticable> | undefined {
         return this.valueGetter();
     }
 

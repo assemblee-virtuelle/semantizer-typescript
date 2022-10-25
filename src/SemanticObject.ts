@@ -23,14 +23,12 @@ import Serializer from "./Serializer";
 /**
  * The SemanticObject class is the base implementation of the Semanticable 
  * interface. It allows an object to store semantic properties and to be 
- * serialized. To add a semantic property to that object, you can use the 
- * different registerSemantic<Type> methods.
+ * serialized. To add a semantic property to that object, use the 
+ * registerSemanticProperty methods.
  * 
  * @see The Semanticable interface.
- * @see The registerSemanticReference() method.
- * @see The registerSemanticCollection() method.
- * @see The registerSemanticConstant() method.
- * @see The registerSemanticValue() method.
+ * @see The Propertyable interface.
+ * @see The registerSemanticProperty() method.
  */
 export default class SemanticObject implements Semanticable {
 
@@ -40,19 +38,17 @@ export default class SemanticObject implements Semanticable {
     };
 
     /**
-     * This contains the list of Edges attached to this object. Edges are the 
-     * way to store the semantic properties. An Edge 
+     * This contains the list of properties attached to this object. 
      */
     private properties: Propertyable[];
 
     /**
-     * Allows to retrieve an Edge by name faster (no need to search). To get the
-     * index of the Edge you want to retrieve, simply use the "get" method of this 
-     * Map like "nameIndex.get(nameOfTheEdge)". Then, access to the requested Edge 
-     * object with "edges[index]".
+     * Associates the name of a property to its corresponding index in the properties array. 
+     * It allows to retrieve a property object by name faster (no need to search).
      * 
-     * @note The map key stores the name of the Edge while the value holds the index 
-     * of the Edge in the "edges" array: Map<nameOfTheEdge, indexOfTheEdge>.
+     * To get the index of the property you want to retrieve, simply use the "get" method 
+     * of this Map like "nameIndex.get(nameOfTheProperty)". Then, access to the requested 
+     * property object with "properties[index]".
      */
     private nameIndex: Map<string, number>;
 
@@ -64,39 +60,43 @@ export default class SemanticObject implements Semanticable {
     }
 
     /**
-     * Append a new Edge in the list of edges. It also updates the 
-     * nameIndex for a faster access. It should be used only by the 
-     * registerSemantic<Type> methods.
+     * Append a new property in the list of properties. It also updates the nameIndex 
+     * for a faster access. It should only be used publicly by the registerSemanticProperty 
+     * method.
      * 
-     * @param name The name of the Edge to create.
-     * @param node The object the Edge to create must target.
-     * @see The Edgeable interface.
+     * @param name The name of the property to create.
+     * @param valueGetter The funtion to get the value of the property.
      * @see The nameIndex property.
      */
-    protected createProperty(name: string, valueGetter: () => string | number | boolean | Semanticable | string[] | number[] | boolean[] | IterableIterator<Semanticable>) {
+    protected createProperty(name: string, valueGetter: () => string | number | boolean | Semanticable | string[] | number[] | boolean[] | IterableIterator<Semanticable> | undefined) {
         let elementCount: number = this.properties.push(new SemanticProperty(name, valueGetter));
         let index: number = elementCount - 1;
         this.nameIndex.set(name, index);
     }
 
-    public getProperties(): IterableIterator<Propertyable> {
+    public getSemanticProperties(): IterableIterator<Propertyable> {
         return this.properties.values();
     }
 
-    public getPropertyByName(name: string): Propertyable | undefined {
+    public getSemanticPropertyValue(name: string): string | number | boolean | Semanticable | Array<string | number | boolean | Semanticable> | IterableIterator<string | number | boolean | Semanticable> | undefined {
         let index: number | undefined = this.nameIndex.get(name);
-        return index !== undefined ? this.properties[index] : undefined;
+        return index !== undefined ? this.properties[index].getValue() : undefined;
     }
 
     public getSemanticId(): string | undefined {
-        return "" + this.getPropertyByName(SemanticObject.ATTRIBUTES.ID)?.getValue();
+        return "" + this.getSemanticPropertyValue(SemanticObject.ATTRIBUTES.ID);
     }
 
     public getSemanticType(): string | undefined {
-        return "" + this.getPropertyByName(SemanticObject.ATTRIBUTES.TYPE)?.getValue();
+        return "" + this.getSemanticPropertyValue(SemanticObject.ATTRIBUTES.TYPE);
     }
 
-    public registerSemanticProperty(name: string, valueGetter: () => string | number | boolean | Semanticable | string[] | number[] | boolean[] | IterableIterator<Semanticable>): void {
+    public isBlankNode(): boolean {
+        const semanticId = this.getSemanticId();
+        return semanticId === undefined || semanticId === "" || semanticId === "undefined";
+    }
+
+    public registerSemanticProperty(name: string, valueGetter: () => string | number | boolean | Semanticable | string[] | number[] | boolean[] | IterableIterator<Semanticable> | undefined): void {
         this.createProperty(name, valueGetter);
     }
 

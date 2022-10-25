@@ -19,7 +19,7 @@ import Serializer from "./Serializer";
 
 /**
  * This interface allows an object to be serialized: exported to 
- * a particular output format, like JSON-LD for instance.
+ * a particular output format, like array or JSON-LD for instance.
  */
 export default interface Serializable {
 

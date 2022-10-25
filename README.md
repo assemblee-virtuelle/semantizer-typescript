@@ -11,7 +11,6 @@ class Person {
     private name: string;
 
     constructor(name: string) {
-        super(); // call SemanticObject constructor
         this.name = name;
     }
 
@@ -37,7 +36,7 @@ class Person extends SemanticObject {
         super(); // call SemanticObject constructor
         this.name = name;
         this.setSemanticType("http://xmlns.com/foaf/0.1/Person");
-        this.registerSemanticValue("http://xmlns.com/foaf/0.1/name", () => this.getName());
+        this.registerSemanticProperty("http://xmlns.com/foaf/0.1/name", () => this.getName());
     }
 
     public getName(): string {
@@ -48,9 +47,9 @@ class Person extends SemanticObject {
 
 Then you can serialize this object to a simple regular JavaScript object:
 ```
-let person = new Person("John");
+const person = new Person("John");
 person.setSemanticId("http://platform.example/John");
-let output = person.serialize(new ObjectSerializer));
+const output = person.serialize(new ObjectSerializer));
 ```
 
 `console.log(output)` will output:

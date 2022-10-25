@@ -1,10 +1,14 @@
 {
-  "name": "@av/semantizer",
+  "name": "@virtual-assembly/semantizer",
   "description": "The semantizer library lets you enhance your object model with semantic data.",
   "type": "module",
   "author": "Maxime Lecoq <maxime@lecoqlibre.fr>",
-  "repository": "https://github.com/assemblee-virtuelle/semantizer.git",
-  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/assemblee-virtuelle/semantizer.git",
+    "directory": "/"
+  },
+  "version": "1.0.0-alpha",
   "license": "AGPL-3.0-or-later",
   "scripts": {
     "build": "tsc -p .",
@@ -15,5 +19,9 @@
     "typescript": "^4.5"
   },
   "main": "lib/index.js",
-  "types": "src"
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib",
+    "src"
+  ]
 }
