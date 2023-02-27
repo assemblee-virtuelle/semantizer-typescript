@@ -22,6 +22,7 @@ SOFTWARE.
 import rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset';
 import QuadExt from 'rdf-ext/lib/Quad';
+import Semanticable from './Semanticable';
 import SemanticObjectAnonymous from './SemanticObjectAnonymous';
 
 /**
@@ -34,7 +35,7 @@ import SemanticObjectAnonymous from './SemanticObjectAnonymous';
  * @see The Propertyable interface.
  * @see The registerSemanticProperty() method.
  */
-export default class SemanticObject {
+export default class SemanticObject implements Semanticable {
 
     private _semanticId: string | undefined;
     private _rdfDataset: any;
@@ -118,10 +119,15 @@ export default class SemanticObject {
     }
 
     public getSemanticProperty(property: string): any {
-        return this.getSemanticPropertyAll(property)[0];
+        return this.hasSemanticProperty(property)? this.getSemanticPropertyAll(property)[0]: undefined;
     }
 
-    public getSemanticPropertyAll(property: string): any {
+    /**
+     * 
+     * @param property 
+     * @returns an array containing the value of all the quad objects.
+     */
+    public getSemanticPropertyAll(property: string): any[] {
         const iteratee = (r: any, q: any) => {
             if (q.predicate.value === property) 
                 r.push(q.object.value)
@@ -130,7 +136,7 @@ export default class SemanticObject {
         return this._rdfDataset.reduce(iteratee, []);
     }
 
-    public hasSemanticProperty(property: string) {
+    public hasSemanticProperty(property: string): boolean {
         return this._rdfDataset.some((q: any, ds: any) => q.predicate.value === property);
     }
 
@@ -138,7 +144,7 @@ export default class SemanticObject {
         throw new Error("Method not yet implemented.");
     } 
 
-    public setSemanticProperty(property: string, value: string): void {
+    public setSemanticPropertyReference(property: string, value: string): void {
         this.addSemanticProperty(property, value, true);
     }
 
@@ -155,7 +161,7 @@ export default class SemanticObject {
     }
 
     public setSemanticType(type: string): void {
-        this.setSemanticProperty('http://www.w3.org/1999/02/22-rdf-syntax-ns#type', type);
+        this.setSemanticPropertyReference('http://www.w3.org/1999/02/22-rdf-syntax-ns#type', type);
     }
 
     public setSemanticPropertyAllFromRdfDataset(dataset: DatasetExt): void {
@@ -177,77 +183,3 @@ export default class SemanticObject {
     }
 
 }
-
-
-    /**
-     * Associates the name of a property to its corresponding index in the properties array. 
-     * It allows to retrieve a property object by name faster (no need to search).
-     * 
-     * To get the index of the property you want to retrieve, simply use the "get" method 
-     * of this Map like "nameIndex.get(nameOfTheProperty)". Then, access to the requested 
-     * property object with "properties[index]".
-     */
-    //private nameIndex: Map<string, number>;
-
-    /*constructor(semanticId: string | undefined = undefined, semanticType: string | undefined = undefined) {
-        this.properties = new Array<SemanticProperty>();
-        this.nameIndex = new Map<string, number>();
-        if (semanticId) this.setSemanticId(semanticId);
-        if (semanticType) this.setSemanticType(semanticType);
-    }
-
-    /**
-     * Append a new property in the list of properties. It also updates the nameIndex 
-     * for a faster access. It should only be used publicly by the registerSemanticProperty 
-     * method.
-     * 
-     * @param name The name of the property to create.
-     * @param valueGetter The funtion to get the value of the property.
-     * @see The nameIndex property.
-     */
-    /*protected createProperty(name: string, valueGetter: () => string | number | boolean | Semanticable | string[] | number[] | boolean[] | IterableIterator<Semanticable> | undefined) {
-        let elementCount: number = this.properties.push(new SemanticProperty(name, valueGetter));
-        let index: number = elementCount - 1;
-        this.nameIndex.set(name, index);
-    }
-
-    public getSemanticProperties(): IterableIterator<Propertyable> {
-        return this.properties.values();
-    }
-
-    public getSemanticPropertyValue(name: string): string | number | boolean | Semanticable | Array<string | number | boolean | Semanticable> | IterableIterator<string | number | boolean | Semanticable> | undefined {
-        let index: number | undefined = this.nameIndex.get(name);
-        return index !== undefined ? this.properties[index].getValue() : undefined;
-    }
-
-    public getSemanticId(): string | undefined {
-        return "" + this.getSemanticPropertyValue(SemanticObject.ATTRIBUTES.ID);
-    }
-
-    public getSemanticType(): string | undefined {
-        return "" + this.getSemanticPropertyValue(SemanticObject.ATTRIBUTES.TYPE);
-    }
-
-    public isBlankNode(): boolean {
-        const semanticId = this.getSemanticId();
-        return semanticId === undefined || semanticId === "" || semanticId === "undefined";
-    }
-
-    public registerSemanticProperty(name: string, valueGetter: () => string | number | boolean | Semanticable | string[] | number[] | boolean[] | IterableIterator<Semanticable> | undefined): void {
-        this.createProperty(name, valueGetter);
-    }
-
-    public setSemanticId(id: string): void {
-        this.registerSemanticProperty(SemanticObject.ATTRIBUTES.ID, () => id);
-    }
-
-    public setSemanticType(type: string): void {
-        this.registerSemanticProperty(SemanticObject.ATTRIBUTES.TYPE, () => type);
-    }
-
-    public serialize(serializer: Serializer<any>): object {
-        return serializer.process(this);
-    }
-    
-}
-*/

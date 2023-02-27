@@ -20,8 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import Propertyable from './Propertyable';
-import Serializable from './Serializable';
+import DatasetExt from 'rdf-ext/lib/Dataset';
+import SemanticObjectAnonymous from './SemanticObjectAnonymous';
 
 /**
  * The Semanticable interface is the way to define semantic objects that 
@@ -35,7 +35,7 @@ import Serializable from './Serializable';
  * @see the SemanticObject, the default implementation class.
  * @see The Serializer interface, to manage serialization.
  */
-export default interface Semanticable extends Serializable {
+export default interface Semanticable {
 
     /**
      * Getter for the semantic property "@id". It should return the 
@@ -52,33 +52,15 @@ export default interface Semanticable extends Serializable {
      */
     getSemanticType(): string | undefined;
 
-    /**
-     * Getter for the semantic properties of this object.
-     * @return an interator to walk through the properties.
-     */
-    getSemanticProperties(): IterableIterator<Propertyable>;
-    
-    /**
-     * Given its name, gives the value of a semantic property this object has. 
-     * @param name the name of the semantic property to get the value of.
-     */
-    getSemanticPropertyValue(name: string): string | number | boolean | Semanticable | Array<string | number | boolean | Semanticable> | IterableIterator<string | number | boolean | Semanticable> | undefined;
+    getSemanticProperty(property: string): any;
+    getSemanticPropertyAll(property: string): any[];
+    hasSemanticProperty(property: string): boolean;
+    setSemanticPropertyReference(property: string, value: string): void;
+    setSemanticPropertyLiteral(property: string, value: string): void;
+    setSemanticPropertyAnonymous(property: string, anonymous: SemanticObjectAnonymous): void;
+    setSemanticPropertyAllFromRdfDataset(dataset: DatasetExt): void;
+    toRdfDataset(): DatasetExt;
 
-    /**
-     * Tells if this object is a blank node. A blank node is an unindentified object 
-     * (it does not have any @id property).
-     * @return whether this object is a blank node or not.
-     */
-    isBlankNode(): boolean;
-    
-    /**
-     * Call this method to add a semantic property to this object.
-     * 
-     * @param name The name of the property. It should be an URI.
-     * @param valueGetter The function to read the value from.
-     */
-    registerSemanticProperty(name: string, valueGetter: () => string | number | boolean | Semanticable | string[] | number[] | boolean[] | IterableIterator<Semanticable> | undefined): void;
-    
     /**
      * Setter for the semantic property "@id". It registers a property 
      * for the "@id" name if necessary.

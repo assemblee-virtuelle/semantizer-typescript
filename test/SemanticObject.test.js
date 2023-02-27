@@ -1,4 +1,3 @@
-import ObjectSerializer from '../lib/ObjectSerializer.js';
 import SemanticObject from '../lib/SemanticObject.js';
 
 test('semantic id', () => {

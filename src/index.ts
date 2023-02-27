@@ -17,8 +17,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 export { default as Semanticable } from './Semanticable';
 export { default as SemanticObject } from './SemanticObject.js';
-export { default as Propertyable } from './Propertyable';
-export { default as SemanticProperty } from './SemanticProperty.js';
-export { default as Serializable } from './Serializable';
-export { default as Serializer } from './Serializer';
-export { default as ObjectSerializer } from './ObjectSerializer.js';
+export { default as SemanticObjectAnonymous } from './SemanticObjectAnonymous.js';
