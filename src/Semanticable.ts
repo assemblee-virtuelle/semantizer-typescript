@@ -21,7 +21,6 @@ SOFTWARE.
 */
 
 import DatasetExt from 'rdf-ext/lib/Dataset';
-import SemanticObjectAnonymous from './SemanticObjectAnonymous';
 
 /**
  * The Semanticable interface is the way to define semantic objects that 
@@ -64,6 +63,7 @@ export default interface Semanticable {
     getSemanticPropertyAll(property: string): any[];
 
     hasSemanticProperty(property: string): boolean;
+    hasSemanticPropertiesOtherThanType(): boolean;
 
     isSemanticObjectAnonymous(): boolean;
     isSemanticSameTypeOf(other: Semanticable): boolean;

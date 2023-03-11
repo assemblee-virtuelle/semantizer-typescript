@@ -23,7 +23,6 @@ import rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset';
 import QuadExt from 'rdf-ext/lib/Quad';
 import Semanticable from './Semanticable';
-import SemanticObjectAnonymous from './SemanticObjectAnonymous';
 
 /**
  * The SemanticObject class is the base implementation of the Semanticable 
@@ -41,13 +40,12 @@ export default class SemanticObject implements Semanticable {
     private _semanticType: string;
     private _rdfDataset: any;
 
-    constructor(semanticId: string, semanticType: string);
-    constructor(semanticId: string, semanticType: string, other?: Semanticable);
-    constructor(semanticId?: string, semanticType?: string, other?: Semanticable);
-    constructor(semanticId?: string, semanticType?: string, other?: Semanticable) {
-        this._semanticId = other? other.getSemanticId(): semanticId!;
-        this._rdfDataset = other? other.toRdfDataset(): rdf.dataset();
-        this._semanticType = other? other.getSemanticType(): semanticType!;
+    public constructor(parameters: {semanticId: string, semanticType: string});
+    public constructor(parameters: {semanticId: string, other: Semanticable});
+    public constructor(parameters: {semanticId?: string, semanticType?: string, other?: Semanticable}) {
+        this._semanticId = parameters.other? parameters.other.getSemanticId(): parameters.semanticId!;
+        this._rdfDataset = parameters.other? parameters.other.toRdfDataset(): rdf.dataset();
+        this._semanticType = parameters.other? parameters.other.getSemanticType(): parameters.semanticType!;
         this.init();
     }
 
@@ -91,7 +89,7 @@ export default class SemanticObject implements Semanticable {
     }
 
     public clone(): SemanticObject {
-        return new SemanticObject("", "", this);
+        return new SemanticObject({ semanticId: this._semanticId, other: this });
     }
 
     protected createRdfQuad(property: string, value: string): any {
@@ -103,7 +101,7 @@ export default class SemanticObject implements Semanticable {
     }
 
     public static createFromRdfDataset(dataset: DatasetExt): SemanticObject {
-        const result = new SemanticObject("");
+        const result = new SemanticObject({semanticId: "", semanticType: ""});
         result.setSemanticPropertyAllFromRdfDataset(dataset);
         return result;
     }
@@ -160,6 +158,10 @@ export default class SemanticObject implements Semanticable {
             return r;
         }
         return this._rdfDataset.reduce(iteratee, []);
+    }
+
+    public hasSemanticPropertiesOtherThanType(): boolean {
+        return this._rdfDataset.some((quad: any) => quad.predicate.value !== 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
     }
 
     public hasSemanticProperty(property: string): boolean {

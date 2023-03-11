@@ -39,10 +39,15 @@ export default class SemanticObjectAnonymous extends SemanticObject {
 
     private _blankNode: BlankNodeExt | undefined; // helper: we keep a pointer to the blank node quad
     
-    //constructor(semanticType: string);
-    //constructor(other: Semanticable);
-    constructor(semanticId?: string, semanticType?: string, other?: Semanticable) {
-        super(semanticId, semanticType, other);
+    public constructor(parameters: {semanticId: string, semanticType: string});
+    public constructor(parameters: {semanticId: string, other: Semanticable});
+    public constructor(parameters: {semanticId?: string, semanticType?: string, other?: Semanticable}) {
+        if (parameters.other) {
+            super({ semanticId: parameters.semanticId!, other: parameters.other });
+            if (!parameters.other.isSemanticObjectAnonymous())
+                throw new Error("Can't create a new SemanticObjectAnonymous from a copy: the copy is not a SemanticObjectAnonymous.");
+        }
+        else super({ semanticId: parameters.semanticId!, semanticType: parameters.semanticType! });
     }
 
     protected init(): void {
