@@ -37,6 +37,12 @@ import SemanticObjectAnonymous from './SemanticObjectAnonymous';
  */
 export default interface Semanticable {
 
+    addSemanticPropertyReference(property: string, value: Semanticable, replace: boolean): void;
+    addSemanticPropertyLiteral(property: string, value: string | number | boolean, replace: boolean): void;
+    addSemanticPropertyAnonymous(property: string, anonymous: Semanticable, replace: boolean): void;
+
+    clone(): Semanticable;
+    
     /**
      * Getter for the semantic property "@id". It should return the 
      * URI of this object. If the semantic "@id" property is undefined 
@@ -45,20 +51,29 @@ export default interface Semanticable {
      * a blank node.
      * @see the function Semanticable:isBlankNode
      */
-    getSemanticId(): string | undefined;
+    getSemanticId(): string;
+
+    getSemanticObjectAnonymous(): any;
 
     /**
      * Getter for the semantic property "@type".
      */
-    getSemanticType(): string | undefined;
+    getSemanticType(): string;
 
     getSemanticProperty(property: string): any;
     getSemanticPropertyAll(property: string): any[];
+
     hasSemanticProperty(property: string): boolean;
-    setSemanticPropertyReference(property: string, value: string): void;
-    setSemanticPropertyLiteral(property: string, value: string): void;
-    setSemanticPropertyAnonymous(property: string, anonymous: SemanticObjectAnonymous): void;
+
+    isSemanticObjectAnonymous(): boolean;
+    isSemanticSameTypeOf(other: Semanticable): boolean;
+    isSemanticTypeOf(type: string): boolean;
+
+    setSemanticPropertyReference(property: string, value: Semanticable): void;
+    setSemanticPropertyLiteral(property: string, value: string | number | boolean): void;
+    setSemanticPropertyAnonymous(property: string, anonymous: Semanticable): void;
     setSemanticPropertyAllFromRdfDataset(dataset: DatasetExt): void;
+    
     toRdfDataset(): DatasetExt;
 
     /**
@@ -66,11 +81,5 @@ export default interface Semanticable {
      * for the "@id" name if necessary.
      */
     setSemanticId(id: string): void;
-
-    /**
-     * Setter for the semantic property "@type". It registers a property 
-     * for the "@type" name if necessary.
-     */
-    setSemanticType(type: string): void;
 
 }

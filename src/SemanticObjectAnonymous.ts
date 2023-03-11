@@ -21,7 +21,9 @@ SOFTWARE.
 */
 
 import rdf from 'rdf-ext'
-import SemanticObject from "./SemanticObject";
+import BlankNodeExt from 'rdf-ext/lib/BlankNode.js';
+import Semanticable from './Semanticable.js';
+import SemanticObject from "./SemanticObject.js";
 
 /**
  * The SemanticObject class is the base implementation of the Semanticable 
@@ -35,17 +37,17 @@ import SemanticObject from "./SemanticObject";
  */
 export default class SemanticObjectAnonymous extends SemanticObject {
 
-    private _blankNode; // helper: we keep a pointer to the blank node quad
-
-    constructor() {
-        super();
-        this._blankNode = rdf.blankNode();
-        this.addRdfQuad(this._blankNode);
+    private _blankNode: BlankNodeExt | undefined; // helper: we keep a pointer to the blank node quad
+    
+    //constructor(semanticType: string);
+    //constructor(other: Semanticable);
+    constructor(semanticId?: string, semanticType?: string, other?: Semanticable) {
+        super(semanticId, semanticType, other);
     }
 
-    public getSemanticId(): string {
-        // @ts-ignore
-        return this._blankNode.value;
+    protected init(): void {
+        this._blankNode = rdf.blankNode(this.getSemanticId());
+        super.init();
     }
 
     protected createRdfQuad(property: string, value: string): any {
@@ -70,6 +72,14 @@ export default class SemanticObjectAnonymous extends SemanticObject {
             rdf.namedNode(property),
             blankNodeQuad
         )
+    }
+
+    public getSemanticObjectAnonymous(): any {
+        return this._blankNode;
+    }
+
+    public isSemanticObjectAnonymous(): boolean {
+        return true;
     }
 
 }

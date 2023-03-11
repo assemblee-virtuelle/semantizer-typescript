@@ -37,39 +37,61 @@ import SemanticObjectAnonymous from './SemanticObjectAnonymous';
  */
 export default class SemanticObject implements Semanticable {
 
-    private _semanticId: string | undefined;
+    private _semanticId: string;
+    private _semanticType: string;
     private _rdfDataset: any;
 
-    constructor(semanticId: string | undefined = undefined) {
-        this._semanticId = semanticId;
-        this._rdfDataset = rdf.dataset();
+    constructor(semanticId: string, semanticType: string);
+    constructor(semanticId: string, semanticType: string, other?: Semanticable);
+    constructor(semanticId?: string, semanticType?: string, other?: Semanticable);
+    constructor(semanticId?: string, semanticType?: string, other?: Semanticable) {
+        this._semanticId = other? other.getSemanticId(): semanticId!;
+        this._rdfDataset = other? other.toRdfDataset(): rdf.dataset();
+        this._semanticType = other? other.getSemanticType(): semanticType!;
+        this.init();
     }
 
     protected addRdfQuad(quad: any): void {
         this._rdfDataset.add(quad);
     }
 
-    public addSemanticProperty(property: string, value: string, replace: boolean = false): void {
+    protected init(): void {
+        this.addSemanticPropertyReferenceId('http://www.w3.org/1999/02/22-rdf-syntax-ns#type', this._semanticType);
+    }
+
+    private addSemanticPropertyReferenceId(property: string, value: string, replace: boolean = false): void {
         if (replace)
             this.deleteRdfProperty(property);
         const quad = this.createRdfQuad(property, value);
         this.addRdfQuad(quad);
-      }
+    }
+
+    public addSemanticPropertyReference(property: string, value: Semanticable, replace: boolean = false): void {
+        this.addSemanticPropertyReferenceId(property, value.getSemanticId(), replace);
+    }
     
-    public addSemanticPropertyLiteral(property: string, value: string, replace: boolean = false): void {
+    public addSemanticPropertyLiteral(property: string, value: string | number | boolean, replace: boolean = false): void {
         if (replace)
             this.deleteRdfProperty(property);
-        const quad = this.createRdfQuadLiteral(property, value);
+        const quad = this.createRdfQuadLiteral(property, value.toString());
         this.addRdfQuad(quad);
     }
 
-    public addSemanticPropertyAnonymous(property: string, anonymous: SemanticObjectAnonymous, replace: boolean = false): void {
+    public addSemanticPropertyAnonymous(property: string, anonymous: Semanticable, replace: boolean = false): void {
         if (replace)
             this.deleteRdfProperty(property);
-        const blankNodeDataset = anonymous._rdfDataset;
-        const blankNodeQuad = Array.from(blankNodeDataset)[0]; // warning here
+
+        if (!anonymous.isSemanticObjectAnonymous())
+            throw new Error("Can't add a semantic property anonymous: the object is not anonymous.");
+
+        const blankNodeQuad = anonymous.getSemanticObjectAnonymous();
         const quad = this.createRdfQuadBlankNode(property, blankNodeQuad);
         this.addRdfQuad(quad);
+        this._rdfDataset.addAll(anonymous.toRdfDataset());
+    }
+
+    public clone(): SemanticObject {
+        return new SemanticObject("", "", this);
     }
 
     protected createRdfQuad(property: string, value: string): any {
@@ -81,7 +103,7 @@ export default class SemanticObject implements Semanticable {
     }
 
     public static createFromRdfDataset(dataset: DatasetExt): SemanticObject {
-        const result = new SemanticObject();
+        const result = new SemanticObject("");
         result.setSemanticPropertyAllFromRdfDataset(dataset);
         return result;
     }
@@ -110,8 +132,12 @@ export default class SemanticObject implements Semanticable {
         return this._rdfDataset.equals(other._rdfDataset);
     }
 
+    public getSemanticObjectAnonymous(): any {
+        throw new Error("Can't get the semantic object anonymous: this semantic object is not anonymous.");
+    }
+
     public getSemanticId(): string {
-        return this._semanticId ?? "";
+        return this._semanticId;
     }
 
     public getSemanticType(){
@@ -140,28 +166,40 @@ export default class SemanticObject implements Semanticable {
         return this._rdfDataset.some((q: any, ds: any) => q.predicate.value === property);
     }
 
-    public removeSemanticProperty(property: string): void {
-        throw new Error("Method not yet implemented.");
-    } 
-
-    public setSemanticPropertyReference(property: string, value: string): void {
-        this.addSemanticProperty(property, value, true);
+    public isSemanticObjectAnonymous(): boolean {
+        return false;
     }
 
-    public setSemanticPropertyLiteral(property: string, value: string): void {
+    public isSemanticSameTypeOf(other: Semanticable): boolean {
+        return other.isSemanticTypeOf(this._semanticType);
+    }
+
+    public isSemanticTypeOf(type: string): boolean {
+        return this._semanticType === type;
+    }
+
+    public removeSemanticProperty(property: string): void {
+        throw new Error("Method not yet implemented.");
+    }
+
+    public setSemanticPropertyReference(property: string, value: Semanticable): void {
+        this.addSemanticPropertyReference(property, value, true);
+    }
+
+    public setSemanticPropertyReferenceId(property: string, value: string): void {
+        this.addSemanticPropertyReferenceId(property, value, true);
+    }
+
+    public setSemanticPropertyLiteral(property: string, value: string | number | boolean): void {
         this.addSemanticPropertyLiteral(property, value, true);
     }
 
-    public setSemanticPropertyAnonymous(property: string, anonymous: SemanticObjectAnonymous): void {
+    public setSemanticPropertyAnonymous(property: string, anonymous: Semanticable): void {
         this.addSemanticPropertyAnonymous(property, anonymous, true);
     }
 
     public setSemanticId(semanticId: string): void {
         throw new Error("Method not yet implemented.");
-    }
-
-    public setSemanticType(type: string): void {
-        this.setSemanticPropertyReference('http://www.w3.org/1999/02/22-rdf-syntax-ns#type', type);
     }
 
     public setSemanticPropertyAllFromRdfDataset(dataset: DatasetExt): void {
