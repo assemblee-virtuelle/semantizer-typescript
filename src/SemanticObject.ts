@@ -126,8 +126,40 @@ export default class SemanticObject implements Semanticable {
         this._rdfDataset.deleteMatches(this.getSemanticId(), property);
     }
 
+    /**
+     * 
+     * @param other 
+     * @returns 
+     * @note We can't use the equals method from the RDF dataset directly because it needs the 
+     * quads to be in the same order.
+     */
     public equals(other: SemanticObject): boolean {
-        return this._rdfDataset.equals(other._rdfDataset);
+        let result: boolean = false;
+
+        if (this._semanticId === other._semanticId) {
+            if (this.getSize() === other.getSize()) {
+                for (const quad of this._rdfDataset) {
+                    const filter = ((otherQuad: any) => {
+                        return quad.subject.value === otherQuad.subject.value &&
+                        quad.predicate.value === otherQuad.predicate.value && 
+                        quad.object.value === otherQuad.object.value
+                    });
+
+                    const otherQuads = other._rdfDataset.filter(filter);
+                    
+                    if (otherQuads.size !== 1) {
+                        return false;
+                    }
+                }
+
+                result = true;
+            }
+        }
+        
+        return result;
+
+        //return this._semanticId === other._semanticId && this._rdfDataset.equals(other._rdfDataset);
+        //this._rdfDataset.forEach((quad: any): )
     }
 
     public getSemanticObjectAnonymous(): any {
@@ -158,6 +190,10 @@ export default class SemanticObject implements Semanticable {
             return r;
         }
         return this._rdfDataset.reduce(iteratee, []);
+    }
+
+    public getSize(): number {
+        return this._rdfDataset.size;
     }
 
     public hasSemanticPropertiesOtherThanType(): boolean {

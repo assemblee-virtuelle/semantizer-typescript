@@ -41,6 +41,7 @@ export default interface Semanticable {
     addSemanticPropertyAnonymous(property: string, anonymous: Semanticable, replace: boolean): void;
 
     clone(): Semanticable;
+    equals(other: Semanticable): boolean;
     
     /**
      * Getter for the semantic property "@id". It should return the 
@@ -62,6 +63,8 @@ export default interface Semanticable {
     getSemanticProperty(property: string): any;
     getSemanticPropertyAll(property: string): any[];
 
+    getSize(): number;
+
     hasSemanticProperty(property: string): boolean;
     hasSemanticPropertiesOtherThanType(): boolean;
 
@@ -74,12 +77,11 @@ export default interface Semanticable {
     setSemanticPropertyAnonymous(property: string, anonymous: Semanticable): void;
     setSemanticPropertyAllFromRdfDataset(dataset: DatasetExt): void;
     
-    toRdfDataset(): DatasetExt;
-
     /**
      * Setter for the semantic property "@id". It registers a property 
      * for the "@id" name if necessary.
-     */
-    setSemanticId(id: string): void;
-
+    */
+   setSemanticId(id: string): void;
+   
+   toRdfDataset(): DatasetExt;
 }
