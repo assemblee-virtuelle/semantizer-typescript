@@ -217,14 +217,18 @@ export default class SemanticObject implements Semanticable {
         let result: boolean = false;
 
         if (this.getSize() === other.getSize()) {
+            const otherDataset = other.toRdfDataset();
             for (const quad of this._rdfDataset) {
                 const filter = ((otherQuad: any) => {
+                    const language = quad.object.termType === "Literal"? quad.object.language === otherQuad.object.language: true;
                     return quad.subject.value === otherQuad.subject.value &&
                     quad.predicate.value === otherQuad.predicate.value && 
-                    quad.object.value === otherQuad.object.value
+                    quad.object.termType === otherQuad.object.termType &&
+                    quad.object.value === otherQuad.object.value && 
+                    language;
                 });
 
-                const otherQuads: any = other.toRdfDataset().filter(filter);
+                const otherQuads: any = otherDataset.filter(filter);
                 
                 if (otherQuads.size !== 1) {
                     return false;
