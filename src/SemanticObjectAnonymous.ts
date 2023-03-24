@@ -79,6 +79,10 @@ export default class SemanticObjectAnonymous extends SemanticObject {
         )
     }
 
+    public equals(other: Semanticable): boolean {
+        return this.hasSameProperties(other);
+    }
+
     public getSemanticObjectAnonymous(): any {
         return this._blankNode;
     }

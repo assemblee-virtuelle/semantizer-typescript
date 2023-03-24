@@ -133,11 +133,11 @@ export default class SemanticObject implements Semanticable {
      * @note We can't use the equals method from the RDF dataset directly because it needs the 
      * quads to be in the same order.
      */
-    public equals(other: SemanticObject): boolean {
+    public equals(other: Semanticable): boolean {
         let result: boolean = false;
 
-        if (this._semanticId === other._semanticId) {
-            if (this.getSize() === other.getSize()) {
+        if (this._semanticId === other.getSemanticId()) {
+            /*if (this.getSize() === other.getSize()) {
                 for (const quad of this._rdfDataset) {
                     const filter = ((otherQuad: any) => {
                         return quad.subject.value === otherQuad.subject.value &&
@@ -153,7 +153,8 @@ export default class SemanticObject implements Semanticable {
                 }
 
                 result = true;
-            }
+            }*/
+            result = this.hasSameProperties(other);
         }
         
         return result;
@@ -192,8 +193,48 @@ export default class SemanticObject implements Semanticable {
         return this._rdfDataset.reduce(iteratee, []);
     }
 
+    public getSemanticPropertyAnonymous(property: string): DatasetExt {
+        const blankNodeId = this.getSemanticProperty(property);
+        return this.getSemanticPropertyAnonymousId(blankNodeId);
+    }
+
+    public getSemanticPropertyAnonymousAll(property: string): DatasetExt[] {
+        const results: DatasetExt[] = [];
+        const blankNodeIds: string[] = this.getSemanticPropertyAll(property);
+        blankNodeIds.forEach(blankNodeId => results.push(this.getSemanticPropertyAnonymousId(blankNodeId)));
+        return results;
+    }
+
+    private getSemanticPropertyAnonymousId(blankNodeId: string): DatasetExt {
+        return this._rdfDataset.filter((q: any) => q.subject.value === blankNodeId);
+    }
+
     public getSize(): number {
         return this._rdfDataset.size;
+    }
+
+    public hasSameProperties(other: Semanticable): boolean {
+        let result: boolean = false;
+
+        if (this.getSize() === other.getSize()) {
+            for (const quad of this._rdfDataset) {
+                const filter = ((otherQuad: any) => {
+                    return quad.subject.value === otherQuad.subject.value &&
+                    quad.predicate.value === otherQuad.predicate.value && 
+                    quad.object.value === otherQuad.object.value
+                });
+
+                const otherQuads: any = other.toRdfDataset().filter(filter);
+                
+                if (otherQuads.size !== 1) {
+                    return false;
+                }
+            }
+
+            result = true;
+        }
+        
+        return result;
     }
 
     public hasSemanticPropertiesOtherThanType(): boolean {

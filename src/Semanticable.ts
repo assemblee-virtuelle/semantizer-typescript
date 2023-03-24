@@ -62,10 +62,15 @@ export default interface Semanticable {
 
     getSemanticProperty(property: string): any;
     getSemanticPropertyAll(property: string): any[];
+    getSemanticPropertyAnonymous(property: string): DatasetExt;
+    getSemanticPropertyAnonymousAll(property: string): DatasetExt[];
 
     getSize(): number;
 
+    hasSameProperties(other: Semanticable): boolean;
     hasSemanticProperty(property: string): boolean;
+    
+    // TODO: remove
     hasSemanticPropertiesOtherThanType(): boolean;
 
     isSemanticObjectAnonymous(): boolean;
