@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Use RDFJS datasets.
 - LICENSE is now MIT (AGPL3 before).
 
 ## [1.0.0-alpha] - 2022-10-25

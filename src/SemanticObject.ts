@@ -40,11 +40,21 @@ export default class SemanticObject implements Semanticable {
     private _semanticType: string;
     private _rdfDataset: any;
 
+    /**
+     * Create a new SemanticObject.
+     * @param parameters 
+     */
     public constructor(parameters: {semanticId: string, semanticType: string});
+
+    /**
+     * Create a new SemanticObject from an other (copy constructor).
+     * The semanticId will be overrided by the one passed as a parameter.
+     * @param parameters 
+     */
     public constructor(parameters: {semanticId: string, other: Semanticable});
     public constructor(parameters: {semanticId?: string, semanticType?: string, other?: Semanticable}) {
         this._semanticId = parameters.other? parameters.other.getSemanticId(): parameters.semanticId!;
-        this._rdfDataset = parameters.other? parameters.other.toRdfDataset(): rdf.dataset();
+        this._rdfDataset = parameters.other? parameters.other.toRdfDatasetExt(): rdf.dataset();
         this._semanticType = parameters.other? parameters.other.getSemanticType(): parameters.semanticType!;
         this.init();
     }
@@ -85,7 +95,7 @@ export default class SemanticObject implements Semanticable {
         const blankNodeQuad = anonymous.getSemanticObjectAnonymous();
         const quad = this.createRdfQuadBlankNode(property, blankNodeQuad);
         this.addRdfQuad(quad);
-        this._rdfDataset.addAll(anonymous.toRdfDataset());
+        this._rdfDataset.addAll(anonymous.toRdfDatasetExt());
     }
 
     public clone(): SemanticObject {
@@ -136,31 +146,10 @@ export default class SemanticObject implements Semanticable {
     public equals(other: Semanticable): boolean {
         let result: boolean = false;
 
-        if (this._semanticId === other.getSemanticId()) {
-            /*if (this.getSize() === other.getSize()) {
-                for (const quad of this._rdfDataset) {
-                    const filter = ((otherQuad: any) => {
-                        return quad.subject.value === otherQuad.subject.value &&
-                        quad.predicate.value === otherQuad.predicate.value && 
-                        quad.object.value === otherQuad.object.value
-                    });
-
-                    const otherQuads = other._rdfDataset.filter(filter);
-                    
-                    if (otherQuads.size !== 1) {
-                        return false;
-                    }
-                }
-
-                result = true;
-            }*/
+        if (this._semanticId === other.getSemanticId())
             result = this.hasSameProperties(other);
-        }
         
         return result;
-
-        //return this._semanticId === other._semanticId && this._rdfDataset.equals(other._rdfDataset);
-        //this._rdfDataset.forEach((quad: any): )
     }
 
     public getSemanticObjectAnonymous(): any {
@@ -217,7 +206,7 @@ export default class SemanticObject implements Semanticable {
         let result: boolean = false;
 
         if (this.getSize() === other.getSize()) {
-            const otherDataset = other.toRdfDataset();
+            const otherDataset = other.toRdfDatasetExt();
             for (const quad of this._rdfDataset) {
                 const filter = ((otherQuad: any) => {
                     const language = quad.object.termType === "Literal"? quad.object.language === otherQuad.object.language: true;
@@ -239,10 +228,6 @@ export default class SemanticObject implements Semanticable {
         }
         
         return result;
-    }
-
-    public hasSemanticPropertiesOtherThanType(): boolean {
-        return this._rdfDataset.some((quad: any) => quad.predicate.value !== 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
     }
 
     public hasSemanticProperty(property: string): boolean {
@@ -299,7 +284,7 @@ export default class SemanticObject implements Semanticable {
      * Return a deep copy of the underlying RDF dataset.
      * @returns 
      */
-    public toRdfDataset(): DatasetExt {
+    public toRdfDatasetExt(): DatasetExt {
         return this._rdfDataset.clone();
     }
 

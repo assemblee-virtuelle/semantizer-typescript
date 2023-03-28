@@ -69,9 +69,6 @@ export default interface Semanticable {
 
     hasSameProperties(other: Semanticable): boolean;
     hasSemanticProperty(property: string): boolean;
-    
-    // TODO: remove
-    hasSemanticPropertiesOtherThanType(): boolean;
 
     isSemanticObjectAnonymous(): boolean;
     isSemanticSameTypeOf(other: Semanticable): boolean;
@@ -88,5 +85,5 @@ export default interface Semanticable {
     */
    setSemanticId(id: string): void;
    
-   toRdfDataset(): DatasetExt;
+   toRdfDatasetExt(): DatasetExt;
 }
