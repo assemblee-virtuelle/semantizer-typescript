@@ -43,27 +43,15 @@ export default interface Semanticable {
     clone(): Semanticable;
     equals(other: Semanticable): boolean;
     
-    /**
-     * Getter for the semantic property "@id". It should return the 
-     * URI of this object. If the semantic "@id" property is undefined 
-     * the object should be considered as a blank node.
-     * @return the semantic id of this object or undefined in case of 
-     * a blank node.
-     * @see the function Semanticable:isBlankNode
-     */
     getSemanticId(): string;
-
-    getSemanticObjectAnonymous(): any;
-
-    /**
-     * Getter for the semantic property "@type".
-     */
     getSemanticType(): string;
 
     getSemanticProperty(property: string): any;
     getSemanticPropertyAll(property: string): any[];
     getSemanticPropertyAnonymous(property: string): DatasetExt;
     getSemanticPropertyAnonymousAll(property: string): DatasetExt[];
+    
+    getSemanticObjectAnonymous(): any;
 
     getSize(): number;
 
@@ -79,11 +67,7 @@ export default interface Semanticable {
     setSemanticPropertyAnonymous(property: string, anonymous: Semanticable): void;
     setSemanticPropertyAllFromRdfDataset(dataset: DatasetExt): void;
     
-    /**
-     * Setter for the semantic property "@id". It registers a property 
-     * for the "@id" name if necessary.
-    */
-   setSemanticId(id: string): void;
+    setSemanticId(id: string): void;
    
-   toRdfDatasetExt(): DatasetExt;
+    toRdfDatasetExt(): DatasetExt;
 }

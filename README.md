@@ -1,86 +1,65 @@
-Semantizer lets you enhance your object model with semantic data without breaking existing code. Just inherit from the `SemanticObject` class to get the ability to mark some properties of your object as "semantic". You can add to your object as any semantic properties as you want. These semantic properties can then be serialized to any output format, like JSON-LD.
+Semantizer is a library to easily build objects that can be represented as RDF datasets. It is built on top of RDFJS.
 
-This library was writen for the [Data Food Consortium](https://datafoodconsortium.org) project (DFC) which aims to provide interoperability between food supply chain platforms. We use the semantizer library inside our connector library to help developers to exchange JSON-LD data expressed with the DFC ontology.
+This library was writen for the [Data Food Consortium](https://datafoodconsortium.org) project (DFC) which aims to provide interoperability between food supply chain platforms. We use the semantizer library inside our connector library to help developers to exchange data expressed with the DFC ontology.
 
 # Get started
-Lets take an example, with a simple Person class:
+Lets take an example, with a simple Address and Person classes:
 
-```
-class Person {
-
-    private name: string;
-
-    constructor(name: string) {
-        this.name = name;
+```JS
+class Address extends SemanticObject {
+  
+    constructor(name: string, country: string) {
+        super({
+            semanticId: "http://myplatform.com/address/" + name,
+            semanticType: "https://schema.org/PostalAddress"
+        });
+        this.setSemanticPropertyLiteral("https://schema.org/addressCountry", country);
     }
 
-    public getName(): string {
-        return this.name;
+    public getCountry(): string {
+        return this.getSemanticProperty("https://schema.org/addressCountry");
     }
 }
-```
 
-Inherit from the `SemanticObject` class and add this two following lines at the end of the constructor method:
-```
-this.setSemanticType("http://xmlns.com/foaf/0.1/Person");
-this.registerSemanticValue("http://xmlns.com/foaf/0.1/name", () => this.getName());
-```
-
-The Person class should now looks like:
-```
 class Person extends SemanticObject {
 
-    private name: string;
+    constructor(name: string, address: Address) {
+        super({
+            semanticId: "http://myplatform.com/person/" + name,
+            semanticType: "https://schema.org/Person"
+        });
+        this.setName(name);
+        this.setAddress(address);
+    }
 
-    constructor(name: string) {
-        super(); // call SemanticObject constructor
-        this.name = name;
-        this.setSemanticType("http://xmlns.com/foaf/0.1/Person");
-        this.registerSemanticProperty("http://xmlns.com/foaf/0.1/name", () => this.getName());
+    public getAddress(): Address {
+        return this.getSemanticProperty("https://schema.org/address");
     }
 
     public getName(): string {
-        return this.name;
+        return this.getSemanticProperty("https://schema.org/givenName");
     }
+
+    public setAddress(address: Address): string {
+        this.setSemanticPropertyReference("https://schema.org/address", address);
+    }
+
+    public setName(name: string): string {
+        this.setSemanticPropertyLiteral("https://schema.org/givenName", name);
+    }
+
 }
 ```
 
-Then you can serialize this object to a simple regular JavaScript object:
-```
-const person = new Person("John");
-person.setSemanticId("http://platform.example/John");
-const output = person.serialize(new ObjectSerializer));
+You can access the properties:
+```JS
+const address = new Address("adr1", "France");
+const person = new Person("John", address);
+
+console.log(person.getName()); // => John
+console.log(person.getAddress().getCountry()); // => France
 ```
 
-`console.log(output)` will output:
-```
-{
-  '@id': 'http://platform.example/John',
-  '@type': 'http://xmlns.com/foaf/0.1/Person',
-  'http://xmlns.com/foaf/0.1/name': 'John'
-}
-```
+You can get a RDF dataset using the `toRdfDatasetExt()` method.
 
-You can then use a library like [jsonld](https://github.com/digitalbazaar/jsonld.js) to add a semantic context like:
-```
-import jsonld from 'jsonld';
-
-let context = {
-    "foaf": "http://xmlns.com/foaf/0.1/"
-};
-
-const compacted = await jsonld.compact(output, context);
-console.log(JSON.stringify(compacted, null, 2));
-```
-
-This will output a contextualized JSON-LD text:
-```
-{
-  "@context": {
-    "foaf": "http://xmlns.com/foaf/0.1/"
-  },
-  "@id": "http://platform.example/John",
-  "@type": "foaf:Person",
-  "foaf:name": "John"
-}
-```
+You can also set all the properties from a RDF dataset with the `setSemanticPropertyAllFromRdfDataset(dataset: DatasetExt)` method.
