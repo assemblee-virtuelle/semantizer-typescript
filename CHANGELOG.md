@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update @types/rdf-ext to version 2.2.0.
 
-## [1.0.0-alpha.1] - 2023-08-28
+## [1.0.0-alpha.1] - 2023-03-28
 
 ### Added
 
