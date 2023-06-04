@@ -20,7 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import DatasetExt from 'rdf-ext/lib/Dataset';
+import { SolidDataset } from '@inrupt/solid-client';
+
 
 /**
  * The Semanticable interface is the way to define semantic objects that 
@@ -48,8 +49,8 @@ export default interface Semanticable {
 
     getSemanticProperty(property: string): any;
     getSemanticPropertyAll(property: string): any[];
-    getSemanticPropertyAnonymous(property: string): DatasetExt;
-    getSemanticPropertyAnonymousAll(property: string): DatasetExt[];
+    getSemanticPropertyAnonymous(property: string): SolidDataset;
+    getSemanticPropertyAnonymousAll(property: string): SolidDataset[];
     
     getSemanticObjectAnonymous(): any;
 
@@ -65,9 +66,9 @@ export default interface Semanticable {
     setSemanticPropertyReference(property: string, value: Semanticable): void;
     setSemanticPropertyLiteral(property: string, value: string | number | boolean): void;
     setSemanticPropertyAnonymous(property: string, anonymous: Semanticable): void;
-    setSemanticPropertyAllFromRdfDataset(dataset: DatasetExt): void;
+    setSemanticPropertyAllFromRdfDataset(dataset: SolidDataset): void;
     
     setSemanticId(id: string): void;
    
-    toRdfDatasetExt(): DatasetExt;
+    toSolidDataset(): SolidDataset;
 }

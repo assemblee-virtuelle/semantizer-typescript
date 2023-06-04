@@ -19,10 +19,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-import rdf from 'rdf-ext'
-import DatasetExt from 'rdf-ext/lib/Dataset';
-import QuadExt from 'rdf-ext/lib/Quad';
+
 import Semanticable from './Semanticable';
+import { SolidDataset, createSolidDataset, getThing, addUrl } from '@inrupt/solid-client';
 
 /**
  * The SemanticObject class is the base implementation of the Semanticable 
@@ -38,7 +37,7 @@ export default class SemanticObject implements Semanticable {
 
     private _semanticId: string;
     private _semanticType: string;
-    private _rdfDataset: any;
+    private _dataset: SolidDataset;
 
     /**
      * Create a new SemanticObject.
@@ -54,24 +53,29 @@ export default class SemanticObject implements Semanticable {
     public constructor(parameters: {semanticId: string, other: Semanticable});
     public constructor(parameters: {semanticId?: string, semanticType?: string, other?: Semanticable}) {
         this._semanticId = parameters.other? parameters.other.getSemanticId(): parameters.semanticId!;
-        this._rdfDataset = parameters.other? parameters.other.toRdfDatasetExt(): rdf.dataset();
+        this._dataset = parameters.other? parameters.other.toSolidDataset(): createSolidDataset();
         this._semanticType = parameters.other? parameters.other.getSemanticType(): parameters.semanticType!;
         this.init();
     }
 
-    protected addRdfQuad(quad: any): void {
-        this._rdfDataset.add(quad);
-    }
+    /*protected addRdfQuad(quad: any): void {
+        this._dataset.add(quad);
+    }*/
 
     protected init(): void {
         this.addSemanticPropertyReferenceId('http://www.w3.org/1999/02/22-rdf-syntax-ns#type', this._semanticType);
     }
 
+    protected getSolidThing(): any {
+        return getThing(this._dataset, this._semanticId);
+    }
+
     private addSemanticPropertyReferenceId(property: string, value: string, replace: boolean = false): void {
-        if (replace)
-            this.deleteRdfProperty(property);
-        const quad = this.createRdfQuad(property, value);
-        this.addRdfQuad(quad);
+        //if (replace)
+            //this.deleteRdfProperty(property);
+
+        const thing = this.getSolidThing();
+        this._dataset = addUrl(thing, property, value);
     }
 
     public addSemanticPropertyReference(property: string, value: Semanticable, replace: boolean = false): void {
@@ -95,28 +99,28 @@ export default class SemanticObject implements Semanticable {
         const blankNodeQuad = anonymous.getSemanticObjectAnonymous();
         const quad = this.createRdfQuadBlankNode(property, blankNodeQuad);
         this.addRdfQuad(quad);
-        this._rdfDataset.addAll(anonymous.toRdfDatasetExt());
+        this._dataset.addAll(anonymous.toRdfDatasetExt());
     }
 
     public clone(): SemanticObject {
         return new SemanticObject({ semanticId: this._semanticId, other: this });
     }
 
-    protected createRdfQuad(property: string, value: string): any {
+    /*protected createRdfQuad(property: string, value: string): any {
         return rdf.quad(
             rdf.namedNode(this.getSemanticId()),
             rdf.namedNode(property),
             rdf.namedNode(value)
         )
-    }
+    }*/
 
-    public static createFromRdfDataset(dataset: DatasetExt): SemanticObject {
+    public static createFromRdfDataset(dataset: SolidDataset): SemanticObject {
         const result = new SemanticObject({semanticId: "", semanticType: ""});
         result.setSemanticPropertyAllFromRdfDataset(dataset);
         return result;
     }
 
-    protected createRdfQuadLiteral(property: string, value: string): any {
+    /*protected createRdfQuadLiteral(property: string, value: string): any {
         return rdf.quad(
             rdf.namedNode(this.getSemanticId()),
             rdf.namedNode(property),
@@ -133,8 +137,8 @@ export default class SemanticObject implements Semanticable {
     }
 
     protected deleteRdfProperty(property: string): void {
-        this._rdfDataset.deleteMatches(this.getSemanticId(), property);
-    }
+        this._dataset.deleteMatches(this.getSemanticId(), property);
+    }*/
 
     /**
      * 
@@ -179,27 +183,27 @@ export default class SemanticObject implements Semanticable {
                 r.push(q.object.value)
             return r;
         }
-        return this._rdfDataset.reduce(iteratee, []);
+        return this._dataset.reduce(iteratee, []);
     }
 
-    public getSemanticPropertyAnonymous(property: string): DatasetExt {
+    public getSemanticPropertyAnonymous(property: string): SolidDataset {
         const blankNodeId = this.getSemanticProperty(property);
         return this.getSemanticPropertyAnonymousId(blankNodeId);
     }
 
-    public getSemanticPropertyAnonymousAll(property: string): DatasetExt[] {
-        const results: DatasetExt[] = [];
+    public getSemanticPropertyAnonymousAll(property: string): SolidDataset[] {
+        const results: SolidDataset[] = [];
         const blankNodeIds: string[] = this.getSemanticPropertyAll(property);
         blankNodeIds.forEach(blankNodeId => results.push(this.getSemanticPropertyAnonymousId(blankNodeId)));
         return results;
     }
 
-    private getSemanticPropertyAnonymousId(blankNodeId: string): DatasetExt {
-        return this._rdfDataset.filter((q: any) => q.subject.value === blankNodeId);
+    private getSemanticPropertyAnonymousId(blankNodeId: string): SolidDataset {
+        return this._dataset.filter((q: any) => q.subject.value === blankNodeId);
     }
 
     public getSize(): number {
-        return this._rdfDataset.size;
+        return this._dataset.size;
     }
 
     public hasSameProperties(other: Semanticable): boolean {
@@ -207,7 +211,7 @@ export default class SemanticObject implements Semanticable {
 
         if (this.getSize() === other.getSize()) {
             const otherDataset = other.toRdfDatasetExt();
-            for (const quad of this._rdfDataset) {
+            for (const quad of this._dataset) {
                 const filter = ((otherQuad: any) => {
                     const language = quad.object.termType === "Literal"? quad.object.language === otherQuad.object.language: true;
                     return quad.subject.value === otherQuad.subject.value &&
@@ -231,7 +235,7 @@ export default class SemanticObject implements Semanticable {
     }
 
     public hasSemanticProperty(property: string): boolean {
-        return this._rdfDataset.some((q: any, ds: any) => q.predicate.value === property);
+        return this._dataset.some((q: any, ds: any) => q.predicate.value === property);
     }
 
     public isSemanticObjectAnonymous(): boolean {
@@ -270,9 +274,9 @@ export default class SemanticObject implements Semanticable {
         throw new Error("Method not yet implemented.");
     }
 
-    public setSemanticPropertyAllFromRdfDataset(dataset: DatasetExt): void {
-        this._rdfDataset = dataset.clone();
-        const datasetArray: QuadExt[] = Array.from(this._rdfDataset);
+    public setSemanticPropertyAllFromRdfDataset(dataset: SolidDataset): void {
+        this._dataset = dataset.clone();
+        const datasetArray: QuadExt[] = Array.from(this._dataset);
         if (datasetArray.length > 0) {
             const firstQuad: QuadExt = datasetArray[0];
             // @ts-ignore
@@ -284,8 +288,8 @@ export default class SemanticObject implements Semanticable {
      * Return a deep copy of the underlying RDF dataset.
      * @returns 
      */
-    public toRdfDatasetExt(): DatasetExt {
-        return this._rdfDataset.clone();
+    public toSolidDataset(): SolidDataset {
+        return this._dataset.clone();
     }
 
 }
