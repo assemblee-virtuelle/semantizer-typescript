@@ -1,5 +1,5 @@
 export default class Order {
-
+/*
     public async getOrderedBy(): Promise<Agent> {
         // make a new command
         // pass it to the queue
@@ -11,5 +11,5 @@ export default class Order {
         // compute the logic here
         return 42;
     }
-
+*/
 }

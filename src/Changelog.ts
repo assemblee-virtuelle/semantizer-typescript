@@ -12,11 +12,11 @@ export default class Changelog<Key, Value> implements Changelogable<Key, Value> 
         return this._changes.get(key);
     }
 
-    public registerChange(command: Value): void {
-        throw new Error("Method not implemented.");
+    public registerChange(key: Key, change: Value): void {
+        this._changes.set(key, change);
     }
 
-    public unregisterChange(command: Value): void {
+    public unregisterChange(key: Key): void {
         throw new Error("Method not implemented.");
     }
     

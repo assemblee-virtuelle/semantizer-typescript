@@ -20,8 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import AddCommand from './AddCommand';
-import Changelog from './Changelog';
+import AddCommand from './AddCommand.js';
+import Changelog from './Changelog.js';
 import Changelogable from './Changelogable';
 import SemanticPropertyInterface from './SemanticPropertyInterface';
 import Semanticable from './Semanticable';
@@ -43,14 +43,10 @@ export default class SemanticObject implements Semanticable {
     //private _semanticId: string; // delete?
     //private _name: string;
     private _semanticType: string = "";
-    
-    private _localDataset: any;
-    private _distantDataset: any;
 
     private _changelog: Changelogable<string, SemanticableCommand<SemanticPropertyInterface<any>>>;
 
     private _dataset: SolidDataset = createSolidDataset(); // dataset distant
-    private _commands: any[] = [];
 
     // resource info
     private _lastSynchro: string = "datetime";
@@ -80,7 +76,7 @@ export default class SemanticObject implements Semanticable {
 
     public addSemanticProperty<T>(property: SemanticPropertyInterface<T>): void {
         const command = new AddCommand<SemanticPropertyInterface<T>>(property);
-        this._changelog.registerChange(command);
+        this._changelog.registerChange(property.getName(), command);
     }
 
     public setSemanticProperty<T>(property: SemanticPropertyInterface<T>): void {
