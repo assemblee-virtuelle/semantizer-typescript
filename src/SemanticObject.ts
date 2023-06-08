@@ -20,8 +20,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import AddCommand from './AddCommand';
+import Changelog from './Changelog';
+import Changelogable from './Changelogable';
+import SemanticPropertyInterface from './SemanticPropertyInterface';
 import Semanticable from './Semanticable';
 import { SolidDataset, createSolidDataset, getThing, addUrl } from '@inrupt/solid-client';
+import SemanticableCommand from './SemanticableCommand';
 
 /**
  * The SemanticObject class is the base implementation of the Semanticable 
@@ -35,9 +40,20 @@ import { SolidDataset, createSolidDataset, getThing, addUrl } from '@inrupt/soli
  */
 export default class SemanticObject implements Semanticable {
 
-    private _semanticId: string;
-    private _semanticType: string;
-    private _dataset: SolidDataset;
+    //private _semanticId: string; // delete?
+    //private _name: string;
+    private _semanticType: string = "";
+    
+    private _localDataset: any;
+    private _distantDataset: any;
+
+    private _changelog: Changelogable<string, SemanticableCommand<SemanticPropertyInterface<any>>>;
+
+    private _dataset: SolidDataset = createSolidDataset(); // dataset distant
+    private _commands: any[] = [];
+
+    // resource info
+    private _lastSynchro: string = "datetime";
 
     /**
      * Create a new SemanticObject.
@@ -52,34 +68,53 @@ export default class SemanticObject implements Semanticable {
      */
     public constructor(parameters: {semanticId: string, other: Semanticable});
     public constructor(parameters: {semanticId?: string, semanticType?: string, other?: Semanticable}) {
-        this._semanticId = parameters.other? parameters.other.getSemanticId(): parameters.semanticId!;
-        this._dataset = parameters.other? parameters.other.toSolidDataset(): createSolidDataset();
-        this._semanticType = parameters.other? parameters.other.getSemanticType(): parameters.semanticType!;
-        this.init();
+        //this._semanticId = parameters.other? parameters.other.getSemanticId(): parameters.semanticId!;
+        //this._dataset = parameters.other? parameters.other.toSolidDataset(): createSolidDataset();
+        //this._semanticType = parameters.other? parameters.other.getSemanticType(): parameters.semanticType!;
+        this._changelog = new Changelog<string, SemanticableCommand<SemanticPropertyInterface<any>>>();
     }
 
-    /*protected addRdfQuad(quad: any): void {
-        this._dataset.add(quad);
+    /*protected getSolidThing(): any {
+        return getThing(this._dataset, this._semanticId);
     }*/
 
-    protected init(): void {
-        this.addSemanticPropertyReferenceId('http://www.w3.org/1999/02/22-rdf-syntax-ns#type', this._semanticType);
+    public addSemanticProperty<T>(property: SemanticPropertyInterface<T>): void {
+        const command = new AddCommand<SemanticPropertyInterface<T>>(property);
+        this._changelog.registerChange(command);
     }
 
-    protected getSolidThing(): any {
-        return getThing(this._dataset, this._semanticId);
+    public setSemanticProperty<T>(property: SemanticPropertyInterface<T>): void {
+
     }
 
-    private addSemanticPropertyReferenceId(property: string, value: string, replace: boolean = false): void {
-        //if (replace)
-            //this.deleteRdfProperty(property);
+    public removeSemanticProperty<T>(property: SemanticPropertyInterface<T>): void {
 
+    }
+
+    // Find the latest change
+    public getSemanticProperty<T>(name: string): T | undefined {
+        const change: SemanticableCommand<SemanticPropertyInterface<T>> | undefined = this._changelog.getLastChange(name);
+
+        if (change) {
+            const t: SemanticPropertyInterface<T> = change.getTarget();
+            return t.getValue();
+        }
+
+        return undefined;
+    }
+
+    // applu changes and write to storage
+    public saveToSemanticSource(url: string, forceOverride: boolean): void {
+        // const dataset = this._dataset.clone(); create a new dataset
+    }
+
+    /*
+
+    public registerChange(command: AddReference): void {
         const thing = this.getSolidThing();
+        const property = command.getProperty();
+        const value = command.getValue();
         this._dataset = addUrl(thing, property, value);
-    }
-
-    public addSemanticPropertyReference(property: string, value: Semanticable, replace: boolean = false): void {
-        this.addSemanticPropertyReferenceId(property, value.getSemanticId(), replace);
     }
     
     public addSemanticPropertyLiteral(property: string, value: string | number | boolean, replace: boolean = false): void {
@@ -106,47 +141,12 @@ export default class SemanticObject implements Semanticable {
         return new SemanticObject({ semanticId: this._semanticId, other: this });
     }
 
-    /*protected createRdfQuad(property: string, value: string): any {
-        return rdf.quad(
-            rdf.namedNode(this.getSemanticId()),
-            rdf.namedNode(property),
-            rdf.namedNode(value)
-        )
-    }*/
-
     public static createFromRdfDataset(dataset: SolidDataset): SemanticObject {
         const result = new SemanticObject({semanticId: "", semanticType: ""});
         result.setSemanticPropertyAllFromRdfDataset(dataset);
         return result;
     }
 
-    /*protected createRdfQuadLiteral(property: string, value: string): any {
-        return rdf.quad(
-            rdf.namedNode(this.getSemanticId()),
-            rdf.namedNode(property),
-            rdf.literal(value)
-        )
-    }
-
-    protected createRdfQuadBlankNode(property: string, blankNodeQuad: any): any {
-        return rdf.quad(
-            rdf.namedNode(this.getSemanticId()),
-            rdf.namedNode(property),
-            blankNodeQuad
-        )
-    }
-
-    protected deleteRdfProperty(property: string): void {
-        this._dataset.deleteMatches(this.getSemanticId(), property);
-    }*/
-
-    /**
-     * 
-     * @param other 
-     * @returns 
-     * @note We can't use the equals method from the RDF dataset directly because it needs the 
-     * quads to be in the same order.
-     */
     public equals(other: Semanticable): boolean {
         let result: boolean = false;
 
@@ -172,11 +172,6 @@ export default class SemanticObject implements Semanticable {
         return this.hasSemanticProperty(property)? this.getSemanticPropertyAll(property)[0]: undefined;
     }
 
-    /**
-     * 
-     * @param property 
-     * @returns an array containing the value of all the quad objects.
-     */
     public getSemanticPropertyAll(property: string): any[] {
         const iteratee = (r: any, q: any) => {
             if (q.predicate.value === property) 
@@ -284,12 +279,8 @@ export default class SemanticObject implements Semanticable {
         }
     }
 
-    /**
-     * Return a deep copy of the underlying RDF dataset.
-     * @returns 
-     */
     public toSolidDataset(): SolidDataset {
         return this._dataset.clone();
-    }
+    }*/
 
 }

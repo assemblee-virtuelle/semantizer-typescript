@@ -21,7 +21,7 @@ SOFTWARE.
 */
 
 import { SolidDataset } from '@inrupt/solid-client';
-
+import SemanticPropertyInterface from './SemanticPropertyInterface';
 
 /**
  * The Semanticable interface is the way to define semantic objects that 
@@ -37,20 +37,32 @@ import { SolidDataset } from '@inrupt/solid-client';
  */
 export default interface Semanticable {
 
-    addSemanticPropertyReference(property: string, value: Semanticable, replace: boolean): void;
+    //addSemanticProperty(name: string, value: SemanticProperty, replace: boolean): void;
+    // command = CommandFactory.createAddReference();
+    // semanticObject.execute(command);
+    
+    saveToSemanticSource(url: string, forceOverride: boolean): void;
+
+    addSemanticProperty<T>(property: SemanticPropertyInterface<T>): void;
+    setSemanticProperty<T>(property: SemanticPropertyInterface<T>): void;
+    removeSemanticProperty<T>(property: SemanticPropertyInterface<T>): void;
+    
+    getSemanticProperty<T>(name: string): T | undefined;
+
+    /*addSemanticPropertyReference(property: string, value: Semanticable, replace: boolean): void;
     addSemanticPropertyLiteral(property: string, value: string | number | boolean, replace: boolean): void;
     addSemanticPropertyAnonymous(property: string, anonymous: Semanticable, replace: boolean): void;
 
     clone(): Semanticable;
     equals(other: Semanticable): boolean;
     
-    getSemanticId(): string;
+    //getSemanticId(): string;
     getSemanticType(): string;
 
-    getSemanticProperty(property: string): any;
-    getSemanticPropertyAll(property: string): any[];
-    getSemanticPropertyAnonymous(property: string): SolidDataset;
-    getSemanticPropertyAnonymousAll(property: string): SolidDataset[];
+    getSemanticProperty(name: string): any;
+    getSemanticPropertyAll(name: string): any[];
+    getSemanticPropertyAnonymous(name: string): SolidDataset;
+    getSemanticPropertyAnonymousAll(name: string): SolidDataset[];
     
     getSemanticObjectAnonymous(): any;
 
@@ -70,5 +82,5 @@ export default interface Semanticable {
     
     setSemanticId(id: string): void;
    
-    toSolidDataset(): SolidDataset;
+    toSolidDataset(): SolidDataset;*/
 }
