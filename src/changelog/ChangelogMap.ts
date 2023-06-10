@@ -1,6 +1,6 @@
 import Changelogable from "./Changelogable";
 
-export default class Changelog<Key, Value> implements Changelogable<Key, Value> {
+export default class ChangelogMap<Key, Value> implements Changelogable<Key, Value> {
 
     private _changes: Map<Key, Value>;
 
@@ -8,6 +8,15 @@ export default class Changelog<Key, Value> implements Changelogable<Key, Value> 
         this._changes = new Map<Key, Value>();
     }
 
+    public getChanges(): IterableIterator<Value> {
+        return this._changes.values();
+    }
+
+    public clone(): Changelogable<Key, Value> {
+        return structuredClone(this);
+    }
+
+    // TODO: get the last change without regarding its type
     public getLastChange(key: Key): Value | undefined {
         return this._changes.get(key);
     }
@@ -17,7 +26,7 @@ export default class Changelog<Key, Value> implements Changelogable<Key, Value> 
     }
 
     public unregisterChange(key: Key): void {
-        throw new Error("Method not implemented.");
+        this._changes.delete(key);
     }
     
 }

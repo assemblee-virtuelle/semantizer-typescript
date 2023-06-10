@@ -1,13 +1,26 @@
 import SemanticObject from '../lib/SemanticObject.js';
+import SemanticProperty from '../lib/SemanticProperty.js';
 
-test('semantic id', () => {
-    const id = "http://platform.com/object1";
+test('semantic id', async () => {
+    const semanticObject = new SemanticObject();
+    semanticObject.addSemanticProperty(new SemanticProperty("rdfs:type", "Person"));
+    semanticObject.addSemanticProperty(new SemanticProperty("dfc:name", "Jean"));
 
-    const semanticObject = new SemanticObject(id);
-
-    expect(semanticObject.getSemanticId()).toStrictEqual(id);
+    expect(await semanticObject.getSemanticProperty("rdfs:type")).toStrictEqual("Person");
+    expect(await semanticObject.getSemanticProperty("dfc:name")).toStrictEqual("Jean");
 });
 
+test('local uuid', async () => {
+    const semanticObject = new SemanticObject();
+    expect(semanticObject.getSemanticId()).toStrictEqual("local://uuid");
+});
+
+test('local ref', async () => {
+    const semanticObject = new SemanticObject();
+    expect(semanticObject.getSemanticId()).toStrictEqual("local://uuid");
+});
+
+/*
 test('semantic type', () => {
     const type = "http://example.org/type";
 
@@ -52,3 +65,4 @@ test('equals', () => {
     expect(semanticObject1.equals(semanticObject3)).toStrictEqual(false);
     expect(semanticObject1.equals(semanticObject4)).toStrictEqual(false);
 });
+*/

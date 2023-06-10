@@ -21,7 +21,10 @@ SOFTWARE.
 */
 
 import { SolidDataset } from '@inrupt/solid-client';
-import SemanticPropertyInterface from './SemanticPropertyInterface';
+import SemanticPropertyInterface from '../property/SemanticPropertyInterface';
+import Changelogable from '../changelog/Changelogable';
+import SemanticableCommand from './SemanticableCommand';
+import StoreInterface from '../store/StoreInterface';
 
 /**
  * The Semanticable interface is the way to define semantic objects that 
@@ -37,34 +40,23 @@ import SemanticPropertyInterface from './SemanticPropertyInterface';
  */
 export default interface Semanticable {
 
-    //addSemanticProperty(name: string, value: SemanticProperty, replace: boolean): void;
-    // command = CommandFactory.createAddReference();
-    // semanticObject.execute(command);
+    addSemanticProperty<T>(name: string, value: T): void;
+    setSemanticProperty<T>(name: string, value: T): void;
+    removeSemanticProperty<T>(name: string, value: T): void;
     
-    saveToSemanticSource(url: string, forceOverride: boolean): void;
+    getSemanticId(): string;
+    getSemanticProperty<T>(name: string): Promise<T | undefined>;
 
-    addSemanticProperty<T>(property: SemanticPropertyInterface<T>): void;
-    setSemanticProperty<T>(property: SemanticPropertyInterface<T>): void;
-    removeSemanticProperty<T>(property: SemanticPropertyInterface<T>): void;
+    getStore(): StoreInterface;
+    getChangelog(): Changelogable<string, SemanticableCommand<SemanticPropertyInterface<any>>>;
+
+    // Rename to synchronize?
+    save(url?: string, methodHint?: "PUT" | "POST" | "PATCH"): Promise<void>;
+    // save(url?: string, options?: { fetch: Function }): Promise<void>;
     
-    getSemanticProperty<T>(name: string): T | undefined;
-
-    /*addSemanticPropertyReference(property: string, value: Semanticable, replace: boolean): void;
-    addSemanticPropertyLiteral(property: string, value: string | number | boolean, replace: boolean): void;
-    addSemanticPropertyAnonymous(property: string, anonymous: Semanticable, replace: boolean): void;
-
+    /*
     clone(): Semanticable;
     equals(other: Semanticable): boolean;
-    
-    //getSemanticId(): string;
-    getSemanticType(): string;
-
-    getSemanticProperty(name: string): any;
-    getSemanticPropertyAll(name: string): any[];
-    getSemanticPropertyAnonymous(name: string): SolidDataset;
-    getSemanticPropertyAnonymousAll(name: string): SolidDataset[];
-    
-    getSemanticObjectAnonymous(): any;
 
     getSize(): number;
 
@@ -74,13 +66,5 @@ export default interface Semanticable {
     isSemanticObjectAnonymous(): boolean;
     isSemanticSameTypeOf(other: Semanticable): boolean;
     isSemanticTypeOf(type: string): boolean;
-
-    setSemanticPropertyReference(property: string, value: Semanticable): void;
-    setSemanticPropertyLiteral(property: string, value: string | number | boolean): void;
-    setSemanticPropertyAnonymous(property: string, anonymous: Semanticable): void;
-    setSemanticPropertyAllFromRdfDataset(dataset: SolidDataset): void;
-    
-    setSemanticId(id: string): void;
-   
-    toSolidDataset(): SolidDataset;*/
+    */
 }
