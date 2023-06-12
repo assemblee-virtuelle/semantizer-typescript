@@ -1,10 +1,12 @@
-import SemanticObject from '../lib/SemanticObject.js';
-import SemanticProperty from '../lib/SemanticProperty.js';
+import SemanticObject from '../lib/object/SemanticObject.js';
+import SemanticProperty from '../lib/property/SemanticProperty.js';
+import StoreMapSemanticable from '../lib/store/StoreMapSemanticable.js';
 
 test('semantic id', async () => {
-    const semanticObject = new SemanticObject();
-    semanticObject.addSemanticProperty(new SemanticProperty("rdfs:type", "Person"));
-    semanticObject.addSemanticProperty(new SemanticProperty("dfc:name", "Jean"));
+    const store = new StoreMapSemanticable();
+    const semanticObject = new SemanticObject({store: store});
+    semanticObject.addSemanticProperty("rdfs:type", "Person");
+    semanticObject.addSemanticProperty("dfc:name", "Jean");
 
     expect(await semanticObject.getSemanticProperty("rdfs:type")).toStrictEqual("Person");
     expect(await semanticObject.getSemanticProperty("dfc:name")).toStrictEqual("Jean");

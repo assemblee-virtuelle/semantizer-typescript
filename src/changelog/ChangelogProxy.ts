@@ -21,7 +21,7 @@ export default class ChangelogProxy<Key, Value> implements Changelogable<Key, Va
     }
 
     registerChange(key: Key, change: Value): void {
-        throw new Error("Method not implemented.");
+        this._changelog.registerChange(key, change);
     }
 
     unregisterChange(key: Key): void {

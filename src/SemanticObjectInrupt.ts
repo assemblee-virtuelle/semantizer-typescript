@@ -18,7 +18,7 @@ export default class SemanticObjectInrupt extends SemanticObject {
             this._thing = parameters.initialState;
     }
 
-    public static fromRdfjsDataset(store: StoreInterfaceSemanticable, rdfjsDataset: DatasetCore<Quad, Quad>, url: string): SemanticObjectInrupt {
+    /*public static fromRdfjsDataset(store: StoreInterfaceSemanticable, rdfjsDataset: DatasetCore<Quad, Quad>, url: string): SemanticObjectInrupt {
         const solidDataset: SolidDataset = fromRdfJsDataset(rdfJsDataset);
         const thing: Thing | null = getThing(solidDataset, url);
 
@@ -26,7 +26,7 @@ export default class SemanticObjectInrupt extends SemanticObject {
             throw new Error("");
 
         return new SemanticObjectInrupt({ store: store, initialState: thing });
-    }
+    }*/
     
     protected apply(thing: Thing, changelog: Changelogable<string, SemanticableCommand<SemanticPropertyInterface<any>>>): Thing {
         for (const change of changelog.getChanges()) {
@@ -43,7 +43,7 @@ export default class SemanticObjectInrupt extends SemanticObject {
     }
 
     protected async saveTemplateMethod(resource?: string, options?: { fetch: Function, methodHint?: "PUT" | "POST" | "PATCH" }): Promise<string> {
-        let solidDatasetUrl: string, thing: Thing;
+        /*let solidDatasetUrl: string, thing: Thing;
         let solidDataset: SolidDataset = createSolidDataset(); // this.getStore().get(ur); this._dataset;
         
         // If there is an Url passed, we want to save a new resource on the POD.
@@ -73,7 +73,9 @@ export default class SemanticObjectInrupt extends SemanticObject {
             }
         }
 
-        return solidDatasetUrl;
+        return solidDatasetUrl;*/
+
+        return "";
     }
 
 }

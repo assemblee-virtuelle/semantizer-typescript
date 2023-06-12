@@ -28,6 +28,7 @@ export default class Order extends SemanticObjectInrupt {
 const RDF = { type: "" };
 const DFC = { Order: "" };
 
+/*
 const store = new StoreMapSemanticable();
 const order = new Order({ store: store });
 order.addSemanticProperty<string>(RDF.type, DFC.Order);
@@ -38,10 +39,6 @@ const order2 = store.get<SemanticObject>("");
 
 const initialThing: Thing = SolidThingImporter.import();
 const order3 = new Order({ store: store, initialState: initialThing})
-
-
-
-/*
 
 Solid document <https://url_1>
 
@@ -57,9 +54,8 @@ DFC = store: url => rdfjs
 - url => id_interne
 
 
-*/
-const dataset = RdfjsImporter.import(data);
-const order4 = Order.fromRdfjsDataset(store, dataset, "https://...");
+//const dataset = RdfjsImporter.import(data);
+//const order4 = Order.fromRdfjsDataset(store, dataset, "https://...");
 
 const order5 = new Order({ store: store }); // stocke un objet local dans le store
 order5.synchronize("https://..."); // demande une création. l'identifiant interne devient une URL
@@ -87,3 +83,4 @@ defined     - demande de création: l'objet
             - demande de mise à jour: l'objet
             a une url dans le store ou il existe
             de manière distante.
+*/

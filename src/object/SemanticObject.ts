@@ -117,7 +117,7 @@ export default abstract class SemanticObject implements Semanticable {
     }
 
     public getChangelogInternal(): Changelogable<string, SemanticableCommand<SemanticPropertyInterface<any>>> {
-        return this.getChangelogInternal();
+        return this._changelog;
     }
 
     public getChangelog(): Changelogable<string, SemanticableCommand<SemanticPropertyInterface<any>>> {
@@ -149,7 +149,7 @@ export default abstract class SemanticObject implements Semanticable {
     // getSemanticProperty<Semanticable> => dereference the object and return it
     // getSemanticProperty<Semanticable> => URL
     public async getSemanticProperty<T>(name: string): Promise<T | undefined> {
-        return this.getSemanticPropertyLastChangeValue<T>(name);
+        return await this.getSemanticPropertyLastChangeValue<T>(name);
     }
 
     public getSynchronizedResourceUrl(): string {

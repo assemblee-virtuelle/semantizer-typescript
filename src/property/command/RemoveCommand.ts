@@ -1,4 +1,4 @@
-import SemanticPropertyCommand from "./SemanticPropertyCommand";
+import SemanticPropertyCommand from "./SemanticPropertyCommand.js";
 
 export default class RemoveCommand<T> extends SemanticPropertyCommand<T> {
     

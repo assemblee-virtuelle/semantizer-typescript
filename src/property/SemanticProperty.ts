@@ -19,7 +19,7 @@ export default class SemanticProperty<T> implements SemanticPropertyInterface<T>
     }
 
     public isReference(): boolean {
-        return 'addSemanticProperty' in (this.value as any);
+        return this.value instanceof Object && 'addSemanticProperty' in (this.value);
     }
 
 }
