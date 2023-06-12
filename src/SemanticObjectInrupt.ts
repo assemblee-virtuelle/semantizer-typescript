@@ -2,7 +2,7 @@ import { SolidDataset, Thing, addStringNoLocale, buildThing, createSolidDataset,
 import SemanticObject from "./object/SemanticObject.js";
 import Changelogable from "./changelog/Changelogable.js";
 import { rdfJsDataset } from "@inrupt/solid-client/dist/rdf.internal.js";
-import StoreInterface from "./store/StoreInterface.js";
+import StoreInterfaceSemanticable from "./store/StoreInterfaceSemanticable.js";
 import SemanticableCommand from "./object/SemanticableCommand.js";
 import SemanticPropertyInterface from "./property/SemanticPropertyInterface.js";
 import AddCommand from "./property/command/AddCommand.js";
@@ -11,15 +11,21 @@ export default class SemanticObjectInrupt extends SemanticObject {
 
     private _thing: Thing | undefined;
 
-    constructor(parameters: { store: StoreInterface, other?: Thing }) {
+    constructor(parameters: { store: StoreInterfaceSemanticable, initialState?: Thing }) {
         super({ store: parameters.store });
 
-        if (parameters.other)
-            this._thing = parameters.other;
+        if (parameters.initialState)
+            this._thing = parameters.initialState;
     }
 
-    public static fromRdfjsDataset(rdfjsDataset: DatasetCore<Quad, Quad>): SemanticObjectInrupt {
-        return new SemanticObjectInrupt(fromRdfJsDataset(rdfJsDataset));
+    public static fromRdfjsDataset(store: StoreInterfaceSemanticable, rdfjsDataset: DatasetCore<Quad, Quad>, url: string): SemanticObjectInrupt {
+        const solidDataset: SolidDataset = fromRdfJsDataset(rdfJsDataset);
+        const thing: Thing | null = getThing(solidDataset, url);
+
+        if (!thing)
+            throw new Error("");
+
+        return new SemanticObjectInrupt({ store: store, initialState: thing });
     }
     
     protected apply(thing: Thing, changelog: Changelogable<string, SemanticableCommand<SemanticPropertyInterface<any>>>): Thing {
@@ -36,7 +42,7 @@ export default class SemanticObjectInrupt extends SemanticObject {
         return thing;
     }
 
-    protected async saveTemplateMethod(url?: string, methodHint?: "PUT" | "POST" | "PATCH"): Promise<string> {
+    protected async saveTemplateMethod(resource?: string, options?: { fetch: Function, methodHint?: "PUT" | "POST" | "PATCH" }): Promise<string> {
         let solidDatasetUrl: string, thing: Thing;
         let solidDataset: SolidDataset = createSolidDataset(); // this.getStore().get(ur); this._dataset;
         

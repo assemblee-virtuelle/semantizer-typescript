@@ -10,6 +10,7 @@ test('semantic id', async () => {
     expect(await semanticObject.getSemanticProperty("dfc:name")).toStrictEqual("Jean");
 });
 
+/*
 test('local uuid', async () => {
     const semanticObject = new SemanticObject();
     expect(semanticObject.getSemanticId()).toStrictEqual("local://uuid");

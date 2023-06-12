@@ -1,5 +1,4 @@
-import SemanticObject from "../object/SemanticObject.js";
-import SemanticPropertyInterface from "./SemanticPropertyInterface.js";
+import SemanticPropertyInterface from "./SemanticPropertyInterface";
 
 export default class SemanticProperty<T> implements SemanticPropertyInterface<T> {
 
@@ -20,7 +19,7 @@ export default class SemanticProperty<T> implements SemanticPropertyInterface<T>
     }
 
     public isReference(): boolean {
-        return this.value instanceof SemanticObject;
+        return 'addSemanticProperty' in (this.value as any);
     }
 
 }

@@ -1,8 +1,8 @@
-import Semanticable from "../object/Semanticable";
+export default interface StoreInterface<Key, Value> {
 
-export default interface StoreInterface {
-    get(semanticObjectId: string): Promise<Semanticable | undefined>;
-    has(semanticObjectId: string): boolean;
-    set(semanticObject: Semanticable): void;
-    setAll(semanticObjects: Array<Semanticable>): void;
+    get<T extends Value>(key: Key): Promise<T | undefined>;
+    has(key: Key): boolean;
+    set<T extends Value>(key: Key, value: T): void;
+    // setAll(values: Array<Value>): void;
+
 }

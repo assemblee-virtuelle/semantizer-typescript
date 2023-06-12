@@ -1,30 +1,23 @@
-import Semanticable from "../object/Semanticable"
 import StoreInterface from "./StoreInterface";
 
-export default class StoreMap implements StoreInterface {
+export default class StoreMap<Key, Value> implements StoreInterface<Key, Value> {
 
-    private storeObject: Map<string, Semanticable>;
+    private storeObject: Map<Key, Value>;
 
     public constructor() {
-        this.storeObject = new Map<string, Semanticable>();
+        this.storeObject = new Map<Key, Value>();
     }
 
-    public async get(semanticObjectId: string): Promise<Semanticable | undefined> {
-        return this.storeObject.get(semanticObjectId);
+    public async get<T extends Value>(key: Key): Promise<T | undefined> {
+        return <T> this.storeObject.get(key);
     }
 
-    public has(semanticObjectId: string): boolean {
-        return this.storeObject.has(semanticObjectId);
+    public has(key: Key): boolean {
+        return this.storeObject.has(key);
     }
 
-    public set(semanticObject: Semanticable): void {
-        const semanticId: string = semanticObject.getSemanticId();
-        if (semanticId !== "")
-            this.storeObject.set(semanticId, semanticObject);
+    public set<T extends Value>(key: Key, value: T): void {
+        this.storeObject.set(key, value);
     }
 
-    public setAll(semanticObjects: Array<Semanticable>): void {
-        semanticObjects.forEach(semanticObject => this.set(semanticObject));
-    }
-    
 }

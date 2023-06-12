@@ -29,7 +29,9 @@ import SemanticableCommand from './SemanticableCommand.js';
 import SemanticProperty from '../property/SemanticProperty.js';
 import ChangelogProxy from '../changelog/ChangelogProxy.js';
 import ChangelogMap from '../changelog/ChangelogMap.js';
-import StoreInterface from '../store/StoreInterface.js';
+import StoreInterfaceSemanticable from '../store/StoreInterfaceSemanticable';
+import SetCommand from '../property/command/SetCommand.js';
+import RemoveCommand from '../property/command/RemoveCommand.js';
 
 /**
  * The SemanticObject class is the base implementation of the Semanticable 
@@ -43,92 +45,150 @@ import StoreInterface from '../store/StoreInterface.js';
  */
 export default abstract class SemanticObject implements Semanticable {
 
-    private _store: StoreInterface;
+    private _synchronizedResource: string;
+    private _store: StoreInterfaceSemanticable;
     private _changelog: Changelogable<string, SemanticableCommand<SemanticPropertyInterface<any>>>;
     
     // resource info
-    private _semanticId: string; 
+    //private _semanticId: string; 
     private _lastSynchro: string = "datetime";
 
-    public constructor(parameters: {store: StoreInterface});
+    public constructor(parameters: {store: StoreInterfaceSemanticable});
     /**
      * Create a new SemanticObject from an other (copy constructor).
      * The semanticId will be overrided by the one passed as a parameter.
      * @param parameters 
      */
-    public constructor(parameters: {store: StoreInterface, other: Semanticable});
-    public constructor(parameters: {store: StoreInterface, other?: Semanticable}) {
-        //this._semanticId = parameters?.semanticId? parameters.semanticId : "local://uuid"; 
-        this._semanticId = "local://uuid";
+    public constructor(parameters: {store: StoreInterfaceSemanticable, other: Semanticable});
+    public constructor(parameters: {store: StoreInterfaceSemanticable, other?: Semanticable}) {
         this._store = parameters.store;
+        this._synchronizedResource = "local://1";
         this._changelog = new ChangelogProxy(new ChangelogMap());
-        this._store.set(this);
+        this._store.set(this._synchronizedResource, this);
     }
 
-    // TODO: refactor to addSemanticProperty<T>(name: string, value: T): void
+    protected isInternal(): boolean {
+        return this._synchronizedResource.startsWith("local");
+    }
+
+    protected registerChange(command: SemanticableCommand<SemanticPropertyInterface<any>>): void {
+        const property = command.getTarget();
+        this.getChangelogInternal().registerChange(property.getName(), command);
+    }
+
+    public createProperty<T>(name: string, value: T): SemanticPropertyInterface<T> {
+        return new SemanticProperty<T>(name, value);
+    }
+
+    public createPropertyUrl(property: SemanticPropertyInterface<Semanticable>): SemanticPropertyInterface<URL> {
+        const url = new URL(property.getValue().getSynchronizedResourceUrl());
+        return this.createProperty<URL>(property.getName(), url);
+    }
+
+    private toPropertyUrlIfNeeded<T>(property: SemanticPropertyInterface<T>): SemanticPropertyInterface<T | URL> {
+        return property.isReference()? this.createPropertyUrl(<SemanticPropertyInterface<Semanticable>> property): property;
+    }
+
+    public createAddCommand<T>(name: string, value: T): SemanticableCommand<SemanticPropertyInterface<T | URL>> {
+        const property = this.toPropertyUrlIfNeeded<T>(this.createProperty<T>(name, value));
+        return new AddCommand<typeof property>(property);
+    }
+
+    public createSetCommand<T>(name: string, value: T): SemanticableCommand<SemanticPropertyInterface<T | URL>> {
+        const property = this.toPropertyUrlIfNeeded<T>(this.createProperty<T>(name, value));
+        return new SetCommand<typeof property>(property);
+    }
+
+    public createRemoveCommand<T>(name: string, value: T): SemanticableCommand<SemanticPropertyInterface<T | URL>> {
+        const property = this.toPropertyUrlIfNeeded<T>(this.createProperty<T>(name, value));
+        return new RemoveCommand<typeof property>(property);
+    }
+
     public addSemanticProperty<T>(name: string, value: T): void {
-        let command;
-
-        const property: SemanticPropertyInterface<T> = new SemanticProperty<T>(name, value);
-
-        if (property.isReference()) {
-            const semanticObject: Semanticable = <Semanticable> property.getValue();
-            const semanticId: string = semanticObject.getSemanticId();
-            const reference = new SemanticProperty<URL>(property.getName(), new URL(semanticId));
-            command = new AddCommand<SemanticPropertyInterface<URL>>(reference);
-        }
-
-        else command = new AddCommand<SemanticPropertyInterface<T>>(property);
-
-        this._changelog.registerChange(property.getName(), command);
+        this.registerChange(this.createAddCommand<T>(name, value));
     }
 
     public setSemanticProperty<T>(name: string, value: T): void {
-
+        this.registerChange(this.createSetCommand<T>(name, value));
     }
 
     public removeSemanticProperty<T>(name: string, value: T): void {
+        this.registerChange(this.createRemoveCommand<T>(name, value));
+    }
 
+    public getChangelogInternal(): Changelogable<string, SemanticableCommand<SemanticPropertyInterface<any>>> {
+        return this.getChangelogInternal();
     }
 
     public getChangelog(): Changelogable<string, SemanticableCommand<SemanticPropertyInterface<any>>> {
-        return this._changelog.clone();
+        return this.getChangelogInternal().clone();
     }
 
-    public getStore(): StoreInterface {
+    public getStore(): StoreInterfaceSemanticable {
         return this._store;
     }
 
-    public getSemanticId(): string {
-        return this._semanticId;
+    public getSemanticPropertyLastChange<T>(name: string): SemanticableCommand<SemanticPropertyInterface<T>> | undefined {
+        return this.getChangelogInternal().getLastChange(name);
     }
 
-    // Find the latest change
+    public getSemanticPropertyLastChangeTarget<T>(name: string): SemanticPropertyInterface<T> | undefined {
+        return this.getSemanticPropertyLastChange<T>(name)?.getTarget();
+    }
+
+    public async getSemanticPropertyLastChangeValue<T>(name: string): Promise<T | undefined> {
+        const property = this.getSemanticPropertyLastChangeTarget<T>(name);
+        return property? this.mayDereferencePropertyValue<T>(property): undefined;
+    }
+
+    // TODO: query the store
+    public async mayDereferencePropertyValue<T>(property: SemanticPropertyInterface<T>): Promise<T> {
+        return property.isReference()? property.getValue(): property.getValue();
+    }
+
+    // getSemanticProperty<Semanticable> => dereference the object and return it
+    // getSemanticProperty<Semanticable> => URL
     public async getSemanticProperty<T>(name: string): Promise<T | undefined> {
-        const change: SemanticableCommand<SemanticPropertyInterface<T>> | undefined = this._changelog.getLastChange(name);
-        let value: T | undefined = undefined;
+        return this.getSemanticPropertyLastChangeValue<T>(name);
+    }
 
-        if (change) {
-            const property: SemanticPropertyInterface<T> = change.getTarget();
-
-            if (property.isReference()) {
-                //value = await store.get...
-                // TODO : implement the store
-            }
-
-            else value = property.getValue();
-        }
-
-        return value;
+    public getSynchronizedResourceUrl(): string {
+        return this._synchronizedResource;
     }
 
     // apply changes and write to storage
-    public async save(url?: string, methodHint?: "PUT" | "POST" | "PATCH"): Promise<void> {
-        this._semanticId = await this.saveTemplateMethod(url, methodHint);
-        this._store.set(this);
+    public async synchronize(resource?: string, options?: { fetch: Function, methodHint?: "PUT" | "POST" | "PATCH" }): Promise<void> {
+        // TODO: prévoir une stratégie qui donne une commande
+        // + une chaine de responsabilité par exemple pour stopper la chaine s'il n'y a pas de réseau (offline) ou pour 
+        // permettre des stratégie de synchronisation plus économiques en terme de réseau (fusion de +sieurs commandes de syncrho).
+        if (resource) {
+            // If the resource was never synchronized before
+            if (this.isInternal()) {
+                const isStored: boolean = false; // check if we aleready have the resource in the store. 
+                
+                // The resource exists, we want an update
+                if (isStored) {
+                    // we load the resource and we apply changes before to send an update.
+                }
+
+                else {
+                    // we try to create the resource
+                    
+                    // if the resource is already existing, il faut résoudre le conflit
+                }
+            }
+
+            // We want an update
+            else {
+                // if the resource does not exist (it was deleted) we add it.
+            }
+        }
+
+        await this.saveTemplateMethod(resource, options); // can throws
+        this._store.set(this.getSynchronizedResourceUrl(), this);
     }
 
-    protected abstract saveTemplateMethod(url?: string, methodHint?: "PUT" | "POST" | "PATCH"): Promise<string>;
+    protected abstract saveTemplateMethod(resource?: string, options?: { fetch: Function, methodHint?: "PUT" | "POST" | "PATCH" }): Promise<string>;
 
     /*
 

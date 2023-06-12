@@ -24,7 +24,7 @@ import { SolidDataset } from '@inrupt/solid-client';
 import SemanticPropertyInterface from '../property/SemanticPropertyInterface';
 import Changelogable from '../changelog/Changelogable';
 import SemanticableCommand from './SemanticableCommand';
-import StoreInterface from '../store/StoreInterface';
+import StoreInterfaceSemanticable from '../store/StoreInterfaceSemanticable';
 
 /**
  * The Semanticable interface is the way to define semantic objects that 
@@ -44,15 +44,18 @@ export default interface Semanticable {
     setSemanticProperty<T>(name: string, value: T): void;
     removeSemanticProperty<T>(name: string, value: T): void;
     
-    getSemanticId(): string;
+    //getSemanticId(): string;
     getSemanticProperty<T>(name: string): Promise<T | undefined>;
 
-    getStore(): StoreInterface;
+    getStore(): StoreInterfaceSemanticable;
     getChangelog(): Changelogable<string, SemanticableCommand<SemanticPropertyInterface<any>>>;
 
-    // Rename to synchronize?
-    save(url?: string, methodHint?: "PUT" | "POST" | "PATCH"): Promise<void>;
-    // save(url?: string, options?: { fetch: Function }): Promise<void>;
+    getSynchronizedResourceUrl(): string;
+
+    //save(url?: string, methodHint?: "PUT" | "POST" | "PATCH"): Promise<void>;
+    synchronize(resource?: string, options?: { fetch: Function, methodHint?: "PUT" | "POST" | "PATCH" }): Promise<void>;
+
+    //toCanonical(): any;
     
     /*
     clone(): Semanticable;

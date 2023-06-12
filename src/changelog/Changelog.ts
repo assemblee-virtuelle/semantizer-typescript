@@ -36,11 +36,11 @@ export default class Changelog {
             // sinon on l'enregistre
         }
 
-        else if (change instanceof SetCommand) {
+        //else if (change instanceof SetCommand) {
             // s'il existe déjà un set avec la même valeur, on ne fait rien
             // s'il existe déjà un add pour la même propriété mais de valeur différente, on le remplace avec la nouvelle valeur
             // sinon on l'ajoute en tant que set
-        }
+        //}
     }
 
 }
