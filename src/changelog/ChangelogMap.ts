@@ -18,7 +18,6 @@ export default class ChangelogMap<Key, Value> implements Changelogable<Key, Valu
 
     // TODO: get the last change without regarding its type
     public getLastChange(key: Key): Value | undefined {
-        console.log(key);
         if (!this._changes.has(key))
             throw new Error(`There is no change corresponding to the provided key: ${key}.`);
             

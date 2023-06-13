@@ -1,11 +1,20 @@
+import IdGeneratorInterface from "./IdGeneratorInterface";
 import StoreInterface from "./StoreInterface";
 
 export default class StoreMap<Key, Value> implements StoreInterface<Key, Value> {
 
     private storeObject: Map<Key, Value>;
+    private idGenerator: IdGeneratorInterface<Key>;
 
-    public constructor() {
+    public constructor(idGenerator: IdGeneratorInterface<Key>) {
         this.storeObject = new Map<Key, Value>();
+        this.idGenerator = idGenerator;
+    }
+
+    public add<T extends Value>(value: T): Key {
+        const id = this.idGenerator.generate();
+        this.set(id, value);
+        return id;
     }
 
     public async get<T extends Value>(key: Key): Promise<T | undefined> {

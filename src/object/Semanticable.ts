@@ -45,7 +45,7 @@ export default interface Semanticable {
     removeSemanticProperty<T>(name: string, value: T): void;
     
     //getSemanticId(): string;
-    getSemanticProperty<T>(name: string): Promise<T | undefined>;
+    getSemanticProperty<T>(name: string): Promise<T | Semanticable | undefined>;
 
     getStore(): StoreInterfaceSemanticable;
     getChangelog(): Changelogable<string, SemanticableCommand<SemanticPropertyInterface<any>>>;

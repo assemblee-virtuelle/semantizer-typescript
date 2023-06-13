@@ -1,10 +1,11 @@
 import Semanticable from "../object/Semanticable";
 import StoreMap from "./StoreMap.js";
+import IdGenerator from "./IdGenerator.js";
 
 export default class StoreMapSemanticable extends StoreMap<string, Semanticable> {
 
     public constructor() {
-        super();
+        super(new IdGenerator());
     }
 
     public setSemanticable<T extends Semanticable>(semanticObject: T): void {

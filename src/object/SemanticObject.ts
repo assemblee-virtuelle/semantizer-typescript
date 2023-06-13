@@ -62,9 +62,8 @@ export default abstract class SemanticObject implements Semanticable {
     public constructor(parameters: {store: StoreInterfaceSemanticable, other: Semanticable});
     public constructor(parameters: {store: StoreInterfaceSemanticable, other?: Semanticable}) {
         this._store = parameters.store;
-        this._synchronizedResource = "local://1";
         this._changelog = new ChangelogProxy(new ChangelogMap());
-        this._store.set(this._synchronizedResource, this);
+        this._synchronizedResource = this._store.add(this);
     }
 
     protected isInternal(): boolean {
@@ -86,7 +85,8 @@ export default abstract class SemanticObject implements Semanticable {
     }
 
     private toPropertyUrlIfNeeded<T>(property: SemanticPropertyInterface<T>): SemanticPropertyInterface<T | URL> {
-        return property.isReference()? this.createPropertyUrl(<SemanticPropertyInterface<Semanticable>> property): property;
+        const isSemanticable: boolean = property.getValue() instanceof Object && 'addSemanticProperty' in <Object> property.getValue();
+        return isSemanticable? this.createPropertyUrl(<SemanticPropertyInterface<Semanticable>> property): property;
     }
 
     public createAddCommand<T>(name: string, value: T): SemanticableCommand<SemanticPropertyInterface<T | URL>> {
@@ -136,19 +136,20 @@ export default abstract class SemanticObject implements Semanticable {
         return this.getSemanticPropertyLastChange<T>(name)?.getTarget();
     }
 
-    public async getSemanticPropertyLastChangeValue<T>(name: string): Promise<T | undefined> {
+    public async getSemanticPropertyLastChangeValue<T>(name: string): Promise<T | Semanticable | undefined> {
         const property = this.getSemanticPropertyLastChangeTarget<T>(name);
         return property? this.mayDereferencePropertyValue<T>(property): undefined;
     }
 
     // TODO: query the store
-    public async mayDereferencePropertyValue<T>(property: SemanticPropertyInterface<T>): Promise<T> {
-        return property.isReference()? property.getValue(): property.getValue();
+    public async mayDereferencePropertyValue<T>(property: SemanticPropertyInterface<T>): Promise<T | Semanticable | undefined> {
+        const value = property.getValue();
+        return property.isReference()? this.getStore().get((<URL> value).toString()): value;
     }
 
     // getSemanticProperty<Semanticable> => dereference the object and return it
     // getSemanticProperty<Semanticable> => URL
-    public async getSemanticProperty<T>(name: string): Promise<T | undefined> {
+    public async getSemanticProperty<T>(name: string): Promise<T | Semanticable | undefined> {
         return await this.getSemanticPropertyLastChangeValue<T>(name);
     }
 
