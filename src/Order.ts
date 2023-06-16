@@ -1,4 +1,3 @@
-import { Thing } from "@inrupt/solid-client";
 import SemanticObjectInrupt from "../../semantizer-typescript-solid/src/SemanticObjectInrupt";
 import SemanticObject from "./object/SemanticObject";
 import Semanticable from "./object/Semanticable";
@@ -7,7 +6,7 @@ import StoreMapSemanticable from "./store/StoreMapSemanticable";
 
 export default class Order extends SemanticObjectInrupt {
 
-    constructor(parameters: { store: StoreInterface<string, Semanticable>, initialState?: Thing }) {
+    constructor(parameters: { store: StoreInterface<string, Semanticable> }) {
         super({ store: parameters.store });
     }
 /*

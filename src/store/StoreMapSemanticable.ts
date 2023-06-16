@@ -9,7 +9,7 @@ export default class StoreMapSemanticable extends StoreMap<string, Semanticable>
     }
 
     public setSemanticable<T extends Semanticable>(semanticObject: T): void {
-        const semanticId: string = semanticObject.getSynchronizedResourceUrl();
+        const semanticId: string = ""; //semanticObject.getSynchronizedResourceUrl();
         if (semanticId !== "")
             super.set(semanticId, semanticObject);
     }

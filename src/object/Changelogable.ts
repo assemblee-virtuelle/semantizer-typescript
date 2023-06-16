@@ -1,9 +1,9 @@
 import ChangeKeeper from "../changelog/ChangeKeeper";
 import SemanticPropertyInterface from "../property/SemanticPropertyInterface";
-import SemanticableCommand from "./SemanticableCommand";
+import CommandWithTarget from "../command/CommandWithTarget";
 
 export default interface Changelogable {
 
-    getChangelog(): ChangeKeeper<string, SemanticableCommand<SemanticPropertyInterface<any>>>;
+    getChangelog(): ChangeKeeper<string, CommandWithTarget<SemanticPropertyInterface<any>>>;
 
 }

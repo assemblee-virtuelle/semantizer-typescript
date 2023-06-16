@@ -1,13 +1,17 @@
-import SemanticableCommand from "../../object/SemanticableCommand";
+import Command from "./Command";
 
-export default abstract class SemanticPropertyCommand<T> implements SemanticableCommand<T> {
+export default abstract class CommandWithTarget<T> implements Command {
     
-    private property: T;
+    private target: T;
     private datetime: Date;
 
     constructor(property: T) {
-        this.property = property;
+        this.target = property;
         this.datetime = new Date();
+    }
+
+    public getName(): string {
+        throw new Error("Method not implemented.");
     }
 
     public getDate(): Date {
@@ -15,7 +19,7 @@ export default abstract class SemanticPropertyCommand<T> implements Semanticable
     }
 
     public getTarget(): T {
-        return this.property;
+        return this.target;
     }
 
     public execute(): void {

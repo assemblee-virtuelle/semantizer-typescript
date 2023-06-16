@@ -20,6 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import SemanticPropertyInterface from "../property/SemanticPropertyInterface";
+
 /**
  * The Semanticable interface is the way to define semantic objects that 
  * contain semantic properties (Propertyable). The properties of a 
@@ -35,7 +37,8 @@ SOFTWARE.
 export default interface Semanticable {
 
     addSemanticProperty<T>(name: string, value: T): void;
-    getSemanticProperty<T>(name: string): Promise<T | Semanticable | undefined>;
+    getSemanticProperty<T>(name: string): SemanticPropertyInterface<T> | undefined;
+    getSemanticPropertyValue<T>(name: string): Promise<T | Semanticable | undefined>;
     removeSemanticProperty<T>(name: string, value: T): void;
     setSemanticProperty<T>(name: string, value: T): void;
 
