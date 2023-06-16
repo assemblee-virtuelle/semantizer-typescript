@@ -1,4 +1,4 @@
-import Changelogable from "./Changelogable";
+import Changelogable from "./ChangeKeeper";
 
 export default class ChangelogProxy<Key, Value> implements Changelogable<Key, Value> {
 

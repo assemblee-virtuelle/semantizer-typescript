@@ -2,17 +2,40 @@ import SemanticObject from '../lib/object/SemanticObject.js';
 import SemanticProperty from '../lib/property/SemanticProperty.js';
 import StoreMapSemanticable from '../lib/store/StoreMapSemanticable.js';
 
-test('get semantic property literal', async () => {
+test('semantic property string', async () => {
     const store = new StoreMapSemanticable();
-    const semanticObject = new SemanticObject({store: store});
-    semanticObject.addSemanticProperty("rdfs:type", "Person");
-    semanticObject.addSemanticProperty("dfc:name", "Jean");
 
-    expect(await semanticObject.getSemanticProperty("rdfs:type")).toStrictEqual("Person");
-    expect(await semanticObject.getSemanticProperty("dfc:name")).toStrictEqual("Jean");
+    const semanticObject = new SemanticObject({store: store});
+    semanticObject.addSemanticProperty("prop1", "Person");
+    semanticObject.addSemanticProperty("prop2", "Jean");
+
+    expect(await semanticObject.getSemanticProperty("prop1")).toStrictEqual("Person");
+    expect(await semanticObject.getSemanticProperty("prop2")).toStrictEqual("Jean");
 });
 
-test('get semantic property reference', async () => {
+test('semantic property boolean', async () => {
+    const store = new StoreMapSemanticable();
+
+    const semanticObject = new SemanticObject({store: store});
+    semanticObject.addSemanticProperty("prop1", true);
+    semanticObject.addSemanticProperty("prop2", false);
+
+    expect(await semanticObject.getSemanticProperty("prop1")).toStrictEqual(true);
+    expect(await semanticObject.getSemanticProperty("prop2")).toStrictEqual(false);
+});
+
+test('semantic property number', async () => {
+    const store = new StoreMapSemanticable();
+
+    const semanticObject = new SemanticObject({store: store});
+    semanticObject.addSemanticProperty("prop1", 1);
+    semanticObject.addSemanticProperty("prop2", 2);
+
+    expect(await semanticObject.getSemanticProperty("prop1")).toStrictEqual(1);
+    expect(await semanticObject.getSemanticProperty("prop2")).toStrictEqual(2);
+});
+
+test('semantic property reference', async () => {
     const store = new StoreMapSemanticable();
 
     const referenced = new SemanticObject({store: store});

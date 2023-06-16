@@ -29,4 +29,8 @@ export default class StoreMap<Key, Value> implements StoreInterface<Key, Value> 
         this.storeObject.set(key, value);
     }
 
+    public unset<T extends Value>(key: Key): boolean {
+        return this.storeObject.delete(key);
+    }
+
 }

@@ -1,6 +1,6 @@
-import Changelogable from "./Changelogable";
+import ChangeKeeper from "./ChangeKeeper";
 
-export default class ChangelogMap<Key, Value> implements Changelogable<Key, Value> {
+export default class ChangelogMap<Key, Value> implements ChangeKeeper<Key, Value> {
 
     private _changes: Map<Key, Value>;
 
@@ -12,7 +12,7 @@ export default class ChangelogMap<Key, Value> implements Changelogable<Key, Valu
         return this._changes.values();
     }
 
-    public clone(): Changelogable<Key, Value> {
+    public clone(): ChangeKeeper<Key, Value> {
         return structuredClone(this);
     }
 

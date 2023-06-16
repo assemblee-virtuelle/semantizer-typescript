@@ -1,5 +1,5 @@
 import { Thing } from "@inrupt/solid-client";
-import SemanticObjectInrupt from "./SemanticObjectInrupt";
+import SemanticObjectInrupt from "../../semantizer-typescript-solid/src/SemanticObjectInrupt";
 import SemanticObject from "./object/SemanticObject";
 import Semanticable from "./object/Semanticable";
 import StoreInterface from "./store/StoreInterface";

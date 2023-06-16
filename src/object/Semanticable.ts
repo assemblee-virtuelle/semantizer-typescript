@@ -20,12 +20,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import { SolidDataset } from '@inrupt/solid-client';
-import SemanticPropertyInterface from '../property/SemanticPropertyInterface';
-import Changelogable from '../changelog/Changelogable';
-import SemanticableCommand from './SemanticableCommand';
-import StoreInterfaceSemanticable from '../store/StoreInterfaceSemanticable';
-
 /**
  * The Semanticable interface is the way to define semantic objects that 
  * contain semantic properties (Propertyable). The properties of a 
@@ -41,33 +35,8 @@ import StoreInterfaceSemanticable from '../store/StoreInterfaceSemanticable';
 export default interface Semanticable {
 
     addSemanticProperty<T>(name: string, value: T): void;
-    setSemanticProperty<T>(name: string, value: T): void;
-    removeSemanticProperty<T>(name: string, value: T): void;
-    
-    //getSemanticId(): string;
     getSemanticProperty<T>(name: string): Promise<T | Semanticable | undefined>;
+    removeSemanticProperty<T>(name: string, value: T): void;
+    setSemanticProperty<T>(name: string, value: T): void;
 
-    getStore(): StoreInterfaceSemanticable;
-    getChangelog(): Changelogable<string, SemanticableCommand<SemanticPropertyInterface<any>>>;
-
-    getSynchronizedResourceUrl(): string;
-
-    //save(url?: string, methodHint?: "PUT" | "POST" | "PATCH"): Promise<void>;
-    synchronize(resource?: string, options?: { fetch: Function, methodHint?: "PUT" | "POST" | "PATCH" }): Promise<void>;
-
-    //toCanonical(): any;
-    
-    /*
-    clone(): Semanticable;
-    equals(other: Semanticable): boolean;
-
-    getSize(): number;
-
-    hasSameProperties(other: Semanticable): boolean;
-    hasSemanticProperty(property: string): boolean;
-
-    isSemanticObjectAnonymous(): boolean;
-    isSemanticSameTypeOf(other: Semanticable): boolean;
-    isSemanticTypeOf(type: string): boolean;
-    */
 }

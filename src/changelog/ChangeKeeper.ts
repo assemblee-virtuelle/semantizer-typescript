@@ -1,4 +1,4 @@
-export default interface Changelogable<Key, Value> {
+export default interface ChangeKeeper<Key, Value> {
 
     getChanges(): IterableIterator<Value>;
     getLastChange(key: Key): Value | undefined;
@@ -9,6 +9,6 @@ export default interface Changelogable<Key, Value> {
     //count(): number;
     //isEmpty(): boolean;
 
-    clone(): Changelogable<Key, Value>;
+    clone(): ChangeKeeper<Key, Value>;
 
 }

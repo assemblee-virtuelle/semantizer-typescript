@@ -21,10 +21,9 @@ SOFTWARE.
 */
 
 import AddCommand from '../property/command/AddCommand.js';
-import Changelogable from '../changelog/Changelogable.js';
+import Changelogable from './Changelogable.js';
 import SemanticPropertyInterface from '../property/SemanticPropertyInterface.js';
 import Semanticable from './Semanticable.js';
-import { SolidDataset, createSolidDataset, getThing, addUrl, Url } from '@inrupt/solid-client';
 import SemanticableCommand from './SemanticableCommand.js';
 import SemanticProperty from '../property/SemanticProperty.js';
 import ChangelogProxy from '../changelog/ChangelogProxy.js';
@@ -32,6 +31,11 @@ import ChangelogMap from '../changelog/ChangelogMap.js';
 import StoreInterfaceSemanticable from '../store/StoreInterfaceSemanticable';
 import SetCommand from '../property/command/SetCommand.js';
 import RemoveCommand from '../property/command/RemoveCommand.js';
+import Publisher from '../common/Publisher.js';
+import Subscriber from '../common/Subscriber.js';
+import Synchronizable from './Synchronizable.js';
+import Browsable from './Browsable.js';
+import ChangeKeeper from '../changelog/ChangeKeeper.js';
 
 /**
  * The SemanticObject class is the base implementation of the Semanticable 
@@ -43,17 +47,21 @@ import RemoveCommand from '../property/command/RemoveCommand.js';
  * @see The Propertyable interface.
  * @see The registerSemanticProperty() method.
  */
-export default abstract class SemanticObject implements Semanticable {
 
+type SemanticPropertyType<T> = SemanticPropertyInterface<T> & Subscriber;
+
+export default abstract class SemanticObject implements Semanticable, Publisher, Browsable, Changelogable, Synchronizable {
+    
     private _synchronizedResource: string;
     private _store: StoreInterfaceSemanticable;
-    private _changelog: Changelogable<string, SemanticableCommand<SemanticPropertyInterface<any>>>;
+    private _changelog: ChangeKeeper<string, SemanticableCommand<SemanticPropertyType<any>>>;
+    private _subscribers: Set<Subscriber>;
     
     // resource info
-    //private _semanticId: string; 
     private _lastSynchro: string = "datetime";
 
     public constructor(parameters: {store: StoreInterfaceSemanticable});
+    
     /**
      * Create a new SemanticObject from an other (copy constructor).
      * The semanticId will be overrided by the one passed as a parameter.
@@ -63,43 +71,69 @@ export default abstract class SemanticObject implements Semanticable {
     public constructor(parameters: {store: StoreInterfaceSemanticable, other?: Semanticable}) {
         this._store = parameters.store;
         this._changelog = new ChangelogProxy(new ChangelogMap());
-        this._synchronizedResource = this._store.add(this);
+        this._synchronizedResource = this.getStore().add(this);
+        this._subscribers = new Set();
+    }
+
+    public getSubscribers(): Set<Subscriber> {
+        return this._subscribers;
+    }
+
+    public subscribe(subscriber: Subscriber): void {
+        this.getSubscribers().add(subscriber);
+    }
+    
+    public unsubscribe(subscriber: Subscriber): void {
+        this.getSubscribers().delete(subscriber);
+    }
+    
+    public notifySubscribers(): void {
+        this.getSubscribers().forEach(subscriber => subscriber.update());
     }
 
     protected isInternal(): boolean {
-        return this._synchronizedResource.startsWith("local");
+        return this.getSynchronizedResourceUrl().startsWith("local");
     }
 
-    protected registerChange(command: SemanticableCommand<SemanticPropertyInterface<any>>): void {
+    public isStored(): boolean {
+        return this.getStore().has(this.getSynchronizedResourceUrl());
+    }
+
+    protected registerChange(command: SemanticableCommand<SemanticPropertyType<any>>): void {
         const property = command.getTarget();
         this.getChangelogInternal().registerChange(property.getName(), command);
     }
 
-    public createProperty<T>(name: string, value: T): SemanticPropertyInterface<T> {
+    public createProperty<T>(name: string, value: T): SemanticPropertyType<T> {
         return new SemanticProperty<T>(name, value);
     }
 
-    public createPropertyUrl(property: SemanticPropertyInterface<Semanticable>): SemanticPropertyInterface<URL> {
+    public createPropertyUrl(property: SemanticPropertyType<Semanticable>): SemanticPropertyType<URL> {
         const url = new URL(property.getValue().getSynchronizedResourceUrl());
         return this.createProperty<URL>(property.getName(), url);
     }
 
-    private toPropertyUrlIfNeeded<T>(property: SemanticPropertyInterface<T>): SemanticPropertyInterface<T | URL> {
-        const isSemanticable: boolean = property.getValue() instanceof Object && 'addSemanticProperty' in <Object> property.getValue();
-        return isSemanticable? this.createPropertyUrl(<SemanticPropertyInterface<Semanticable>> property): property;
+    public bindToPropertyUrl(property: SemanticPropertyType<URL>): SemanticPropertyType<URL> {
+        this.subscribe(property);
+        return property;
     }
 
-    public createAddCommand<T>(name: string, value: T): SemanticableCommand<SemanticPropertyInterface<T | URL>> {
+    private toPropertyUrlIfNeeded<T>(property: SemanticPropertyType<T>): SemanticPropertyType<T | URL> {
+        const isSemanticable: boolean = property.getValue() instanceof Object && 'addSemanticProperty' in <Object> property.getValue();
+        return isSemanticable? this.bindToPropertyUrl(this.createPropertyUrl(<SemanticPropertyType<Semanticable>> property)): property;
+    }
+
+    public createAddCommand<T>(name: string, value: T): SemanticableCommand<SemanticPropertyType<T | URL>> {
         const property = this.toPropertyUrlIfNeeded<T>(this.createProperty<T>(name, value));
         return new AddCommand<typeof property>(property);
     }
 
-    public createSetCommand<T>(name: string, value: T): SemanticableCommand<SemanticPropertyInterface<T | URL>> {
+    public createSetCommand<T>(name: string, value: T): SemanticableCommand<SemanticPropertyType<T | URL>> {
         const property = this.toPropertyUrlIfNeeded<T>(this.createProperty<T>(name, value));
         return new SetCommand<typeof property>(property);
     }
 
-    public createRemoveCommand<T>(name: string, value: T): SemanticableCommand<SemanticPropertyInterface<T | URL>> {
+    public createRemoveCommand<T>(name: string, value: T): SemanticableCommand<SemanticPropertyType<T | URL>> {
         const property = this.toPropertyUrlIfNeeded<T>(this.createProperty<T>(name, value));
         return new RemoveCommand<typeof property>(property);
     }
@@ -116,11 +150,11 @@ export default abstract class SemanticObject implements Semanticable {
         this.registerChange(this.createRemoveCommand<T>(name, value));
     }
 
-    public getChangelogInternal(): Changelogable<string, SemanticableCommand<SemanticPropertyInterface<any>>> {
+    public getChangelogInternal(): ChangeKeeper<string, SemanticableCommand<SemanticPropertyType<any>>> {
         return this._changelog;
     }
 
-    public getChangelog(): Changelogable<string, SemanticableCommand<SemanticPropertyInterface<any>>> {
+    public getChangelog(): ChangeKeeper<string, SemanticableCommand<SemanticPropertyType<any>>> {
         return this.getChangelogInternal().clone();
     }
 
@@ -128,11 +162,19 @@ export default abstract class SemanticObject implements Semanticable {
         return this._store;
     }
 
-    public getSemanticPropertyLastChange<T>(name: string): SemanticableCommand<SemanticPropertyInterface<T>> | undefined {
+    public getFromStore(name: string): Promise<Semanticable | undefined> {
+        return this.getStore().get(name);
+    }
+
+    public store(name: string, value: Semanticable): void {
+        this.getStore().set(name, value);
+    }
+
+    public getSemanticPropertyLastChange<T>(name: string): SemanticableCommand<SemanticPropertyType<T>> | undefined {
         return this.getChangelogInternal().getLastChange(name);
     }
 
-    public getSemanticPropertyLastChangeTarget<T>(name: string): SemanticPropertyInterface<T> | undefined {
+    public getSemanticPropertyLastChangeTarget<T>(name: string): SemanticPropertyType<T> | undefined {
         return this.getSemanticPropertyLastChange<T>(name)?.getTarget();
     }
 
@@ -141,14 +183,11 @@ export default abstract class SemanticObject implements Semanticable {
         return property? this.mayDereferencePropertyValue<T>(property): undefined;
     }
 
-    // TODO: query the store
-    public async mayDereferencePropertyValue<T>(property: SemanticPropertyInterface<T>): Promise<T | Semanticable | undefined> {
+    public async mayDereferencePropertyValue<T>(property: SemanticPropertyType<T>): Promise<T | Semanticable | undefined> {
         const value = property.getValue();
-        return property.isReference()? this.getStore().get((<URL> value).toString()): value;
+        return property.isReference()? this.getFromStore((<URL> value).toString()): value;
     }
 
-    // getSemanticProperty<Semanticable> => dereference the object and return it
-    // getSemanticProperty<Semanticable> => URL
     public async getSemanticProperty<T>(name: string): Promise<T | Semanticable | undefined> {
         return await this.getSemanticPropertyLastChangeValue<T>(name);
     }
@@ -157,39 +196,35 @@ export default abstract class SemanticObject implements Semanticable {
         return this._synchronizedResource;
     }
 
-    // apply changes and write to storage
-    public async synchronize(resource?: string, options?: { fetch: Function, methodHint?: "PUT" | "POST" | "PATCH" }): Promise<void> {
-        // TODO: prévoir une stratégie qui donne une commande
-        // + une chaine de responsabilité par exemple pour stopper la chaine s'il n'y a pas de réseau (offline) ou pour 
-        // permettre des stratégie de synchronisation plus économiques en terme de réseau (fusion de +sieurs commandes de syncrho).
-        if (resource) {
-            // If the resource was never synchronized before
-            if (this.isInternal()) {
-                const isStored: boolean = false; // check if we aleready have the resource in the store. 
-                
-                // The resource exists, we want an update
-                if (isStored) {
-                    // we load the resource and we apply changes before to send an update.
-                }
-
-                else {
-                    // we try to create the resource
-                    
-                    // if the resource is already existing, il faut résoudre le conflit
-                }
-            }
-
-            // We want an update
-            else {
-                // if the resource does not exist (it was deleted) we add it.
-            }
+    private setSynchronizedResourceUrl(url: string): void {
+        if (url !== this.getSynchronizedResourceUrl()) {
+            const oldUrl = this.getSynchronizedResourceUrl();
+            this._synchronizedResource = url;
+            this.store(url, this);
+            this.notifySubscribers();
+            this.removeFromStore(oldUrl);
         }
-
-        await this.saveTemplateMethod(resource, options); // can throws
-        this._store.set(this.getSynchronizedResourceUrl(), this);
     }
 
-    protected abstract saveTemplateMethod(resource?: string, options?: { fetch: Function, methodHint?: "PUT" | "POST" | "PATCH" }): Promise<string>;
+    public removeFromStore(name: string): boolean {
+        return this.getStore().unset(name);
+    }
+
+    private handleSynchronizeSuccess(result: string) {
+        this.setSynchronizedResourceUrl(result);
+    }
+
+    private handleSynchronizeFail(error: string) {
+        
+    }
+
+    public async synchronize(resource?: string, options?: { fetch: Function, methodHint?: "PUT" | "POST" | "PATCH" }): Promise<void> {
+        await this.handleSynchronize(resource, options)
+            .then(result => this.handleSynchronizeSuccess(result))
+            .catch(error => this.handleSynchronizeFail(error));
+    }
+
+    protected abstract handleSynchronize(resource?: string, options?: { fetch: Function, methodHint?: "PUT" | "POST" | "PATCH" }): Promise<string>;
 
     /*
 
