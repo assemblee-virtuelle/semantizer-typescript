@@ -1,13 +1,7 @@
-import SemanticObject from '../lib/object/SemanticObject.js';
-import SemanticProperty from '../lib/property/SemanticProperty.js';
-import StoreMapSemanticable from '../lib/store/StoreMapSemanticable.js';
+import SemanticObjectMap from '../lib/object/SemanticObjectMap.js';
 
-const store = new StoreMapSemanticable();
+const semanticObject = new SemanticObjectMap();
 
-const referenced = new SemanticObject({store: store});
-referenced.addSemanticProperty("name", "value");
+semanticObject.addSemanticProperty("prop1", "Person");
 
-const reference = new SemanticObject({store: store});
-reference.addSemanticProperty("reference", referenced);
-
-console.log(await reference.getSemanticProperty("reference"));
+console.log(await semanticObject.getSemanticPropertyValue("prop1"));

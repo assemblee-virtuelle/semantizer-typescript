@@ -1,21 +1,20 @@
-import Command from "../command/Command";
-import CommandWithTarget from "../command/CommandWithTarget";
+import CommandWithTarget from "../command/CommandWithTarget.js";
+import GetCommand from "../command/GetCommand.js";
 import SemanticPropertyInterface from "../property/SemanticPropertyInterface";
 import Handler from "./Handler";
-import HandlerBase from "./HandlerBase";
+import HandlerBase from "./HandlerBase.js";
 
 export default class SemanticPropertyMapGetter extends HandlerBase<string> {
 
-    private dataset: Map<string, string>;
-
-    constructor(dataset: Map<string, string>, nextHandler: Handler<string> | undefined = undefined) {
+    constructor(nextHandler: Handler<string> | undefined = undefined) {
         super(nextHandler);
-        this.dataset = dataset;
     }
 
-    public handle(command: CommandWithTarget<SemanticPropertyInterface<any>>): string | undefined {
-        if (command.getName() === 'getSemanticProperty')
-            return this.dataset.get(command.getTarget().getName());
+    public handle(command: GetCommand): string | undefined {
+        if (command.getName() === 'GET_SEMANTIC_PROPERTY') {
+            command.execute();
+            return command.getResult();
+        }
         else return super.handle(command);
     }
 

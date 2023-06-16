@@ -1,10 +1,10 @@
-import Changelogable from "./ChangeKeeper";
+import ChangeKeeper from "./ChangeKeeper";
 
-export default class ChangelogProxy<Key, Value> implements Changelogable<Key, Value> {
+export default class ChangelogProxy<Key, Value> implements ChangeKeeper<Key, Value> {
 
-    private _changelog: Changelogable<Key, Value>;
+    private _changelog: ChangeKeeper<Key, Value>;
 
-    constructor(changelog: Changelogable<Key, Value>) {
+    constructor(changelog: ChangeKeeper<Key, Value>) {
         this._changelog = changelog;
     }
 
@@ -12,7 +12,7 @@ export default class ChangelogProxy<Key, Value> implements Changelogable<Key, Va
         return this._changelog.getChanges();
     }
 
-    clone(): Changelogable<Key, Value> {
+    clone(): ChangeKeeper<Key, Value> {
         return this._changelog.clone();
     }
 

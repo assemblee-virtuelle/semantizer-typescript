@@ -10,9 +10,7 @@ export default abstract class CommandWithTarget<T> implements Command {
         this.datetime = new Date();
     }
 
-    public getName(): string {
-        throw new Error("Method not implemented.");
-    }
+    public abstract getName(): string;
 
     public getDate(): Date {
         return this.datetime;

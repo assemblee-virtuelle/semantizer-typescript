@@ -1,13 +1,13 @@
-import SemanticObjectInrupt from "../../semantizer-typescript-solid/src/SemanticObjectInrupt";
+//import SemanticObjectInrupt from "../../semantizer-typescript-solid/src/SemanticObjectInrupt";
 import SemanticObject from "./object/SemanticObject";
 import Semanticable from "./object/Semanticable";
 import StoreInterface from "./store/StoreInterface";
 import StoreMapSemanticable from "./store/StoreMapSemanticable";
 
-export default class Order extends SemanticObjectInrupt {
+export default class Order /*extends SemanticObjectInrupt*/ {
 
     constructor(parameters: { store: StoreInterface<string, Semanticable> }) {
-        super({ store: parameters.store });
+        //super({ store: parameters.store });
     }
 /*
     public async getOrderedBy(): Promise<Agent> {
