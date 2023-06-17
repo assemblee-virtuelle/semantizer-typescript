@@ -1,6 +1,6 @@
 //import SemanticObjectInrupt from "../../semantizer-typescript-solid/src/SemanticObjectInrupt";
-import SemanticObject from "./object/SemanticObject";
-import Semanticable from "./object/Semanticable";
+import SemanticObject from "./core/SemanticObject";
+import Semanticable from "./core/Semanticable";
 import StoreInterface from "./store/StoreInterface";
 import StoreMapSemanticable from "./store/StoreMapSemanticable";
 

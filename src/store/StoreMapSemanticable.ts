@@ -1,4 +1,4 @@
-import Semanticable from "../object/Semanticable";
+import Semanticable from "../core/Semanticable";
 import StoreMap from "./StoreMap.js";
 import IdGenerator from "./IdGenerator.js";
 

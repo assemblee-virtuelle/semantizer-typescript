@@ -20,7 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import SemanticPropertyInterface from "../property/SemanticPropertyInterface";
+import SemanticPropertyInterface from "./SemanticPropertyInterface";
 
 /**
  * The Semanticable interface is the way to define semantic objects that 

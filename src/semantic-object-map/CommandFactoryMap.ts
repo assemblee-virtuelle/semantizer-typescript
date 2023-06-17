@@ -17,22 +17,18 @@ export default class CommandFactoryMap implements CommandFactory<string | undefi
 
     public createCommandToAddSemanticProperty<T>(name: string, value: T): Command<void> {
         return new CommandBase('ADD', () => this.getMap().set(name, value!.toString()));
-        //return new AddCommand(this.getMap(), name, value!.toString());
     }
 
     public createCommandToGetSemanticProperty(name: string): Command<string | undefined> {
         return new CommandBase('GET', () => this.getMap().get(name));
-        //return new CommandGet(this.getMap(), name);
     }
 
     public createCommandToSetSemanticProperty<T>(name: string, value: T): Command<void> {
         return new CommandBase('SET', () => this.getMap().set(name, value!.toString()));
-        //return new SetCommand(this.getMap(), name, value!.toString());
     }
 
     public createCommandToRemoveSemanticProperty<T>(name: string, value: T): Command<void> {
         return new CommandBase('RMV', () => this.getMap().unset(name));
-        //return new RemoveCommand(this.getMap(), name);
     }
 
 }

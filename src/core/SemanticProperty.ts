@@ -1,4 +1,4 @@
-import Subscriber from "../common/Subscriber";
+import Subscriber from "../notification/Subscriber";
 import SemanticPropertyInterface from "./SemanticPropertyInterface";
 
 export default class SemanticProperty<T> implements SemanticPropertyInterface<T>, Subscriber {

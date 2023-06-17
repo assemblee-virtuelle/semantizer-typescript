@@ -1,5 +1,4 @@
-import SemanticObjectMap from '../lib/object/SemanticObjectMap.js';
-import StoreMapSemanticable from '../lib/store/StoreMapSemanticable.js';
+import SemanticObjectMap from '../lib/semantic-object-map/SemanticObjectMap.js';
 
 test('semantic property string', async () => {
     const semanticObject = new SemanticObjectMap();

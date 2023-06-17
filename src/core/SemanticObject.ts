@@ -21,8 +21,8 @@ SOFTWARE.
 */
 
 import Semanticable from './Semanticable.js';
-import SemanticPropertyInterface from '../property/SemanticPropertyInterface.js';
-import Handler from '../handler/Handler.js';
+import SemanticPropertyInterface from './SemanticPropertyInterface.js';
+import Handler from './Handler.js';
 import Command from '../command/Command.js';
 import CommandFactory from '../command/CommandFactory.js';
 

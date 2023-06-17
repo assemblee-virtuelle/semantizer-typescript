@@ -1,4 +1,4 @@
-import Handler from "../handler/Handler";
+import Handler from "./Handler";
 import CommandFactory from "../command/CommandFactory";
 import SemanticObject from "./SemanticObject.js";
 
