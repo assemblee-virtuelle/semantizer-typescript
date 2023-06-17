@@ -14,6 +14,14 @@ export default abstract class HandlerAbstract<T> implements Handler<T> {
             return this._nextHandler.handle(command);
     }
 
+    public getNext(): Handler<any> | undefined {
+        return this._nextHandler;
+    }
+
+    public hasNext(): boolean {
+        return this.getNext() !== undefined;
+    }
+
     public setNext(handler: Handler<T>): void {
         this._nextHandler = handler;
     }

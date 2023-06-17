@@ -1,8 +1,8 @@
-import Handler from "./Handler";
-import Command from "./Command";
-import HandlerAbstract from "./HandlerAbstract.js";
+import Handler from "../core/Handler";
+import Command from "../core/Command";
+import HandlerAbstract from "../core/HandlerAbstract.js";
 
-export default class HandlerBase<T> extends HandlerAbstract<T> {
+export default class HandlerDefault<T> extends HandlerAbstract<T> {
 
     private _executor: Function;
 

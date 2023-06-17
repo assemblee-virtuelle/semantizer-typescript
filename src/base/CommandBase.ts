@@ -1,4 +1,4 @@
-import Command from "./Command";
+import Command from "../core/Command";
 
 export default class CommandBase<T> implements Command<T> {
 

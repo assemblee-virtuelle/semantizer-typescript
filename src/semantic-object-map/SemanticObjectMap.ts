@@ -1,10 +1,9 @@
-import CommandFactory from "../core/CommandFactory.js";
 import CommandFactoryMap from "./CommandFactoryMap.js";
 import SemanticObjectWithDataset from "../core/SemanticObjectWithDataset.js";
-import HandlerBase from "../core/HandlerBase.js";
-import Command from "../core/Command.js";
 import Handler from "../core/Handler.js";
 import SemanticProperty from "../core/SemanticProperty.js";
+import HandlerFilter from "../handlers/filter/HandlerFilter.js";
+import HandlerFilterStrategyByName from "../handlers/filter/HandlerFilterStrategyByName.js";
 
 type Property = SemanticProperty<any>;
 
@@ -19,23 +18,20 @@ export default class SemanticObjectMap extends SemanticObjectWithDataset<Array<P
     }
 
     protected getDefaultHandlerChainToAddSemanticProperty(): Handler<void> {
-        const executor = (command: Command<any>) => command.getName() === 'ADD'? command.execute(): undefined;
-        return new HandlerBase(executor);
+        return new HandlerFilter<void>(new HandlerFilterStrategyByName<void>(['ADD'], 'ACCEPT_AND_CONTINUE'));
     }
 
     protected getDefaultHandlerChainToGetSemanticProperty(): Handler<string> {
-        const executor = (command: Command<any>) => ['GET', 'GET_ALL'].includes(command.getName()) ? command.execute(): undefined;
-        return new HandlerBase(executor);
+        const strategy = new HandlerFilterStrategyByName<string>(['GET', 'GET_ALL'], 'ACCEPT_AND_CONTINUE');
+        return new HandlerFilter<string>(strategy);
     }
 
     protected getDefaultHandlerChainToSetSemanticProperty(): Handler<void> {
-        const executor = (command: Command<any>) => command.getName() === 'SET'? command.execute(): undefined;
-        return new HandlerBase(executor);
+        return new HandlerFilter<void>(new HandlerFilterStrategyByName<void>(['SET'], 'ACCEPT_AND_CONTINUE'));
     }
 
     protected getDefaultHandlerChainToRemoveSemanticProperty(): Handler<void> {
-        const executor = (command: Command<any>) => command.getName() === 'RMV'? command.execute(): undefined;
-        return new HandlerBase(executor);
+        return new HandlerFilter<void>(new HandlerFilterStrategyByName<void>(['RMV'], 'ACCEPT_AND_CONTINUE'));
     }
 
     private findIndex<T>(name: string, value: T): number {

@@ -1,8 +1,8 @@
 import Command from "../core/Command.js";
-import CommandBase from "../core/CommandBase.js";
+import CommandBase from "../base/CommandBase.js";
 import CommandFactory from "../core/CommandFactory.js";
 import SemanticProperty from "../core/SemanticProperty.js";
-import SemanticPropertyBase from "../core/SemanticPropertyBase.js";
+import SemanticPropertyBase from "../base/SemanticPropertyBase.js";
 import SemanticObjectMap from "./SemanticObjectMap.js";
 
 export default class CommandFactoryMap implements CommandFactory<SemanticProperty<any> | undefined> {
