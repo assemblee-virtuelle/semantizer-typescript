@@ -1,6 +1,6 @@
 import SemanticPropertyMapAdder from "./SemanticPropertyMapAdder.js";
 import SemanticPropertyMapGetter from "./SemanticPropertyMapGetter.js";
-import CommandFactory from "../command/CommandFactory.js";
+import CommandFactory from "../core/CommandFactory.js";
 import CommandFactoryMap from "./CommandFactoryMap.js";
 import SemanticObjectWithDataset from "../core/SemanticObjectWithDataset.js";
 

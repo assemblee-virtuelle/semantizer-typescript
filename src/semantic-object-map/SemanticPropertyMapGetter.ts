@@ -1,4 +1,4 @@
-import Command from "../command/Command.js";
+import Command from "../core/Command.js";
 import Handler from "../core/Handler.js";
 import HandlerBase from "../core/HandlerBase.js";
 

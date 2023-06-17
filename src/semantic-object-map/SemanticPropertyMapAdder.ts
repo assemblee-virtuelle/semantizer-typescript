@@ -1,6 +1,6 @@
 import Handler from "../core/Handler.js";
 import HandlerBase from "../core/HandlerBase.js";
-import Command from "../command/Command.js";
+import Command from "../core/Command.js";
 
 export default class SemanticPropertyMapAdder extends HandlerBase<void> {
 

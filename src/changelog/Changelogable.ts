@@ -1,5 +1,5 @@
-import ChangeKeeper from "../changelog/ChangeKeeper";
-import Command from "../command/Command";
+import ChangeKeeper from "./ChangeKeeper";
+import Command from "../core/Command";
 
 export default interface Changelogable {
 

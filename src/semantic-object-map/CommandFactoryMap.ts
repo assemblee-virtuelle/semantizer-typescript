@@ -1,6 +1,6 @@
-import Command from "../command/Command.js";
-import CommandBase from "../command/CommandBase.js";
-import CommandFactory from "../command/CommandFactory.js";
+import Command from "../core/Command.js";
+import CommandBase from "../core/CommandBase.js";
+import CommandFactory from "../core/CommandFactory.js";
 import SemanticObjectMap from "./SemanticObjectMap.js";
 
 export default class CommandFactoryMap implements CommandFactory<string | undefined> {

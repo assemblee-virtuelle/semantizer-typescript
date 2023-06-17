@@ -1,5 +1,5 @@
 import Handler from "./Handler";
-import Command from "../command/Command";
+import Command from "./Command";
 
 export default abstract class HandlerBase<T> implements Handler<T> {
 

@@ -1,4 +1,4 @@
-import Command from "../command/Command";
+import Command from "./Command";
 
 export default interface Handler<T> {
 
