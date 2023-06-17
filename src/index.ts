@@ -15,6 +15,5 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export { default as Semanticable } from './Semanticable';
-export { default as SemanticObject } from './SemanticObject.js';
-export { default as SemanticObjectAnonymous } from './SemanticObjectAnonymous.js';
+export { default as Semanticable } from './core/Semanticable';
+export { default as SemanticObject } from './core/SemanticObject.js';

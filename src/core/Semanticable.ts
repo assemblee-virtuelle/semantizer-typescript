@@ -20,7 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import DatasetExt from 'rdf-ext/lib/Dataset';
+import SemanticProperty from "./SemanticProperty";
 
 /**
  * The Semanticable interface is the way to define semantic objects that 
@@ -36,38 +36,12 @@ import DatasetExt from 'rdf-ext/lib/Dataset';
  */
 export default interface Semanticable {
 
-    addSemanticPropertyReference(property: string, value: Semanticable, replace: boolean): void;
-    addSemanticPropertyLiteral(property: string, value: string | number | boolean, replace: boolean): void;
-    addSemanticPropertyAnonymous(property: string, anonymous: Semanticable, replace: boolean): void;
+    addSemanticProperty<T>(name: string, value: T): void;
+    getSemanticProperty<T>(name: string): SemanticProperty<T> | undefined;
+    getSemanticPropertyAll<T>(name: string): SemanticProperty<T>[];
+    getSemanticPropertyValue<T>(name: string): Promise<T | Semanticable | undefined>;
+    getSemanticPropertyValueAll<T>(name: string): Promise<Array<T | Semanticable>>;
+    removeSemanticProperty<T>(name: string, value: T): void;
+    setSemanticProperty<T>(name: string, oldValue: T, newValue: T): void;
 
-    clone(): Semanticable;
-    equals(other: Semanticable): boolean;
-    
-    getSemanticId(): string;
-    getSemanticType(): string;
-
-    getSemanticProperty(property: string): any;
-    getSemanticPropertyAll(property: string): any[];
-    getSemanticPropertyAnonymous(property: string): DatasetExt;
-    getSemanticPropertyAnonymousAll(property: string): DatasetExt[];
-    
-    getSemanticObjectAnonymous(): any;
-
-    getSize(): number;
-
-    hasSameProperties(other: Semanticable): boolean;
-    hasSemanticProperty(property: string): boolean;
-
-    isSemanticObjectAnonymous(): boolean;
-    isSemanticSameTypeOf(other: Semanticable): boolean;
-    isSemanticTypeOf(type: string): boolean;
-
-    setSemanticPropertyReference(property: string, value: Semanticable): void;
-    setSemanticPropertyLiteral(property: string, value: string | number | boolean): void;
-    setSemanticPropertyAnonymous(property: string, anonymous: Semanticable): void;
-    setSemanticPropertyAllFromRdfDataset(dataset: DatasetExt): void;
-    
-    setSemanticId(id: string): void;
-   
-    toRdfDatasetExt(): DatasetExt;
 }
