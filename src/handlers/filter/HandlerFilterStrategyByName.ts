@@ -34,19 +34,19 @@ export default class HandlerFilterStrategyByName<T> implements HandlerFilterStra
         return ['ACCEPT_AND_CONTINUE', 'REJECT_AND_CONTINUE'].includes(this.getBehavior());
     }
 
-    private match(command: Command<any>): boolean {
+    private match(command: Command<any, any>): boolean {
         return this.getFilteredNames().includes(command.getName());
     }
 
-    private executeCommandIfMatchedAndAccepted(command: Command<any>): T | undefined {
+    private executeCommandIfMatchedAndAccepted(command: Command<any, any>): T | undefined {
         return this.match(command) && this.isAcceptFilter()? command.execute(): undefined;
     }
 
-    private processNextHandlerIfNecessaryOrReturnPassedResult(handler: Handler<any>, command: Command<any>, result: T | undefined): T | undefined {
+    private processNextHandlerIfNecessaryOrReturnPassedResult(handler: Handler<any>, command: Command<any, any>, result: T | undefined): T | undefined {
         return this.continueToProcessChain() && handler.hasNext()? handler.getNext()!.handle(command): result;
     }
 
-    public filter(handler: Handler<any>, command: Command<any>): T | undefined {
+    public filter(handler: Handler<any>, command: Command<any, any>): T | undefined {
         const result = this.executeCommandIfMatchedAndAccepted(command);
         return this.processNextHandlerIfNecessaryOrReturnPassedResult(handler, command, result);
     }

@@ -4,6 +4,7 @@ import Handler from "../core/Handler.js";
 import SemanticProperty from "../core/SemanticProperty.js";
 import HandlerFilter from "../handlers/filter/HandlerFilter.js";
 import HandlerFilterStrategyByName from "../handlers/filter/HandlerFilterStrategyByName.js";
+import HandlerStore from "../handlers/store/HandlerStore.js";
 
 type Property = SemanticProperty<any>;
 
@@ -18,7 +19,8 @@ export default class SemanticObjectMap extends SemanticObjectWithDataset<Array<P
     }
 
     protected getDefaultHandlerChainToAddSemanticProperty(): Handler<void> {
-        return new HandlerFilter<void>(new HandlerFilterStrategyByName<void>(['ADD'], 'ACCEPT_AND_CONTINUE'));
+        const store = new HandlerStore();
+        return new HandlerFilter<void>(new HandlerFilterStrategyByName<void>(['ADD'], 'ACCEPT_AND_CONTINUE'), store);
     }
 
     protected getDefaultHandlerChainToGetSemanticProperty(): Handler<string> {

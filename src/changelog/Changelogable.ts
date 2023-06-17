@@ -3,6 +3,6 @@ import Command from "../core/Command";
 
 export default interface Changelogable {
 
-    getChangelog(): ChangeKeeper<string, Command<any>>;
+    getChangelog(): ChangeKeeper<string, Command<any, any>>;
 
 }

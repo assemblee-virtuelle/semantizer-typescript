@@ -6,12 +6,12 @@ export default class HandlerDefault<T> extends HandlerAbstract<T> {
 
     private _executor: Function;
 
-    constructor(executor: (command: Command<any>) => T | undefined, nextHandler: Handler<T> | undefined = undefined) {
+    constructor(executor: (command: Command<any, any>) => T | undefined, nextHandler: Handler<T> | undefined = undefined) {
         super(nextHandler);
         this._executor = executor;
     }
 
-    public handle(command: Command<any>): T | undefined {
+    public handle(command: Command<any, any>): T | undefined {
         super.handle(command);
         return this._executor(command);
     }

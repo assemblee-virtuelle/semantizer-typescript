@@ -1,6 +1,7 @@
-export default interface Command<T> {
+export default interface Command<Origin, ExecutionResult> {
 
+    getOrigin(): Origin;
     getName(): string;
-    execute(): T;
+    execute(): ExecutionResult;
 
 }

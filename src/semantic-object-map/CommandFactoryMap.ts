@@ -4,8 +4,9 @@ import CommandFactory from "../core/CommandFactory.js";
 import SemanticProperty from "../core/SemanticProperty.js";
 import SemanticPropertyBase from "../base/SemanticPropertyBase.js";
 import SemanticObjectMap from "./SemanticObjectMap.js";
+import Semanticable from "../core/Semanticable.js";
 
-export default class CommandFactoryMap implements CommandFactory<SemanticProperty<any> | undefined> {
+export default class CommandFactoryMap implements CommandFactory<Semanticable, SemanticProperty<any> | undefined> {
 
     private _map: SemanticObjectMap;
 
@@ -21,24 +22,24 @@ export default class CommandFactoryMap implements CommandFactory<SemanticPropert
         return new SemanticPropertyBase<T>(name, value);
     }
 
-    public createCommandToAddSemanticProperty<T>(name: string, value: T): Command<void> {
-        return new CommandBase('ADD', () => this.getMap().add(this.createSemanticProperty<T>(name, value)));
+    public createCommandToAddSemanticProperty<T>(name: string, value: T): Command<Semanticable, void> {
+        return new CommandBase(this.getMap(), 'ADD', () => this.getMap().add(this.createSemanticProperty<T>(name, value)));
     }
 
-    public createCommandToGetSemanticProperty(name: string): Command<SemanticProperty<any> | undefined> {
-        return new CommandBase('GET', () => this.getMap().get(name)?.getValue());
+    public createCommandToGetSemanticProperty(name: string): Command<Semanticable, SemanticProperty<any> | undefined> {
+        return new CommandBase(this.getMap(), 'GET', () => this.getMap().get(name)?.getValue());
     }
 
-    public createCommandToGetSemanticPropertyAll(name: string): Command<Array<SemanticProperty<any>>> {
-        return new CommandBase('GET_ALL', () => this.getMap().getAll(name).map((p: SemanticProperty<any>) => p.getValue()));
+    public createCommandToGetSemanticPropertyAll(name: string): Command<Semanticable, Array<SemanticProperty<any>>> {
+        return new CommandBase(this.getMap(), 'GET_ALL', () => this.getMap().getAll(name).map((p: SemanticProperty<any>) => p.getValue()));
     }
 
-    public createCommandToSetSemanticProperty<T>(name: string, oldValue: T, newValue: T): Command<void> {
-        return new CommandBase('SET', () => this.getMap().set(name, oldValue, newValue));
+    public createCommandToSetSemanticProperty<T>(name: string, oldValue: T, newValue: T): Command<Semanticable, void> {
+        return new CommandBase(this.getMap(), 'SET', () => this.getMap().set(name, oldValue, newValue));
     }
 
-    public createCommandToRemoveSemanticProperty<T>(name: string, value: T): Command<void> {
-        return new CommandBase('RMV', () => this.getMap().unset<T>(name, value));
+    public createCommandToRemoveSemanticProperty<T>(name: string, value: T): Command<Semanticable, void> {
+        return new CommandBase(this.getMap(), 'RMV', () => this.getMap().unset<T>(name, value));
     }
 
 }

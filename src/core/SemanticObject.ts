@@ -38,7 +38,7 @@ import CommandFactory from './CommandFactory.js';
  */
 export default abstract class SemanticObject<Result, AddHandler extends Handler<void>, GetHandler extends Handler<any>, SetHandler extends Handler<void>, RemoveHandler extends Handler<void>> implements Semanticable {
 
-    private _commandFactory: CommandFactory<Result>;
+    private _commandFactory: CommandFactory<Semanticable, Result>;
     private _addSemanticPropertyHandlerChain: AddHandler;
     private _getSemanticPropertyHandlerChain: GetHandler;
     private _setSemanticPropertyHandlerChain: SetHandler;
@@ -52,33 +52,33 @@ export default abstract class SemanticObject<Result, AddHandler extends Handler<
         this._removeSemanticPropertyHandlerChain = other? other._removeSemanticPropertyHandlerChain: this.getDefaultHandlerChainToRemoveSemanticProperty();
     }
 
-    protected abstract getDefaultCommandFactory(): CommandFactory<Result>;
+    protected abstract getDefaultCommandFactory(): CommandFactory<Semanticable, Result>;
     protected abstract getDefaultHandlerChainToAddSemanticProperty(): AddHandler;
     protected abstract getDefaultHandlerChainToGetSemanticProperty(): GetHandler;
     protected abstract getDefaultHandlerChainToSetSemanticProperty(): SetHandler;
     protected abstract getDefaultHandlerChainToRemoveSemanticProperty(): RemoveHandler;
 
-    public getCommandFactory(): CommandFactory<Result> {
+    public getCommandFactory(): CommandFactory<Semanticable, Result> {
         return this._commandFactory;
     }
 
-    public createAddCommand<T>(name: string, value: T): Command<void> {
+    public createAddCommand<T>(name: string, value: T): Command<Semanticable, void> {
         return this.getCommandFactory().createCommandToAddSemanticProperty<T>(name, value);
     }
 
-    public createGetCommand(name: string): Command<Result> {
+    public createGetCommand(name: string): Command<Semanticable, Result> {
         return this.getCommandFactory().createCommandToGetSemanticProperty(name);
     }
 
-    public createGetAllCommand(name: string): Command<Array<Result>> {
+    public createGetAllCommand(name: string): Command<Semanticable, Array<Result>> {
         return this.getCommandFactory().createCommandToGetSemanticPropertyAll(name);
     }
 
-    public createSetCommand<T>(name: string,  oldValue: T, newValue: T): Command<void> {
+    public createSetCommand<T>(name: string,  oldValue: T, newValue: T): Command<Semanticable, void> {
         return this.getCommandFactory().createCommandToSetSemanticProperty<T>(name, oldValue, newValue);
     }
 
-    public createRemoveCommand<T>(name: string, value: T): Command<void> {
+    public createRemoveCommand<T>(name: string, value: T): Command<Semanticable, void> {
         return this.getCommandFactory().createCommandToRemoveSemanticProperty<T>(name, value);
     }
 

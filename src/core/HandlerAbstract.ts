@@ -9,7 +9,7 @@ export default abstract class HandlerAbstract<T> implements Handler<T> {
         this._nextHandler = nextHandler;
     }
 
-    public handle(command: Command<any>): T | undefined {
+    public handle(command: Command<any, any>): T | undefined {
         if (this._nextHandler)
             return this._nextHandler.handle(command);
     }

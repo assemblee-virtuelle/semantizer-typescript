@@ -1,12 +1,14 @@
 import Command from "../core/Command";
 
-export default class CommandBase<T> implements Command<T> {
+export default class CommandBase<Origin, ExecutionResult> implements Command<Origin, ExecutionResult> {
 
     private _name: string;
+    private _origin: Origin;
     private _execute: Function;
 
-    public constructor(name: string, execute: () => T) {
+    public constructor(origin: Origin, name: string, execute: () => ExecutionResult) {
         this._name = name;
+        this._origin = origin;
         this._execute = execute;
     }
 
@@ -14,7 +16,11 @@ export default class CommandBase<T> implements Command<T> {
         return this._name;
     }
 
-    public execute(): T {
+    public getOrigin(): Origin {
+        return this._origin;
+    }
+
+    public execute(): ExecutionResult {
         return this._execute();
     }
 

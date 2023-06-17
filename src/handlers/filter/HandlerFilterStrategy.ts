@@ -3,6 +3,6 @@ import Handler from "../../core/Handler";
 
 export default interface HandlerFilterStrategy<T> {
 
-    filter(handler: Handler<any>, command: Command<any>): T | undefined;
+    filter(handler: Handler<any>, command: Command<any, any>): T | undefined;
 
 }

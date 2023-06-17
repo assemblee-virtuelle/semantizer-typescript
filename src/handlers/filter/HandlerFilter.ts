@@ -16,7 +16,7 @@ export default class HandlerFilter<T> extends HandlerAbstract<T> {
         return this._strategy;
     }
 
-    public handle(command: Command<any>): T | undefined {
+    public handle(command: Command<any, any>): T | undefined {
         super.handle(command);
         return this.getStrategy().filter(this, command);
     }
