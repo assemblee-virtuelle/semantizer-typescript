@@ -3,19 +3,19 @@ import Command from "./Command";
 
 export default abstract class HandlerAbstract<T> implements Handler<T> {
 
-    private nextHandler: Handler<T> | undefined;
+    private _nextHandler: Handler<T> | undefined;
 
     constructor(nextHandler: Handler<T> | undefined = undefined) {
-        this.nextHandler = nextHandler;
+        this._nextHandler = nextHandler;
     }
 
     public handle(command: Command<any>): T | undefined {
-        if (this.nextHandler)
-            return this.nextHandler.handle(command);
+        if (this._nextHandler)
+            return this._nextHandler.handle(command);
     }
 
     public setNext(handler: Handler<T>): void {
-        this.nextHandler = handler;
+        this._nextHandler = handler;
     }
 
 }
