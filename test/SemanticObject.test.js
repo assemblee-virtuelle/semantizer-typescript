@@ -1,33 +1,70 @@
 import SemanticObjectMap from '../lib/semantic-object-map/SemanticObjectMap.js';
 
-test('semantic property string', async () => {
+test('add semantic property', async () => {
     const semanticObject = new SemanticObjectMap();
 
     semanticObject.addSemanticProperty("prop1", "Person");
-    semanticObject.addSemanticProperty("prop2", "Jean");
+    semanticObject.addSemanticProperty("prop2", true);
+    semanticObject.addSemanticProperty("prop3", 3);
 
     expect(await semanticObject.getSemanticPropertyValue("prop1")).toStrictEqual("Person");
-    expect(await semanticObject.getSemanticPropertyValue("prop2")).toStrictEqual("Jean");
+    expect(await semanticObject.getSemanticPropertyValue("prop2")).toStrictEqual(true);
+    expect(await semanticObject.getSemanticPropertyValue("prop3")).toStrictEqual(3);
+    expect(await semanticObject.getSemanticPropertyValue("prop4")).toStrictEqual(undefined);
 });
 
-test('semantic property boolean', async () => {
+test('set semantic property', async () => {
     const semanticObject = new SemanticObjectMap();
-    semanticObject.addSemanticProperty("prop1", true);
-    semanticObject.addSemanticProperty("prop2", false);
 
-    expect(await semanticObject.getSemanticPropertyValue("prop1")).toStrictEqual("true");
-    expect(await semanticObject.getSemanticPropertyValue("prop2")).toStrictEqual("false");
+    semanticObject.addSemanticProperty("prop1", "Person");
+    semanticObject.addSemanticProperty("prop2", true);
+    semanticObject.addSemanticProperty("prop3", 3);
+
+    expect(await semanticObject.getSemanticPropertyValue("prop1")).toStrictEqual("Person");
+    expect(await semanticObject.getSemanticPropertyValue("prop2")).toStrictEqual(true);
+    expect(await semanticObject.getSemanticPropertyValue("prop3")).toStrictEqual(3);
+
+    semanticObject.setSemanticProperty("prop1", "Person", "Person2");
+    semanticObject.setSemanticProperty("prop2", true, false);
+    semanticObject.setSemanticProperty("prop3", 3, 4);
+
+    expect(await semanticObject.getSemanticPropertyValue("prop1")).toStrictEqual("Person2");
+    expect(await semanticObject.getSemanticPropertyValue("prop2")).toStrictEqual(false);
+    expect(await semanticObject.getSemanticPropertyValue("prop3")).toStrictEqual(4);
 });
 
-test('semantic property number', async () => {
+test('remove semantic property', async () => {
     const semanticObject = new SemanticObjectMap();
-    semanticObject.addSemanticProperty("prop1", 1);
-    semanticObject.addSemanticProperty("prop2", 2);
 
-    expect(await semanticObject.getSemanticPropertyValue("prop1")).toStrictEqual("1");
-    expect(await semanticObject.getSemanticPropertyValue("prop2")).toStrictEqual("2");
+    semanticObject.addSemanticProperty("prop1", "Person");
+    semanticObject.addSemanticProperty("prop2", true);
+    semanticObject.addSemanticProperty("prop3", 3);
+
+    expect(await semanticObject.getSemanticPropertyValue("prop1")).toStrictEqual("Person");
+    expect(await semanticObject.getSemanticPropertyValue("prop2")).toStrictEqual(true);
+    expect(await semanticObject.getSemanticPropertyValue("prop3")).toStrictEqual(3);
+
+    semanticObject.removeSemanticProperty("prop1", "Person");
+
+    expect(await semanticObject.getSemanticPropertyValue("prop1")).toStrictEqual(undefined);
+    expect(await semanticObject.getSemanticPropertyValue("prop2")).toStrictEqual(true);
+    expect(await semanticObject.getSemanticPropertyValue("prop3")).toStrictEqual(3);
 });
 
+test('add semantic property multiple', async () => {
+    const semanticObject = new SemanticObjectMap();
+
+    semanticObject.addSemanticProperty("prop1", "Jean");
+    semanticObject.addSemanticProperty("prop2", true);
+    semanticObject.addSemanticProperty("prop1", "Marie");
+
+    expect(await semanticObject.getSemanticPropertyValue("prop1")).toStrictEqual("Jean");
+    expect(await semanticObject.getSemanticPropertyValue("prop2")).toStrictEqual(true);
+    expect(await semanticObject.getSemanticPropertyValueAll("prop1")).toStrictEqual(["Jean", "Marie"]);
+});
+
+
+/*
 test('semantic property reference', async () => {
     const referenced = new SemanticObjectMap();
     referenced.addSemanticProperty("name", "value");
@@ -41,7 +78,6 @@ test('semantic property reference', async () => {
     expect(await tested.getSemanticPropertyValue("name")).toStrictEqual("value");
 });
 
-/*
 test('local uuid', async () => {
     const semanticObject = new SemanticObject();
     expect(semanticObject.getSemanticId()).toStrictEqual("local://uuid");

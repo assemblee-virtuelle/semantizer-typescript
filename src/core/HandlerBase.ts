@@ -1,6 +1,6 @@
 import Handler from "./Handler";
 import Command from "./Command";
-import HandlerAbstract from "./HandlerAbstract";
+import HandlerAbstract from "./HandlerAbstract.js";
 
 export default class HandlerBase<T> extends HandlerAbstract<T> {
 

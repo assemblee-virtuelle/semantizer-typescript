@@ -21,7 +21,7 @@ SOFTWARE.
 */
 
 import Semanticable from './Semanticable.js';
-import SemanticPropertyInterface from './SemanticPropertyInterface.js';
+import SemanticProperty from './SemanticProperty.js';
 import Handler from './Handler.js';
 import Command from './Command.js';
 import CommandFactory from './CommandFactory.js';
@@ -70,8 +70,12 @@ export default abstract class SemanticObject<Result, AddHandler extends Handler<
         return this.getCommandFactory().createCommandToGetSemanticProperty(name);
     }
 
-    public createSetCommand<T>(name: string, value: T): Command<void> {
-        return this.getCommandFactory().createCommandToSetSemanticProperty<T>(name, value);
+    public createGetAllCommand(name: string): Command<Array<Result>> {
+        return this.getCommandFactory().createCommandToGetSemanticPropertyAll(name);
+    }
+
+    public createSetCommand<T>(name: string,  oldValue: T, newValue: T): Command<void> {
+        return this.getCommandFactory().createCommandToSetSemanticProperty<T>(name, oldValue, newValue);
     }
 
     public createRemoveCommand<T>(name: string, value: T): Command<void> {
@@ -82,7 +86,11 @@ export default abstract class SemanticObject<Result, AddHandler extends Handler<
         this._addSemanticPropertyHandlerChain.handle(this.createAddCommand<T>(name, value));
     }
 
-    public getSemanticProperty<T>(name: string): SemanticPropertyInterface<T> | undefined {
+    public getSemanticProperty<T>(name: string): SemanticProperty<T> | undefined {
+        throw new Error("Method not implemented.");
+    }
+
+    public getSemanticPropertyAll<T>(name: string): SemanticProperty<T>[] {
         throw new Error("Method not implemented.");
     }
     
@@ -90,8 +98,12 @@ export default abstract class SemanticObject<Result, AddHandler extends Handler<
         return this._getSemanticPropertyHandlerChain.handle(this.createGetCommand(name));
     }
 
-    public setSemanticProperty<T>(name: string, value: T): void {
-        this._setSemanticPropertyHandlerChain.handle(this.createSetCommand<T>(name, value));
+    public async getSemanticPropertyValueAll<T>(name: string): Promise<Array<T | Semanticable>> {
+        return this._getSemanticPropertyHandlerChain.handle(this.createGetAllCommand(name));
+    }
+
+    public setSemanticProperty<T>(name: string, oldValue: T, newValue: T): void {
+        this._setSemanticPropertyHandlerChain.handle(this.createSetCommand<T>(name, oldValue, newValue));
     }
 
     public removeSemanticProperty<T>(name: string, value: T): void {

@@ -1,30 +1,7 @@
-import Subscriber from "../notification/Subscriber";
-import SemanticPropertyInterface from "./SemanticPropertyInterface";
-
-export default class SemanticProperty<T> implements SemanticPropertyInterface<T>, Subscriber {
-
-    private name: string;
-    private value: T;
-
-    constructor(name: string, value: T) {
-        this.name = name;
-        this.value = value;
-    }
+export default interface SemanticProperty<T> {
     
-    public getName(): string {
-        return this.name;
-    }
+    getName(): string;
+    getValue(): T;
+    isReference(): boolean;
     
-    public getValue(): T {
-        return this.value;
-    }
-    
-    public isReference(): boolean {
-        return this.value instanceof URL;
-    }
-    
-    public update(): void {
-        throw new Error("Method not implemented.");
-    }
-
 }

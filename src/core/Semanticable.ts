@@ -20,7 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import SemanticPropertyInterface from "./SemanticPropertyInterface";
+import SemanticProperty from "./SemanticProperty";
 
 /**
  * The Semanticable interface is the way to define semantic objects that 
@@ -37,9 +37,11 @@ import SemanticPropertyInterface from "./SemanticPropertyInterface";
 export default interface Semanticable {
 
     addSemanticProperty<T>(name: string, value: T): void;
-    getSemanticProperty<T>(name: string): SemanticPropertyInterface<T> | undefined;
+    getSemanticProperty<T>(name: string): SemanticProperty<T> | undefined;
+    getSemanticPropertyAll<T>(name: string): SemanticProperty<T>[];
     getSemanticPropertyValue<T>(name: string): Promise<T | Semanticable | undefined>;
+    getSemanticPropertyValueAll<T>(name: string): Promise<Array<T | Semanticable>>;
     removeSemanticProperty<T>(name: string, value: T): void;
-    setSemanticProperty<T>(name: string, value: T): void;
+    setSemanticProperty<T>(name: string, oldValue: T, newValue: T): void;
 
 }
