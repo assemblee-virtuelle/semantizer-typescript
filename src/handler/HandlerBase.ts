@@ -9,7 +9,7 @@ export default abstract class HandlerBase<T> implements Handler<T> {
         this.nextHandler = nextHandler;
     }
 
-    public handle(command: Command): T | undefined {
+    public handle(command: Command<any>): T | undefined {
         if (this.nextHandler)
             return this.nextHandler.handle(command);
     }

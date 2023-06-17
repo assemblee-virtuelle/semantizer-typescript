@@ -1,10 +1,10 @@
 import Command from "./Command";
 
-export default interface CommandFactory {
+export default interface CommandFactory<Result> {
 
-    createCommandToAddSemanticProperty<T>(name: string, value: T): Command;
-    createCommandToGetSemanticProperty(name: string): Command;
-    createCommandToSetSemanticProperty<T>(name: string, value: T): Command;
-    createCommandToRemoveSemanticProperty<T>(name: string, value: T): Command;
+    createCommandToAddSemanticProperty<Value>(name: string, value: Value): Command<void>;
+    createCommandToGetSemanticProperty(name: string): Command<Result>;
+    createCommandToSetSemanticProperty<Value>(name: string, value: Value): Command<void>;
+    createCommandToRemoveSemanticProperty<Value>(name: string, value: Value): Command<void>;
 
 }

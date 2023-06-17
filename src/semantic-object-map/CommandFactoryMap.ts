@@ -1,12 +1,9 @@
-import AddCommand from "./AddCommand.js";
 import Command from "../command/Command.js";
-import GetCommand from "./GetCommand.js";
-import RemoveCommand from "./RemoveCommand.js";
-import SetCommand from "./SetCommand.js";
+import CommandBase from "../command/CommandBase.js";
 import CommandFactory from "../command/CommandFactory.js";
 import SemanticObjectMap from "./SemanticObjectMap.js";
 
-export default class CommandFactoryMap implements CommandFactory {
+export default class CommandFactoryMap implements CommandFactory<string | undefined> {
 
     private _map: SemanticObjectMap;
 
@@ -18,20 +15,24 @@ export default class CommandFactoryMap implements CommandFactory {
         return this._map;
     }
 
-    public createCommandToAddSemanticProperty<T>(name: string, value: T): Command {
-        return new AddCommand(this.getMap(), name, value!.toString());
+    public createCommandToAddSemanticProperty<T>(name: string, value: T): Command<void> {
+        return new CommandBase('ADD', () => this.getMap().set(name, value!.toString()));
+        //return new AddCommand(this.getMap(), name, value!.toString());
     }
 
-    public createCommandToGetSemanticProperty(name: string): Command {
-        return new GetCommand(this.getMap(), name);
+    public createCommandToGetSemanticProperty(name: string): Command<string | undefined> {
+        return new CommandBase('GET', () => this.getMap().get(name));
+        //return new CommandGet(this.getMap(), name);
     }
 
-    public createCommandToSetSemanticProperty<T>(name: string, value: T): Command {
-        return new SetCommand(this.getMap(), name, value!.toString());
+    public createCommandToSetSemanticProperty<T>(name: string, value: T): Command<void> {
+        return new CommandBase('SET', () => this.getMap().set(name, value!.toString()));
+        //return new SetCommand(this.getMap(), name, value!.toString());
     }
 
-    public createCommandToRemoveSemanticProperty<T>(name: string, value: T): Command {
-        return new RemoveCommand(this.getMap(), name);
+    public createCommandToRemoveSemanticProperty<T>(name: string, value: T): Command<void> {
+        return new CommandBase('RMV', () => this.getMap().unset(name));
+        //return new RemoveCommand(this.getMap(), name);
     }
 
 }

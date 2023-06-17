@@ -4,13 +4,13 @@ import CommandFactory from "../command/CommandFactory.js";
 import CommandFactoryMap from "./CommandFactoryMap.js";
 import SemanticObjectWithDataset from "../object/SemanticObjectWithDataset.js";
 
-export default class SemanticObjectMap extends SemanticObjectWithDataset<Map<string, string>, SemanticPropertyMapAdder, SemanticPropertyMapGetter, SemanticPropertyMapAdder, SemanticPropertyMapAdder> {
+export default class SemanticObjectMap extends SemanticObjectWithDataset<Map<string, string>, string | undefined, SemanticPropertyMapAdder, SemanticPropertyMapGetter, SemanticPropertyMapAdder, SemanticPropertyMapAdder> {
     
     constructor(other?: SemanticObjectMap) {
         super(new Map<string, string>(), other);
     }
 
-    protected getDefaultCommandFactory(): CommandFactory {
+    protected getDefaultCommandFactory(): CommandFactory<string | undefined> {
         return new CommandFactoryMap(this);
     }
 

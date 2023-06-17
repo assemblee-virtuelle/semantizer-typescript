@@ -8,8 +8,8 @@ export default class SemanticPropertyMapAdder extends HandlerBase<void> {
         super(nextHandler);
     }
 
-    public handle(command: Command): void {
-        if (command.getName() === 'ADD_SEMANTIC_PROPERTY')
+    public handle(command: Command<any>): void {
+        if (command.getName() === 'ADD')
             command.execute();
         super.handle(command);
     }

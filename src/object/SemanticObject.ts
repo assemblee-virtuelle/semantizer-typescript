@@ -36,15 +36,15 @@ import CommandFactory from '../command/CommandFactory.js';
  * @see The Propertyable interface.
  * @see The registerSemanticProperty() method.
  */
-export default abstract class SemanticObject<AddHandler extends Handler<void>, GetHandler extends Handler<any>, SetHandler extends Handler<void>, RemoveHandler extends Handler<void>> implements Semanticable {
+export default abstract class SemanticObject<Result, AddHandler extends Handler<void>, GetHandler extends Handler<any>, SetHandler extends Handler<void>, RemoveHandler extends Handler<void>> implements Semanticable {
 
-    private _commandFactory: CommandFactory;
+    private _commandFactory: CommandFactory<Result>;
     private _addSemanticPropertyHandlerChain: AddHandler;
     private _getSemanticPropertyHandlerChain: GetHandler;
     private _setSemanticPropertyHandlerChain: SetHandler;
     private _removeSemanticPropertyHandlerChain: RemoveHandler;
     
-    public constructor(other?: SemanticObject<AddHandler, GetHandler, SetHandler, RemoveHandler>) {
+    public constructor(other?: SemanticObject<Result, AddHandler, GetHandler, SetHandler, RemoveHandler>) {
         this._commandFactory = other? other.getDefaultCommandFactory(): this.getDefaultCommandFactory();
         this._addSemanticPropertyHandlerChain = other? other._addSemanticPropertyHandlerChain: this.getDefaultHandlerChainToAddSemanticProperty();
         this._getSemanticPropertyHandlerChain = other? other._getSemanticPropertyHandlerChain: this.getDefaultHandlerChainToGetSemanticProperty();
@@ -52,29 +52,29 @@ export default abstract class SemanticObject<AddHandler extends Handler<void>, G
         this._removeSemanticPropertyHandlerChain = other? other._removeSemanticPropertyHandlerChain: this.getDefaultHandlerChainToRemoveSemanticProperty();
     }
 
-    protected abstract getDefaultCommandFactory(): CommandFactory;
+    protected abstract getDefaultCommandFactory(): CommandFactory<Result>;
     protected abstract getDefaultHandlerChainToAddSemanticProperty(): AddHandler;
     protected abstract getDefaultHandlerChainToGetSemanticProperty(): GetHandler;
     protected abstract getDefaultHandlerChainToSetSemanticProperty(): SetHandler;
     protected abstract getDefaultHandlerChainToRemoveSemanticProperty(): RemoveHandler;
 
-    public getCommandFactory(): CommandFactory {
+    public getCommandFactory(): CommandFactory<Result> {
         return this._commandFactory;
     }
 
-    public createAddCommand<T>(name: string, value: T): Command {
+    public createAddCommand<T>(name: string, value: T): Command<void> {
         return this.getCommandFactory().createCommandToAddSemanticProperty<T>(name, value);
     }
 
-    public createGetCommand<T>(name: string): Command {
+    public createGetCommand(name: string): Command<Result> {
         return this.getCommandFactory().createCommandToGetSemanticProperty(name);
     }
 
-    public createSetCommand<T>(name: string, value: T): Command {
+    public createSetCommand<T>(name: string, value: T): Command<void> {
         return this.getCommandFactory().createCommandToSetSemanticProperty<T>(name, value);
     }
 
-    public createRemoveCommand<T>(name: string, value: T): Command {
+    public createRemoveCommand<T>(name: string, value: T): Command<void> {
         return this.getCommandFactory().createCommandToRemoveSemanticProperty<T>(name, value);
     }
 
@@ -87,7 +87,7 @@ export default abstract class SemanticObject<AddHandler extends Handler<void>, G
     }
     
     public async getSemanticPropertyValue<T>(name: string): Promise<T> {
-        return this._getSemanticPropertyHandlerChain.handle(this.createGetCommand<string>(name));
+        return this._getSemanticPropertyHandlerChain.handle(this.createGetCommand(name));
     }
 
     public setSemanticProperty<T>(name: string, value: T): void {
