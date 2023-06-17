@@ -1,18 +1,20 @@
-import Command from "./Command.js";
-import SemanticObjectMap from "../object/SemanticObjectMap.js";
+import Command from "../command/Command.js";
+import SemanticObjectMap from "./SemanticObjectMap.js";
 
-export default class RemoveCommand implements Command {
+export default class GetCommand implements Command {
     
     private _map: SemanticObjectMap;
+    private _result: string;
     private _name: string;
 
     constructor(map: SemanticObjectMap, name: string) {
         this._map = map;
+        this._result = "";
         this._name = name;
     }
     
     public getName(): string {
-        return 'REMOVE_SEMANTIC_PROPERTY';
+        return 'GET_SEMANTIC_PROPERTY';
     }
 
     public getPropertyName(): string {
@@ -23,8 +25,12 @@ export default class RemoveCommand implements Command {
         return this._map;
     }
 
+    public getResult(): string {
+        return this._result;
+    }
+
     public execute(): void {
-        this.getMap().unset(this.getPropertyName());
+        this._result = this.getMap().get(this.getPropertyName());
     }
 
 }

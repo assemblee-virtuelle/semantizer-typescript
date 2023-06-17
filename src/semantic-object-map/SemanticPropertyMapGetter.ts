@@ -1,8 +1,8 @@
 import CommandWithTarget from "../command/CommandWithTarget.js";
-import GetCommand from "../command/GetCommand.js";
-import SemanticPropertyInterface from "../property/SemanticPropertyInterface";
-import Handler from "./Handler";
-import HandlerBase from "./HandlerBase.js";
+import GetCommand from "./GetCommand.js";
+import SemanticPropertyInterface from "../property/SemanticPropertyInterface.js";
+import Handler from "../handler/Handler.js";
+import HandlerBase from "../handler/HandlerBase.js";
 
 export default class SemanticPropertyMapGetter extends HandlerBase<string> {
 

@@ -1,8 +1,8 @@
-import SemanticPropertyMapAdder from "../handler/SemanticPropertyMapAdder.js";
-import SemanticPropertyMapGetter from "../handler/SemanticPropertyMapGetter.js";
-import CommandFactory from "./CommandFactory";
+import SemanticPropertyMapAdder from "./SemanticPropertyMapAdder.js";
+import SemanticPropertyMapGetter from "./SemanticPropertyMapGetter.js";
+import CommandFactory from "../object/CommandFactory.js";
 import CommandFactoryMap from "./CommandFactoryMap.js";
-import SemanticObjectWithDataset from "./SemanticObjectWithDataset.js";
+import SemanticObjectWithDataset from "../object/SemanticObjectWithDataset.js";
 
 export default class SemanticObjectMap extends SemanticObjectWithDataset<Map<string, string>, SemanticPropertyMapAdder, SemanticPropertyMapGetter, SemanticPropertyMapAdder, SemanticPropertyMapAdder> {
     

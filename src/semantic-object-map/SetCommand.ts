@@ -1,5 +1,5 @@
-import Command from "./Command.js";
-import SemanticObjectMap from "../object/SemanticObjectMap.js";
+import Command from "../command/Command.js";
+import SemanticObjectMap from "./SemanticObjectMap.js";
 
 export default class SetCommand implements Command {
     
