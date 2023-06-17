@@ -1,5 +1,5 @@
 import Handler from "../handler/Handler";
-import CommandFactory from "./CommandFactory";
+import CommandFactory from "../command/CommandFactory";
 import SemanticObject from "./SemanticObject.js";
 
 export default abstract class SemanticObjectWithDataset<Dataset, AddHandler extends Handler<void>, GetHandler extends Handler<any>, SetHandler extends Handler<void>, RemoveHandler extends Handler<void>> extends SemanticObject<AddHandler, GetHandler, SetHandler, RemoveHandler> {

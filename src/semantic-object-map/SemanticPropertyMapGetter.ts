@@ -1,8 +1,6 @@
-import CommandWithTarget from "../command/CommandWithTarget.js";
-import GetCommand from "./GetCommand.js";
-import SemanticPropertyInterface from "../property/SemanticPropertyInterface.js";
 import Handler from "../handler/Handler.js";
 import HandlerBase from "../handler/HandlerBase.js";
+import CommandWithResult from "../command/CommandWithResult.js";
 
 export default class SemanticPropertyMapGetter extends HandlerBase<string> {
 
@@ -10,7 +8,7 @@ export default class SemanticPropertyMapGetter extends HandlerBase<string> {
         super(nextHandler);
     }
 
-    public handle(command: GetCommand): string | undefined {
+    public handle(command: CommandWithResult<string>): string | undefined {
         if (command.getName() === 'GET_SEMANTIC_PROPERTY') {
             command.execute();
             return command.getResult();

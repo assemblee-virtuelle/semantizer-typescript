@@ -3,7 +3,7 @@ import Command from "../command/Command.js";
 import GetCommand from "./GetCommand.js";
 import RemoveCommand from "./RemoveCommand.js";
 import SetCommand from "./SetCommand.js";
-import CommandFactory from "../object/CommandFactory.js";
+import CommandFactory from "../command/CommandFactory.js";
 import SemanticObjectMap from "./SemanticObjectMap.js";
 
 export default class CommandFactoryMap implements CommandFactory {

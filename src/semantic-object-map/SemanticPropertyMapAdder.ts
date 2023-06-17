@@ -1,7 +1,6 @@
-import CommandWithTarget from "../command/CommandWithTarget.js";
-import SemanticPropertyInterface from "../property/SemanticPropertyInterface.js";
 import Handler from "../handler/Handler.js";
 import HandlerBase from "../handler/HandlerBase.js";
+import Command from "../command/Command.js";
 
 export default class SemanticPropertyMapAdder extends HandlerBase<void> {
 
@@ -9,7 +8,7 @@ export default class SemanticPropertyMapAdder extends HandlerBase<void> {
         super(nextHandler);
     }
 
-    public handle(command: CommandWithTarget<SemanticPropertyInterface<any>>): void {
+    public handle(command: Command): void {
         if (command.getName() === 'ADD_SEMANTIC_PROPERTY')
             command.execute();
         super.handle(command);

@@ -1,15 +1,15 @@
 import Command from "../command/Command.js";
+import CommandWithResultBase from "../command/CommandWithResultBase.js";
 import SemanticObjectMap from "./SemanticObjectMap.js";
 
-export default class GetCommand implements Command {
+export default class GetCommand extends CommandWithResultBase<string> {
     
     private _map: SemanticObjectMap;
-    private _result: string;
     private _name: string;
 
     constructor(map: SemanticObjectMap, name: string) {
+        super();
         this._map = map;
-        this._result = "";
         this._name = name;
     }
     
@@ -25,12 +25,8 @@ export default class GetCommand implements Command {
         return this._map;
     }
 
-    public getResult(): string {
-        return this._result;
-    }
-
     public execute(): void {
-        this._result = this.getMap().get(this.getPropertyName());
+        this.setResult(this.getMap().get(this.getPropertyName()));
     }
 
 }

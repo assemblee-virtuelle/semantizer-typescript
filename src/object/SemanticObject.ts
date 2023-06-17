@@ -24,7 +24,7 @@ import Semanticable from './Semanticable.js';
 import SemanticPropertyInterface from '../property/SemanticPropertyInterface.js';
 import Handler from '../handler/Handler.js';
 import Command from '../command/Command.js';
-import CommandFactory from './CommandFactory.js';
+import CommandFactory from '../command/CommandFactory.js';
 
 /**
  * The SemanticObject class is the base implementation of the Semanticable 
