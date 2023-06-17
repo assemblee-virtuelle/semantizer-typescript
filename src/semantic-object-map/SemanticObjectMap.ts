@@ -1,10 +1,11 @@
-import SemanticPropertyMapAdder from "./SemanticPropertyMapAdder.js";
-import SemanticPropertyMapGetter from "./SemanticPropertyMapGetter.js";
 import CommandFactory from "../core/CommandFactory.js";
 import CommandFactoryMap from "./CommandFactoryMap.js";
 import SemanticObjectWithDataset from "../core/SemanticObjectWithDataset.js";
+import HandlerBase from "../core/HandlerBase.js";
+import Command from "../core/Command.js";
+import Handler from "../core/Handler.js";
 
-export default class SemanticObjectMap extends SemanticObjectWithDataset<Map<string, string>, string | undefined, SemanticPropertyMapAdder, SemanticPropertyMapGetter, SemanticPropertyMapAdder, SemanticPropertyMapAdder> {
+export default class SemanticObjectMap extends SemanticObjectWithDataset<Map<string, string>, string | undefined, Handler<void>, Handler<string>, Handler<void>, Handler<void>> {
     
     constructor(other?: SemanticObjectMap) {
         super(new Map<string, string>(), other);
@@ -14,20 +15,24 @@ export default class SemanticObjectMap extends SemanticObjectWithDataset<Map<str
         return new CommandFactoryMap(this);
     }
 
-    protected getDefaultHandlerChainToAddSemanticProperty(): SemanticPropertyMapAdder {
-        return new SemanticPropertyMapAdder();
+    protected getDefaultHandlerChainToAddSemanticProperty(): Handler<void> {
+        const executor = (command: Command<any>) => command.getName() === 'ADD'? command.execute(): undefined;
+        return new HandlerBase(executor);
     }
 
-    protected getDefaultHandlerChainToGetSemanticProperty(): SemanticPropertyMapGetter {
-        return new SemanticPropertyMapGetter();
+    protected getDefaultHandlerChainToGetSemanticProperty(): Handler<string> {
+        const executor = (command: Command<any>) => command.getName() === 'GET'? command.execute(): undefined;
+        return new HandlerBase(executor);
     }
 
-    protected getDefaultHandlerChainToSetSemanticProperty(): SemanticPropertyMapAdder {
-        return new SemanticPropertyMapAdder();
+    protected getDefaultHandlerChainToSetSemanticProperty(): Handler<void> {
+        const executor = (command: Command<any>) => command.getName() === 'ADD'? command.execute(): undefined;
+        return new HandlerBase(executor);
     }
 
-    protected getDefaultHandlerChainToRemoveSemanticProperty(): SemanticPropertyMapAdder {
-        return new SemanticPropertyMapAdder();
+    protected getDefaultHandlerChainToRemoveSemanticProperty(): Handler<void> {
+        const executor = (command: Command<any>) => command.getName() === 'ADD'? command.execute(): undefined;
+        return new HandlerBase(executor);
     }
 
     public get(key: string): string {

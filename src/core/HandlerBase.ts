@@ -1,21 +1,19 @@
 import Handler from "./Handler";
 import Command from "./Command";
+import HandlerAbstract from "./HandlerAbstract";
 
-export default abstract class HandlerBase<T> implements Handler<T> {
+export default class HandlerBase<T> extends HandlerAbstract<T> {
 
-    private nextHandler: Handler<T> | undefined;
+    private _executor: Function;
 
-    constructor(nextHandler: Handler<T> | undefined = undefined) {
-        this.nextHandler = nextHandler;
+    constructor(executor: (command: Command<any>) => T | undefined, nextHandler: Handler<T> | undefined = undefined) {
+        super(nextHandler);
+        this._executor = executor;
     }
 
     public handle(command: Command<any>): T | undefined {
-        if (this.nextHandler)
-            return this.nextHandler.handle(command);
-    }
-
-    public setNext(handler: Handler<T>): void {
-        this.nextHandler = handler;
+        super.handle(command);
+        return this._executor(command);
     }
 
 }
