@@ -1,13 +1,30 @@
-import CommandWithTarget from "./CommandWithTarget.js";
+import Command from "./Command.js";
+import SemanticObjectMap from "../object/SemanticObjectMap.js";
 
-export default class RemoveCommand<T> extends CommandWithTarget<T> {
+export default class RemoveCommand implements Command {
     
-    constructor(property: T) {
-        super(property)
-    }
+    private _map: SemanticObjectMap;
+    private _name: string;
 
+    constructor(map: SemanticObjectMap, name: string) {
+        this._map = map;
+        this._name = name;
+    }
+    
     public getName(): string {
         return 'REMOVE_SEMANTIC_PROPERTY';
     }
-    
+
+    public getPropertyName(): string {
+        return this._name;
+    }
+
+    public getMap(): SemanticObjectMap {
+        return this._map;
+    }
+
+    public execute(): void {
+        this.getMap().unset(this.getPropertyName());
+    }
+
 }

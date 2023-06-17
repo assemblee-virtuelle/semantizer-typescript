@@ -1,10 +1,8 @@
 import AddCommand from "../command/AddCommand.js";
-import CommandWithTarget from "../command/CommandWithTarget.js";
+import Command from "../command/Command.js";
 import GetCommand from "../command/GetCommand.js";
 import RemoveCommand from "../command/RemoveCommand.js";
 import SetCommand from "../command/SetCommand.js";
-import SemanticProperty from "../property/SemanticProperty.js";
-import SemanticPropertyInterface from "../property/SemanticPropertyInterface";
 import CommandFactory from "./CommandFactory";
 import SemanticObjectMap from "./SemanticObjectMap.js";
 
@@ -20,29 +18,20 @@ export default class CommandFactoryMap implements CommandFactory {
         return this._map;
     }
 
-    public createProperty(name: string, value: string): SemanticPropertyInterface<string> {
-        return new SemanticProperty<string>(name, value);
+    public createCommandToAddSemanticProperty<T>(name: string, value: T): Command {
+        return new AddCommand(this.getMap(), name, value!.toString());
     }
 
-    // TODO: fix returning "any"
-    public createCommandToAddSemanticProperty<T>(name: string, value: T): CommandWithTarget<SemanticPropertyInterface<any>> {
-        const property = this.createProperty(name, value!.toString());
-        return new AddCommand(this.getMap(), property);
+    public createCommandToGetSemanticProperty(name: string): Command {
+        return new GetCommand(this.getMap(), name);
     }
 
-    public createCommandToGetSemanticProperty<T>(name: string): CommandWithTarget<SemanticPropertyInterface<any>> {
-        const property = this.createProperty(name, '');
-        return new GetCommand(this.getMap(), property);
+    public createCommandToSetSemanticProperty<T>(name: string, value: T): Command {
+        return new SetCommand(this.getMap(), name, value!.toString());
     }
 
-    public createCommandToSetSemanticProperty<T>(name: string, value: T): CommandWithTarget<SemanticPropertyInterface<any>> {
-        const property = this.createProperty(name, value!.toString());
-        return new SetCommand<typeof property>(property);
-    }
-
-    public createCommandToRemoveSemanticProperty<T>(name: string, value: T): CommandWithTarget<SemanticPropertyInterface<any>> {
-        const property = this.createProperty(name, value!.toString());
-        return new RemoveCommand<typeof property>(property);
+    public createCommandToRemoveSemanticProperty<T>(name: string, value: T): Command {
+        return new RemoveCommand(this.getMap(), name);
     }
 
 }

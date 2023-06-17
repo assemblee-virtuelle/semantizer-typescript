@@ -20,10 +20,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import SemanticPropertyInterface from '../property/SemanticPropertyInterface.js';
 import Semanticable from './Semanticable.js';
+import SemanticPropertyInterface from '../property/SemanticPropertyInterface.js';
 import Handler from '../handler/Handler.js';
-import CommandWithTarget from '../command/CommandWithTarget.js';
+import Command from '../command/Command.js';
 import CommandFactory from './CommandFactory.js';
 
 /**
@@ -62,19 +62,19 @@ export default abstract class SemanticObject<AddHandler extends Handler<void>, G
         return this._commandFactory;
     }
 
-    public createAddCommand<T>(name: string, value: T): CommandWithTarget<SemanticPropertyInterface<T>> {
+    public createAddCommand<T>(name: string, value: T): Command {
         return this.getCommandFactory().createCommandToAddSemanticProperty<T>(name, value);
     }
 
-    public createGetCommand<T>(name: string): CommandWithTarget<SemanticPropertyInterface<T>> {
-        return this.getCommandFactory().createCommandToGetSemanticProperty<T>(name);
+    public createGetCommand<T>(name: string): Command {
+        return this.getCommandFactory().createCommandToGetSemanticProperty(name);
     }
 
-    public createSetCommand<T>(name: string, value: T): CommandWithTarget<SemanticPropertyInterface<T>> {
+    public createSetCommand<T>(name: string, value: T): Command {
         return this.getCommandFactory().createCommandToSetSemanticProperty<T>(name, value);
     }
 
-    public createRemoveCommand<T>(name: string, value: T): CommandWithTarget<SemanticPropertyInterface<T>> {
+    public createRemoveCommand<T>(name: string, value: T): Command {
         return this.getCommandFactory().createCommandToRemoveSemanticProperty<T>(name, value);
     }
 
@@ -95,7 +95,7 @@ export default abstract class SemanticObject<AddHandler extends Handler<void>, G
     }
 
     public removeSemanticProperty<T>(name: string, value: T): void {
-        this._removeSemanticPropertyHandlerChain.handle(this.createRemoveCommand<T>(name, value));
+        this._removeSemanticPropertyHandlerChain.handle(this.createRemoveCommand(name, value));
     }
 
 }

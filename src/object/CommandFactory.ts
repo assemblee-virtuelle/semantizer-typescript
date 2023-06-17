@@ -1,11 +1,10 @@
-import CommandWithTarget from "../command/CommandWithTarget";
-import SemanticPropertyInterface from "../property/SemanticPropertyInterface";
+import Command from "../command/Command";
 
 export default interface CommandFactory {
 
-    createCommandToAddSemanticProperty<T>(name: string, value: T): CommandWithTarget<SemanticPropertyInterface<T>>;
-    createCommandToGetSemanticProperty<T>(name: string): CommandWithTarget<SemanticPropertyInterface<T>>;
-    createCommandToSetSemanticProperty<T>(name: string, value: T): CommandWithTarget<SemanticPropertyInterface<T>>;
-    createCommandToRemoveSemanticProperty<T>(name: string, value: T): CommandWithTarget<SemanticPropertyInterface<T>>;
+    createCommandToAddSemanticProperty<T>(name: string, value: T): Command;
+    createCommandToGetSemanticProperty(name: string): Command;
+    createCommandToSetSemanticProperty<T>(name: string, value: T): Command;
+    createCommandToRemoveSemanticProperty<T>(name: string, value: T): Command;
 
 }

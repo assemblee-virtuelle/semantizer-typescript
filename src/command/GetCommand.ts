@@ -1,20 +1,24 @@
+import Command from "./Command.js";
 import SemanticObjectMap from "../object/SemanticObjectMap.js";
-import SemanticPropertyInterface from "../property/SemanticPropertyInterface.js";
-import CommandWithTarget from "./CommandWithTarget.js";
 
-export default class GetCommand extends CommandWithTarget<SemanticPropertyInterface<string>> {
+export default class GetCommand implements Command {
     
     private _map: SemanticObjectMap;
     private _result: string;
+    private _name: string;
 
-    constructor(map: SemanticObjectMap, property: SemanticPropertyInterface<string>) {
-        super(property);
+    constructor(map: SemanticObjectMap, name: string) {
         this._map = map;
         this._result = "";
+        this._name = name;
     }
     
     public getName(): string {
         return 'GET_SEMANTIC_PROPERTY';
+    }
+
+    public getPropertyName(): string {
+        return this._name;
     }
 
     public getMap(): SemanticObjectMap {
@@ -26,7 +30,7 @@ export default class GetCommand extends CommandWithTarget<SemanticPropertyInterf
     }
 
     public execute(): void {
-        this._result = this.getMap().get(this.getTarget().getName());
+        this._result = this.getMap().get(this.getPropertyName());
     }
 
 }

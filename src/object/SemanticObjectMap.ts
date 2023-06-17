@@ -38,4 +38,8 @@ export default class SemanticObjectMap extends SemanticObjectWithDataset<Map<str
         this.getDataset().set(key, value);
     }
 
+    public unset(key: string): void {
+        this.getDataset().delete(key);
+    }
+
 }

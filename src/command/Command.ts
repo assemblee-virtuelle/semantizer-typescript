@@ -1,7 +1,7 @@
 export default interface Command {
 
     getName(): string;
-    getDate(): Date;
+    //getDate(): Date;
     execute(): void;
 
 }
