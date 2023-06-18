@@ -9,9 +9,12 @@ export default abstract class HandlerAbstract implements Handler {
         this._nextHandler = nextHandler;
     }
 
+    public handle<T>(request: HandlerRequest<any, any, any>): T | undefined;
+    public handle<T>(request: HandlerRequest<any, any, any>): Promise<T | void>;
     public handle<T>(request: HandlerRequest<any, any, any>): T | undefined {
         if (this._nextHandler)
             return this._nextHandler.handle(request);
+        //return Promise.resolve();
     }
 
     public getNext(): Handler | undefined {

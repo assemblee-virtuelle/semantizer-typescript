@@ -36,12 +36,25 @@ import SemanticProperty from "./SemanticProperty";
  */
 export default interface Semanticable {
 
-    addSemanticProperty<T>(name: string, value: T): void;
-    getSemanticProperty<T>(name: string): SemanticProperty<T> | undefined;
-    getSemanticPropertyAll<T>(name: string): SemanticProperty<T>[];
+    addSemanticProperty<T>(name: string, value: T): T;
+    addSemanticProperty<T>(name: string, value: T): Promise<T>;
+
+    getSemanticProperty<T>(name: string): T;
+    getSemanticProperty<T>(name: string): Promise<T>;
+
+    getSemanticPropertyAll<T>(name: string): T[];
+    getSemanticPropertyAll<T>(name: string): Promise<T[]>;
+
+    getSemanticPropertyValue<T>(name: string): T | Semanticable | undefined;
     getSemanticPropertyValue<T>(name: string): Promise<T | Semanticable | undefined>;
-    getSemanticPropertyValueAll<T>(name: string): Promise<Array<T | Semanticable>>;
-    removeSemanticProperty<T>(name: string, value: T): void;
-    setSemanticProperty<T>(name: string, newValue: T, oldValue: T): void;
+
+    getSemanticPropertyValueAll<T>(name: string): T[];
+    getSemanticPropertyValueAll<T>(name: string): Promise<T[]>;
+    
+    removeSemanticProperty<T>(name: string, value: T): T;
+    removeSemanticProperty<T>(name: string, value: T): Promise<T>;
+
+    setSemanticProperty<T>(name: string, newValue: T, oldValue: T): T;
+    setSemanticProperty<T>(name: string, newValue: T, oldValue: T): Promise<T>;
 
 }

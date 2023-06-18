@@ -10,6 +10,8 @@ import Semanticable from "../core/Semanticable.js";
 import RequestFactoryDefault from "../core/RequestFactoryDefault.js";
 import HandlerMapAdd from "./HandlerMapAdd.js";
 import HandlerMapGet from "./HandlerMapGet.js";
+import HandlerMapAddAsync from "./HandlerMapAddAsync.js";
+import HandlerMapSet from "./HandlerMapSet.js";
 
 type Property = SemanticProperty<any>;
 
@@ -31,6 +33,7 @@ export default class SemanticObjectMap extends SemanticObjectWithDataset<Array<P
         // return new Accept(['ADD'], new HandlerStore());
         const store = new HandlerStore();
         const dataset = new HandlerMapAdd(this, store);
+        //const dataset = new HandlerMapAddAsync(this, store);
         return new HandlerFilter(new HandlerFilterStrategyByName(['ADD'], 'ACCEPT'), dataset);
     }
 
@@ -40,7 +43,8 @@ export default class SemanticObjectMap extends SemanticObjectWithDataset<Array<P
     }
 
     protected getDefaultHandlerChainToSetSemanticProperty(): Handler {
-        return new HandlerFilter(new HandlerFilterStrategyByName(['SET'], 'ACCEPT'));
+        const strategy = new HandlerFilterStrategyByName(['SET'], 'ACCEPT');
+        return new HandlerFilter(strategy, new HandlerMapSet(this));
     }
 
     protected getDefaultHandlerChainToRemoveSemanticProperty(): Handler {

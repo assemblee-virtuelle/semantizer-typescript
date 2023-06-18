@@ -3,7 +3,10 @@ import HandlerRequest from "./HandlerRequest";
 export default interface Handler {
 
     getNext(): Handler | undefined;
-    handle<T>(request: HandlerRequest<any, any, any>): T | undefined;
+
+    handle<T>(request: HandlerRequest<any, any, any>): T;
+    handle<T>(request: HandlerRequest<any, any, any>): Promise<T>;
+    
     hasNext(): boolean;
     setNext(handler: Handler): void;
 

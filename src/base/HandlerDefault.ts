@@ -11,7 +11,8 @@ export default class HandlerDefault extends HandlerAbstract {
         this._executor = executor;
     }
 
-    public handle<T>(request: HandlerRequest<any, any, any>): T | undefined {
+    public handle<T>(request: HandlerRequest<any, any, any>): Promise<T>;
+    public handle<T>(request: HandlerRequest<any, any, any>): T {
         super.handle(request);
         return this._executor(request);
     }

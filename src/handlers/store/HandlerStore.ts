@@ -16,11 +16,13 @@ export default class HandlerStore extends HandlerAbstract {
         return this._store;
     }
     
+    public handle<T>(request: HandlerRequest<any, any, any>): T | undefined;
+    public handle<T>(request: HandlerRequest<any, any, any>): Promise<T>;
     public handle<T>(request: HandlerRequest<any, any, any>): T | undefined {
         if (request.isIdentifiedBy("ADD")) {
             this.getStore().push(request.getOrigin());
         }
-        return super.handle(request);
+        return super.handle<T>(request);
     }
 
 }
