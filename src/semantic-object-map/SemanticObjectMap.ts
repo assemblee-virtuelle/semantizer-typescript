@@ -1,18 +1,16 @@
 import SemanticObjectWithDataset from "../core/SemanticObjectWithDataset.js";
-import Handler from "../core/Handler.js";
 import SemanticProperty from "../core/SemanticProperty.js";
-import HandlerFilter from "../handlers/filter/HandlerFilter.js";
-import HandlerFilterStrategyByName from "../handlers/filter/HandlerFilterStrategyByName.js";
-import HandlerStore from "../handlers/store/HandlerStore.js";
 import SemanticPropertyBase from "../base/SemanticPropertyBase.js";
 import RequestFactory from "../core/RequestFactory.js";
 import Semanticable from "../core/Semanticable.js";
 import RequestFactoryDefault from "../core/RequestFactoryDefault.js";
 import HandlerMap from "./HandlerMap.js";
+import HandlerRequest from "../core/HandlerRequest.js";
 
 type Property = SemanticProperty<any>;
+type Request = HandlerRequest<any, any, Semanticable>;
 
-export default class SemanticObjectMap extends SemanticObjectWithDataset<Array<Property>, Handler, Handler, Handler, Handler> {
+export default class SemanticObjectMap extends SemanticObjectWithDataset<Array<Property>> {
 
     constructor(other?: SemanticObjectMap) {
         super(new Array<Property>(), other);
@@ -26,26 +24,11 @@ export default class SemanticObjectMap extends SemanticObjectWithDataset<Array<P
         return new SemanticPropertyBase(name, value);
     }
 
-    protected getDefaultHandlerChainToAddSemanticProperty(): Handler {
-        // return new Accept(['ADD'], new HandlerStore());
-        const store = new HandlerStore();
-        const dataset = new HandlerMap(this, store);
-        return new HandlerFilter(new HandlerFilterStrategyByName(['ADD'], 'ACCEPT'), dataset);
-    }
-
-    protected getDefaultHandlerChainToGetSemanticProperty(): Handler {
-        const strategy = new HandlerFilterStrategyByName(['GET', 'GET_ALL'], 'ACCEPT');
-        return new HandlerFilter(strategy, new HandlerMap(this));
-    }
-
-    protected getDefaultHandlerChainToSetSemanticProperty(): Handler {
-        const strategy = new HandlerFilterStrategyByName(['SET'], 'ACCEPT');
-        return new HandlerFilter(strategy, new HandlerMap(this));
-    }
-
-    protected getDefaultHandlerChainToRemoveSemanticProperty(): Handler {
-        const strategy = new HandlerFilterStrategyByName(['REMOVE'], 'ACCEPT');
-        return new HandlerFilter(strategy, new HandlerMap(this));
+    protected handle<T>(request: Request): T;
+    protected handle<T>(request: Request): Promise<T>;
+    protected handle<T>(request: Request): T | T[] | undefined {
+        const handler = new HandlerMap(this);
+        return handler.handle(request);
     }
 
     private findIndex<T>(name: string, value: T): number {

@@ -1,13 +1,15 @@
-import Handler from "./Handler";
+import HandlerRequest from "./HandlerRequest";
 import RequestFactory from "./RequestFactory";
 import SemanticObject from "./SemanticObject.js";
 import Semanticable from "./Semanticable";
 
-export default abstract class SemanticObjectWithDataset<Dataset, AddHandler extends Handler, GetHandler extends Handler, SetHandler extends Handler, RemoveHandler extends Handler> extends SemanticObject<AddHandler, GetHandler, SetHandler, RemoveHandler> {
+type Request = HandlerRequest<any, any, Semanticable>;
+
+export default abstract class SemanticObjectWithDataset<Dataset> extends SemanticObject {
 
     private _dataset: Dataset;
 
-    public constructor(dataset: Dataset, other?: SemanticObjectWithDataset<Dataset, AddHandler, GetHandler, SetHandler, RemoveHandler>) {
+    public constructor(dataset: Dataset, other?: SemanticObjectWithDataset<Dataset>) {
         super(other);
         this._dataset = other? other._dataset: dataset;
     }
@@ -17,5 +19,7 @@ export default abstract class SemanticObjectWithDataset<Dataset, AddHandler exte
     }
 
     protected abstract getDefaultRequestFactory(): RequestFactory<Semanticable>;
+    protected abstract handle<T>(request: Request): T;
+    protected abstract handle<T>(request: Request): Promise<T>;
 
 }

@@ -21,10 +21,10 @@ SOFTWARE.
 */
 
 import Semanticable from './Semanticable.js';
-import SemanticProperty from './SemanticProperty.js';
-import Handler from './Handler.js';
 import RequestFactory from './RequestFactory.js';
 import HandlerRequest from './HandlerRequest.js';
+
+type Request = HandlerRequest<any, any, Semanticable>;
 
 /**
  * The SemanticObject class is the base implementation of the Semanticable 
@@ -36,30 +36,18 @@ import HandlerRequest from './HandlerRequest.js';
  * @see The Propertyable interface.
  * @see The registerSemanticProperty() method.
  */
-
-type Request = HandlerRequest<any, any, Semanticable>;
-
-export default abstract class SemanticObject<AddHandler extends Handler, GetHandler extends Handler, SetHandler extends Handler, RemoveHandler extends Handler> implements Semanticable {
+export default abstract class SemanticObject implements Semanticable {
 
     private _requestFactory: RequestFactory<Semanticable>;
-    private _addSemanticPropertyHandlerChain: AddHandler;
-    private _getSemanticPropertyHandlerChain: GetHandler;
-    private _setSemanticPropertyHandlerChain: SetHandler;
-    private _removeSemanticPropertyHandlerChain: RemoveHandler;
     
-    public constructor(other?: SemanticObject<AddHandler, GetHandler, SetHandler, RemoveHandler>) {
+    public constructor(other?: SemanticObject) {
         this._requestFactory = other? other.getDefaultRequestFactory(): this.getDefaultRequestFactory();
-        this._addSemanticPropertyHandlerChain = other? other._addSemanticPropertyHandlerChain: this.getDefaultHandlerChainToAddSemanticProperty();
-        this._getSemanticPropertyHandlerChain = other? other._getSemanticPropertyHandlerChain: this.getDefaultHandlerChainToGetSemanticProperty();
-        this._setSemanticPropertyHandlerChain = other? other._setSemanticPropertyHandlerChain: this.getDefaultHandlerChainToSetSemanticProperty();
-        this._removeSemanticPropertyHandlerChain = other? other._removeSemanticPropertyHandlerChain: this.getDefaultHandlerChainToRemoveSemanticProperty();
     }
 
     protected abstract getDefaultRequestFactory(): RequestFactory<Semanticable>;
-    protected abstract getDefaultHandlerChainToAddSemanticProperty(): AddHandler;
-    protected abstract getDefaultHandlerChainToGetSemanticProperty(): GetHandler;
-    protected abstract getDefaultHandlerChainToSetSemanticProperty(): SetHandler;
-    protected abstract getDefaultHandlerChainToRemoveSemanticProperty(): RemoveHandler;
+
+    protected abstract handle<T>(request: Request): T;
+    protected abstract handle<T>(request: Request): Promise<T>;
 
     public getRequestFactory(): RequestFactory<Semanticable> {
         return this._requestFactory;
@@ -88,7 +76,7 @@ export default abstract class SemanticObject<AddHandler extends Handler, GetHand
     public addSemanticProperty<T>(name: string, value: T): T;
     public addSemanticProperty<T>(name: string, value: T): Promise<T>;
     public addSemanticProperty<T>(name: string, value: T): T {
-        return this._addSemanticPropertyHandlerChain.handle<T>(this.createAddRequest<T>(name, value));
+        return this.handle<T>(this.createAddRequest<T>(name, value));
     }
 
     public getSemanticProperty<T>(name: string): T;
@@ -104,24 +92,24 @@ export default abstract class SemanticObject<AddHandler extends Handler, GetHand
     public getSemanticPropertyValue<T>(name: string): T | Semanticable | undefined;
     public getSemanticPropertyValue<T>(name: string): Promise<T | Semanticable | undefined>;
     public getSemanticPropertyValue<T>(name: string): T | Semanticable | undefined {
-        return this._getSemanticPropertyHandlerChain.handle(this.createGetRequest(name));
+        return this.handle(this.createGetRequest(name));
     }
 
     public getSemanticPropertyValueAll<T extends Array<T>>(name: string): T;
     public getSemanticPropertyValueAll<T extends Array<T>>(name: string): Promise<T>;
     public getSemanticPropertyValueAll<T extends Array<T>>(name: string): T {
-        return this._getSemanticPropertyHandlerChain.handle<T>(this.createGetAllRequest(name));
+        return this.handle<T>(this.createGetAllRequest(name));
     }
 
     public setSemanticProperty<T>(name: string, newValue: T, oldValue: T): T;
     public setSemanticProperty<T>(name: string, newValue: T, oldValue: T): Promise<T>;
     public setSemanticProperty<T>(name: string, newValue: T, oldValue: T): T {
-        return this._setSemanticPropertyHandlerChain.handle<T>(this.createSetRequest<T>(name, newValue, oldValue));
+        return this.handle<T>(this.createSetRequest<T>(name, newValue, oldValue));
     }
 
     public removeSemanticProperty<T>(name: string, value: T): T;
     public async removeSemanticProperty<T>(name: string, value: T): Promise<T> {
-        return this._removeSemanticPropertyHandlerChain.handle<T>(this.createRemoveRequest(name, value));
+        return this.handle<T>(this.createRemoveRequest(name, value));
     }
 
 }
