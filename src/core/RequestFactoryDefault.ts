@@ -32,7 +32,7 @@ export default class RequestFactoryDefault implements RequestFactory<Semanticabl
     }
 
     public createRequestToAddSemanticProperty<Value>(name: string, value: Value): Request<PayloadNameValue<Value>> {
-        return this.createDefaultHandler('ADD', this.createPayloadNameValue(name, value));
+        return this.createDefaultHandler('ADD', this.createPayloadNameValue<Value>(name, value));
     }
     
     public createRequestToGetSemanticProperty<Value>(name: string): Request<string> {
@@ -44,11 +44,11 @@ export default class RequestFactoryDefault implements RequestFactory<Semanticabl
     }
     
     public createRequestToSetSemanticProperty<Value>(name: string, newValue: Value, oldValue: Value): Request<PayloadNameNewValue<Value>> {
-        return this.createDefaultHandler('SET', this.createPayloadNameNewValue(name, newValue, oldValue));
+        return this.createDefaultHandler('SET', this.createPayloadNameNewValue<Value>(name, newValue, oldValue));
     }
     
     public createRequestToRemoveSemanticProperty<Value>(name: string, value: Value): Request<PayloadNameValue<Value>> {
-        return this.createDefaultHandler('REMOVE', this.createPayloadNameValue(name, value));
+        return this.createDefaultHandler('REMOVE', this.createPayloadNameValue<Value>(name, value));
     }
     
 }

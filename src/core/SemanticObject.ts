@@ -38,7 +38,6 @@ import HandlerRequest from './HandlerRequest.js';
  */
 
 type Request = HandlerRequest<any, any, Semanticable>;
-type Test<T> = SemanticProperty<T> | undefined;
 
 export default abstract class SemanticObject<AddHandler extends Handler, GetHandler extends Handler, SetHandler extends Handler, RemoveHandler extends Handler> implements Semanticable {
 
@@ -109,8 +108,9 @@ export default abstract class SemanticObject<AddHandler extends Handler, GetHand
     }
 
     public getSemanticPropertyValueAll<T extends Array<T>>(name: string): T;
-    public async getSemanticPropertyValueAll<T extends Array<T>>(name: string): Promise<T> {
-        return this._getSemanticPropertyHandlerChain.handle<T>(this.createGetAllRequest(name)) ?? Promise.resolve([]);
+    public getSemanticPropertyValueAll<T extends Array<T>>(name: string): Promise<T>;
+    public getSemanticPropertyValueAll<T extends Array<T>>(name: string): T {
+        return this._getSemanticPropertyHandlerChain.handle<T>(this.createGetAllRequest(name));
     }
 
     public setSemanticProperty<T>(name: string, newValue: T, oldValue: T): T;

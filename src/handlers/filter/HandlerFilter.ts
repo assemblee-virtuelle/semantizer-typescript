@@ -16,8 +16,8 @@ export default class HandlerFilter extends HandlerAbstract {
         return this._strategy;
     }
 
-    //public handle<T>(request: HandlerRequest<any, any, any>): T
-    //public handle<T>(request: HandlerRequest<any, any, any>): Promise<T | void>;
+    public handle<T>(request: HandlerRequest<any, any, any>): T
+    public handle<T>(request: HandlerRequest<any, any, any>): Promise<T | void>;
     public handle<T>(request: HandlerRequest<any, any, any>): T | undefined {
         if (this.getStrategy().accept(request))
             return super.handle(request);

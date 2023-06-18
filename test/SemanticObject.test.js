@@ -24,9 +24,9 @@ test('set semantic property', () => {
     expect(semanticObject.getSemanticPropertyValue("prop2")).toStrictEqual(true);
     expect(semanticObject.getSemanticPropertyValue("prop3")).toStrictEqual(3);
 
-    semanticObject.setSemanticProperty("prop1", "Person", "Person2");
-    semanticObject.setSemanticProperty("prop2", true, false);
-    semanticObject.setSemanticProperty("prop3", 3, 4);
+    semanticObject.setSemanticProperty("prop1", "Person2", "Person");
+    semanticObject.setSemanticProperty("prop2", false, true);
+    semanticObject.setSemanticProperty("prop3", 4, 3);
 
     expect(semanticObject.getSemanticPropertyValue("prop1")).toStrictEqual("Person2");
     expect(semanticObject.getSemanticPropertyValue("prop2")).toStrictEqual(false);

@@ -8,15 +8,12 @@ import SemanticPropertyBase from "../base/SemanticPropertyBase.js";
 import RequestFactory from "../core/RequestFactory.js";
 import Semanticable from "../core/Semanticable.js";
 import RequestFactoryDefault from "../core/RequestFactoryDefault.js";
-import HandlerMapAdd from "./HandlerMapAdd.js";
-import HandlerMapGet from "./HandlerMapGet.js";
-import HandlerMapAddAsync from "./HandlerMapAddAsync.js";
-import HandlerMapSet from "./HandlerMapSet.js";
+import HandlerMap from "./HandlerMap.js";
 
 type Property = SemanticProperty<any>;
 
 export default class SemanticObjectMap extends SemanticObjectWithDataset<Array<Property>, Handler, Handler, Handler, Handler> {
-    
+
     constructor(other?: SemanticObjectMap) {
         super(new Array<Property>(), other);
     }
@@ -32,23 +29,23 @@ export default class SemanticObjectMap extends SemanticObjectWithDataset<Array<P
     protected getDefaultHandlerChainToAddSemanticProperty(): Handler {
         // return new Accept(['ADD'], new HandlerStore());
         const store = new HandlerStore();
-        const dataset = new HandlerMapAdd(this, store);
-        //const dataset = new HandlerMapAddAsync(this, store);
+        const dataset = new HandlerMap(this, store);
         return new HandlerFilter(new HandlerFilterStrategyByName(['ADD'], 'ACCEPT'), dataset);
     }
 
     protected getDefaultHandlerChainToGetSemanticProperty(): Handler {
         const strategy = new HandlerFilterStrategyByName(['GET', 'GET_ALL'], 'ACCEPT');
-        return new HandlerFilter(strategy, new HandlerMapGet(this));
+        return new HandlerFilter(strategy, new HandlerMap(this));
     }
 
     protected getDefaultHandlerChainToSetSemanticProperty(): Handler {
         const strategy = new HandlerFilterStrategyByName(['SET'], 'ACCEPT');
-        return new HandlerFilter(strategy, new HandlerMapSet(this));
+        return new HandlerFilter(strategy, new HandlerMap(this));
     }
 
     protected getDefaultHandlerChainToRemoveSemanticProperty(): Handler {
-        return new HandlerFilter(new HandlerFilterStrategyByName(['RMV'], 'ACCEPT'));
+        const strategy = new HandlerFilterStrategyByName(['REMOVE'], 'ACCEPT');
+        return new HandlerFilter(strategy, new HandlerMap(this));
     }
 
     private findIndex<T>(name: string, value: T): number {
@@ -59,7 +56,7 @@ export default class SemanticObjectMap extends SemanticObjectWithDataset<Array<P
         this.getDataset().push(this.createSemanticProperty(name, value));
     }
 
-    public get(name: string): any {
+    public get<T>(name: string): Property | undefined {
         return this.getDataset().find((p: Property) => p.getName() === name);
     }
 
@@ -67,10 +64,10 @@ export default class SemanticObjectMap extends SemanticObjectWithDataset<Array<P
         return this.getDataset().filter((p: Property) => p.getName() === name);
     }
 
-    public set<T>(name: string, oldValue: T, newValue: T): void {
+    public set<T>(name: string, newValue: T, oldValue: T): void {
         const index = this.findIndex(name, oldValue);
         if (-1 !== index)
-            this.getDataset().splice(index, 1, this.createSemanticProperty(name, newValue));
+            this.getDataset().splice(index, 1, this.createSemanticProperty<T>(name, newValue));
     }
 
     public unset<T>(name: string, value: T): void {
