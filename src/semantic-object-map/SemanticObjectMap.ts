@@ -13,7 +13,7 @@ import HandlerMapGet from "./HandlerMapGet.js";
 
 type Property = SemanticProperty<any>;
 
-export default class SemanticObjectMap extends SemanticObjectWithDataset<Array<Property>, Handler<void>, Handler<string | undefined>, Handler<void>, Handler<void>> {
+export default class SemanticObjectMap extends SemanticObjectWithDataset<Array<Property>, Handler, Handler, Handler, Handler> {
     
     constructor(other?: SemanticObjectMap) {
         super(new Array<Property>(), other);
@@ -27,24 +27,24 @@ export default class SemanticObjectMap extends SemanticObjectWithDataset<Array<P
         return new SemanticPropertyBase(name, value);
     }
 
-    protected getDefaultHandlerChainToAddSemanticProperty(): Handler<void> {
+    protected getDefaultHandlerChainToAddSemanticProperty(): Handler {
         // return new Accept(['ADD'], new HandlerStore());
         const store = new HandlerStore();
         const dataset = new HandlerMapAdd(this, store);
-        return new HandlerFilter<void>(new HandlerFilterStrategyByName(['ADD'], 'ACCEPT'), dataset);
+        return new HandlerFilter(new HandlerFilterStrategyByName(['ADD'], 'ACCEPT'), dataset);
     }
 
-    protected getDefaultHandlerChainToGetSemanticProperty(): Handler<string | undefined> {
+    protected getDefaultHandlerChainToGetSemanticProperty(): Handler {
         const strategy = new HandlerFilterStrategyByName(['GET', 'GET_ALL'], 'ACCEPT');
-        return new HandlerFilter<string>(strategy, new HandlerMapGet(this));
+        return new HandlerFilter(strategy, new HandlerMapGet(this));
     }
 
-    protected getDefaultHandlerChainToSetSemanticProperty(): Handler<void> {
-        return new HandlerFilter<void>(new HandlerFilterStrategyByName(['SET'], 'ACCEPT'));
+    protected getDefaultHandlerChainToSetSemanticProperty(): Handler {
+        return new HandlerFilter(new HandlerFilterStrategyByName(['SET'], 'ACCEPT'));
     }
 
-    protected getDefaultHandlerChainToRemoveSemanticProperty(): Handler<void> {
-        return new HandlerFilter<void>(new HandlerFilterStrategyByName(['RMV'], 'ACCEPT'));
+    protected getDefaultHandlerChainToRemoveSemanticProperty(): Handler {
+        return new HandlerFilter(new HandlerFilterStrategyByName(['RMV'], 'ACCEPT'));
     }
 
     private findIndex<T>(name: string, value: T): number {

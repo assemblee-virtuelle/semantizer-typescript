@@ -1,7 +1,7 @@
 import HandlerRequest from "../core/HandlerRequest";
 import HandlerMap from "./HandlerMap.js";
 
-export default class HandlerMapGet extends HandlerMap<any> {
+export default class HandlerMapGet extends HandlerMap {
 
     public handle(request: HandlerRequest<any, any, any>): any {
         if (request.isIdentifiedBy('GET')) {

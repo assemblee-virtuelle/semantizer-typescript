@@ -3,7 +3,7 @@ import RequestFactory from "./RequestFactory";
 import SemanticObject from "./SemanticObject.js";
 import Semanticable from "./Semanticable";
 
-export default abstract class SemanticObjectWithDataset<Dataset, AddHandler extends Handler<void>, GetHandler extends Handler<any>, SetHandler extends Handler<void>, RemoveHandler extends Handler<void>> extends SemanticObject<AddHandler, GetHandler, SetHandler, RemoveHandler> {
+export default abstract class SemanticObjectWithDataset<Dataset, AddHandler extends Handler, GetHandler extends Handler, SetHandler extends Handler, RemoveHandler extends Handler> extends SemanticObject<AddHandler, GetHandler, SetHandler, RemoveHandler> {
 
     private _dataset: Dataset;
 

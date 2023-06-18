@@ -1,14 +1,14 @@
 import HandlerRequest from "../core/HandlerRequest";
 import HandlerMap from "./HandlerMap.js";
 
-export default class HandlerMapAdd extends HandlerMap<void> {
+export default class HandlerMapAdd extends HandlerMap {
 
-    public handle(request: HandlerRequest<any, any, any>): void {
+    public handle<T>(request: HandlerRequest<any, any, any>): T | undefined {
         if (request.isIdentifiedBy('ADD')) {
             const payload = <{ name: string, value: string }> request.getPayload();
             this.getMap().add(payload.name, payload.value);
         }
-        super.handle(request);
+        return super.handle(request);
     }
 
 }

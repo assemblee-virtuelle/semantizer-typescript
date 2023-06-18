@@ -3,11 +3,11 @@ import HandlerAbstract from "../../core/HandlerAbstract.js";
 import Semanticable from "../../core/Semanticable";
 import HandlerRequest from "../../core/HandlerRequest";
 
-export default class HandlerStore extends HandlerAbstract<void> {
+export default class HandlerStore extends HandlerAbstract {
 
     private _store: Array<Semanticable>;
 
-    constructor(nextHandler: Handler<void> | undefined = undefined) {
+    constructor(nextHandler: Handler | undefined = undefined) {
         super(nextHandler);
         this._store = [];
     }
@@ -16,11 +16,11 @@ export default class HandlerStore extends HandlerAbstract<void> {
         return this._store;
     }
     
-    public handle(request: HandlerRequest<any, any, any>): void {
+    public handle<T>(request: HandlerRequest<any, any, any>): T | undefined {
         if (request.isIdentifiedBy("ADD")) {
             this.getStore().push(request.getOrigin());
         }
-        super.handle(request);
+        return super.handle(request);
     }
 
 }

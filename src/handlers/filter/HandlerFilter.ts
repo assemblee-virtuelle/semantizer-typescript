@@ -3,11 +3,11 @@ import HandlerAbstract from "../../core/HandlerAbstract.js";
 import HandlerFilterStrategy from "./HandlerFilterStrategy";
 import HandlerRequest from "../../core/HandlerRequest";
 
-export default class HandlerFilter<T> extends HandlerAbstract<T> {
+export default class HandlerFilter extends HandlerAbstract {
 
     private _strategy: HandlerFilterStrategy;
 
-    constructor(strategy: HandlerFilterStrategy, nextHandler: Handler<any> | undefined = undefined) {
+    constructor(strategy: HandlerFilterStrategy, nextHandler: Handler | undefined = undefined) {
         super(nextHandler);
         this._strategy = strategy;
     }
@@ -16,7 +16,7 @@ export default class HandlerFilter<T> extends HandlerAbstract<T> {
         return this._strategy;
     }
 
-    public handle(request: HandlerRequest<any, any, any>): T | undefined {
+    public handle<T>(request: HandlerRequest<any, any, any>): T | undefined {
         if (this.getStrategy().accept(request))
             return super.handle(request);
     }

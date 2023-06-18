@@ -1,10 +1,10 @@
 import HandlerRequest from "./HandlerRequest";
 
-export default interface Handler<Result> {
+export default interface Handler {
 
-    getNext(): Handler<any> | undefined;
-    handle(request: HandlerRequest<any, any, any>): Result;
+    getNext(): Handler | undefined;
+    handle<T>(request: HandlerRequest<any, any, any>): T | undefined;
     hasNext(): boolean;
-    setNext(handler: Handler<any>): void;
+    setNext(handler: Handler): void;
 
 }

@@ -39,7 +39,7 @@ import HandlerRequest from './HandlerRequest.js';
 
 type Request = HandlerRequest<any, any, Semanticable>;
 
-export default abstract class SemanticObject<AddHandler extends Handler<void>, GetHandler extends Handler<any>, SetHandler extends Handler<void>, RemoveHandler extends Handler<void>> implements Semanticable {
+export default abstract class SemanticObject<AddHandler extends Handler, GetHandler extends Handler, SetHandler extends Handler, RemoveHandler extends Handler> implements Semanticable {
 
     private _requestFactory: RequestFactory<Semanticable>;
     private _addSemanticPropertyHandlerChain: AddHandler;
@@ -97,12 +97,12 @@ export default abstract class SemanticObject<AddHandler extends Handler<void>, G
         throw new Error("Method not implemented.");
     }
     
-    public async getSemanticPropertyValue<T>(name: string): Promise<T> {
-        return this._getSemanticPropertyHandlerChain.handle(this.createGetRequest(name));
+    public async getSemanticPropertyValue<T>(name: string): Promise<T | Semanticable | undefined> {
+        return this._getSemanticPropertyHandlerChain.handle<T>(this.createGetRequest(name));
     }
 
     public async getSemanticPropertyValueAll<T>(name: string): Promise<Array<T | Semanticable>> {
-        return this._getSemanticPropertyHandlerChain.handle(this.createGetAllRequest(name));
+        return this._getSemanticPropertyHandlerChain.handle<T[]>(this.createGetAllRequest(name)) ?? [];
     }
 
     public setSemanticProperty<T>(name: string, newValue: T, oldValue: T): void {
