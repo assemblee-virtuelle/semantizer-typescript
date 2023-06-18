@@ -1,8 +1,7 @@
-import Command from "../../core/Command";
-import Handler from "../../core/Handler";
+import HandlerRequest from "../../core/HandlerRequest";
 
-export default interface HandlerFilterStrategy<T> {
+export default interface HandlerFilterStrategy {
 
-    filter(handler: Handler<any>, command: Command<any, any>): T | undefined;
+    accept(request: HandlerRequest<any, any, any>): boolean;
 
 }

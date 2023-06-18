@@ -1,19 +1,19 @@
 import Handler from "../core/Handler";
-import Command from "../core/Command";
 import HandlerAbstract from "../core/HandlerAbstract.js";
+import HandlerRequest from "../core/HandlerRequest";
 
 export default class HandlerDefault<T> extends HandlerAbstract<T> {
 
     private _executor: Function;
 
-    constructor(executor: (command: Command<any, any>) => T | undefined, nextHandler: Handler<T> | undefined = undefined) {
+    constructor(executor: (p: HandlerRequest<any, any, any>) => T | undefined, nextHandler: Handler<T> | undefined = undefined) {
         super(nextHandler);
         this._executor = executor;
     }
 
-    public handle(command: Command<any, any>): T | undefined {
-        super.handle(command);
-        return this._executor(command);
+    public handle(request: HandlerRequest<any, any, any>): T | undefined {
+        super.handle(request);
+        return this._executor(request);
     }
 
 }

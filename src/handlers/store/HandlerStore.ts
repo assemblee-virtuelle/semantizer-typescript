@@ -1,7 +1,7 @@
 import Handler from "../../core/Handler";
-import Command from "../../core/Command";
 import HandlerAbstract from "../../core/HandlerAbstract.js";
 import Semanticable from "../../core/Semanticable";
+import HandlerRequest from "../../core/HandlerRequest";
 
 export default class HandlerStore extends HandlerAbstract<void> {
 
@@ -15,11 +15,12 @@ export default class HandlerStore extends HandlerAbstract<void> {
     public getStore(): Array<Semanticable> {
         return this._store;
     }
-
-    public handle(command: Command<any, any>): void {
-        this.getStore().push(command.getOrigin());
-        super.handle(command);
-        //return this.getStrategy().filter(this, command);
+    
+    public handle(request: HandlerRequest<any, any, any>): void {
+        if (request.isIdentifiedBy("ADD")) {
+            this.getStore().push(request.getOrigin());
+        }
+        super.handle(request);
     }
 
 }

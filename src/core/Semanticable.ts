@@ -42,6 +42,6 @@ export default interface Semanticable {
     getSemanticPropertyValue<T>(name: string): Promise<T | Semanticable | undefined>;
     getSemanticPropertyValueAll<T>(name: string): Promise<Array<T | Semanticable>>;
     removeSemanticProperty<T>(name: string, value: T): void;
-    setSemanticProperty<T>(name: string, oldValue: T, newValue: T): void;
+    setSemanticProperty<T>(name: string, newValue: T, oldValue: T): void;
 
 }

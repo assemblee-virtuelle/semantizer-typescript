@@ -1,10 +1,10 @@
-import Command from "./Command";
+import HandlerRequest from "./HandlerRequest";
 
-export default interface Handler<T> {
+export default interface Handler<Result> {
 
-    handle(command: Command<any, any>): T | undefined;
     getNext(): Handler<any> | undefined;
+    handle(request: HandlerRequest<any, any, any>): Result;
     hasNext(): boolean;
-    setNext(handler: Handler<T>): void;
+    setNext(handler: Handler<any>): void;
 
 }
