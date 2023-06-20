@@ -1,8 +1,12 @@
-export default interface HandlerRequest<Identifier, Payload, Origin> {
+import RequestHeaders from "./RequestHeaders";
+export default interface HandlerRequest<HeaderKey, HeaderValue, Payload, Origin> {
 
-    getIdentifier(): Identifier;
+    getHeader(key: HeaderKey): HeaderValue | undefined;
+    getHeaders(): RequestHeaders<HeaderKey, HeaderValue>;
     getOrigin(): Origin;
     getPayload(): Payload;
-    isIdentifiedBy(identifier: Identifier): boolean;
+    hasHeader(key: HeaderKey): boolean;
 
+    //getIdentifier(): Identifier;
+    //isIdentifiedBy(identifier: Identifier): boolean;
 }

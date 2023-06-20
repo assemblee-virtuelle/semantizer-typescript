@@ -24,7 +24,7 @@ import Semanticable from './Semanticable.js';
 import RequestFactory from './RequestFactory.js';
 import HandlerRequest from './HandlerRequest.js';
 
-type Request = HandlerRequest<any, any, Semanticable>;
+type Request = HandlerRequest<any, any, any, Semanticable>;
 
 /**
  * The SemanticObject class is the base implementation of the Semanticable 

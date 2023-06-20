@@ -1,6 +1,6 @@
 import HandlerRequest from "./HandlerRequest";
 
-type Request<Origin> = HandlerRequest<any, any, Origin>;
+type Request<Origin> = HandlerRequest<any, any, any, Origin>;
 
 export default interface RequestFactory<Origin> {
 
@@ -11,3 +11,5 @@ export default interface RequestFactory<Origin> {
     createRequestToRemoveSemanticProperty<Value>(name: string, value: Value): Request<Origin>;
 
 }
+
+// select ?value { ?property dfc:description ?value }

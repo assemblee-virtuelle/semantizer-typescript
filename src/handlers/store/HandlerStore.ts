@@ -1,13 +1,12 @@
 import Handler from "../../core/Handler";
 import HandlerAbstract from "../../core/HandlerAbstract.js";
 import Semanticable from "../../core/Semanticable";
-import HandlerRequest from "../../core/HandlerRequest";
 
-export default class HandlerStore extends HandlerAbstract {
+export default class HandlerStore<Request> extends HandlerAbstract<Request> {
 
     private _store: Array<Semanticable>;
 
-    constructor(nextHandler: Handler | undefined = undefined) {
+    constructor(nextHandler: Handler<Request> | undefined = undefined) {
         super(nextHandler);
         this._store = [];
     }
@@ -16,12 +15,12 @@ export default class HandlerStore extends HandlerAbstract {
         return this._store;
     }
     
-    public handle<T>(request: HandlerRequest<any, any, any>): T | undefined;
-    public handle<T>(request: HandlerRequest<any, any, any>): Promise<T>;
-    public handle<T>(request: HandlerRequest<any, any, any>): T | undefined {
-        if (request.isIdentifiedBy("ADD")) {
+    public handle<T>(request: Request): T | undefined;
+    public handle<T>(request: Request): Promise<T>;
+    public handle<T>(request: Request): T | undefined {
+        /*if (request.isIdentifiedBy("ADD")) {
             this.getStore().push(request.getOrigin());
-        }
+        }*/
         return super.handle<T>(request);
     }
 

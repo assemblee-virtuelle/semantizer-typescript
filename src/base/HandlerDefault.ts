@@ -1,18 +1,16 @@
 import Handler from "../core/Handler";
 import HandlerAbstract from "../core/HandlerAbstract.js";
-import HandlerRequest from "../core/HandlerRequest";
-
-export default class HandlerDefault extends HandlerAbstract {
+export default class HandlerDefault<Request> extends HandlerAbstract<Request> {
 
     private _executor: Function;
 
-    constructor(executor: (p: HandlerRequest<any, any, any>) => any, nextHandler: Handler | undefined = undefined) {
+    constructor(executor: (p: Request) => any, nextHandler: Handler<Request> | undefined = undefined) {
         super(nextHandler);
         this._executor = executor;
     }
 
-    public handle<T>(request: HandlerRequest<any, any, any>): Promise<T>;
-    public handle<T>(request: HandlerRequest<any, any, any>): T {
+    public handle<T>(request: Request): Promise<T>;
+    public handle<T>(request: Request): T {
         super.handle(request);
         return this._executor(request);
     }

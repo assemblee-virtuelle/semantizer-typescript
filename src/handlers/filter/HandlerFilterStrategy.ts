@@ -1,7 +1,5 @@
-import HandlerRequest from "../../core/HandlerRequest";
+export default interface HandlerFilterStrategy<Request> {
 
-export default interface HandlerFilterStrategy {
-
-    accept(request: HandlerRequest<any, any, any>): boolean;
+    accept(request: Request): boolean;
 
 }

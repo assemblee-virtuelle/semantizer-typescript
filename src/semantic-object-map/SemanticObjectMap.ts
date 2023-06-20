@@ -5,10 +5,10 @@ import RequestFactory from "../core/RequestFactory.js";
 import Semanticable from "../core/Semanticable.js";
 import RequestFactoryDefault from "../core/RequestFactoryDefault.js";
 import HandlerMap from "./HandlerMap.js";
-import HandlerRequest from "../core/HandlerRequest.js";
+import { SemanticObjectRequest } from "../core/SemanticObjectRequest.js";
 
 type Property = SemanticProperty<any>;
-type Request = HandlerRequest<any, any, Semanticable>;
+type Request = SemanticObjectRequest<any>;
 
 export default class SemanticObjectMap extends SemanticObjectWithDataset<Array<Property>> {
 
