@@ -21,57 +21,106 @@ export default class SemanticObjectDefaultHandler extends RequestHandlerAbstract
         return this._map;
     }
 
-    public handle<T>(request: SemanticableObjectRequest): T | T[] | undefined {
-        this.handleAdd<T>(request);
-
-        const get = this.handleGet<T | undefined>(request);
-        if (get !== undefined)
-            return get;
-
-        const getAll = this.handleGetAll<T>(request);
-        if (getAll !== undefined)
-            return getAll;
-
-        this.handleSet<T>(request);
-        this.handleRemove(request);
-
-        return super.handle(request);
+    private createCommand(request: SemanticableObjectRequest): SemanticObjectDefaultHandlerCommand {
+        let command;
+        switch (request.getIdentifier()) {
+            case 'ADD':
+                command = new SemanticObjectDefaultHandlerCommandAdd(this.getMap(), request);    
+                break;
+    
+            case 'GET':
+                command = new SemanticObjectDefaultHandlerCommandGet(this.getMap(), request);    
+                break;
+        
+            case 'GET_ALL':
+                command = new SemanticObjectDefaultHandlerCommandGetAll(this.getMap(), request);    
+                break;
+    
+            case 'SET':
+                command = new SemanticObjectDefaultHandlerCommandSet(this.getMap(), request);    
+                break;
+    
+            case 'REMOVE':
+                command = new SemanticObjectDefaultHandlerCommandRemove(this.getMap(), request);    
+                break;
+    
+            default:
+                throw new Error("Unable to create command for the request: unknown identifier.");
+                break;
+        }
+        return command;
     }
 
-    private handleAdd<T>(request: SemanticableObjectRequest): void {
-        if (request.isIdentifiedBy('ADD')) {
-            const payload = <PayloadNameValue<T>> request.getPayload();
-            this.getMap().add(payload.name, payload.value);
-        }
+    public handle<T>(request: SemanticableObjectRequest): T | T[] | undefined | void {
+        super.handle(request);
+        return this.createCommand(request)?.execute<T>();
     }
 
-    private handleGet<T>(request: SemanticableObjectRequest): T | undefined {
-        if (request.isIdentifiedBy('GET')) {
-            const result: SemanticProperty<any> | undefined = this.getMap().get(request.getPayload());
-            if (result)
-                return result.getValue();
-        }
+}
+
+export abstract class SemanticObjectDefaultHandlerCommand {
+
+    private _semanticObject: SemanticObjectDefault;
+    private _request: SemanticableObjectRequest;
+
+    public constructor(semanticObject: SemanticObjectDefault, request: SemanticableObjectRequest) {
+        this._semanticObject = semanticObject;
+        this._request = request;
     }
 
-    private handleGetAll<T>(request: SemanticableObjectRequest): T[] | undefined {
-        if (request.isIdentifiedBy('GET_ALL')) {
-            const properties: SemanticProperty<any>[] = this.getMap().getAll(request.getPayload());
-            return properties.map((p: SemanticProperty<any>) => p.getValue());
-        }
+    public getSemanticObject(): SemanticObjectDefault {
+        return this._semanticObject;
     }
 
-    private handleSet<T>(request: SemanticableObjectRequest): void {
-        if (request.isIdentifiedBy('SET')) {
-            const payload = <PayloadNameNewOldValue<T>> request.getPayload();
-            this.getMap().set(payload.name, payload.newValue, payload.oldValue);
-        }
+    public getRequest(): SemanticableObjectRequest {
+        return this._request;
     }
 
-    private handleRemove<T>(request: SemanticableObjectRequest): void {
-        if (request.isIdentifiedBy('REMOVE')) {
-            const payload = <PayloadNameValue<T>> request.getPayload();
-            this.getMap().unset(payload.name, payload.value);
-        }
+    public abstract execute<T>(): any;
+
+}
+
+export class SemanticObjectDefaultHandlerCommandAdd extends SemanticObjectDefaultHandlerCommand {
+
+    public execute<T>(): void {
+        const payload = <PayloadNameValue<T>> this.getRequest().getPayload();
+        return this.getSemanticObject().add(payload.name, payload.value);
+    }
+
+}
+
+export class SemanticObjectDefaultHandlerCommandGet extends SemanticObjectDefaultHandlerCommand {
+
+    public execute<T>(): T | undefined {
+        const result: SemanticProperty<any> | undefined = this.getSemanticObject().get(this.getRequest().getPayload());
+        return result?.getValue();
+    }
+
+}
+
+export class SemanticObjectDefaultHandlerCommandGetAll extends SemanticObjectDefaultHandlerCommand {
+
+    public execute<T>(): T[] {
+        const properties: SemanticProperty<any>[] = this.getSemanticObject().getAll(this.getRequest().getPayload());
+        return properties.map((p: SemanticProperty<any>) => p.getValue());
+    }
+
+}
+
+export class SemanticObjectDefaultHandlerCommandSet extends SemanticObjectDefaultHandlerCommand {
+
+    public execute<T>(): void {
+        const payload = <PayloadNameNewOldValue<T>> this.getRequest().getPayload();
+        return this.getSemanticObject().set(payload.name, payload.newValue, payload.oldValue);
+    }
+
+}
+
+export class SemanticObjectDefaultHandlerCommandRemove extends SemanticObjectDefaultHandlerCommand {
+
+    public execute<T>(): void {
+        const payload = <PayloadNameValue<T>> this.getRequest().getPayload();
+        return this.getSemanticObject().unset(payload.name, payload.value);
     }
 
 }
