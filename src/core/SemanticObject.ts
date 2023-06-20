@@ -58,64 +58,34 @@ export default abstract class SemanticObject<Add, Set, Remove> implements Semant
         return this._requestFactory;
     }
 
-    public createAddRequest<T>(name: string, value: T): SemanticRequest<Add, Set, Remove> {
-        return this.getRequestFactory().createRequestToAddSemanticProperty<T>(name, value);
-    }
-
-    public createGetRequest(name: string): SemanticRequest<Add, Set, Remove> {
-        return this.getRequestFactory().createRequestToGetSemanticProperty(name);
-    }
-
-    public createGetAllRequest(name: string): SemanticRequest<Add, Set, Remove> {
-        return this.getRequestFactory().createRequestToGetSemanticPropertyAll(name);
-    }
-
-    public createSetRequest<T>(name: string, newValue: T, oldValue: T): SemanticRequest<Add, Set, Remove> {
-        return this.getRequestFactory().createRequestToSetSemanticProperty<T>(name, newValue, oldValue);
-    }
-
-    public createRemoveRequest<T>(name: string, value: T): SemanticRequest<Add, Set, Remove> {
-        return this.getRequestFactory().createRequestToRemoveSemanticProperty<T>(name, value);
-    }
-
     public addSemanticProperty<T>(name: string, value: T): Add;
     public addSemanticProperty<T>(name: string, value: T): Promise<Add>;
     public addSemanticProperty<T>(name: string, value: T): Add | Promise<Add> {
-        return this.handle<Add>(this.createAddRequest<T>(name, value));
+        return this.handle<Add>(this.getRequestFactory().createRequestToAddSemanticProperty<T>(name, value));
     }
-
-    public getSemanticProperty<T>(name: string): T;
-    public async getSemanticProperty<T>(name: string): Promise<T> {
-        throw new Error("Method not implemented.");
+    
+    public getSemanticProperty<T>(name: string): T | Semanticable<Add, Set, Remove> | undefined;
+    public getSemanticProperty<T>(name: string): Promise<T | Semanticable<Add, Set, Remove> | undefined>;
+    public getSemanticProperty<T>(name: string): T | Semanticable<Add, Set, Remove> | undefined {
+        return this.handle<T>(this.getRequestFactory().createRequestToGetSemanticProperty(name));
     }
 
     public getSemanticPropertyAll<T extends Array<T>>(name: string): T;
-    public async getSemanticPropertyAll<T extends Array<T>>(name: string): Promise<T> {
-        throw new Error("Method not implemented.");
-    }
-    
-    public getSemanticPropertyValue<T>(name: string): T | Semanticable<Add, Set, Remove> | undefined;
-    public getSemanticPropertyValue<T>(name: string): Promise<T | Semanticable<Add, Set, Remove> | undefined>;
-    public getSemanticPropertyValue<T>(name: string): T | Semanticable<Add, Set, Remove> | undefined {
-        return this.handle(this.createGetRequest(name));
-    }
-
-    public getSemanticPropertyValueAll<T extends Array<T>>(name: string): T;
-    public getSemanticPropertyValueAll<T extends Array<T>>(name: string): Promise<T>;
-    public getSemanticPropertyValueAll<T extends Array<T>>(name: string): T {
-        return this.handle<T>(this.createGetAllRequest(name));
+    public getSemanticPropertyAll<T extends Array<T>>(name: string): Promise<T>;
+    public getSemanticPropertyAll<T extends Array<T>>(name: string): T {
+        return this.handle<T>(this.getRequestFactory().createRequestToGetSemanticPropertyAll(name));
     }
 
     public setSemanticProperty<T>(name: string, newValue: T, oldValue: T): Set;
     public setSemanticProperty<T>(name: string, newValue: T, oldValue: T): Promise<Set>;
     public setSemanticProperty<T>(name: string, newValue: T, oldValue: T): Set | Promise<Set> {
-        return this.handle<Set>(this.createSetRequest<T>(name, newValue, oldValue));
+        return this.handle<Set>(this.getRequestFactory().createRequestToSetSemanticProperty<T>(name, newValue, oldValue));
     }
 
     public removeSemanticProperty<T>(name: string, value: T): Remove;
     public removeSemanticProperty<T>(name: string, value: T): Promise<Remove>;
     public removeSemanticProperty<T>(name: string, value: T): Remove | Promise<Remove> {
-        return this.handle<Remove>(this.createRemoveRequest(name, value));
+        return this.handle<Remove>(this.getRequestFactory().createRequestToRemoveSemanticProperty<T>(name, value));
     }
 
 }

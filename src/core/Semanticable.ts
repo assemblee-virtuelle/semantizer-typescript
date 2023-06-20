@@ -20,8 +20,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import SemanticProperty from "./SemanticProperty";
-
 /**
  * The Semanticable interface is the way to define semantic objects that 
  * contain semantic properties (Propertyable). The properties of a 
@@ -39,17 +37,11 @@ export default interface Semanticable<Add, Set, Remove> {
     addSemanticProperty<T>(name: string, value: T): Add;
     addSemanticProperty<T>(name: string, value: T): Promise<Add>;
 
-    getSemanticProperty<Get>(name: string): Get;
-    getSemanticProperty<Get>(name: string): Promise<Get>;
+    getSemanticProperty<Get>(name: string): Get | Semanticable<Add, Set, Remove> | undefined;
+    getSemanticProperty<Get>(name: string): Promise<Get | Semanticable<Add, Set, Remove> | undefined>;
 
     getSemanticPropertyAll<Get>(name: string): Get[];
     getSemanticPropertyAll<Get>(name: string): Promise<Get[]>;
-
-    getSemanticPropertyValue<Get>(name: string): Get | Semanticable<Add, Set, Remove> | undefined;
-    getSemanticPropertyValue<Get>(name: string): Promise<Get | Semanticable<Add, Set, Remove> | undefined>;
-
-    getSemanticPropertyValueAll<Get>(name: string): Get[];
-    getSemanticPropertyValueAll<Get>(name: string): Promise<Get[]>;
     
     removeSemanticProperty<T>(name: string, value: T): Remove;
     removeSemanticProperty<T>(name: string, value: T): Promise<Remove>;
