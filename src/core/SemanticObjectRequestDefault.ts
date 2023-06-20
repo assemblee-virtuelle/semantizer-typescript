@@ -1,6 +1,6 @@
 import RequestHeaders from "./RequestHeaders";
 import RequestHeadersDefault from "./RequestHeadersDefault";
-import { SemanticObjectRequest } from "./SemanticObjectRequest";
+import SemanticObjectRequest from "./SemanticObjectRequest";
 import Semanticable from "./Semanticable";
 
 export default class SemanticObjectRequestDefault<Payload, Add, Set, Remove> implements SemanticObjectRequest<Payload, Add, Set, Remove> {

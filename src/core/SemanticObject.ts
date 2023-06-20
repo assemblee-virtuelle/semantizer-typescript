@@ -23,6 +23,7 @@ SOFTWARE.
 import Semanticable from './Semanticable.js';
 import RequestFactory from './RequestFactory.js';
 import Request from './Request.js';
+import RequestHandler from './RequestHandler.js';
 
 type SemanticRequest<Add, Set, Remove> = Request<any, any, any, Semanticable<Add, Set, Remove>>;
 
@@ -45,9 +46,13 @@ export default abstract class SemanticObject<Add, Set, Remove> implements Semant
     }
 
     protected abstract getDefaultRequestFactory(): RequestFactory<Semanticable<Add, Set, Remove>>;
+    protected abstract getDefaultRequestHandler(): RequestHandler<Request<any, any, any, any>>;
 
-    protected abstract handle<T>(request: SemanticRequest<Add, Set, Remove>): T;
-    protected abstract handle<T>(request: SemanticRequest<Add, Set, Remove>): Promise<T>;
+    protected handle<T>(request: SemanticRequest<Add, Set, Remove>): T;
+    protected handle<T>(request: SemanticRequest<Add, Set, Remove>): Promise<T>;
+    protected handle<T>(request: SemanticRequest<Add, Set, Remove>): T | Promise<T> {
+        return this.getDefaultRequestHandler().handle<T>(request);
+    }
 
     public getRequestFactory(): RequestFactory<Semanticable<Add, Set, Remove>> {
         return this._requestFactory;

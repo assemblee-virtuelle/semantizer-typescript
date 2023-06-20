@@ -1,5 +1,6 @@
 import Request from "./Request";
 import RequestFactory from "./RequestFactory";
+import RequestHandler from "./RequestHandler";
 import SemanticObject from "./SemanticObject.js";
 import Semanticable from "./Semanticable";
 
@@ -19,7 +20,6 @@ export default abstract class SemanticObjectWithDataset<Dataset, Add, Set, Remov
     }
 
     protected abstract getDefaultRequestFactory(): RequestFactory<Semanticable<Add, Set, Remove>>;
-    protected abstract handle<T>(request: SemanticRequest<Add, Set, Remove>): T;
-    protected abstract handle<T>(request: SemanticRequest<Add, Set, Remove>): Promise<T>;
+    protected abstract getDefaultRequestHandler(): RequestHandler<SemanticRequest<any, any, any>>;
 
 }

@@ -1,6 +1,6 @@
 import RequestHandler from "../core/RequestHandler";
 import RequestHandlerAbstract from "../core/RequestHandlerAbstract.js";
-import { SemanticObjectRequest } from "../core/SemanticObjectRequest";
+import SemanticObjectRequest from "../core/SemanticObjectRequest";
 import SemanticProperty from "../core/SemanticProperty";
 import SemanticObjectMap from "./SemanticObjectMap";
 
