@@ -1,5 +1,6 @@
-import RequestHandler from "../core/RequestHandler";
-import RequestHandlerAbstract from "../core/RequestHandlerAbstract.js";
+import RequestHandler from "./RequestHandler";
+import RequestHandlerAbstract from "./RequestHandlerAbstract.js";
+
 export default class HandlerDefault<Request> extends RequestHandlerAbstract<Request> {
 
     private _executor: Function;
