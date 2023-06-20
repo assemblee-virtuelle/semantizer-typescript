@@ -1,15 +1,13 @@
-import HandlerRequest from "./HandlerRequest";
+import Request from "./Request";
 
-type Request<Origin> = HandlerRequest<any, any, any, Origin>;
+type RequestWithOrigin<Origin> = Request<any, any, any, Origin>;
 
 export default interface RequestFactory<Origin> {
 
-    createRequestToAddSemanticProperty<Value>(name: string, value: Value): Request<Origin>;
-    createRequestToGetSemanticProperty<Value>(name: string): Request<Origin>;
-    createRequestToGetSemanticPropertyAll<Value>(name: string): Request<Origin>;
-    createRequestToSetSemanticProperty<Value>(name: string, newValue: Value, oldValue: Value): Request<Origin>;
-    createRequestToRemoveSemanticProperty<Value>(name: string, value: Value): Request<Origin>;
+    createRequestToAddSemanticProperty<Value>(name: string, value: Value): RequestWithOrigin<Origin>;
+    createRequestToGetSemanticProperty<Value>(name: string): RequestWithOrigin<Origin>;
+    createRequestToGetSemanticPropertyAll<Value>(name: string): RequestWithOrigin<Origin>;
+    createRequestToSetSemanticProperty<Value>(name: string, newValue: Value, oldValue: Value): RequestWithOrigin<Origin>;
+    createRequestToRemoveSemanticProperty<Value>(name: string, value: Value): RequestWithOrigin<Origin>;
 
 }
-
-// select ?value { ?property dfc:description ?value }

@@ -1,9 +1,9 @@
-import HandlerRequest from "./HandlerRequest";
+import Request from "./Request";
 import RequestFactory from "./RequestFactory";
 import SemanticObject from "./SemanticObject.js";
 import Semanticable from "./Semanticable";
 
-type Request = HandlerRequest<any, any, any, Semanticable>;
+type SemanticRequest = Request<any, any, any, Semanticable>;
 
 export default abstract class SemanticObjectWithDataset<Dataset> extends SemanticObject {
 
@@ -19,7 +19,7 @@ export default abstract class SemanticObjectWithDataset<Dataset> extends Semanti
     }
 
     protected abstract getDefaultRequestFactory(): RequestFactory<Semanticable>;
-    protected abstract handle<T>(request: Request): T;
-    protected abstract handle<T>(request: Request): Promise<T>;
+    protected abstract handle<T>(request: SemanticRequest): T;
+    protected abstract handle<T>(request: SemanticRequest): Promise<T>;
 
 }

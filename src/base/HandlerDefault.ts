@@ -1,10 +1,10 @@
-import Handler from "../core/Handler";
-import HandlerAbstract from "../core/HandlerAbstract.js";
-export default class HandlerDefault<Request> extends HandlerAbstract<Request> {
+import RequestHandler from "../core/RequestHandler";
+import RequestHandlerAbstract from "../core/RequestHandlerAbstract.js";
+export default class HandlerDefault<Request> extends RequestHandlerAbstract<Request> {
 
     private _executor: Function;
 
-    constructor(executor: (p: Request) => any, nextHandler: Handler<Request> | undefined = undefined) {
+    constructor(executor: (p: Request) => any, nextHandler: RequestHandler<Request> | undefined = undefined) {
         super(nextHandler);
         this._executor = executor;
     }

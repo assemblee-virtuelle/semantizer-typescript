@@ -1,11 +1,11 @@
-import Handler from "../../core/Handler";
-import HandlerAbstract from "../../core/HandlerAbstract.js";
+import RequestHandler from "../../core/RequestHandler";
+import RequestHandlerAbstract from "../../core/RequestHandlerAbstract.js";
 import HandlerFilterStrategy from "./HandlerFilterStrategy";
-export default class HandlerFilter<Request> extends HandlerAbstract<Request> {
+export default class HandlerFilter<Request> extends RequestHandlerAbstract<Request> {
 
     private _strategy: HandlerFilterStrategy<Request>;
 
-    constructor(strategy: HandlerFilterStrategy<Request>, nextHandler: Handler<Request> | undefined = undefined) {
+    constructor(strategy: HandlerFilterStrategy<Request>, nextHandler: RequestHandler<Request> | undefined = undefined) {
         super(nextHandler);
         this._strategy = strategy;
     }

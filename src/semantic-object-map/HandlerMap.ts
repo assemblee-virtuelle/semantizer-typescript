@@ -1,5 +1,5 @@
-import Handler from "../core/Handler";
-import HandlerAbstract from "../core/HandlerAbstract.js";
+import RequestHandler from "../core/RequestHandler";
+import RequestHandlerAbstract from "../core/RequestHandlerAbstract.js";
 import { SemanticObjectRequest } from "../core/SemanticObjectRequest";
 import SemanticProperty from "../core/SemanticProperty";
 import SemanticObjectMap from "./SemanticObjectMap";
@@ -7,11 +7,11 @@ import SemanticObjectMap from "./SemanticObjectMap";
 type PayloadNameValue<T> = { name: string, value: T };
 type PayloadNameNewOldValue<T> = { name: string, newValue: T, oldValue: T };
 
-export default class HandlerMap extends HandlerAbstract<SemanticObjectRequest<any>> {
+export default class HandlerMap extends RequestHandlerAbstract<SemanticObjectRequest<any>> {
 
     private _map: SemanticObjectMap;
 
-    constructor(map: SemanticObjectMap, nextHandler: Handler<SemanticObjectRequest<any>> | undefined = undefined) {
+    constructor(map: SemanticObjectMap, nextHandler: RequestHandler<SemanticObjectRequest<any>> | undefined = undefined) {
         super(nextHandler);
         this._map = map;
     }

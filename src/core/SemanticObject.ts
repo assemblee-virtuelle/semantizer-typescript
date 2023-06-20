@@ -22,9 +22,9 @@ SOFTWARE.
 
 import Semanticable from './Semanticable.js';
 import RequestFactory from './RequestFactory.js';
-import HandlerRequest from './HandlerRequest.js';
+import Request from './Request.js';
 
-type Request = HandlerRequest<any, any, any, Semanticable>;
+type SemanticRequest = Request<any, any, any, Semanticable>;
 
 /**
  * The SemanticObject class is the base implementation of the Semanticable 
@@ -46,30 +46,30 @@ export default abstract class SemanticObject implements Semanticable {
 
     protected abstract getDefaultRequestFactory(): RequestFactory<Semanticable>;
 
-    protected abstract handle<T>(request: Request): T;
-    protected abstract handle<T>(request: Request): Promise<T>;
+    protected abstract handle<T>(request: SemanticRequest): T;
+    protected abstract handle<T>(request: SemanticRequest): Promise<T>;
 
     public getRequestFactory(): RequestFactory<Semanticable> {
         return this._requestFactory;
     }
 
-    public createAddRequest<T>(name: string, value: T): Request {
+    public createAddRequest<T>(name: string, value: T): SemanticRequest {
         return this.getRequestFactory().createRequestToAddSemanticProperty<T>(name, value);
     }
 
-    public createGetRequest(name: string): Request {
+    public createGetRequest(name: string): SemanticRequest {
         return this.getRequestFactory().createRequestToGetSemanticProperty(name);
     }
 
-    public createGetAllRequest(name: string): Request {
+    public createGetAllRequest(name: string): SemanticRequest {
         return this.getRequestFactory().createRequestToGetSemanticPropertyAll(name);
     }
 
-    public createSetRequest<T>(name: string, newValue: T, oldValue: T): Request {
+    public createSetRequest<T>(name: string, newValue: T, oldValue: T): SemanticRequest {
         return this.getRequestFactory().createRequestToSetSemanticProperty<T>(name, newValue, oldValue);
     }
 
-    public createRemoveRequest<T>(name: string, value: T): Request {
+    public createRemoveRequest<T>(name: string, value: T): SemanticRequest {
         return this.getRequestFactory().createRequestToRemoveSemanticProperty<T>(name, value);
     }
 

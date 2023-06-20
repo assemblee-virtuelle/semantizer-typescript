@@ -1,9 +1,10 @@
-import Handler from "./Handler";
-export default abstract class HandlerAbstract<Request> implements Handler<Request> {
+import RequestHandler from "./RequestHandler";
 
-    private _nextHandler: Handler<Request> | undefined;
+export default abstract class RequestHandlerAbstract<Request> implements RequestHandler<Request> {
 
-    constructor(nextHandler: Handler<Request> | undefined = undefined) {
+    private _nextHandler: RequestHandler<Request> | undefined;
+
+    constructor(nextHandler: RequestHandler<Request> | undefined = undefined) {
         this._nextHandler = nextHandler;
     }
 
@@ -15,7 +16,7 @@ export default abstract class HandlerAbstract<Request> implements Handler<Reques
         //return Promise.resolve();
     }
 
-    public getNext(): Handler<Request> | undefined {
+    public getNext(): RequestHandler<Request> | undefined {
         return this._nextHandler;
     }
 
@@ -23,7 +24,7 @@ export default abstract class HandlerAbstract<Request> implements Handler<Reques
         return this.getNext() !== undefined;
     }
 
-    public setNext(handler: Handler<Request>): void {
+    public setNext(handler: RequestHandler<Request>): void {
         this._nextHandler = handler;
     }
 

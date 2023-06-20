@@ -1,12 +1,12 @@
-import Handler from "../../core/Handler";
-import HandlerAbstract from "../../core/HandlerAbstract.js";
+import RequestHandler from "../../core/RequestHandler";
+import RequestHandlerAbstract from "../../core/RequestHandlerAbstract.js";
 import Semanticable from "../../core/Semanticable";
 
-export default class HandlerStore<Request> extends HandlerAbstract<Request> {
+export default class HandlerStore<Request> extends RequestHandlerAbstract<Request> {
 
     private _store: Array<Semanticable>;
 
-    constructor(nextHandler: Handler<Request> | undefined = undefined) {
+    constructor(nextHandler: RequestHandler<Request> | undefined = undefined) {
         super(nextHandler);
         this._store = [];
     }

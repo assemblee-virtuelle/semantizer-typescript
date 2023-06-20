@@ -1,5 +1,5 @@
 import RequestHeaders from "./RequestHeaders";
-export default interface HandlerRequest<HeaderKey, HeaderValue, Payload, Origin> {
+export default interface Request<HeaderKey, HeaderValue, Payload, Origin> {
 
     getHeader(key: HeaderKey): HeaderValue | undefined;
     getHeaders(): RequestHeaders<HeaderKey, HeaderValue>;
