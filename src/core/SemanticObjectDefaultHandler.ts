@@ -21,27 +21,32 @@ export default class SemanticObjectDefaultHandler extends RequestHandlerAbstract
         return this._map;
     }
 
-    private createCommand(request: SemanticableObjectRequest): SemanticObjectDefaultHandlerCommand {
-        let command;
+    private createCommand<T>(request: SemanticableObjectRequest): SemanticObjectDefaultHandlerCommand {
+        let command, payload;
         switch (request.getIdentifier()) {
             case 'ADD':
-                command = new SemanticObjectDefaultHandlerCommandAdd(this.getMap(), request);    
+                payload = <PayloadNameValue<T>> request.getPayload();
+                command = new SemanticObjectDefaultHandlerCommandAdd(this.getMap(), payload.name, payload.value);    
                 break;
     
             case 'GET':
-                command = new SemanticObjectDefaultHandlerCommandGet(this.getMap(), request);    
+                payload = <string> request.getPayload();
+                command = new SemanticObjectDefaultHandlerCommandGet(this.getMap(), payload);    
                 break;
         
             case 'GET_ALL':
-                command = new SemanticObjectDefaultHandlerCommandGetAll(this.getMap(), request);    
+                payload = <string> request.getPayload();
+                command = new SemanticObjectDefaultHandlerCommandGetAll(this.getMap(), payload);    
                 break;
     
             case 'SET':
-                command = new SemanticObjectDefaultHandlerCommandSet(this.getMap(), request);    
+                payload = <PayloadNameNewOldValue<T>> request.getPayload();
+                command = new SemanticObjectDefaultHandlerCommandSet(this.getMap(), payload.name, payload.newValue, payload.oldValue);    
                 break;
     
             case 'REMOVE':
-                command = new SemanticObjectDefaultHandlerCommandRemove(this.getMap(), request);    
+                payload = <PayloadNameValue<T>> request.getPayload();
+                command = new SemanticObjectDefaultHandlerCommandRemove(this.getMap(), payload.name, payload.value);    
                 break;
     
             default:
@@ -53,38 +58,67 @@ export default class SemanticObjectDefaultHandler extends RequestHandlerAbstract
 
     public handle<T>(request: SemanticableObjectRequest): T | T[] | undefined | void {
         super.handle(request);
-        return this.createCommand(request)?.execute<T>();
+        return this.createCommand<T>(request)?.execute<T>();
     }
 
 }
 
 export abstract class SemanticObjectDefaultHandlerCommand {
 
+    private _name: string;
     private _semanticObject: SemanticObjectDefault;
-    private _request: SemanticableObjectRequest;
 
-    public constructor(semanticObject: SemanticObjectDefault, request: SemanticableObjectRequest) {
+    public constructor(semanticObject: SemanticObjectDefault, name: string) {
+        this._name = name;
         this._semanticObject = semanticObject;
-        this._request = request;
     }
 
     public getSemanticObject(): SemanticObjectDefault {
         return this._semanticObject;
     }
-
-    public getRequest(): SemanticableObjectRequest {
-        return this._request;
+    
+    public getName(): string {
+        return this._name;
     }
 
     public abstract execute<T>(): any;
 
 }
 
-export class SemanticObjectDefaultHandlerCommandAdd extends SemanticObjectDefaultHandlerCommand {
+export abstract class SemanticObjectDefaultHandlerCommandWithValue<T> extends SemanticObjectDefaultHandlerCommand {
+
+    private _value: T;
+
+    public constructor(semanticObject: SemanticObjectDefault, name: string, value: T) {
+        super(semanticObject, name);
+        this._value = value;
+    }
+
+    public getValue(): T {
+        return this._value;
+    }
+
+}
+
+export abstract class SemanticObjectDefaultHandlerCommandWithOldValue<T> extends SemanticObjectDefaultHandlerCommandWithValue<T> {
+
+    private _oldValue: T;
+
+    public constructor(semanticObject: SemanticObjectDefault, name: string, newValue: T, oldValue: T) {
+        super(semanticObject, name, newValue);
+        this._oldValue = oldValue;
+    }
+
+    public getOldValue(): T {
+        return this._oldValue;
+    }
+
+}
+
+export class SemanticObjectDefaultHandlerCommandAdd<T> extends SemanticObjectDefaultHandlerCommandWithValue<T> {
 
     public execute<T>(): void {
-        const payload = <PayloadNameValue<T>> this.getRequest().getPayload();
-        return this.getSemanticObject().add(payload.name, payload.value);
+        return this.getSemanticObject().add(this.getName(), this.getValue());
     }
 
 }
@@ -92,8 +126,7 @@ export class SemanticObjectDefaultHandlerCommandAdd extends SemanticObjectDefaul
 export class SemanticObjectDefaultHandlerCommandGet extends SemanticObjectDefaultHandlerCommand {
 
     public execute<T>(): T | undefined {
-        const result: SemanticProperty<any> | undefined = this.getSemanticObject().get(this.getRequest().getPayload());
-        return result?.getValue();
+        return this.getSemanticObject().get(this.getName())?.getValue();
     }
 
 }
@@ -101,26 +134,24 @@ export class SemanticObjectDefaultHandlerCommandGet extends SemanticObjectDefaul
 export class SemanticObjectDefaultHandlerCommandGetAll extends SemanticObjectDefaultHandlerCommand {
 
     public execute<T>(): T[] {
-        const properties: SemanticProperty<any>[] = this.getSemanticObject().getAll(this.getRequest().getPayload());
+        const properties: SemanticProperty<any>[] = this.getSemanticObject().getAll(this.getName());
         return properties.map((p: SemanticProperty<any>) => p.getValue());
     }
 
 }
 
-export class SemanticObjectDefaultHandlerCommandSet extends SemanticObjectDefaultHandlerCommand {
+export class SemanticObjectDefaultHandlerCommandSet<T> extends SemanticObjectDefaultHandlerCommandWithOldValue<T> {
 
     public execute<T>(): void {
-        const payload = <PayloadNameNewOldValue<T>> this.getRequest().getPayload();
-        return this.getSemanticObject().set(payload.name, payload.newValue, payload.oldValue);
+        return this.getSemanticObject().set(this.getName(), this.getValue(), this.getOldValue());
     }
 
 }
 
-export class SemanticObjectDefaultHandlerCommandRemove extends SemanticObjectDefaultHandlerCommand {
+export class SemanticObjectDefaultHandlerCommandRemove<T> extends SemanticObjectDefaultHandlerCommandWithValue<T> {
 
     public execute<T>(): void {
-        const payload = <PayloadNameValue<T>> this.getRequest().getPayload();
-        return this.getSemanticObject().unset(payload.name, payload.value);
+        return this.getSemanticObject().unset(this.getName(), this.getValue());
     }
 
 }
