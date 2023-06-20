@@ -1,7 +1,7 @@
 import RequestHandler from "./RequestHandler";
 import RequestHandlerAbstract from "./RequestHandlerAbstract.js";
 
-export default class HandlerDefault<Request> extends RequestHandlerAbstract<Request> {
+export default class RequestHandlerDefault<Request> extends RequestHandlerAbstract<Request> {
 
     private _executor: Function;
 

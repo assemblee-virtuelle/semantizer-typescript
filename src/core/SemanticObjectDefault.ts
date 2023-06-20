@@ -1,19 +1,19 @@
-import SemanticObjectWithDataset from "../core/SemanticObjectWithDataset.js";
-import SemanticProperty from "../core/SemanticProperty.js";
-import SemanticPropertyDefault from "../core/SemanticPropertyDefault.js";
-import RequestFactory from "../core/RequestFactory.js";
-import Semanticable from "../core/Semanticable.js";
-import RequestFactoryDefault from "../core/RequestFactoryDefault.js";
-import HandlerMap from "./HandlerMap.js";
-import SemanticObjectRequest from "../core/SemanticObjectRequest.js";
-import RequestHandler from "../core/RequestHandler.js";
+import SemanticObjectWithDataset from "./SemanticObjectWithDataset.js";
+import SemanticProperty from "./SemanticProperty.js";
+import SemanticPropertyDefault from "./SemanticPropertyDefault.js";
+import RequestFactory from "./RequestFactory.js";
+import Semanticable from "./Semanticable.js";
+import RequestFactoryDefault from "./RequestFactoryDefault.js";
+import SemanticObjectDefaultHandler from "./SemanticObjectDefaultHandler.js";
+import SemanticObjectRequest from "./SemanticObjectRequest.js";
+import RequestHandler from "./RequestHandler.js";
 
 type Property = SemanticProperty<any>;
 type Request = SemanticObjectRequest<any, void, void, void>;
 
-export default class SemanticObjectMap extends SemanticObjectWithDataset<Array<Property>, void, void, void> {
+export default class SemanticObjectDefault extends SemanticObjectWithDataset<Array<Property>, void, void, void> {
 
-    constructor(other?: SemanticObjectMap) {
+    constructor(other?: SemanticObjectDefault) {
         super(new Array<Property>(), other);
     }
 
@@ -22,7 +22,7 @@ export default class SemanticObjectMap extends SemanticObjectWithDataset<Array<P
     }
 
     protected getDefaultRequestHandler(): RequestHandler<Request> {
-        return new HandlerMap(this);
+        return new SemanticObjectDefaultHandler(this);
     }
 
     protected createSemanticProperty<Value>(name: string, value: Value): SemanticProperty<Value> {

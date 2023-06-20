@@ -1,7 +1,7 @@
-import SemanticObjectMap from '../lib/semantic-object-map/SemanticObjectMap.js';
+import SemanticObjectDefault from '../lib/core/SemanticObjectDefault.js';
 
 test('add semantic property', () => {
-    const semanticObject = new SemanticObjectMap();
+    const semanticObject = new SemanticObjectDefault();
 
     semanticObject.addSemanticProperty("prop1", "Person");
     semanticObject.addSemanticProperty("prop2", true);
@@ -14,7 +14,7 @@ test('add semantic property', () => {
 });
 
 test('set semantic property', () => {
-    const semanticObject = new SemanticObjectMap();
+    const semanticObject = new SemanticObjectDefault();
 
     semanticObject.addSemanticProperty("prop1", "Person");
     semanticObject.addSemanticProperty("prop2", true);
@@ -34,7 +34,7 @@ test('set semantic property', () => {
 });
 
 test('remove semantic property', () => {
-    const semanticObject = new SemanticObjectMap();
+    const semanticObject = new SemanticObjectDefault();
 
     semanticObject.addSemanticProperty("prop1", "Person");
     semanticObject.addSemanticProperty("prop2", true);
@@ -52,7 +52,7 @@ test('remove semantic property', () => {
 });
 
 test('add semantic property multiple', () => {
-    const semanticObject = new SemanticObjectMap();
+    const semanticObject = new SemanticObjectDefault();
 
     semanticObject.addSemanticProperty("prop1", "Jean");
     semanticObject.addSemanticProperty("prop2", true);

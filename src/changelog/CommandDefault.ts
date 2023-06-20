@@ -1,6 +1,6 @@
-import Command from "../changelog/Command";
+import Command from "./Command";
 
-export default class CommandBase<Origin, ExecutionResult> implements Command<Origin, ExecutionResult> {
+export default class CommandDefault<Origin, ExecutionResult> implements Command<Origin, ExecutionResult> {
 
     private _name: string;
     private _origin: Origin;

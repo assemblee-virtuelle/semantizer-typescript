@@ -1,23 +1,23 @@
-import RequestHandler from "../core/RequestHandler";
-import RequestHandlerAbstract from "../core/RequestHandlerAbstract.js";
-import SemanticObjectRequest from "../core/SemanticObjectRequest";
-import SemanticProperty from "../core/SemanticProperty";
-import SemanticObjectMap from "./SemanticObjectMap";
+import RequestHandler from "./RequestHandler";
+import RequestHandlerAbstract from "./RequestHandlerAbstract.js";
+import SemanticObjectRequest from "./SemanticObjectRequest";
+import SemanticProperty from "./SemanticProperty";
+import SemanticObjectDefault from "./SemanticObjectDefault";
 
 type SemanticableObjectRequest = SemanticObjectRequest<any, void, void, void>;
 type PayloadNameValue<T> = { name: string, value: T };
 type PayloadNameNewOldValue<T> = { name: string, newValue: T, oldValue: T };
 
-export default class HandlerMap extends RequestHandlerAbstract<SemanticableObjectRequest> {
+export default class SemanticObjectDefaultHandler extends RequestHandlerAbstract<SemanticableObjectRequest> {
 
-    private _map: SemanticObjectMap;
+    private _map: SemanticObjectDefault;
 
-    constructor(map: SemanticObjectMap, nextHandler: RequestHandler<SemanticableObjectRequest> | undefined = undefined) {
+    constructor(map: SemanticObjectDefault, nextHandler: RequestHandler<SemanticableObjectRequest> | undefined = undefined) {
         super(nextHandler);
         this._map = map;
     }
 
-    public getMap(): SemanticObjectMap {
+    public getMap(): SemanticObjectDefault {
         return this._map;
     }
 
