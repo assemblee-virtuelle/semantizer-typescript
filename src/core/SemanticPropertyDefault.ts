@@ -1,7 +1,7 @@
 import Subscriber from "../notification/Subscriber";
-import SemanticProperty from "../core/SemanticProperty";
+import SemanticProperty from "./SemanticProperty";
 
-export default class SemanticPropertyBase<T> implements SemanticProperty<T>, Subscriber {
+export default class SemanticPropertyDefault<T> implements SemanticProperty<T>, Subscriber {
 
     private name: string;
     private value: T;

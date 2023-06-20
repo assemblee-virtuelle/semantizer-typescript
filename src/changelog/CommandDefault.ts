@@ -1,4 +1,4 @@
-import Command from "../core/Command";
+import Command from "../changelog/Command";
 
 export default class CommandBase<Origin, ExecutionResult> implements Command<Origin, ExecutionResult> {
 
