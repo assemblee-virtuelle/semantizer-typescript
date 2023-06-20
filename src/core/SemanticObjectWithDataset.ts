@@ -3,13 +3,13 @@ import RequestFactory from "./RequestFactory";
 import SemanticObject from "./SemanticObject.js";
 import Semanticable from "./Semanticable";
 
-type SemanticRequest = Request<any, any, any, Semanticable>;
+type SemanticRequest<Add, Set, Remove> = Request<any, any, any, Semanticable<Add, Set, Remove>>;
 
-export default abstract class SemanticObjectWithDataset<Dataset> extends SemanticObject {
+export default abstract class SemanticObjectWithDataset<Dataset, Add, Set, Remove> extends SemanticObject<Add, Set, Remove> {
 
     private _dataset: Dataset;
 
-    public constructor(dataset: Dataset, other?: SemanticObjectWithDataset<Dataset>) {
+    public constructor(dataset: Dataset, other?: SemanticObjectWithDataset<Dataset, Add, Set, Remove>) {
         super(other);
         this._dataset = other? other._dataset: dataset;
     }
@@ -18,8 +18,8 @@ export default abstract class SemanticObjectWithDataset<Dataset> extends Semanti
         return this._dataset;
     }
 
-    protected abstract getDefaultRequestFactory(): RequestFactory<Semanticable>;
-    protected abstract handle<T>(request: SemanticRequest): T;
-    protected abstract handle<T>(request: SemanticRequest): Promise<T>;
+    protected abstract getDefaultRequestFactory(): RequestFactory<Semanticable<Add, Set, Remove>>;
+    protected abstract handle<T>(request: SemanticRequest<Add, Set, Remove>): T;
+    protected abstract handle<T>(request: SemanticRequest<Add, Set, Remove>): Promise<T>;
 
 }

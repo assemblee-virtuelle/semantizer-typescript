@@ -2,16 +2,16 @@ import RequestHandler from "../../core/RequestHandler";
 import RequestHandlerAbstract from "../../core/RequestHandlerAbstract.js";
 import Semanticable from "../../core/Semanticable";
 
-export default class HandlerStore<Request> extends RequestHandlerAbstract<Request> {
+export default class HandlerStore<Request, Add, Set, Remove> extends RequestHandlerAbstract<Request> {
 
-    private _store: Array<Semanticable>;
+    private _store: Array<Semanticable<Add, Set, Remove>>;
 
     constructor(nextHandler: RequestHandler<Request> | undefined = undefined) {
         super(nextHandler);
         this._store = [];
     }
 
-    public getStore(): Array<Semanticable> {
+    public getStore(): Array<Semanticable<Add, Set, Remove>> {
         return this._store;
     }
     

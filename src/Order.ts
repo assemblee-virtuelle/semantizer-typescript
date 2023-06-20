@@ -6,7 +6,7 @@ import StoreMapSemanticable from "./store/StoreMapSemanticable";
 
 export default class Order /*extends SemanticObjectInrupt*/ {
 
-    constructor(parameters: { store: StoreInterface<string, Semanticable> }) {
+    constructor(parameters: { store: StoreInterface<string, Semanticable<void, void, void>> }) {
         //super({ store: parameters.store });
     }
 /*

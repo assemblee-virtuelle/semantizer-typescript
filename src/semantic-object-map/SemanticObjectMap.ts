@@ -8,15 +8,15 @@ import HandlerMap from "./HandlerMap.js";
 import { SemanticObjectRequest } from "../core/SemanticObjectRequest.js";
 
 type Property = SemanticProperty<any>;
-type Request = SemanticObjectRequest<any>;
+type Request = SemanticObjectRequest<any, void, void, void>;
 
-export default class SemanticObjectMap extends SemanticObjectWithDataset<Array<Property>> {
+export default class SemanticObjectMap extends SemanticObjectWithDataset<Array<Property>, void, void, void> {
 
     constructor(other?: SemanticObjectMap) {
         super(new Array<Property>(), other);
     }
 
-    protected getDefaultRequestFactory(): RequestFactory<Semanticable> {
+    protected getDefaultRequestFactory(): RequestFactory<Semanticable<void, void, void>> {
         return new RequestFactoryDefault(this);
     }
 
@@ -28,7 +28,7 @@ export default class SemanticObjectMap extends SemanticObjectWithDataset<Array<P
     protected handle<T>(request: Request): Promise<T>;
     protected handle<T>(request: Request): T | T[] | undefined {
         const handler = new HandlerMap(this);
-        return handler.handle(request);
+        return handler.handle<T>(request);
     }
 
     private findIndex<T>(name: string, value: T): number {

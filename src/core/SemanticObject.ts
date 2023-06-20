@@ -24,7 +24,7 @@ import Semanticable from './Semanticable.js';
 import RequestFactory from './RequestFactory.js';
 import Request from './Request.js';
 
-type SemanticRequest = Request<any, any, any, Semanticable>;
+type SemanticRequest<Add, Set, Remove> = Request<any, any, any, Semanticable<Add, Set, Remove>>;
 
 /**
  * The SemanticObject class is the base implementation of the Semanticable 
@@ -36,47 +36,47 @@ type SemanticRequest = Request<any, any, any, Semanticable>;
  * @see The Propertyable interface.
  * @see The registerSemanticProperty() method.
  */
-export default abstract class SemanticObject implements Semanticable {
+export default abstract class SemanticObject<Add, Set, Remove> implements Semanticable<Add, Set, Remove> {
 
-    private _requestFactory: RequestFactory<Semanticable>;
+    private _requestFactory: RequestFactory<Semanticable<Add, Set, Remove>>;
     
-    public constructor(other?: SemanticObject) {
+    public constructor(other?: SemanticObject<Add, Set, Remove>) {
         this._requestFactory = other? other.getDefaultRequestFactory(): this.getDefaultRequestFactory();
     }
 
-    protected abstract getDefaultRequestFactory(): RequestFactory<Semanticable>;
+    protected abstract getDefaultRequestFactory(): RequestFactory<Semanticable<Add, Set, Remove>>;
 
-    protected abstract handle<T>(request: SemanticRequest): T;
-    protected abstract handle<T>(request: SemanticRequest): Promise<T>;
+    protected abstract handle<T>(request: SemanticRequest<Add, Set, Remove>): T;
+    protected abstract handle<T>(request: SemanticRequest<Add, Set, Remove>): Promise<T>;
 
-    public getRequestFactory(): RequestFactory<Semanticable> {
+    public getRequestFactory(): RequestFactory<Semanticable<Add, Set, Remove>> {
         return this._requestFactory;
     }
 
-    public createAddRequest<T>(name: string, value: T): SemanticRequest {
+    public createAddRequest<T>(name: string, value: T): SemanticRequest<Add, Set, Remove> {
         return this.getRequestFactory().createRequestToAddSemanticProperty<T>(name, value);
     }
 
-    public createGetRequest(name: string): SemanticRequest {
+    public createGetRequest(name: string): SemanticRequest<Add, Set, Remove> {
         return this.getRequestFactory().createRequestToGetSemanticProperty(name);
     }
 
-    public createGetAllRequest(name: string): SemanticRequest {
+    public createGetAllRequest(name: string): SemanticRequest<Add, Set, Remove> {
         return this.getRequestFactory().createRequestToGetSemanticPropertyAll(name);
     }
 
-    public createSetRequest<T>(name: string, newValue: T, oldValue: T): SemanticRequest {
+    public createSetRequest<T>(name: string, newValue: T, oldValue: T): SemanticRequest<Add, Set, Remove> {
         return this.getRequestFactory().createRequestToSetSemanticProperty<T>(name, newValue, oldValue);
     }
 
-    public createRemoveRequest<T>(name: string, value: T): SemanticRequest {
+    public createRemoveRequest<T>(name: string, value: T): SemanticRequest<Add, Set, Remove> {
         return this.getRequestFactory().createRequestToRemoveSemanticProperty<T>(name, value);
     }
 
-    public addSemanticProperty<T>(name: string, value: T): T;
-    public addSemanticProperty<T>(name: string, value: T): Promise<T>;
-    public addSemanticProperty<T>(name: string, value: T): T {
-        return this.handle<T>(this.createAddRequest<T>(name, value));
+    public addSemanticProperty<T>(name: string, value: T): Add;
+    public addSemanticProperty<T>(name: string, value: T): Promise<Add>;
+    public addSemanticProperty<T>(name: string, value: T): Add | Promise<Add> {
+        return this.handle<Add>(this.createAddRequest<T>(name, value));
     }
 
     public getSemanticProperty<T>(name: string): T;
@@ -89,9 +89,9 @@ export default abstract class SemanticObject implements Semanticable {
         throw new Error("Method not implemented.");
     }
     
-    public getSemanticPropertyValue<T>(name: string): T | Semanticable | undefined;
-    public getSemanticPropertyValue<T>(name: string): Promise<T | Semanticable | undefined>;
-    public getSemanticPropertyValue<T>(name: string): T | Semanticable | undefined {
+    public getSemanticPropertyValue<T>(name: string): T | Semanticable<Add, Set, Remove> | undefined;
+    public getSemanticPropertyValue<T>(name: string): Promise<T | Semanticable<Add, Set, Remove> | undefined>;
+    public getSemanticPropertyValue<T>(name: string): T | Semanticable<Add, Set, Remove> | undefined {
         return this.handle(this.createGetRequest(name));
     }
 
@@ -101,15 +101,16 @@ export default abstract class SemanticObject implements Semanticable {
         return this.handle<T>(this.createGetAllRequest(name));
     }
 
-    public setSemanticProperty<T>(name: string, newValue: T, oldValue: T): T;
-    public setSemanticProperty<T>(name: string, newValue: T, oldValue: T): Promise<T>;
-    public setSemanticProperty<T>(name: string, newValue: T, oldValue: T): T {
-        return this.handle<T>(this.createSetRequest<T>(name, newValue, oldValue));
+    public setSemanticProperty<T>(name: string, newValue: T, oldValue: T): Set;
+    public setSemanticProperty<T>(name: string, newValue: T, oldValue: T): Promise<Set>;
+    public setSemanticProperty<T>(name: string, newValue: T, oldValue: T): Set | Promise<Set> {
+        return this.handle<Set>(this.createSetRequest<T>(name, newValue, oldValue));
     }
 
-    public removeSemanticProperty<T>(name: string, value: T): T;
-    public async removeSemanticProperty<T>(name: string, value: T): Promise<T> {
-        return this.handle<T>(this.createRemoveRequest(name, value));
+    public removeSemanticProperty<T>(name: string, value: T): Remove;
+    public removeSemanticProperty<T>(name: string, value: T): Promise<Remove>;
+    public removeSemanticProperty<T>(name: string, value: T): Remove | Promise<Remove> {
+        return this.handle<Remove>(this.createRemoveRequest(name, value));
     }
 
 }

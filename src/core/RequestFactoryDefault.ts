@@ -3,19 +3,20 @@ import SemanticObjectRequestDefault from "./SemanticObjectRequestDefault.js";
 import RequestFactory from "./RequestFactory";
 import Semanticable from "./Semanticable";
 
-type RequestWithPayload<Payload> = Request<string, string, Payload, Semanticable>;
+type SemanticableDefault = Semanticable<void, void, void>;
+type RequestWithPayload<Payload> = Request<string, string, Payload, SemanticableDefault>;
 type PayloadNameValue<Value> = { name: string, value: Value };
 type PayloadNameNewValue<Value> = { name: string, newValue: Value, oldValue: Value };
 
-export default class RequestFactoryDefault implements RequestFactory<Semanticable> {
+export default class RequestFactoryDefault implements RequestFactory<SemanticableDefault> {
 
-    private _origin: Semanticable;
+    private _origin: SemanticableDefault;
 
-    public constructor(origin: Semanticable) {
+    public constructor(origin: SemanticableDefault) {
         this._origin = origin;
     }
 
-    public getOrigin(): Semanticable {
+    public getOrigin(): SemanticableDefault {
         return this._origin;
     }
 

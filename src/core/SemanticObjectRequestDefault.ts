@@ -3,14 +3,14 @@ import RequestHeadersDefault from "./RequestHeadersDefault";
 import { SemanticObjectRequest } from "./SemanticObjectRequest";
 import Semanticable from "./Semanticable";
 
-export default class SemanticObjectRequestDefault<Payload> implements SemanticObjectRequest<Payload> {
+export default class SemanticObjectRequestDefault<Payload, Add, Set, Remove> implements SemanticObjectRequest<Payload, Add, Set, Remove> {
     
     private _headers: RequestHeaders<string, string>;
     private _identifier: string;
-    private _origin: Semanticable;
+    private _origin: Semanticable<Add, Set, Remove>;
     private _payload: Payload;
 
-    public constructor(identifier: string, payload: Payload, origin: Semanticable) {
+    public constructor(identifier: string, payload: Payload, origin: Semanticable<Add, Set, Remove>) {
         this._headers = new RequestHeadersDefault<string, string>();
         this._identifier = identifier;
         this._origin = origin;
@@ -33,7 +33,7 @@ export default class SemanticObjectRequestDefault<Payload> implements SemanticOb
         return this._identifier;
     }
 
-    public getOrigin(): Semanticable {
+    public getOrigin(): Semanticable<Add, Set, Remove> {
         return this._origin;
     }
 

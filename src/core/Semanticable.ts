@@ -34,27 +34,27 @@ import SemanticProperty from "./SemanticProperty";
  * @see the SemanticObject, the default implementation class.
  * @see The Serializer interface, to manage serialization.
  */
-export default interface Semanticable {
+export default interface Semanticable<Add, Set, Remove> {
 
-    addSemanticProperty<T>(name: string, value: T): T;
-    addSemanticProperty<T>(name: string, value: T): Promise<T>;
+    addSemanticProperty<T>(name: string, value: T): Add;
+    addSemanticProperty<T>(name: string, value: T): Promise<Add>;
 
-    getSemanticProperty<T>(name: string): T;
-    getSemanticProperty<T>(name: string): Promise<T>;
+    getSemanticProperty<Get>(name: string): Get;
+    getSemanticProperty<Get>(name: string): Promise<Get>;
 
-    getSemanticPropertyAll<T>(name: string): T[];
-    getSemanticPropertyAll<T>(name: string): Promise<T[]>;
+    getSemanticPropertyAll<Get>(name: string): Get[];
+    getSemanticPropertyAll<Get>(name: string): Promise<Get[]>;
 
-    getSemanticPropertyValue<T>(name: string): T | Semanticable | undefined;
-    getSemanticPropertyValue<T>(name: string): Promise<T | Semanticable | undefined>;
+    getSemanticPropertyValue<Get>(name: string): Get | Semanticable<Add, Set, Remove> | undefined;
+    getSemanticPropertyValue<Get>(name: string): Promise<Get | Semanticable<Add, Set, Remove> | undefined>;
 
-    getSemanticPropertyValueAll<T>(name: string): T[];
-    getSemanticPropertyValueAll<T>(name: string): Promise<T[]>;
+    getSemanticPropertyValueAll<Get>(name: string): Get[];
+    getSemanticPropertyValueAll<Get>(name: string): Promise<Get[]>;
     
-    removeSemanticProperty<T>(name: string, value: T): T;
-    removeSemanticProperty<T>(name: string, value: T): Promise<T>;
+    removeSemanticProperty<T>(name: string, value: T): Remove;
+    removeSemanticProperty<T>(name: string, value: T): Promise<Remove>;
 
-    setSemanticProperty<T>(name: string, newValue: T, oldValue: T): T;
-    setSemanticProperty<T>(name: string, newValue: T, oldValue: T): Promise<T>;
+    setSemanticProperty<T>(name: string, newValue: T, oldValue: T): Set;
+    setSemanticProperty<T>(name: string, newValue: T, oldValue: T): Promise<Set>;
 
 }
