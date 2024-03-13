@@ -1,0 +1,1 @@
+{"version":3,"file":"Changelogable.d.ts","sourceRoot":"","sources":["../../src/changelog/Changelogable.ts"],"names":[],"mappings":"AAAA,OAAO,YAAY,MAAM,gBAAgB,CAAC;AAC1C,OAAO,OAAO,MAAM,WAAW,CAAC;AAEhC,MAAM,CAAC,OAAO,WAAW,aAAa;IAElC,YAAY,IAAI,YAAY,CAAC,MAAM,EAAE,OAAO,CAAC,GAAG,EAAE,GAAG,CAAC,CAAC,CAAC;CAE3D"}
