@@ -43,6 +43,7 @@ export default interface Semanticable {
     clone(): Semanticable;
     equals(other: Semanticable): boolean;
     
+    getContext(): Object;
     getSemanticId(): string;
     getSemanticType(): string;
 

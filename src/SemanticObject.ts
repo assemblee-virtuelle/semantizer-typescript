@@ -23,6 +23,8 @@ import rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset';
 import QuadExt from 'rdf-ext/lib/Quad';
 import Semanticable from './Semanticable';
+import ISemantizer from './ISemantizer';
+import IContext from './IContext';
 
 /**
  * The SemanticObject class is the base implementation of the Semanticable 
@@ -36,35 +38,40 @@ import Semanticable from './Semanticable';
  */
 export default class SemanticObject implements Semanticable {
 
+    private _semantizer: ISemantizer;
     private _semanticId: string;
-    private _semanticType: string;
     private _rdfDataset: any;
 
     /**
      * Create a new SemanticObject.
      * @param parameters 
      */
-    public constructor(parameters: {semanticId: string, semanticType: string});
+    public constructor(parameters: {semantizer: ISemantizer, semanticId: string, semanticType?: string});
 
     /**
      * Create a new SemanticObject from an other (copy constructor).
      * The semanticId will be overrided by the one passed as a parameter.
      * @param parameters 
      */
-    public constructor(parameters: {semanticId: string, other: Semanticable});
-    public constructor(parameters: {semanticId?: string, semanticType?: string, other?: Semanticable}) {
+    public constructor(parameters: {semantizer: ISemantizer, semanticId: string, other: Semanticable});
+    public constructor(parameters: {semantizer: ISemantizer, semanticId?: string, semanticType?: string, other?: Semanticable}) {
+        this._semantizer = parameters.semantizer;
         this._semanticId = parameters.other? parameters.other.getSemanticId(): parameters.semanticId!;
         this._rdfDataset = parameters.other? parameters.other.toRdfDatasetExt(): rdf.dataset();
-        this._semanticType = parameters.other? parameters.other.getSemanticType(): parameters.semanticType!;
-        this.init();
+        if (parameters.semanticType)
+            this.addSemanticPropertyReferenceId('http://www.w3.org/1999/02/22-rdf-syntax-ns#type', parameters.semanticType);
     }
 
-    protected addRdfQuad(quad: any): void {
+    public getContext(): IContext {
+        return this.getSemantizer().getContext();
+    }
+
+    public getSemantizer(): ISemantizer {
+        return this._semantizer;
+    }
+
+    protected addRdfQuad(quad: QuadExt): void {
         this._rdfDataset.add(quad);
-    }
-
-    protected init(): void {
-        this.addSemanticPropertyReferenceId('http://www.w3.org/1999/02/22-rdf-syntax-ns#type', this._semanticType);
     }
 
     private addSemanticPropertyReferenceId(property: string, value: string, replace: boolean = false): void {
@@ -99,19 +106,19 @@ export default class SemanticObject implements Semanticable {
     }
 
     public clone(): SemanticObject {
-        return new SemanticObject({ semanticId: this._semanticId, other: this });
+        return new SemanticObject({ semantizer: this.getSemantizer(), semanticId: this._semanticId, other: this });
     }
 
     protected createRdfQuad(property: string, value: string): any {
         return rdf.quad(
             rdf.namedNode(this.getSemanticId()),
-            rdf.namedNode(property),
-            rdf.namedNode(value)
+            rdf.namedNode(this.getSemantizer().expand(property)),
+            rdf.namedNode(this.getSemantizer().expand(value))
         )
     }
 
-    public static createFromRdfDataset(dataset: DatasetExt): SemanticObject {
-        const result = new SemanticObject({semanticId: "", semanticType: ""});
+    public static createFromRdfDataset(semantizer: ISemantizer, dataset: DatasetExt): SemanticObject {
+        const result = new SemanticObject({ semantizer: semantizer, semanticId: "", semanticType: "" });
         result.setSemanticPropertyAllFromRdfDataset(dataset);
         return result;
     }
@@ -119,7 +126,7 @@ export default class SemanticObject implements Semanticable {
     protected createRdfQuadLiteral(property: string, value: string): any {
         return rdf.quad(
             rdf.namedNode(this.getSemanticId()),
-            rdf.namedNode(property),
+            rdf.namedNode(this.getSemantizer().expand(property)),
             rdf.literal(value)
         )
     }
@@ -127,12 +134,13 @@ export default class SemanticObject implements Semanticable {
     protected createRdfQuadBlankNode(property: string, blankNodeQuad: any): any {
         return rdf.quad(
             rdf.namedNode(this.getSemanticId()),
-            rdf.namedNode(property),
+            rdf.namedNode(this.getSemantizer().expand(property)),
             blankNodeQuad
         )
     }
 
     protected deleteRdfProperty(property: string): void {
+        property = this.getSemantizer().expand(property);
         this._rdfDataset.deleteMatches(this.getSemanticId(), property);
     }
 
@@ -175,8 +183,8 @@ export default class SemanticObject implements Semanticable {
      */
     public getSemanticPropertyAll(property: string): any[] {
         const iteratee = (r: any, q: any) => {
-            if (q.predicate.value === property) 
-                r.push(q.object.value)
+            if (q.predicate.value === this.getSemantizer().expand(property)) 
+                r.push(this.getSemantizer().shorten(q.object.value))
             return r;
         }
         return this._rdfDataset.reduce(iteratee, []);
@@ -231,6 +239,7 @@ export default class SemanticObject implements Semanticable {
     }
 
     public hasSemanticProperty(property: string): boolean {
+        property = this.getSemantizer().expand(property);
         return this._rdfDataset.some((q: any, ds: any) => q.predicate.value === property);
     }
 
@@ -239,11 +248,11 @@ export default class SemanticObject implements Semanticable {
     }
 
     public isSemanticSameTypeOf(other: Semanticable): boolean {
-        return other.isSemanticTypeOf(this._semanticType);
+        return other.isSemanticTypeOf(this.getSemanticType());
     }
 
     public isSemanticTypeOf(type: string): boolean {
-        return this._semanticType === type;
+        return this.getSemanticType() === type;
     }
 
     public removeSemanticProperty(property: string): void {

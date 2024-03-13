@@ -24,6 +24,7 @@ import rdf from 'rdf-ext'
 import BlankNodeExt from 'rdf-ext/lib/BlankNode.js';
 import Semanticable from './Semanticable.js';
 import SemanticObject from "./SemanticObject.js";
+import ISemantizer from './ISemantizer.js';
 
 /**
  * The SemanticObject class is the base implementation of the Semanticable 
@@ -39,20 +40,16 @@ export default class SemanticObjectAnonymous extends SemanticObject {
 
     private _blankNode: BlankNodeExt | undefined; // helper: we keep a pointer to the blank node quad
     
-    public constructor(parameters: {semanticId: string, semanticType: string});
-    public constructor(parameters: {semanticId: string, other: Semanticable});
-    public constructor(parameters: {semanticId?: string, semanticType?: string, other?: Semanticable}) {
+    public constructor(parameters: {semantizer: ISemantizer, semanticId: string, semanticType?: string});
+    public constructor(parameters: {semantizer: ISemantizer, semanticId: string, other: Semanticable});
+    public constructor(parameters: {semantizer: ISemantizer, semanticId?: string, semanticType?: string, other?: Semanticable}) {
         if (parameters.other) {
-            super({ semanticId: parameters.semanticId!, other: parameters.other });
+            super({ semantizer: parameters.semantizer, semanticId: parameters.semanticId!, other: parameters.other });
             if (!parameters.other.isSemanticObjectAnonymous())
                 throw new Error("Can't create a new SemanticObjectAnonymous from a copy: the copy is not a SemanticObjectAnonymous.");
         }
-        else super({ semanticId: parameters.semanticId!, semanticType: parameters.semanticType! });
-    }
-
-    protected init(): void {
+        else super({ semantizer: parameters.semantizer, semanticId: parameters.semanticId!, semanticType: parameters.semanticType! });
         this._blankNode = rdf.blankNode(this.getSemanticId());
-        super.init();
     }
 
     protected createRdfQuad(property: string, value: string): any {
