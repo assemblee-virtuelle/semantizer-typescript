@@ -36,6 +36,13 @@ export default class SemanticObject implements Semanticable {
         semanticId: string;
         other: Semanticable;
     });
+    /**
+     * This method should be called to initialize properly a blank node.
+     * Because the blank node is created after the constructor of SemanticObject.
+     * This method should be deleted when SemanticObjectAnonymous will be removed.
+     * @param type The type to coming from the constructor.
+     */
+    protected init(type?: string): void;
     getContext(): IContext;
     getSemantizer(): ISemantizer;
     protected addRdfQuad(quad: QuadExt): void;

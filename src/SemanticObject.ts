@@ -58,8 +58,18 @@ export default class SemanticObject implements Semanticable {
         this._semantizer = parameters.semantizer;
         this._semanticId = parameters.other? parameters.other.getSemanticId(): parameters.semanticId!;
         this._rdfDataset = parameters.other? parameters.other.toRdfDatasetExt(): rdf.dataset();
-        if (parameters.semanticType)
-            this.addSemanticPropertyReferenceId('http://www.w3.org/1999/02/22-rdf-syntax-ns#type', parameters.semanticType);
+        this.init(parameters.semanticType);
+    }
+
+    /**
+     * This method should be called to initialize properly a blank node.
+     * Because the blank node is created after the constructor of SemanticObject.
+     * This method should be deleted when SemanticObjectAnonymous will be removed.
+     * @param type The type to coming from the constructor.
+     */
+    protected init(type?: string): void {
+        if (type)
+            this.addSemanticPropertyReferenceId('http://www.w3.org/1999/02/22-rdf-syntax-ns#type', type);
     }
 
     public getContext(): IContext {

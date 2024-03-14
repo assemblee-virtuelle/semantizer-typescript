@@ -49,21 +49,25 @@ export default class SemanticObjectAnonymous extends SemanticObject {
                 throw new Error("Can't create a new SemanticObjectAnonymous from a copy: the copy is not a SemanticObjectAnonymous.");
         }
         else super({ semantizer: parameters.semantizer, semanticId: parameters.semanticId!, semanticType: parameters.semanticType! });
+    }
+
+    protected init(type?: string): void {
         this._blankNode = rdf.blankNode(this.getSemanticId());
+        super.init(type);
     }
 
     protected createRdfQuad(property: string, value: string): any {
         return rdf.quad(
             this._blankNode,
-            rdf.namedNode(property),
-            rdf.namedNode(value)
+            rdf.namedNode(this.getSemantizer().expand(property)),
+            rdf.namedNode(this.getSemantizer().expand(value))
         )
     }
 
     protected createRdfQuadLiteral(property: string, value: string): any {
         return rdf.quad(
             this._blankNode,
-            rdf.namedNode(property),
+            rdf.namedNode(this.getSemantizer().expand(property)),
             rdf.literal(value)
         )
     }
@@ -71,7 +75,7 @@ export default class SemanticObjectAnonymous extends SemanticObject {
     protected createRdfQuadBlankNode(property: string, blankNodeQuad: any): any {
         return rdf.quad(
             this._blankNode,
-            rdf.namedNode(property),
+            rdf.namedNode(this.getSemantizer().expand(property)),
             blankNodeQuad
         )
     }

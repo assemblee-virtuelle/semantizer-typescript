@@ -23,6 +23,7 @@ export default class SemanticObjectAnonymous extends SemanticObject {
         semanticId: string;
         other: Semanticable;
     });
+    protected init(type?: string): void;
     protected createRdfQuad(property: string, value: string): any;
     protected createRdfQuadLiteral(property: string, value: string): any;
     protected createRdfQuadBlankNode(property: string, blankNodeQuad: any): any;
