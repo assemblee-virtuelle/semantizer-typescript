@@ -7,11 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Method `isSemanticSameTypeOf` support prefixed types.
+
 ### Changed
 
 - Update `rdf-ext` to version 2.5.1.
 - Update `@types/rdf-ext` to version 2.5.0.
 - Do not require `semanticType` in constructor.
+
+### Added
+
+- More tests to test the `equals` method.
 
 ### Removed
 

@@ -28,6 +28,47 @@ test('semantic type', () => {
     expect(semanticObject.getSemanticType()).toStrictEqual(type);
 });
 
+test('are same type', () => {
+    const semantizer = new Semantizer();
+
+    const type = "http://example.org/type";
+
+    const semanticObject1 = new SemanticObject({ 
+        semantizer: semantizer, 
+        semanticId: "http://platform.com/object1", 
+        semanticType: type 
+    });
+
+    const semanticObject2 = new SemanticObject({ 
+        semantizer: semantizer, 
+        semanticId: "http://platform.com/object2", 
+        semanticType: type 
+    });
+
+    expect(semanticObject1.isSemanticSameTypeOf(semanticObject2)).toStrictEqual(true);
+});
+
+test('are same type with context', () => {
+    const context = { "ex": "http://example.org#" };
+    const semantizer = new Semantizer(context);
+
+    const type = "http://example.org#Type";
+
+    const semanticObject1 = new SemanticObject({ 
+        semantizer: semantizer, 
+        semanticId: "http://platform.com/object1", 
+        semanticType: type 
+    });
+
+    const semanticObject2 = new SemanticObject({ 
+        semantizer: semantizer, 
+        semanticId: "http://platform.com/object2", 
+        semanticType: "ex:Type" 
+    });
+
+    expect(semanticObject1.isSemanticSameTypeOf(semanticObject2)).toStrictEqual(true);
+});
+
 test('semantic type without built in type setter', () => {
     const context = { "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#" };
     const semantizer = new Semantizer(context);
@@ -88,14 +129,25 @@ test('from dataset', () => {
 });
 
 test('equals', () => {
-    const semantizer = new Semantizer();
+    const context = { "ex": "http://example.org#" };
+    const semantizer = new Semantizer(context);
 
     const id = "http://platform.com/object1";
-    const type = "http://example.org/type";
+    const type = "ex:Type";
 
     const semanticObject1 = new SemanticObject({ semantizer: semantizer, semanticId: id, semanticType: type });
+    semanticObject1.addSemanticPropertyLiteral("ex:literal2", "literal2");
+    semanticObject1.addSemanticPropertyLiteral("ex:literal", "literal");
+    semanticObject1.addSemanticPropertyLiteral("ex:litera3", "01234");
+
+    console.log(semanticObject1);
 
     const semanticObject2 = new SemanticObject({ semantizer: semantizer, semanticId: id, semanticType: type });
+    semanticObject2.addSemanticPropertyLiteral("ex:literal", "literal");
+    semanticObject2.addSemanticPropertyLiteral("ex:literal2", "literal2");
+    semanticObject2.addSemanticPropertyLiteral("ex:litera3", "01234");
+
+    console.log(semanticObject2);
 
     const semanticObject3 = new SemanticObject({ semantizer: semantizer, semanticId: id + 'differs', semanticType: type });
 

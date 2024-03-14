@@ -252,7 +252,7 @@ export default class SemanticObject implements Semanticable {
     }
 
     public isSemanticTypeOf(type: string): boolean {
-        return this.getSemanticType() === type;
+        return this.getSemantizer().expand(this.getSemanticType()) === this.getSemantizer().expand(type);
     }
 
     public removeSemanticProperty(property: string): void {
