@@ -1,1 +1,0 @@
-{"version":3,"file":"Synchronizable.d.ts","sourceRoot":"","sources":["../../src/store/Synchronizable.ts"],"names":[],"mappings":"AAAA,MAAM,CAAC,OAAO,WAAW,cAAc;IAEnC,0BAA0B,IAAI,MAAM,CAAC;IACrC,WAAW,CAAC,QAAQ,CAAC,EAAE,MAAM,EAAE,OAAO,CAAC,EAAE;QAAE,KAAK,EAAE,QAAQ,CAAC;QAAC,UAAU,CAAC,EAAE,KAAK,GAAG,MAAM,GAAG,OAAO,CAAA;KAAE,GAAG,OAAO,CAAC,IAAI,CAAC,CAAC;CAEvH"}

@@ -24,7 +24,7 @@ import rdf from 'rdf-ext'
 import BlankNodeExt from 'rdf-ext/lib/BlankNode.js';
 import Semanticable from './Semanticable.js';
 import SemanticObject from "./SemanticObject.js";
-import ISemantizer from './ISemantizer.js';
+import Semantizer from './Semantizer.js';
 
 /**
  * The SemanticObject class is the base implementation of the Semanticable 
@@ -40,9 +40,9 @@ export default class SemanticObjectAnonymous extends SemanticObject {
 
     private _blankNode: BlankNodeExt | undefined; // helper: we keep a pointer to the blank node quad
     
-    public constructor(parameters: {semantizer: ISemantizer, semanticId: string, semanticType?: string});
-    public constructor(parameters: {semantizer: ISemantizer, semanticId: string, other: Semanticable});
-    public constructor(parameters: {semantizer: ISemantizer, semanticId?: string, semanticType?: string, other?: Semanticable}) {
+    public constructor(parameters: {semantizer: Semantizer, semanticId: string, semanticType?: string});
+    public constructor(parameters: {semantizer: Semantizer, semanticId: string, other: Semanticable});
+    public constructor(parameters: {semantizer: Semantizer, semanticId?: string, semanticType?: string, other?: Semanticable}) {
         if (parameters.other) {
             super({ semantizer: parameters.semantizer, semanticId: parameters.semanticId!, other: parameters.other });
             if (!parameters.other.isSemanticObjectAnonymous())

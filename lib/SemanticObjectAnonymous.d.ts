@@ -1,6 +1,6 @@
 import Semanticable from './Semanticable.js';
 import SemanticObject from "./SemanticObject.js";
-import ISemantizer from './ISemantizer.js';
+import Semantizer from './Semantizer.js';
 /**
  * The SemanticObject class is the base implementation of the Semanticable
  * interface. It allows an object to store semantic properties and to be
@@ -14,12 +14,12 @@ import ISemantizer from './ISemantizer.js';
 export default class SemanticObjectAnonymous extends SemanticObject {
     private _blankNode;
     constructor(parameters: {
-        semantizer: ISemantizer;
+        semantizer: Semantizer;
         semanticId: string;
         semanticType?: string;
     });
     constructor(parameters: {
-        semantizer: ISemantizer;
+        semantizer: Semantizer;
         semanticId: string;
         other: Semanticable;
     });

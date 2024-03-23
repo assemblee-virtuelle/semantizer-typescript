@@ -1,8 +1,8 @@
 import DatasetExt from 'rdf-ext/lib/Dataset';
 import QuadExt from 'rdf-ext/lib/Quad';
 import Semanticable from './Semanticable';
-import ISemantizer from './ISemantizer';
-import IContext from './IContext';
+import Semantizer from './Semantizer';
+import Context from './Context';
 /**
  * The SemanticObject class is the base implementation of the Semanticable
  * interface. It allows an object to store semantic properties and to be
@@ -22,7 +22,7 @@ export default class SemanticObject implements Semanticable {
      * @param parameters
      */
     constructor(parameters: {
-        semantizer: ISemantizer;
+        semantizer: Semantizer;
         semanticId: string;
         semanticType?: string;
     });
@@ -32,7 +32,7 @@ export default class SemanticObject implements Semanticable {
      * @param parameters
      */
     constructor(parameters: {
-        semantizer: ISemantizer;
+        semantizer: Semantizer;
         semanticId: string;
         other: Semanticable;
     });
@@ -43,8 +43,8 @@ export default class SemanticObject implements Semanticable {
      * @param type The type to coming from the constructor.
      */
     protected init(type?: string): void;
-    getContext(): IContext;
-    getSemantizer(): ISemantizer;
+    getContext(): Context;
+    getSemantizer(): Semantizer;
     protected addRdfQuad(quad: QuadExt): void;
     private addSemanticPropertyReferenceId;
     addSemanticPropertyReference(property: string, value: Semanticable, replace?: boolean): void;
@@ -52,7 +52,7 @@ export default class SemanticObject implements Semanticable {
     addSemanticPropertyAnonymous(property: string, anonymous: Semanticable, replace?: boolean): void;
     clone(): SemanticObject;
     protected createRdfQuad(property: string, value: string): any;
-    static createFromRdfDataset(semantizer: ISemantizer, dataset: DatasetExt): SemanticObject;
+    static createFromRdfDataset(semantizer: Semantizer, dataset: DatasetExt): SemanticObject;
     protected createRdfQuadLiteral(property: string, value: string): any;
     protected createRdfQuadBlankNode(property: string, blankNodeQuad: any): any;
     protected deleteRdfProperty(property: string): void;

@@ -23,8 +23,8 @@ import rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset';
 import QuadExt from 'rdf-ext/lib/Quad';
 import Semanticable from './Semanticable';
-import ISemantizer from './ISemantizer';
-import IContext from './IContext';
+import Semantizer from './Semantizer';
+import Context from './Context';
 
 /**
  * The SemanticObject class is the base implementation of the Semanticable 
@@ -38,7 +38,7 @@ import IContext from './IContext';
  */
 export default class SemanticObject implements Semanticable {
 
-    private _semantizer: ISemantizer;
+    private _semantizer: Semantizer;
     private _semanticId: string;
     private _rdfDataset: any;
 
@@ -46,15 +46,15 @@ export default class SemanticObject implements Semanticable {
      * Create a new SemanticObject.
      * @param parameters 
      */
-    public constructor(parameters: {semantizer: ISemantizer, semanticId: string, semanticType?: string});
+    public constructor(parameters: {semantizer: Semantizer, semanticId: string, semanticType?: string});
 
     /**
      * Create a new SemanticObject from an other (copy constructor).
      * The semanticId will be overrided by the one passed as a parameter.
      * @param parameters 
      */
-    public constructor(parameters: {semantizer: ISemantizer, semanticId: string, other: Semanticable});
-    public constructor(parameters: {semantizer: ISemantizer, semanticId?: string, semanticType?: string, other?: Semanticable}) {
+    public constructor(parameters: {semantizer: Semantizer, semanticId: string, other: Semanticable});
+    public constructor(parameters: {semantizer: Semantizer, semanticId?: string, semanticType?: string, other?: Semanticable}) {
         this._semantizer = parameters.semantizer;
         this._semanticId = parameters.other? parameters.other.getSemanticId(): parameters.semanticId!;
         this._rdfDataset = parameters.other? parameters.other.toRdfDatasetExt(): rdf.dataset();
@@ -72,11 +72,11 @@ export default class SemanticObject implements Semanticable {
             this.addSemanticPropertyReferenceId('http://www.w3.org/1999/02/22-rdf-syntax-ns#type', type);
     }
 
-    public getContext(): IContext {
+    public getContext(): Context {
         return this.getSemantizer().getContext();
     }
 
-    public getSemantizer(): ISemantizer {
+    public getSemantizer(): Semantizer {
         return this._semantizer;
     }
 
@@ -127,7 +127,7 @@ export default class SemanticObject implements Semanticable {
         )
     }
 
-    public static createFromRdfDataset(semantizer: ISemantizer, dataset: DatasetExt): SemanticObject {
+    public static createFromRdfDataset(semantizer: Semantizer, dataset: DatasetExt): SemanticObject {
         const result = new SemanticObject({ semantizer: semantizer, semanticId: "", semanticType: "" });
         result.setSemanticPropertyAllFromRdfDataset(dataset);
         return result;

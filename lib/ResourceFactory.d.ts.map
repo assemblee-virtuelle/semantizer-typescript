@@ -1,0 +1,1 @@
+{"version":3,"file":"ResourceFactory.d.ts","sourceRoot":"","sources":["../src/ResourceFactory.ts"],"names":[],"mappings":"AAAA,OAAO,QAAQ,MAAM,YAAY,CAAC;AAClC,OAAO,EAAE,0BAA0B,EAAE,MAAM,cAAc,CAAC;AAE1D,MAAM,CAAC,OAAO,WAAW,eAAe;IAEpC,oBAAoB,CAAC,UAAU,EAAE,MAAM,GAAG,QAAQ,CAAC;IACnD,sBAAsB,CAAC,UAAU,CAAC,EAAE,0BAA0B,GAAG,QAAQ,CAAC;CAE7E"}

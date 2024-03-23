@@ -1,33 +1,36 @@
-import Context from "./Context.js";
-import IContext from "./IContext";
-import ISemantizer from "./ISemantizer";
+import Context from "./Context";
+import Document from "./Document";
 
-export default class Semantizer implements ISemantizer {
+export enum ImportFormat {
+    JSON_LD = "jsonld"
+}
 
-    private _context: IContext;
+export interface ResourceCreationParameters {
+    semanticId?: string;
+    semanticType?: string | string[];
+    semanticContainedResource?: Document | Document[];
+}
 
-    public constructor(context: any = {}) {
-        this._context = new Context(context);
-    }
+export interface Semantizer {
 
-    public setContext(context: IContext): void {
-        this._context = context;
-    }
+    createSemanticResource(parameters?: ResourceCreationParameters): Document;
 
-    public getContext(): IContext {
-        return this._context;
-    }
+    /**
+     * 
+     * @param input The input data to import resources from. See format. 
+     * @param format Default is ImportFormat.JSON_LD.
+     * @param callback A callback function called each time a resource is imported.
+     */
+    importSemanticResource(input: string, format?: ImportFormat, callback?: Function): Promise<Document>;
+    exportSemanticResource(...input: Document[]): Promise<string>;
+    //saveResource(semanticId: string): SemanticResource;
 
-    /*public getPrefix(uri: string): string | undefined {
-        return uri.startsWith("http")? undefined: uri.split(':')[0];
-    }*/
+    getContext(): Context;
+    setContext(context: Context): void;
 
-    public shorten(uri: string): string {
-        return this.getContext()? this.getContext().shorten(uri): uri;
-    }
-
-    public expand(uri: string): string {
-        return this.getContext()? this.getContext().expand(uri): uri;
-    }
+    shorten(uri: string): string;
+    expand(uri: string): string;
 
 }
+
+export default Semantizer;
