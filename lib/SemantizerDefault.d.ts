@@ -1,14 +1,14 @@
 import Context from "./Context.js";
 import { Semantizer, ImportFormat, ResourceCreationParameters } from "./Semantizer.js";
-import Resource from "./Document.js";
+import Document from "./Document.js";
 import ResourceFactory from "./ResourceFactory.js";
 export default class SemantizerDefault implements Semantizer {
     private _context;
     private _semanticResourceFactory;
     constructor(context?: any, semanticResourceFactory?: ResourceFactory);
-    exportSemanticResource(...input: Resource[]): Promise<string>;
-    createSemanticResource(parameters?: ResourceCreationParameters): Resource;
-    importSemanticResource(input: string, format?: ImportFormat, callback?: Function): Promise<Resource>;
+    exportDocument(...input: Document[]): Promise<string>;
+    createDocument(parameters?: ResourceCreationParameters): Document;
+    importDocument(input: string, format?: ImportFormat, callback?: Function): Promise<Document>;
     getSemanticResourceFactory(): ResourceFactory;
     setContext(context: Context): void;
     getContext(): Context;

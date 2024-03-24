@@ -1,6 +1,6 @@
 import LdpContainer from "./LdpContainer";
-import ResourceDefault from "./ResourceDefault";
-export default class LdpContainerDefault extends ResourceDefault implements LdpContainer {
+import DocumentDefault from "./DocumentDefault";
+export default class LdpContainerDefault extends DocumentDefault implements LdpContainer {
     countContainedResources(): number;
 }
 //# sourceMappingURL=LdpContainerDefault.d.ts.map

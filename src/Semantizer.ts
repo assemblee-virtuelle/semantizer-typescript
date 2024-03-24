@@ -13,7 +13,7 @@ export interface ResourceCreationParameters {
 
 export interface Semantizer {
 
-    createSemanticResource(parameters?: ResourceCreationParameters): Document;
+    createDocument(parameters?: ResourceCreationParameters): Document;
 
     /**
      * 
@@ -21,8 +21,8 @@ export interface Semantizer {
      * @param format Default is ImportFormat.JSON_LD.
      * @param callback A callback function called each time a resource is imported.
      */
-    importSemanticResource(input: string, format?: ImportFormat, callback?: Function): Promise<Document>;
-    exportSemanticResource(...input: Document[]): Promise<string>;
+    importDocument(input: string, format?: ImportFormat, callback?: Function): Promise<Document>;
+    exportDocument(...input: Document[]): Promise<string>;
     //saveResource(semanticId: string): SemanticResource;
 
     getContext(): Context;

@@ -5,7 +5,7 @@ import Document from "./Document.js";
 import ResourceFactory from "./ResourceFactory.js";
 import ResourceFactoryDefault from "./ResourceFactoryDefault.js";
 
-export default class SemantizerDefault implements Semantizer {
+export class SemantizerDefault implements Semantizer {
 
     private _context: Context;
     private _semanticResourceFactory: ResourceFactory;
@@ -15,15 +15,15 @@ export default class SemantizerDefault implements Semantizer {
         this._semanticResourceFactory = semanticResourceFactory || new ResourceFactoryDefault(this);
     }
 
-    public async exportSemanticResource(...input: Document[]): Promise<string> {
+    public async exportDocument(...input: Document[]): Promise<string> {
         throw new Error("Method not implemented.");
     }
 
-    public createSemanticResource(parameters?: ResourceCreationParameters): Document {
+    public createDocument(parameters?: ResourceCreationParameters): Document {
         return this.getSemanticResourceFactory().createSemanticResource(parameters);
     }
 
-    public async importSemanticResource(input: string, format?: ImportFormat, callback?: Function): Promise<Document> {
+    public async importDocument(input: string, format?: ImportFormat, callback?: Function): Promise<Document> {
         // fetch the resource
         // pass the resource to the factory (as a Dataset ?)
         return this.getSemanticResourceFactory().loadSemanticResource(input);
@@ -59,3 +59,5 @@ export default class SemantizerDefault implements Semantizer {
     }
 
 }
+
+export default SemantizerDefault;

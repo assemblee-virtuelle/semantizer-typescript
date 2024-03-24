@@ -7,8 +7,35 @@ import { Readable } from 'readable-stream';
 
 const semantizer = new SemantizerDefault();
 
-test('Address:import', () => {
-    const resource = semantizer.createSemanticResource({ 
+test("DocumentDefault:create", () => {
+    let document = semantizer.createDocument();
+    expect.strictEqual(document.getSemanticId(), "");
+    document.addRdfTypeStatement("ex:Type");
+    expect.strictEqual(document.getFirstRdfTypeValue(), "ex:Type");
+    document.addRdfTypeStatement("ex:Type2");
+    expect.strictEqual(document.getFirstRdfTypeValue(), "ex:Type");
+
+    const semanticTypes = document.getAllRdfTypeValues();
+    expect.strictEqual(semanticTypes.length, 2);
+    expect.strictEqual(semanticTypes[0], "ex:Type");
+    expect.strictEqual(semanticTypes[1], "ex:Type2");
+
+    console.log(document)
+});
+
+test("DocumentDefault:create", () => {
+    const document = semantizer.createDocument();
+    expect.strictEqual(document.getSemanticId(), "");
+
+    const property = "http://example.org/property";
+    const value = "value"
+    document.addStringStatementAbout(property, value);
+    expect.strictEqual(document.getFirstStringValueAboutStatement(property), value);
+});
+
+/*
+test('DocumentDefault:export', () => {
+    const resource = semantizer.createDocument({ 
         semanticId: "http://example.org/test",
         semanticType: "http://example.org/Type1"
     });
@@ -39,4 +66,4 @@ test('Address:import', () => {
     dataset.add(quad);
     dataset.add(quad2);
     console.log(dataset);
-});
+});*/
