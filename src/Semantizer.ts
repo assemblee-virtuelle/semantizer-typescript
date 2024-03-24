@@ -1,5 +1,4 @@
-import Context from "./Context";
-import Document from "./Document";
+import { Document, ConstructionParameters } from "./Document";
 
 export enum ImportFormat {
     JSON_LD = "jsonld"
@@ -13,7 +12,7 @@ export interface ResourceCreationParameters {
 
 export interface Semantizer {
 
-    createDocument(parameters?: ResourceCreationParameters): Document;
+    createDocument(parameters?: ConstructionParameters): Document;
 
     /**
      * 
@@ -24,12 +23,6 @@ export interface Semantizer {
     importDocument(input: string, format?: ImportFormat, callback?: Function): Promise<Document>;
     exportDocument(...input: Document[]): Promise<string>;
     //saveResource(semanticId: string): SemanticResource;
-
-    getContext(): Context;
-    setContext(context: Context): void;
-
-    shorten(uri: string): string;
-    expand(uri: string): string;
 
 }
 

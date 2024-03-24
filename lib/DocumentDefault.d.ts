@@ -1,61 +1,42 @@
-import Semantizer, { ResourceCreationParameters } from "./Semantizer";
-import Document from "./Document";
+import { Document, ConstructionParameters } from "./Document";
 import QuadExt from 'rdf-ext/lib/Quad';
 import DatasetExt from "rdf-ext/lib/Dataset";
 import NamedNodeExt from "rdf-ext/lib/NamedNode";
-interface ConstructionParameters {
-    semantizer: Semantizer;
-    rdfDataset?: any;
-    semanticId?: string;
-    semanticType?: string | string[];
-    resources?: Document | Document[];
-}
-export default class DocumentDefault implements Document {
-    private _semantizer;
+import Thing from "./Thing";
+import Resource from "./Resource";
+import Contextualized from "./Contextualized";
+import Context from "./Context";
+export declare class DocumentDefault implements Document, Contextualized {
     private _rdfDataset;
-    private _semanticId;
-    static load(semantizer: Semantizer, rdfDataset: any): DocumentDefault;
-    /**
-     *
-     * @param semantizer
-     * @param parameters semanticId = uri or name of blank node
-     * @returns
-     */
-    static create(semantizer: Semantizer, parameters?: ResourceCreationParameters): DocumentDefault;
-    protected constructor(parameters: ConstructionParameters);
-    getSemanticId(): string;
-    setSemanticId(semanticId: string): void;
-    removeSemanticId(): void;
+    private _uri;
+    private _things;
+    private _context?;
+    constructor(parameters?: ConstructionParameters);
+    setContext(context: Context): void;
+    getContext(): Context | undefined;
+    expand(uri: string): string;
+    shorten(uri: string): string;
+    addThing(thing: Thing): Document;
+    addDocument(document: Document): Document;
+    getThing(uri: string): Thing | null;
+    createSelfDescribingThing(): Thing;
+    createThing(nameHintOrUri?: string): Thing;
+    createAnonymousThing(nameHint?: string): Thing;
+    removeThing(): void;
+    getUri(): string;
+    setUri(uri: string): void;
     isEmpty(): boolean;
-    getStatementsAbout(subject: string | Document, property?: string): Document;
-    getAllValuesAboutStatement(property: string, subject?: string | Document): string[];
-    addStatementAbout(property: string, valueOrResource: string | Document, subject?: string | Document, datatype?: string, language?: string): void;
-    getFirstStringValueAboutStatement(property: string, subject?: string | Document): string | null;
-    getAllStringValuesAboutStatement(property: string, subject?: string | Document): string[];
-    addRdfTypeStatement(value: string | Document, subject?: string | Document): void;
-    addStringStatementAbout(property: string, value: string, locale?: string, subject?: string | Document): void;
-    addBooleanStatementAbout(property: string, value: boolean, subject?: string | Document): void;
-    addDecimalStatementAbout(property: string, value: number, subject?: string | Document): void;
-    addIntegerStatementAbout(property: string, value: number, subject?: string | Document): void;
-    addDateStatementAbout(property: string, value: Date, subject?: string | Document): void;
-    addDatetimeStatementAbout(property: string, value: Date, subject?: string | Document): void;
-    addTimeStatementAbout(property: string, value: Date, subject?: string | Document): void;
-    countStatementsAbout(subject?: string | Document, property?: string): number;
-    countSubjects(): number;
-    getFirstRdfTypeValue(subject?: string | Document): string | null;
-    getAllRdfTypeValues(subject?: string | Document): string[];
-    hasStatementsAbout(subject: string | Document | undefined, property: string, ...hasValues: string[]): boolean;
-    isSemanticTypeOf(semanticType: string): boolean;
+    getAllThings(): Thing[];
+    countThings(): number;
+    hasStatementsAbout(subject: string | Resource | undefined, property: string, ...hasValues: string[]): boolean;
     protected addRdfQuad(quad: QuadExt): void;
-    filter(by: (subject?: string | Document, property?: string, value?: string) => boolean): Document;
-    addStatementFrom(source: Document, subject?: string | Document): void;
+    filter(by: (subject?: string | Resource, property?: string, value?: string) => boolean): Thing;
     protected createRdfQuad(subject: string | Document, property: string, value: string | Document, languageOrDatatype?: string | NamedNodeExt): QuadExt;
-    getSemantizer(): Semantizer;
     /**
      * Return a deep copy of the underlying RDF dataset.
      * @returns
      */
     toRdfDatasetExt(): DatasetExt;
 }
-export {};
+export default DocumentDefault;
 //# sourceMappingURL=DocumentDefault.d.ts.map

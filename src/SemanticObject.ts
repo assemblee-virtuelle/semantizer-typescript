@@ -73,7 +73,8 @@ export default class SemanticObject implements Semanticable {
     }
 
     public getContext(): Context {
-        return this.getSemantizer().getContext();
+        throw new Error();
+        //return this.getSemantizer().getContext();
     }
 
     public getSemantizer(): Semantizer {

@@ -1,11 +1,25 @@
 import Document from "./Document";
+import Thing from "./Thing";
+import QuadExt from 'rdf-ext/lib/Quad';
+import NamedNodeExt from "rdf-ext/lib/NamedNode";
 import Resource from "./Resource";
-
-export interface Thing extends Resource {
-    getDocument(): Document;
+import Contextualized from "./Contextualized";
+import Context from "./Context";
+declare class ThingDefaultImpl implements Thing, Contextualized {
+    private _uri;
+    private _rdfjsDataset;
+    private _context?;
+    constructor(uri: string, context?: Context);
+    getUri(): string;
+    setUri(uri: string): void;
+    setContext(context: Context): void;
+    getContext(): Context | undefined;
+    expand(uri: string): string;
+    shorten(uri: string): string;
     filter(by: (property?: string, value?: string, datatype?: string) => boolean): Thing;
-    isAnonymous(): boolean;
-    
+    private getDataset;
+    protected addRdfQuad(quad: QuadExt): void;
+    protected createRdfQuad(property: string, value: string | Resource, languageOrDatatype?: string | NamedNodeExt): QuadExt;
     addStatement(about: string, value: string | Resource, datatype?: string, language?: string): Thing;
     addStatementFrom(source: Thing): Thing;
     addRdfTypeStatement(value: string): Thing;
@@ -16,7 +30,8 @@ export interface Thing extends Resource {
     addDateStatement(about: string, value: Date): Thing;
     addDatetimeStatement(about: string, value: Date): Thing;
     addTimeStatement(about: string, value: Date): Thing;
-
+    getAllValuesAboutStatement(property: string): string[];
+    getDocument(): Document;
     getRdfTypeValue(): string | null;
     getAllRdfTypeValues(): string[];
     getBooleanStatementValue(about: string): boolean;
@@ -33,7 +48,6 @@ export interface Thing extends Resource {
     getAllDatetimeStatementValues(about: string): Date[];
     getTimeStatementValue(about: string): Date;
     getAllTimeStatementValues(about: string): Date[];
-
     setRdfTypeStatement(value: string): Thing;
     setBooleanStatement(about: string, value: boolean): Thing;
     setStringStatement(about: string, value: string, locale?: string): Thing;
@@ -42,7 +56,6 @@ export interface Thing extends Resource {
     setDateStatement(about: string, value: Date): Thing;
     setDatetimeStatement(about: string, value: Date): Thing;
     setTimeStatement(about: string, value: Date): Thing;
-
     removeAllStatements(about: string): void;
     removeRdfTypeStatement(value: string): void;
     removeBooleanStatement(about: string, value: boolean): void;
@@ -53,5 +66,5 @@ export interface Thing extends Resource {
     removeDatetimeStatement(about: string, value: Date): void;
     removeTimeStatement(about: string, value: Date): void;
 }
-
-export default Thing;
+export default ThingDefaultImpl;
+//# sourceMappingURL=ThingDefaultImpl.d.ts.map

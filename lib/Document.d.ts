@@ -1,29 +1,28 @@
 import DatasetExt from "rdf-ext/lib/Dataset";
-import Semantizer from "./Semantizer";
-export default interface Document {
-    getSemantizer(): Semantizer;
-    getSemanticId(): string;
-    setSemanticId(semanticId: string): void;
+import Thing from "./Thing";
+import Resource from "./Resource";
+import Context from "./Context";
+export interface ConstructionParameters {
+    rdfDataset?: any;
+    uri?: string;
+    types?: string | string[];
+    things?: Thing | Thing[];
+    context?: Context;
+}
+export interface Document extends Resource {
     isEmpty(): boolean;
-    countSubjects(): number;
-    countStatementsAbout(subject: string | Document, property?: string): number;
-    hasStatementsAbout(subject: string | Document, property: string, ...hasValues: string[]): boolean;
-    filter(by: (subject?: string | Document, property?: string, value?: string) => boolean): Document;
-    addStatementAbout(property: string, valueOrDocument: string | Document, subject?: string | Document, datatype?: string, language?: string): void;
-    addStatementFrom(source: Document, subject?: string | Document): void;
-    addRdfTypeStatement(value: string | Document, subject?: string | Document): void;
-    addBooleanStatementAbout(property: string, value: boolean, subject?: string | Document): void;
-    addStringStatementAbout(property: string, value: string, locale?: string, subject?: string | Document): void;
-    addDecimalStatementAbout(property: string, value: number, subject?: string | Document): void;
-    addIntegerStatementAbout(property: string, value: number, subject?: string | Document): void;
-    addDateStatementAbout(property: string, value: Date, subject?: string | Document): void;
-    addDatetimeStatementAbout(property: string, value: Date, subject?: string | Document): void;
-    addTimeStatementAbout(property: string, value: Date, subject?: string | Document): void;
-    getStatementsAbout(subject: string | Document, property?: string): Document;
-    getFirstRdfTypeValue(subject?: string | Document): string | null;
-    getAllRdfTypeValues(subject?: string | Document): string[];
-    getFirstStringValueAboutStatement(property: string, subject?: string | Document): string | null;
-    getAllStringValuesAboutStatement(property: string, subject?: string | Document): string[];
+    countThings(): number;
+    addThing(thing: Thing): Document;
+    addDocument(document: Document): Document;
+    getThing(uri: string): Thing | null;
+    getAllThings(): Thing[];
+    createSelfDescribingThing(): Thing;
+    createThing(nameHintOrUri?: string): Thing;
+    createAnonymousThing(nameHint?: string): Thing;
+    removeThing(): void;
+    hasStatementsAbout(subject: string | Resource, property: string, ...hasValues: string[]): boolean;
+    filter(by: (subject?: string | Resource, property?: string, value?: string) => boolean): Thing;
     toRdfDatasetExt(): DatasetExt;
 }
+export default Document;
 //# sourceMappingURL=Document.d.ts.map

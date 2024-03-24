@@ -1,5 +1,5 @@
-import Context from "./Context";
-import Document from "./Document";
+import Contextualized from "./Contextualized";
+import { Document, ConstructionParameters } from "./Document";
 export declare enum ImportFormat {
     JSON_LD = "jsonld"
 }
@@ -8,8 +8,8 @@ export interface ResourceCreationParameters {
     semanticType?: string | string[];
     semanticContainedResource?: Document | Document[];
 }
-export interface Semantizer {
-    createDocument(parameters?: ResourceCreationParameters): Document;
+export interface Semantizer extends Contextualized {
+    createDocument(parameters?: ConstructionParameters): Document;
     /**
      *
      * @param input The input data to import resources from. See format.
@@ -18,10 +18,6 @@ export interface Semantizer {
      */
     importDocument(input: string, format?: ImportFormat, callback?: Function): Promise<Document>;
     exportDocument(...input: Document[]): Promise<string>;
-    getContext(): Context;
-    setContext(context: Context): void;
-    shorten(uri: string): string;
-    expand(uri: string): string;
 }
 export default Semantizer;
 //# sourceMappingURL=Semantizer.d.ts.map
