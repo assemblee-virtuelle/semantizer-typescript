@@ -20,16 +20,21 @@ export interface Document extends Resource {
 
     isEmpty(): boolean;
     countThings(): number;
+    
     addThing(thing: Thing): Document;
     addDocument(document: Document): Document;
+
     getThing(uri: string): Thing | null;
     getAllThings(): Thing[];
+    getSelfDescribingThing(): Thing | null;
+
     createSelfDescribingThing(): Thing;
     createThing(nameHintOrUri?: string): Thing;
     createAnonymousThing(nameHint?: string): Thing;
+
     deleteThing(): void;
     //countStatementsAbout(subject: string | Resource, property?: string): number;
-    hasStatementsAbout(subject: string | Resource, property: string, ...hasValues: string[]): boolean;
+    hasStatementsAbout(subject: string | Resource, property?: string, ...hasValues: string[]): boolean;
     filter(by: (subject?: string | Resource, property?: string, value?: string) => boolean): Thing;
 
     toRdfDatasetExt(): DatasetExt;

@@ -19,8 +19,8 @@ export class SemantizerDefault implements Semantizer {
         throw new Error("Method not implemented.");
     }
 
-    public createDocument(parameters?: ConstructionParameters): Document {
-        return this.getSemanticResourceFactory().createDocument(parameters);
+    public createDocument(uri?: string, context?: Context): Document {
+        return this.getSemanticResourceFactory().createDocument(uri, context);
     }
 
     public async importDocument(input: string, format?: ImportFormat, callback?: Function): Promise<Document> {

@@ -1,3 +1,4 @@
+import Context from "./Context";
 import { Document, ConstructionParameters } from "./Document";
 
 export enum ImportFormat {
@@ -12,7 +13,13 @@ export interface ResourceCreationParameters {
 
 export interface Semantizer {
 
-    createDocument(parameters?: ConstructionParameters): Document;
+    getContext(): Context | undefined;
+    setContext(context: Context): void;
+    expand(uri: string): string;
+    shorten(uri: string): string;
+
+    createDocument(uri?: string, context?: Context): Document;
+    // getDocument(uri: string): Promise<Document>;
 
     /**
      * 

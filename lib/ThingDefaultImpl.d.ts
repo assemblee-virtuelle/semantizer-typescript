@@ -1,25 +1,29 @@
 import Document from "./Document";
 import Thing from "./Thing";
-import QuadExt from 'rdf-ext/lib/Quad';
-import NamedNodeExt from "rdf-ext/lib/NamedNode";
 import Resource from "./Resource";
-import Contextualized from "./Contextualized";
 import Context from "./Context";
-declare class ThingDefaultImpl implements Thing, Contextualized {
-    private _uri;
-    private _rdfjsDataset;
-    private _context?;
-    constructor(uri: string, context?: Context);
+import DatasetExt from "rdf-ext/lib/Dataset";
+declare enum StateType {
+    ForDescribing = 0,
+    Regular = 1,
+    Anonymous = 2
+}
+declare class ThingDefaultImpl implements Thing {
+    private _document;
+    private _state;
+    static createThingForDescribingDocument(document: Document): Thing;
+    static createRegularThing(document: Document, uri: string): Thing;
+    static createAnonymousThing(document: Document, nameHint?: string): Thing;
+    protected constructor(document: Document, stateType: StateType, uri?: string);
+    private getState;
+    isAnonymous(): boolean;
     getUri(): string;
     setUri(uri: string): void;
-    setContext(context: Context): void;
     getContext(): Context | undefined;
     expand(uri: string): string;
     shorten(uri: string): string;
     filter(by: (property?: string, value?: string, datatype?: string) => boolean): Thing;
-    private getDataset;
-    protected addRdfQuad(quad: QuadExt): void;
-    protected createRdfQuad(property: string, value: string | Resource, languageOrDatatype?: string | NamedNodeExt): QuadExt;
+    toRdfDatasetExt(): DatasetExt;
     addStatement(about: string, value: string | Resource, datatype?: string, language?: string): Thing;
     addStatementFrom(source: Thing): Thing;
     addRdfTypeStatement(value: string): Thing;

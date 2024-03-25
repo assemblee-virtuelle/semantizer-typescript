@@ -3,48 +3,27 @@ import Semantizer, { ResourceCreationParameters } from "./Semantizer";
 import { Document, ConstructionParameters } from "./Document";
 import rdf from 'rdf-ext';
 import QuadExt from 'rdf-ext/lib/Quad';
-import ThingState from "./ThingState";
-import ThingStateRegular from "./ThingStateRegular";
 import DatasetExt from "rdf-ext/lib/Dataset";
-import NamedNodeExt from "rdf-ext/lib/NamedNode";
 import Thing from "./Thing";
 import Resource from "./Resource";
 import Context from "./Context";
-import ThingDefaultImpl from "./ThingDefaultImpl";
+import ThingDefaultImpl from "./ThingDefaultImpl.js";
 //import * as RDF from "@rdfjs/types";
 
 // states: Object | Document | Container
 // states: Local | Distant
 // states: Created | Modified | Loaded
 
-export class DocumentDefault implements Document {
+export class DocumentDefaultImpl implements Document {
 
-    private _rdfDataset: any;
     private _uri: string;
     private _things: Thing[];
     private _context?: Context;
 
-    public constructor(parameters?: ConstructionParameters) {
-        this._context = parameters?.context;
-        this._uri = parameters?.uri ?? "";
-        this._things = [];
-        
-        // Load
-        if (parameters?.rdfDataset) {
-            this._rdfDataset = parameters.rdfDataset;
-        }
-        
-        // Create
-        else {
-            this._rdfDataset = rdf.dataset();
-
-            /*if (parameters.semanticType) {
-                const semanticTypes = typeof parameters.semanticType === 'string'? [parameters.semanticType]: parameters.semanticType;
-                semanticTypes.forEach(type => this.addRdfTypeStatement(type));
-            }*/
-
-            // Handle resources
-        }
+    public constructor(uri?: string, context?: Context) {
+        this._uri = uri ?? '';
+        this._context = context;
+        this._things = [];        
     }
 
     public setContext(context: Context): void {
@@ -64,7 +43,8 @@ export class DocumentDefault implements Document {
     }
 
     public addThing(thing: Thing): Document {
-        throw new Error("Method not implemented.");
+        this._things.push(thing);
+        return this;
     }
 
     public addDocument(document: Document): Document {
@@ -75,20 +55,70 @@ export class DocumentDefault implements Document {
         throw new Error("Method not implemented.");
     }
 
+    protected isUrl(input: string): boolean {
+        return input.startsWith('http') || input.startsWith('#') || input === '';
+    }
+
+    protected generateUriWithFragment(): string {
+        return this.createUriWithFragment(this.generateThingName());
+    }
+
+    protected getOrCreateNameWithHash(nameWithOrWithoutHash: string): string {
+        return nameWithOrWithoutHash.startsWith('#')? nameWithOrWithoutHash: `#${nameWithOrWithoutHash}`;
+    }
+
+    protected createUriWithFragment(name: string): string {
+        return this.getUri() + this.getOrCreateNameWithHash(name);
+    }
+
+    protected checkUriCanBeAddedToTheDocument(uri: string): boolean {
+        return this.isUrl(uri) && !this.hasStatementsAbout(uri);
+    }
+
+    protected getSafeUriFromUri(uri: string): string {
+        if (!this.checkUriCanBeAddedToTheDocument(uri))
+            throw new Error(`You are trying to add the thing "${uri}" which is already part of the document.`);
+        return uri;
+    }
+
+    protected getSafeUriFromName(name: string): string {
+        const uri = this.createUriWithFragment(name);
+        if (!this.checkUriCanBeAddedToTheDocument(uri))
+            throw new Error(`You are trying to add the thing "${uri}" which is already part of the document.`);
+        return uri;
+    }
+
+    protected getSafeUriFromNameHintOrUri(nameHintOrUri: string): string {
+        return this.isUrl(nameHintOrUri)? this.getSafeUriFromUri(nameHintOrUri): this.getSafeUriFromName(nameHintOrUri);
+    }
+
     public createSelfDescribingThing(): Thing {
-        const thing = new ThingDefaultImpl(this, this.getUri(), this.getContext());
+        const thing = ThingDefaultImpl.createThingForDescribingDocument(this);
+        this.addThing(thing);
+        return thing;
+    }
+
+    public generateThingName(): string {
+        return "generatedName"; // TODO
+    }
+
+    protected validateOrCreateThingUri(nameHintOrUri?: string): string {
+        return nameHintOrUri? this.getSafeUriFromNameHintOrUri(nameHintOrUri): this.generateUriWithFragment();
+    }
+
+    protected createAndAddRegularThing(uri: string): Thing {
+        const thing = ThingDefaultImpl.createRegularThing(this, uri);
         this.addThing(thing);
         return thing;
     }
 
     public createThing(nameHintOrUri?: string): Thing {
-        const thing = new ThingDefaultImpl(this, nameHintOrUri, this.getContext());
-        this.addThing(thing);
-        return thing;
+        const uriOfNewRegularThing = this.validateOrCreateThingUri(nameHintOrUri);
+        return this.createAndAddRegularThing(uriOfNewRegularThing);
     }
 
     public createAnonymousThing(nameHint?: string): Thing {
-        const thing = new ThingDefaultImpl(this, nameHint, this.getContext());
+        const thing = ThingDefaultImpl.createAnonymousThing(this, nameHint);
         this.addThing(thing);
         return thing;
     }
@@ -103,7 +133,7 @@ export class DocumentDefault implements Document {
 
     public setUri(uri: string): void {
         this._uri = uri;
-        // compute change in graph
+        // compute change in every things
     }
 
     public isEmpty(): boolean {
@@ -114,25 +144,40 @@ export class DocumentDefault implements Document {
         return this._things;
     }
 
+    public getSelfDescribingThing(): Thing | null {
+        return this.getThing(this.getUri());
+    }
+
     public countThings(): number {
         return this.getAllThings().length;
     }
 
-    public hasStatementsAbout(subject: string | Resource = this, property: string, ...hasValues: string[]): boolean {
-        return true;
-    }
-
-    protected addRdfQuad(quad: QuadExt): void {
-        this._rdfDataset.add(quad);
+    public hasStatementsAbout(subject: string | Resource, property?: string, ...hasValues: string[]): boolean {
+        const uri = typeof subject === 'string'? subject: subject.getUri();
+        return this.getAllThings().some(thing => thing.getUri() === uri);
     }
 
     public filter(by: (subject?: string | Resource, property?: string, value?: string) => boolean): Thing {
         throw new Error("Not implemented");
     }
 
-    protected createRdfQuad(subject: string | Document, property: string, value: string | Document, languageOrDatatype?: string | NamedNodeExt): QuadExt {
+    public toRdfDatasetExt(): DatasetExt {
+        const result = rdf.dataset();
+        this._things.forEach(thing => {
+            // @ts-ignore
+            result.addAll(thing.toRdfDatasetExt())
+        })
+        return result;
+    }
+
+}
+
+export default DocumentDefaultImpl;
+
+
+/*protected createRdfQuad(subject: string | Document, property: string, value: string | Document, languageOrDatatype?: string | NamedNodeExt): QuadExt {
         let object = typeof value === 'string'? rdf.literal(value): value;
-        /*
+        
         let valueOrResource = value;
         if (typeof valueOrResource !== "string" && !this.isSemanticAnonymous(valueOrResource))
             value = valueOrResource.getSemanticId();
@@ -141,8 +186,6 @@ export class DocumentDefault implements Document {
             object = languageOrDatatype? rdf.literal(value, languageOrDatatype): rdf.namedNode(this.getSemantizer().expand(value));
         }
 
-        */
-
         const subject2 = rdf.namedNode(''); // typeof subject === "string"? rdf.namedNode(subject): subject, // or blank node
 
         return rdf.quad(
@@ -150,23 +193,7 @@ export class DocumentDefault implements Document {
             rdf.namedNode(this.expand(property)),
             object // or blank node
         );
-    }
-
-    
-
-    /**
-     * Return a deep copy of the underlying RDF dataset.
-     * @returns 
-     */
-    public toRdfDatasetExt(): DatasetExt {
-        return this._rdfDataset.clone();
-    }
-
-}
-
-export default DocumentDefault;
-
-
+    }*/
 
 /*public getStatementsAbout(subject: string | Document, property?: string): Document {
         const semanticId = typeof subject === 'string'? subject: subject.getSemanticId(); // manage self

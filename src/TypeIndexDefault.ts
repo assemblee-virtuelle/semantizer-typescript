@@ -1,8 +1,8 @@
 import Document from "./Document";
-import DocumentDefault from "./DocumentDefault"
+import DocumentDefaultImpl from "./DocumentDefaultImpl"
 import TypeIndex from "./TypeIndex";
 
-export default class TypeIndexDefault extends DocumentDefault implements TypeIndex {
+export default class TypeIndexDefault extends DocumentDefaultImpl implements TypeIndex {
 
     public addRegistration(forClass: string, instance: string): void {
 

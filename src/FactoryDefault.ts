@@ -1,6 +1,6 @@
 import Context from "./Context.js";
 import { Document, ConstructionParameters } from "./Document.js";
-import { DocumentDefault } from "./DocumentDefault.js";
+import { DocumentDefaultImpl } from "./DocumentDefaultImpl.js";
 import ResourceFactory from "./Factory.js";
 import Semantizer, { ResourceCreationParameters } from "./Semantizer.js";
 
@@ -13,11 +13,11 @@ export default class ResourceFactoryDefault implements ResourceFactory {
     }
 
     public loadDocument(semanticId: string): Document {
-        return new DocumentDefault({ uri: semanticId });
+        return new DocumentDefaultImpl(semanticId);
     }
 
-    public createDocument(parameters?: ConstructionParameters): Document {
-        return new DocumentDefault(parameters);
+    public createDocument(uri?: string, context?: Context): Document {
+        return new DocumentDefaultImpl(uri, context);
     }
 
     public getSemantizer(): Semantizer {
@@ -25,7 +25,7 @@ export default class ResourceFactoryDefault implements ResourceFactory {
     }
 
     public loadSemanticResource(semanticId: string): Document {
-        return new DocumentDefault({ uri: semanticId });
+        return new DocumentDefaultImpl(semanticId);
     }
 
     public createContext(): Context {

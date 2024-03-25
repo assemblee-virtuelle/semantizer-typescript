@@ -1,5 +1,5 @@
-import Contextualized from "./Contextualized";
-import { Document, ConstructionParameters } from "./Document";
+import Context from "./Context";
+import { Document } from "./Document";
 export declare enum ImportFormat {
     JSON_LD = "jsonld"
 }
@@ -8,8 +8,12 @@ export interface ResourceCreationParameters {
     semanticType?: string | string[];
     semanticContainedResource?: Document | Document[];
 }
-export interface Semantizer extends Contextualized {
-    createDocument(parameters?: ConstructionParameters): Document;
+export interface Semantizer {
+    getContext(): Context | undefined;
+    setContext(context: Context): void;
+    expand(uri: string): string;
+    shorten(uri: string): string;
+    createDocument(uri?: string, context?: Context): Document;
     /**
      *
      * @param input The input data to import resources from. See format.

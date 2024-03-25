@@ -1,7 +1,7 @@
 import LdpContainer from "./LdpContainer";
-import DocumentDefault from "./DocumentDefault";
+import DocumentDefaultImpl from "./DocumentDefaultImpl";
 
-export default class LdpContainerDefault extends DocumentDefault implements LdpContainer {
+export default class LdpContainerDefault extends DocumentDefaultImpl implements LdpContainer {
 
     // Todo: add methods to get meta info.
 

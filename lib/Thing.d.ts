@@ -1,8 +1,15 @@
+import DatasetExt from "rdf-ext/lib/Dataset";
+import Context from "./Context";
 import Document from "./Document";
 import Resource from "./Resource";
 export interface Thing extends Resource {
     getDocument(): Document;
     filter(by: (property?: string, value?: string, datatype?: string) => boolean): Thing;
+    isAnonymous(): boolean;
+    getContext(): Context | undefined;
+    expand(uri: string): string;
+    shorten(uri: string): string;
+    toRdfDatasetExt(): DatasetExt;
     addStatement(about: string, value: string | Resource, datatype?: string, language?: string): Thing;
     addStatementFrom(source: Thing): Thing;
     addRdfTypeStatement(value: string): Thing;

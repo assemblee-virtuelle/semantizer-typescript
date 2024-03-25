@@ -1,43 +1,55 @@
 import Document from "./Document";
 import Thing from "./Thing";
-import rdf from 'rdf-ext';
-import QuadExt from 'rdf-ext/lib/Quad';
-import NamedNodeExt from "rdf-ext/lib/NamedNode";
 import Resource from "./Resource";
 import Context from "./Context";
 import ThingState from "./ThingState";
-import ThingStateRegular from "./ThingStateRegular";
+import ThingStateRegular from "./ThingStateRegular.js";
+import ThingStateAnonymous from "./ThingStateAnonymous.js";
+import DatasetExt from "rdf-ext/lib/Dataset";
+
+enum StateType {
+    ForDescribing,
+    Regular,
+    Anonymous
+}
 
 class ThingDefaultImpl implements Thing {
 
     private _document;
-    private _uri: string | undefined;
-    private _rdfjsDataset: any;
     private _state: ThingState;
 
     public static createThingForDescribingDocument(document: Document): Thing {
-        return new ThingDefaultImpl(document, document.getUri());
+        return new ThingDefaultImpl(document, StateType.ForDescribing);
     }
 
-    public static createThing(document: Document, nameHintOrUri?: string): Thing {
-        let uri = nameHintOrUri;
-        if (!nameHintOrUri || !nameHintOrUri.startsWith("http")) {
-            uri = "#toGenerate";
-        }
-        return new ThingDefaultImpl(document, uri);
+    public static createRegularThing(document: Document, uri: string): Thing {
+        return new ThingDefaultImpl(document, StateType.Regular, uri);
     }
 
     public static createAnonymousThing(document: Document, nameHint?: string): Thing {
         if (nameHint?.startsWith('http'))
             throw new Error("You are trying to create an anonymous thing with an URI but anonymous thing can not have an URI. Please pass a name hint instead or leave it undefined.");
-        return new ThingDefaultImpl(document, nameHint);
+        return new ThingDefaultImpl(document, StateType.Anonymous, nameHint);
     }
 
-    protected constructor(document: Document, uri?: string) {
-        this._uri = uri;
+    protected constructor(document: Document, stateType: StateType, uri?: string) {
         this._document = document;
-        this._state = new ThingStateRegular(uri);
-        this._rdfjsDataset = rdf.dataset();
+
+        switch (stateType) {
+            case StateType.Regular:
+                if (!uri)
+                    throw new Error();
+                this._state = new ThingStateRegular(this, uri);
+                break;
+        
+            case StateType.Anonymous:
+                this._state = new ThingStateAnonymous(this, uri);
+                break;
+
+            case StateType.ForDescribing:
+                this._state = new ThingStateRegular(this, document.getUri());
+                break;
+        }
     }
 
     private getState(): ThingState {
@@ -53,7 +65,7 @@ class ThingDefaultImpl implements Thing {
     }
 
     public setUri(uri: string): void {
-        this._uri = uri;
+        // Todo: change state
         // Todo: change dataset
     }
 
@@ -62,40 +74,24 @@ class ThingDefaultImpl implements Thing {
     }
 
     public expand(uri: string): string {
-        return this.getContext()?.expand(uri) ?? uri;
+        return this.getDocument().expand(uri);
     }
 
     public shorten(uri: string): string {
-        return this.getContext()?.shorten(uri) ?? uri;
+        return this.getDocument().shorten(uri);
     }
 
     public filter(by: (property?: string, value?: string, datatype?: string) => boolean): Thing {
         throw new Error("Method not implemented.");
     }
 
-    private getDataset(): any {
-        return this._rdfjsDataset;
-    }
-
-    protected addRdfQuad(quad: QuadExt): void {
-        this.getDataset().add(quad);
-    }
-
-    protected createRdfQuad(property: string, value: string | Resource, languageOrDatatype?: string | NamedNodeExt): QuadExt {
-        let object = typeof value === 'string'? rdf.literal(value): rdf.namedNode(value.getUri());
-
-        return rdf.quad(
-            rdf.namedNode(this.getUri()),
-            rdf.namedNode(this.expand(property)),
-            object // or blank node
-        );
+    public toRdfDatasetExt(): DatasetExt {
+        return this.getState().toRdfDatasetExt();
     }
 
     ////////////// Adder //////////////
     public addStatement(about: string, value: string | Resource, datatype?: string, language?: string): Thing {
-        const languageOrDatatype = language? language: datatype? rdf.namedNode(datatype): undefined;
-        this.addRdfQuad(this.createRdfQuad(about, value, languageOrDatatype));
-        return this;
+        return this.getState().addStatement(about, value, datatype, language);
     }
 
     public addStatementFrom(source: Thing): Thing {
@@ -136,12 +132,7 @@ class ThingDefaultImpl implements Thing {
 
     ////////////// Getters //////////////
     public getAllValuesAboutStatement(property: string): string[] {
-        const iteratee = (r: any, q: any) => {
-            if (q.predicate.value === this.expand(property)) 
-                r.push(this.shorten(q.object.value))
-            return r;
-        }
-        return this.getDataset().reduce(iteratee, []);
+        return this.getState().getAllValuesAboutStatement(property);
     }
 
     public getDocument(): Document {
