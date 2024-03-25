@@ -1,7 +1,7 @@
 import ContextDefault from "./ContextDefault.js";
 import Context from "./Context.js";
 import { Semantizer, ImportFormat, ResourceCreationParameters } from "./Semantizer.js";
-import { Document, ConstructionParameters } from "./Document.js";
+import { Document } from "./Document.js";
 import ResourceFactory from "./Factory.js";
 import ResourceFactoryDefault from "./FactoryDefault.js";
 

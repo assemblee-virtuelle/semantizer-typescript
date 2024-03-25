@@ -17,6 +17,13 @@ test("DocumentDefault:createWithUri", () => {
     expect.strictEqual(document.getUri(), "http://example.org/document");
 })
 
+test("DocumentDefault:createBlankNode", () => {
+    const document = semantizer.createDocument("http://example.org/document");
+    const bn = document.createAnonymousThing("blank").addStringStatement("anonymous", "string");
+    console.log(document.toRdfDatasetExt());
+    console.log(bn.getUri());
+})
+
 test("DocumentDefault:create", () => {
     let document = semantizer.createDocument("http://example.org/document");
     expect.strictEqual(document.getUri(), "http://example.org/document");
@@ -55,7 +62,7 @@ test("DocumentDefault:create", () => {
 
     const output = serializer.import(input);
 
-    output.on("data", (json) => console.log(JSON.stringify(json)));
+    //output.on("data", (json) => console.log(JSON.stringify(json)));
 });
 
 /*test("DocumentDefault:create", () => {

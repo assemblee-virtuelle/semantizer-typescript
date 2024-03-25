@@ -2,13 +2,6 @@ import DatasetExt from "rdf-ext/lib/Dataset";
 import Thing from "./Thing";
 import Resource from "./Resource";
 import Context from "./Context";
-export interface ConstructionParameters {
-    rdfDataset?: any;
-    uri?: string;
-    types?: string | string[];
-    things?: Thing | Thing[];
-    context?: Context;
-}
 export interface Document extends Resource {
     getContext(): Context | undefined;
     setContext(context: Context): void;

@@ -1,6 +1,6 @@
 import BlankNodeExt from "rdf-ext/lib/BlankNode";
 import Semantizer, { ResourceCreationParameters } from "./Semantizer";
-import { Document, ConstructionParameters } from "./Document";
+import { Document } from "./Document";
 import rdf from 'rdf-ext';
 import QuadExt from 'rdf-ext/lib/Quad';
 import DatasetExt from "rdf-ext/lib/Dataset";

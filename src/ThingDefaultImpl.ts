@@ -3,8 +3,8 @@ import Thing from "./Thing";
 import Resource from "./Resource";
 import Context from "./Context";
 import ThingState from "./ThingState";
-import ThingStateRegular from "./ThingStateRegular.js";
-import ThingStateAnonymous from "./ThingStateAnonymous.js";
+import ThingStateRdfjsRegular from "./ThingStateRdfjsRegular.js";
+import ThingStateRdfjsAnonymous from "./ThingStateRdfjsAnonymous.js";
 import DatasetExt from "rdf-ext/lib/Dataset";
 
 enum StateType {
@@ -39,15 +39,15 @@ class ThingDefaultImpl implements Thing {
             case StateType.Regular:
                 if (!uri)
                     throw new Error();
-                this._state = new ThingStateRegular(this, uri);
+                this._state = new ThingStateRdfjsRegular(this, uri);
                 break;
         
             case StateType.Anonymous:
-                this._state = new ThingStateAnonymous(this, uri);
+                this._state = new ThingStateRdfjsAnonymous(this, uri);
                 break;
 
             case StateType.ForDescribing:
-                this._state = new ThingStateRegular(this, document.getUri());
+                this._state = new ThingStateRdfjsRegular(this, document.getUri());
                 break;
         }
     }
