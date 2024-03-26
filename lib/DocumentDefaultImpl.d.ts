@@ -1,8 +1,8 @@
-import { Document } from "./Document";
 import DatasetExt from "rdf-ext/lib/Dataset";
-import Thing from "./Thing";
-import Resource from "./Resource";
 import Context from "./Context";
+import { Document } from "./Document";
+import Resource from "./Resource";
+import Thing from "./Thing";
 export declare class DocumentDefaultImpl implements Document {
     private _uri;
     private _things;
@@ -14,6 +14,7 @@ export declare class DocumentDefaultImpl implements Document {
     shorten(uri: string): string;
     addThing(thing: Thing): Document;
     addDocument(document: Document): Document;
+    equals(other: Document): boolean;
     getThing(uri: string): Thing | null;
     protected isUrl(input: string): boolean;
     protected generateUriWithFragment(): string;
@@ -26,6 +27,8 @@ export declare class DocumentDefaultImpl implements Document {
     createThingToSelfDescribe(): Thing;
     generateThingName(): string;
     protected validateOrCreateThingUri(nameHintOrUri?: string): string;
+    protected validateNameHintForThingWithoutUri(nameHint: string): void;
+    protected validateAndCreateThingWithoutUri(nameHint?: string): Thing;
     protected createAndAddRegularThing(uri: string): Thing;
     createThing(nameHintOrUri?: string): Thing;
     createThingWithoutUri(nameHint?: string): Thing;
@@ -33,11 +36,11 @@ export declare class DocumentDefaultImpl implements Document {
     getUri(): string;
     setUri(uri: string): void;
     isEmpty(): boolean;
-    getAllThings(): Thing[];
-    getSelfDescribingThing(): Thing | null;
+    getThingsAll(): Thing[];
+    getThingThatSelfDescribes(): Thing | null;
     countThings(): number;
     hasStatementsAbout(subject: string | Resource, property?: string, ...hasValues: string[]): boolean;
-    filter(by: (subject?: string | Resource, property?: string, value?: string) => boolean): Thing;
+    filter(predicate: (value: Thing, index: number, array: Thing[]) => boolean): Thing[];
     toRdfDatasetExt(): DatasetExt;
 }
 export default DocumentDefaultImpl;

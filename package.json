@@ -1,6 +1,6 @@
 {
   "name": "@virtual-assembly/semantizer",
-  "description": "The semantizer library lets you enhance your object model with semantic data.",
+  "description": "A library to manipulate local or distant RDF documents.",
   "type": "module",
   "author": "Maxime Lecoq <maxime@lecoqlibre.fr>",
   "repository": {
@@ -8,7 +8,7 @@
     "url": "https://github.com/assemblee-virtuelle/semantizer-typescript.git",
     "directory": "/"
   },
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0-alpha.4",
   "license": "MIT",
   "scripts": {
     "build": "tsc -p .",

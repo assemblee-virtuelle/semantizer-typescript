@@ -12,6 +12,7 @@ export declare class ThingStateRdfjsRegular extends ThingStateDefaultBase {
     protected getDataset(): any;
     protected addRdfQuad(quad: QuadExt): void;
     toRdfDatasetExt(): DatasetExt;
+    equals(other: Thing): boolean;
     isAnonymous(): boolean;
     getAllValuesAboutStatement(property: string): string[];
     addStatement(about: string, value: string | Resource, datatype?: string, language?: string): Thing;

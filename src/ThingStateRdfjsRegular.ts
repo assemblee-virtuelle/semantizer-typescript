@@ -29,6 +29,10 @@ export class ThingStateRdfjsRegular extends ThingStateDefaultBase {
         return this.getDataset().clone();
     }
 
+    public equals(other: Thing): boolean {
+        return this.getDataset().equals(other.toRdfDatasetExt());
+    }
+
     public isAnonymous(): boolean {
         return false;
     }

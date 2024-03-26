@@ -10,6 +10,7 @@ export interface Thing extends Resource {
     getContext(): Context | undefined;
     expand(uri: string): string;
     shorten(uri: string): string;
+    equals(other: Thing): boolean;
     toRdfDatasetExt(): DatasetExt;
     
     addStatement(about: string, value: string | Resource, datatype?: string, language?: string): Thing;

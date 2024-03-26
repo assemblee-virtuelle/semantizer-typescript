@@ -85,6 +85,10 @@ class ThingDefaultImpl implements Thing {
         throw new Error("Method not implemented.");
     }
 
+    public equals(other: Thing): boolean {
+        return this.getState().equals(other);
+    }
+
     public toRdfDatasetExt(): DatasetExt {
         return this.getState().toRdfDatasetExt();
     }

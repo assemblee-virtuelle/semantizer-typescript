@@ -1,19 +1,13 @@
-import BlankNodeExt from "rdf-ext/lib/BlankNode";
-import Semantizer, { ResourceCreationParameters } from "./Semantizer";
-import { Document } from "./Document";
 import rdf from 'rdf-ext';
-import QuadExt from 'rdf-ext/lib/Quad';
 import DatasetExt from "rdf-ext/lib/Dataset";
-import Thing from "./Thing";
-import Resource from "./Resource";
 import Context from "./Context";
+import { Document } from "./Document";
+import Resource from "./Resource";
+import Thing from "./Thing";
 import ThingDefaultImpl from "./ThingDefaultImpl.js";
-//import * as RDF from "@rdfjs/types";
 
-// states: Object | Document | Container
 // states: Local | Distant
 // states: Created | Modified | Loaded
-
 export class DocumentDefaultImpl implements Document {
 
     private _uri: string;
@@ -51,8 +45,13 @@ export class DocumentDefaultImpl implements Document {
         throw new Error("Method not implemented.");
     }
 
+    public equals(other: Document): boolean {
+        return this.toRdfDatasetExt().equals(other);
+    }
+
     public getThing(uri: string): Thing | null {
-        throw new Error("Method not implemented.");
+        const things = this.filter((thing: Thing) => thing.getUri() === uri);
+        return things.length > 0? things[0]: null;
     }
 
     protected isUrl(input: string): boolean {
@@ -77,14 +76,14 @@ export class DocumentDefaultImpl implements Document {
 
     protected getSafeUriFromUri(uri: string): string {
         if (!this.checkUriCanBeAddedToTheDocument(uri))
-            throw new Error(`You are trying to add the thing "${uri}" which is already part of the document.`);
+            throw new Error(`You are trying to add the thing "${uri}" but it is already part of the document.`);
         return uri;
     }
 
     protected getSafeUriFromName(name: string): string {
         const uri = this.createUriWithFragment(name);
         if (!this.checkUriCanBeAddedToTheDocument(uri))
-            throw new Error(`You are trying to add the thing "${uri}" which is already part of the document.`);
+            throw new Error(`You are trying to add the thing "${uri}" but it is already part of the document.`);
         return uri;
     }
 
@@ -106,6 +105,17 @@ export class DocumentDefaultImpl implements Document {
         return nameHintOrUri? this.getSafeUriFromNameHintOrUri(nameHintOrUri): this.generateUriWithFragment();
     }
 
+    protected validateNameHintForThingWithoutUri(nameHint: string): void {
+        if (this.hasStatementsAbout(`_:${nameHint}`))
+        throw new Error(`You are trying to add the anonymous thing "${nameHint}" but it is already part of the document.`);
+    }
+
+    protected validateAndCreateThingWithoutUri(nameHint?: string): Thing {
+        if (nameHint)
+            this.validateNameHintForThingWithoutUri(nameHint);
+        return ThingDefaultImpl.createThingWithoutUri(this, nameHint);
+    }
+
     protected createAndAddRegularThing(uri: string): Thing {
         const thing = ThingDefaultImpl.createThing(this, uri);
         this.addThing(thing);
@@ -118,7 +128,7 @@ export class DocumentDefaultImpl implements Document {
     }
 
     public createThingWithoutUri(nameHint?: string): Thing {
-        const thing = ThingDefaultImpl.createThingWithoutUri(this, nameHint);
+        const thing = this.validateAndCreateThingWithoutUri(nameHint);
         this.addThing(thing);
         return thing;
     }
@@ -157,8 +167,8 @@ export class DocumentDefaultImpl implements Document {
         return this.getThingsAll().some(thing => thing.getUri() === uri);
     }
 
-    public filter(by: (subject?: string | Resource, property?: string, value?: string) => boolean): Thing {
-        throw new Error("Not implemented");
+    public filter(predicate: (value: Thing, index: number, array: Thing[]) => boolean): Thing[] {
+        return this.getThingsAll().filter(predicate);
     }
 
     public toRdfDatasetExt(): DatasetExt {
@@ -173,84 +183,3 @@ export class DocumentDefaultImpl implements Document {
 }
 
 export default DocumentDefaultImpl;
-
-
-/*protected createRdfQuad(subject: string | Document, property: string, value: string | Document, languageOrDatatype?: string | NamedNodeExt): QuadExt {
-        let object = typeof value === 'string'? rdf.literal(value): value;
-        
-        let valueOrResource = value;
-        if (typeof valueOrResource !== "string" && !this.isSemanticAnonymous(valueOrResource))
-            value = valueOrResource.getSemanticId();
-
-        if (typeof value === "string") {
-            object = languageOrDatatype? rdf.literal(value, languageOrDatatype): rdf.namedNode(this.getSemantizer().expand(value));
-        }
-
-        const subject2 = rdf.namedNode(''); // typeof subject === "string"? rdf.namedNode(subject): subject, // or blank node
-
-        return rdf.quad(
-            subject2,
-            rdf.namedNode(this.expand(property)),
-            object // or blank node
-        );
-    }*/
-
-/*public getStatementsAbout(subject: string | Document, property?: string): Document {
-        const semanticId = typeof subject === 'string'? subject: subject.getSemanticId(); // manage self
-        const dataset = this._rdfDataset.filter((quad: QuadExt) => quad.subject.toCanonical() === semanticId)
-        return dataset? DocumentDefault.load(this.getSemantizer(), dataset): new DocumentDefault({ semantizer: this.getSemantizer() });
-    }*/
-
-    /*public getAllValuesAboutStatement(property: string, subject: string | Document = this): string[] {
-        const subjectAsString = typeof subject === 'string'? subject: subject.getSemanticId();
-        const iteratee = (r: any, q: any) => {
-            if (q.subject.value === subjectAsString && q.predicate.value === this.getSemantizer().expand(property)) 
-                r.push(this.getSemantizer().shorten(q.object.value))
-            return r;
-        }
-        return this._rdfDataset.reduce(iteratee, []);
-    }*/
-
-    /*public getFirstStringValueAboutStatement(property: string, subject: string | Document = this): string | null {
-        const values = this.getAllStringValuesAboutStatement(property, subject);
-        return values.length >= 1? values[0]: null;
-    }*/
-
-    /*public getAllStringValuesAboutStatement(property: string, subject: string | Document = this): string[] {
-        return this.getAllValuesAboutStatement(property, subject);
-    }*/
-
-    /*public getFirstRdfTypeValue(subject?: string | Document): string | null {
-        const values = this.getAllRdfTypeValues(subject);
-        return values.length >= 1? values[0]: null;
-    }*/
-
-    /*public getAllRdfTypeValues(subject?: string | Document): string[] {
-        return this.getAllValuesAboutStatement("http://www.w3.org/1999/02/22-rdf-syntax-ns#type", subject);
-    }*/
-
-    /*public isSemanticTypeOf(semanticType: string): boolean {
-        return this.hasStatementsAbout(this, "rdf:type", semanticType);
-        //return this.getStatementsAbout(this, "rdf:type").includes(semanticType);
-    }*/
-
-    /*public removeSemanticId(): void {
-        // compute change in graph -> to blank node
-    }*/
-
-    /*public getSemantizer(): Semantizer {
-        return this._semantizer;
-    }*/
-
-    /*public static load(semantizer: Semantizer, rdfDataset: any): DocumentDefault {
-        return new DocumentDefault({semantizer, rdfDataset});
-    }*/
-
-    /*public static create(semantizer: Semantizer, parameters?: ResourceCreationParameters): DocumentDefault {
-        return new DocumentDefault({
-            semantizer, 
-            semanticId: parameters?.semanticId, 
-            semanticType: parameters?.semanticType, 
-            resources: parameters?.semanticContainedResource
-        });
-    }*/

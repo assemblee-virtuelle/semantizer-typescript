@@ -23,6 +23,7 @@ declare class ThingDefaultImpl implements Thing {
     expand(uri: string): string;
     shorten(uri: string): string;
     filter(by: (property?: string, value?: string, datatype?: string) => boolean): Thing;
+    equals(other: Thing): boolean;
     toRdfDatasetExt(): DatasetExt;
     addStatement(about: string, value: string | Resource, datatype?: string, language?: string): Thing;
     addStatementFrom(source: Thing): Thing;

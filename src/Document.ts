@@ -12,6 +12,7 @@ export interface Document extends Resource {
 
     isEmpty(): boolean;
     countThings(): number;
+    equals(other: Document): boolean;
 
     addThing(thing: Thing): Document;
     addDocument(document: Document): Document;
@@ -27,7 +28,7 @@ export interface Document extends Resource {
     deleteThing(): void;
     //countStatementsAbout(subject: string | Resource, property?: string): number;
     hasStatementsAbout(subject: string | Resource, property?: string, ...hasValues: string[]): boolean;
-    filter(by: (subject?: string | Resource, property?: string, value?: string) => boolean): Thing;
+    filter(predicate: (value: Thing, index: number, array: Thing[]) => boolean): Thing[];
 
     toRdfDatasetExt(): DatasetExt;
 }

@@ -13,6 +13,7 @@ export declare abstract class ThingStateDefaultBase implements ThingState {
     expand(uri: string): string;
     shorten(uri: string): string;
     abstract isAnonymous(): boolean;
+    abstract equals(other: Thing): boolean;
     abstract getAllValuesAboutStatement(property: string): string[];
     abstract toRdfDatasetExt(): DatasetExt;
     abstract addStatement(about: string, value: string | Resource, datatype?: string, language?: string): Thing;

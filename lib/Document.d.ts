@@ -9,17 +9,18 @@ export interface Document extends Resource {
     shorten(uri: string): string;
     isEmpty(): boolean;
     countThings(): number;
+    equals(other: Document): boolean;
     addThing(thing: Thing): Document;
     addDocument(document: Document): Document;
     getThing(uri: string): Thing | null;
-    getAllThings(): Thing[];
-    getSelfDescribingThing(): Thing | null;
+    getThingsAll(): Thing[];
+    getThingThatSelfDescribes(): Thing | null;
     createThingToSelfDescribe(): Thing;
     createThing(nameHintOrUri?: string): Thing;
     createThingWithoutUri(nameHint?: string): Thing;
     deleteThing(): void;
     hasStatementsAbout(subject: string | Resource, property?: string, ...hasValues: string[]): boolean;
-    filter(by: (subject?: string | Resource, property?: string, value?: string) => boolean): Thing;
+    filter(predicate: (value: Thing, index: number, array: Thing[]) => boolean): Thing[];
     toRdfDatasetExt(): DatasetExt;
 }
 export default Document;
