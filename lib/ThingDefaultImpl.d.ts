@@ -11,9 +11,9 @@ declare enum StateType {
 declare class ThingDefaultImpl implements Thing {
     private _document;
     private _state;
-    static createThingForDescribingDocument(document: Document): Thing;
-    static createRegularThing(document: Document, uri: string): Thing;
-    static createAnonymousThing(document: Document, nameHint?: string): Thing;
+    static createThingToDescribeDocument(document: Document): Thing;
+    static createThing(document: Document, uri: string): Thing;
+    static createThingWithoutUri(document: Document, nameHint?: string): Thing;
     protected constructor(document: Document, stateType: StateType, uri?: string);
     private getState;
     isAnonymous(): boolean;

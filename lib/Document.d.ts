@@ -14,9 +14,9 @@ export interface Document extends Resource {
     getThing(uri: string): Thing | null;
     getAllThings(): Thing[];
     getSelfDescribingThing(): Thing | null;
-    createSelfDescribingThing(): Thing;
+    createThingToSelfDescribe(): Thing;
     createThing(nameHintOrUri?: string): Thing;
-    createAnonymousThing(nameHint?: string): Thing;
+    createThingWithoutUri(nameHint?: string): Thing;
     deleteThing(): void;
     hasStatementsAbout(subject: string | Resource, property?: string, ...hasValues: string[]): boolean;
     filter(by: (subject?: string | Resource, property?: string, value?: string) => boolean): Thing;

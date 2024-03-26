@@ -41,11 +41,11 @@ const importedJson = semantizer.importDocument("json data");
 
 // 2 possibilités d'export:
 const address = semantizer.createDocument("https://example.org/address")
-    .createSelfDescribingThing()
+    .createThingToSelfDescribe()
     .addRdfTypeStatement("dfc-b:Address");
 
 const addressAnonymous = semantizer.createDocument()
-    .createAnonymousThing()
+    .createThingWithoutUri()
     .addRdfTypeStatement("dfc-b:Address");
 
 semantizer.exportDocument(address.getDocument(), addressAnonymous.getDocument());
@@ -57,20 +57,20 @@ semantizer.exportDocument(address.getDocument(), addressAnonymous.getDocument())
 
 const catalog = semantizer.createDocument();
 
-catalog.createSelfDescribingThing(); // self describing
+catalog.createThingToSelfDescribe(); // self describing
 catalog.createThing(); // add thing with a generated name into the document
 catalog.createThing("me"); // add a named thing into the document
 catalog.createThing("http://example.org/thing"); // add a fixed thing into the document
-catalog.createAnonymousThing(); // add a generated name blank node into the document
-catalog.createAnonymousThing("blankNodeNameHint"); // add a named blank node into the document
+catalog.createThingWithoutUri(); // add a generated name blank node into the document
+catalog.createThingWithoutUri("blankNodeNameHint"); // add a named blank node into the document
 
-catalog.createSelfDescribingThing().addRdfTypeStatement("dfc-b:Catalog").addStringStatement("dfc-b:name", "test");
+catalog.createThingToSelfDescribe().addRdfTypeStatement("dfc-b:Catalog").addStringStatement("dfc-b:name", "test");
 
 catalog.createThing().addRdfTypeStatement("dfc-b:CatalogItem").addStringStatement("dfc-b:name", "catalog item 1");
 
 // Ajout d'une thing dans un document:
 const catalogItem = semantizer.createDocument()
-    .createSelfDescribingThing()
+    .createThingToSelfDescribe()
     .addRdfTypeStatement("dfc-b:CatalogItem")
     .addStringStatement("dfc-b:name", "Catalog item 1");
 catalog.addThing(catalogItem);

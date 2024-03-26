@@ -17,12 +17,12 @@ export interface Document extends Resource {
     addDocument(document: Document): Document;
 
     getThing(uri: string): Thing | null;
-    getAllThings(): Thing[];
-    getSelfDescribingThing(): Thing | null;
+    getThingsAll(): Thing[];
+    getThingThatSelfDescribes(): Thing | null;
 
-    createSelfDescribingThing(): Thing;
+    createThingToSelfDescribe(): Thing;
     createThing(nameHintOrUri?: string): Thing;
-    createAnonymousThing(nameHint?: string): Thing;
+    createThingWithoutUri(nameHint?: string): Thing;
 
     deleteThing(): void;
     //countStatementsAbout(subject: string | Resource, property?: string): number;

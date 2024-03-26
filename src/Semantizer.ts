@@ -18,7 +18,7 @@ export interface Semantizer {
     expand(uri: string): string;
     shorten(uri: string): string;
 
-    createDocument(uri?: string, context?: Context): Document;
+    createDocument(uri?: string, context?: Context): Document; // TODO: drop fragment in name
     // getDocument(uri: string): Promise<Document>;
 
     /**

@@ -18,15 +18,15 @@ class ThingDefaultImpl implements Thing {
     private _document;
     private _state: ThingState;
 
-    public static createThingForDescribingDocument(document: Document): Thing {
+    public static createThingToDescribeDocument(document: Document): Thing {
         return new ThingDefaultImpl(document, StateType.ForDescribing);
     }
 
-    public static createRegularThing(document: Document, uri: string): Thing {
+    public static createThing(document: Document, uri: string): Thing {
         return new ThingDefaultImpl(document, StateType.Regular, uri);
     }
 
-    public static createAnonymousThing(document: Document, nameHint?: string): Thing {
+    public static createThingWithoutUri(document: Document, nameHint?: string): Thing {
         if (nameHint?.startsWith('http'))
             throw new Error("You are trying to create an anonymous thing with an URI but anonymous thing can not have an URI. Please pass a name hint instead or leave it undefined.");
         return new ThingDefaultImpl(document, StateType.Anonymous, nameHint);

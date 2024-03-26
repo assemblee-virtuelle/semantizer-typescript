@@ -19,21 +19,41 @@ test("DocumentDefault:createWithUri", () => {
 
 test("DocumentDefault:createBlankNode", () => {
     const document = semantizer.createDocument("http://example.org/document");
-    const bn = document.createAnonymousThing("blank").addStringStatement("anonymous", "string");
-    console.log(document.toRdfDatasetExt());
-    console.log(bn.getUri());
+    const bn = document.createThingWithoutUri("blank").addStringStatement("anonymous", "string");
 })
 
 test("DocumentDefault:create", () => {
     let document = semantizer.createDocument("http://example.org/document");
     expect.strictEqual(document.getUri(), "http://example.org/document");
 
-    const metaData = document.createSelfDescribingThing();
+    const metaData = document.createThingToSelfDescribe();
     metaData.addRdfTypeStatement("ex:DocumentType");
     expect.strictEqual(metaData.getUri(), "http://example.org/document");
     expect.strictEqual(metaData.getRdfTypeValue(), "ex:DocumentType");
 
-    const catalog = document.createThing("catalog").addStringStatement("dfc-b:name", "Catalog 1");
+    const personDocument = semantizer.createDocument();
+    const person = personDocument.createThingToSelfDescribe()
+        .addRdfTypeStatement("dfc-b:Person");
+        /*.addStatement("dfc-b:hasAddres", 
+            personDocument.createThing("adr")
+                .addRdfTypeStatement("dfc-b:Address")
+                .addStringStatement("dfc-b:hasCountry", "France")
+        );*/
+    
+    const address = personDocument.createThingWithoutUri().addRdfTypeStatement("dfc-b:Address");
+    person.addStatement("dfc-b:hasAddress", address);
+
+    //console.log(personDocument.toRdfDatasetExt());
+
+    // person.addStatementAnonymous("dfc-b:hasAddress").addRdfTypeStatement("dfc-b:Address"); // raccourci
+
+    // const anonymThing = catalog.addAnonymousStatement("ex:blankNodeProp", "nameHintLikeaddress" | address (Thing | Document), ?nameHint);
+    // anonymThing.addRdfTypeStatement("dfc-b:Address");
+
+    // catalog.createAnonymousThing()
+
+    // le blank node est ajouté au document mais n'a pas de sens s'il n'est pas relié à 
+    // au moins une chose du document ?
 
     const thingWithourName = document.createThing().addStringStatement("dfc-b:name", "Without name");
 
@@ -55,14 +75,14 @@ test("DocumentDefault:create", () => {
         objectMode: true,
         read: () => {
             //semanticObjets.forEach((semanticObject) => semanticObject.toRdfDatasetExt().forEach((quad) => input.push(quad)));
-            document.toRdfDatasetExt().forEach((quad) => input.push(quad));
+            personDocument.toRdfDatasetExt().forEach((quad) => input.push(quad));
             input.push(null)
         }
     });
 
     const output = serializer.import(input);
 
-    //output.on("data", (json) => console.log(JSON.stringify(json)));
+    output.on("data", (json) => console.log(JSON.stringify(json)));
 });
 
 /*test("DocumentDefault:create", () => {

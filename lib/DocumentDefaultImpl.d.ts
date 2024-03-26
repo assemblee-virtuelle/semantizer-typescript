@@ -23,12 +23,12 @@ export declare class DocumentDefaultImpl implements Document {
     protected getSafeUriFromUri(uri: string): string;
     protected getSafeUriFromName(name: string): string;
     protected getSafeUriFromNameHintOrUri(nameHintOrUri: string): string;
-    createSelfDescribingThing(): Thing;
+    createThingToSelfDescribe(): Thing;
     generateThingName(): string;
     protected validateOrCreateThingUri(nameHintOrUri?: string): string;
     protected createAndAddRegularThing(uri: string): Thing;
     createThing(nameHintOrUri?: string): Thing;
-    createAnonymousThing(nameHint?: string): Thing;
+    createThingWithoutUri(nameHint?: string): Thing;
     deleteThing(): void;
     getUri(): string;
     setUri(uri: string): void;

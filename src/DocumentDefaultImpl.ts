@@ -92,8 +92,8 @@ export class DocumentDefaultImpl implements Document {
         return this.isUrl(nameHintOrUri)? this.getSafeUriFromUri(nameHintOrUri): this.getSafeUriFromName(nameHintOrUri);
     }
 
-    public createSelfDescribingThing(): Thing {
-        const thing = ThingDefaultImpl.createThingForDescribingDocument(this);
+    public createThingToSelfDescribe(): Thing {
+        const thing = ThingDefaultImpl.createThingToDescribeDocument(this);
         this.addThing(thing);
         return thing;
     }
@@ -107,7 +107,7 @@ export class DocumentDefaultImpl implements Document {
     }
 
     protected createAndAddRegularThing(uri: string): Thing {
-        const thing = ThingDefaultImpl.createRegularThing(this, uri);
+        const thing = ThingDefaultImpl.createThing(this, uri);
         this.addThing(thing);
         return thing;
     }
@@ -117,8 +117,8 @@ export class DocumentDefaultImpl implements Document {
         return this.createAndAddRegularThing(uriOfNewRegularThing);
     }
 
-    public createAnonymousThing(nameHint?: string): Thing {
-        const thing = ThingDefaultImpl.createAnonymousThing(this, nameHint);
+    public createThingWithoutUri(nameHint?: string): Thing {
+        const thing = ThingDefaultImpl.createThingWithoutUri(this, nameHint);
         this.addThing(thing);
         return thing;
     }
@@ -140,21 +140,21 @@ export class DocumentDefaultImpl implements Document {
         return this.countThings() === 0;
     }
 
-    public getAllThings(): Thing[] {
+    public getThingsAll(): Thing[] {
         return this._things;
     }
 
-    public getSelfDescribingThing(): Thing | null {
+    public getThingThatSelfDescribes(): Thing | null {
         return this.getThing(this.getUri());
     }
 
     public countThings(): number {
-        return this.getAllThings().length;
+        return this.getThingsAll().length;
     }
 
     public hasStatementsAbout(subject: string | Resource, property?: string, ...hasValues: string[]): boolean {
         const uri = typeof subject === 'string'? subject: subject.getUri();
-        return this.getAllThings().some(thing => thing.getUri() === uri);
+        return this.getThingsAll().some(thing => thing.getUri() === uri);
     }
 
     public filter(by: (subject?: string | Resource, property?: string, value?: string) => boolean): Thing {
