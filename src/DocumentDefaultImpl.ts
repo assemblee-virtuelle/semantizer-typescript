@@ -17,7 +17,7 @@ export class DocumentDefaultImpl implements Document {
     public constructor(uri?: string, context?: Context) {
         this._uri = uri ?? '';
         this._context = context;
-        this._things = [];        
+        this._things = [];
     }
 
     public setContext(context: Context): void {
@@ -41,12 +41,16 @@ export class DocumentDefaultImpl implements Document {
         return this;
     }
 
+    protected setThings(things: Thing[]): void {
+        this._things = things;
+    }
+
     public addDocument(document: Document): Document {
         throw new Error("Method not implemented.");
     }
 
     public equals(other: Document): boolean {
-        return this.toRdfDatasetExt().equals(other);
+        return this.toRdfDatasetExt().equals(other.toRdfDatasetExt());
     }
 
     public getThing(uri: string): Thing | null {
@@ -133,8 +137,10 @@ export class DocumentDefaultImpl implements Document {
         return thing;
     }
 
-    public deleteThing(): void {
-        throw new Error("Method not implemented.");
+    public deleteThing(thingOrUri: string | Thing): void {
+        const thing = typeof thingOrUri === 'string'? this.getThing(thingOrUri): thingOrUri;
+        if (thing)
+            this.setThings(this.filter((filteredThing: Thing) => thing.getUri() !== filteredThing.getUri())) // Maybe use equals instead
     }
 
     public getUri(): string {
@@ -173,10 +179,8 @@ export class DocumentDefaultImpl implements Document {
 
     public toRdfDatasetExt(): DatasetExt {
         const result = rdf.dataset();
-        this._things.forEach(thing => {
-            // @ts-ignore
-            result.addAll(thing.toRdfDatasetExt())
-        })
+        // @ts-ignore
+        this._things.forEach(thing => result.addAll(thing.toRdfDatasetExt()));
         return result;
     }
 

@@ -18,7 +18,7 @@ export interface Document extends Resource {
     createThingToSelfDescribe(): Thing;
     createThing(nameHintOrUri?: string): Thing;
     createThingWithoutUri(nameHint?: string): Thing;
-    deleteThing(): void;
+    deleteThing(thingOrUri: string | Thing): void;
     hasStatementsAbout(subject: string | Resource, property?: string, ...hasValues: string[]): boolean;
     filter(predicate: (value: Thing, index: number, array: Thing[]) => boolean): Thing[];
     toRdfDatasetExt(): DatasetExt;

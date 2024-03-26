@@ -66,7 +66,6 @@ export class ThingStateRdfjsRegular extends ThingStateDefaultBase {
         this.getDocumentDataset().forEach((quad: QuadExt) => {
             // @ts-ignore
             if (quad.subject.termType === "BlankNode" && quad.subject.toCanonical() === blankNodeCanonicalName) {
-                console.log("FOUND", quad.subject);
                 result = quad.subject;
                 return;
             }

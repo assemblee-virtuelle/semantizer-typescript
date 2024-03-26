@@ -7,22 +7,141 @@ import { Readable } from 'readable-stream';
 
 const semantizer = new SemantizerDefault();
 
-test("DocumentDefault:createWithoutUri", () => {
+test("DocumentDefaultImpl:createWithoutUri", () => {
     let document = semantizer.createDocument();
     expect.strictEqual(document.getUri(), "");
 });
 
-test("DocumentDefault:createWithUri", () => {
+test("DocumentDefaultImpl:createWithUri", () => {
     let document = semantizer.createDocument("http://example.org/document");
     expect.strictEqual(document.getUri(), "http://example.org/document");
 })
 
-test("DocumentDefault:createBlankNode", () => {
+test("DocumentDefaultImpl:isEmpty", () => {
+    let document = semantizer.createDocument();
+    expect.strictEqual(document.isEmpty(), true);
+    document.createThingToSelfDescribe();
+    expect.strictEqual(document.isEmpty(), false);
+
+    document = semantizer.createDocument();
+    document.createThing();
+    expect.strictEqual(document.isEmpty(), false);
+
+    document = semantizer.createDocument();
+    document.createThingWithoutUri();
+    expect.strictEqual(document.isEmpty(), false);
+});
+
+test("DocumentDefaultImpl:countThings", () => {
+    let document = semantizer.createDocument();
+    expect.strictEqual(document.countThings(), 0);
+
+    document.createThingToSelfDescribe();
+    expect.strictEqual(document.countThings(), 1);
+
+    document.createThing();
+    expect.strictEqual(document.countThings(), 2);
+
+    document.createThingWithoutUri();
+    expect.strictEqual(document.countThings(), 3);
+});
+
+test("DocumentDefaultImpl:equals", () => {
+    let document1 = semantizer.createDocument();
+    let document2 = semantizer.createDocument();
+
+    expect.strictEqual(document1.equals(document2), true);
+    expect.strictEqual(document2.equals(document1), true);
+
+    document1.createThingToSelfDescribe();
+    expect.strictEqual(document1.equals(document2), false);
+    expect.strictEqual(document2.equals(document1), false);
+
+    document2.createThingToSelfDescribe();
+    expect.strictEqual(document1.equals(document2), true);
+    expect.strictEqual(document2.equals(document1), true);
+
+    document1.createThing();
+    expect.strictEqual(document1.equals(document2), false);
+    expect.strictEqual(document2.equals(document1), false);
+
+    document2.createThing();
+    expect.strictEqual(document1.equals(document2), true);
+    expect.strictEqual(document2.equals(document1), true);
+});
+
+test("DocumentDefaultImpl:addThing", () => {
+    let document1 = semantizer.createDocument();
+    let thing = document1.createThing().addStringStatement("predicate", "value");
+
+    let document2 = semantizer.createDocument();
+    document2.addThing(thing);
+});
+
+test("DocumentDefaultImpl:addDocument", () => {
+
+});
+
+test("DocumentDefaultImpl:getThing", () => {
+    let document = semantizer.createDocument();
+    expect.strictEqual(document.getThing(""), null);
+    expect.strictEqual(document.getThing("someUri"), null);
+    
+    let thing1 = document.createThingToSelfDescribe();
+    expect.strictEqual(document.getThing(""), thing1);
+
+    let thing2 = document.createThing();
+    expect.strictEqual(document.getThing(""), thing1);
+});
+
+test("DocumentDefaultImpl:getThingsAll", () => {
+
+});
+
+test("DocumentDefaultImpl:getThingThatSelfDescribes", () => {
+    let document = semantizer.createDocument();
+    expect.strictEqual(document.getThingThatSelfDescribes(), null);
+
+    const thingThatSelfDescribes = document.createThingToSelfDescribe();
+    expect.strictEqual(document.getThingThatSelfDescribes(), thingThatSelfDescribes);
+});
+
+test("DocumentDefaultImpl:createThingToSelfDescribe", () => {
+    let document = semantizer.createDocument();
+    expect.strictEqual(document.getThingThatSelfDescribes(), null);
+
+    const thingThatSelfDescribes = document.createThingToSelfDescribe();
+    expect.strictEqual(document.getThingThatSelfDescribes(), thingThatSelfDescribes);
+
+    // test throws
+});
+
+test("DocumentDefaultImpl:createThing", () => {
+
+});
+
+test("DocumentDefaultImpl:createThingWithoutUri", () => {
     const document = semantizer.createDocument("http://example.org/document");
     const bn = document.createThingWithoutUri("blank").addStringStatement("anonymous", "string");
-})
+});
 
-test("DocumentDefault:create", () => {
+test("DocumentDefaultImpl:deleteThing", () => {
+
+});
+
+test("DocumentDefaultImpl:hasStatementsAbout", () => {
+
+});
+
+test("DocumentDefaultImpl:filter", () => {
+
+});
+
+test("DocumentDefaultImpl:toRdfDatasetExt", () => {
+
+});
+
+test("DocumentDefaultImpl:create", () => {
     let document = semantizer.createDocument("http://example.org/document");
     expect.strictEqual(document.getUri(), "http://example.org/document");
 
@@ -82,10 +201,10 @@ test("DocumentDefault:create", () => {
 
     const output = serializer.import(input);
 
-    output.on("data", (json) => console.log(JSON.stringify(json)));
+    //output.on("data", (json) => console.log(JSON.stringify(json)));
 });
 
-/*test("DocumentDefault:create", () => {
+/*test("DocumentDefaultImpl:create", () => {
     const document = semantizer.createDocument();
     expect.strictEqual(document.getSemanticId(), "");
 
@@ -96,7 +215,7 @@ test("DocumentDefault:create", () => {
 });*/
 
 /*
-test('DocumentDefault:export', () => {
+test('DocumentDefaultImpl:export', () => {
     const resource = semantizer.createDocument({ 
         semanticId: "http://example.org/test",
         semanticType: "http://example.org/Type1"

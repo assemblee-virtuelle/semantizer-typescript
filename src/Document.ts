@@ -1,5 +1,4 @@
 import DatasetExt from "rdf-ext/lib/Dataset";
-import Semantizer from "./Semantizer";
 import Thing from "./Thing";
 import Resource from "./Resource";
 import Context from "./Context";
@@ -25,7 +24,7 @@ export interface Document extends Resource {
     createThing(nameHintOrUri?: string): Thing;
     createThingWithoutUri(nameHint?: string): Thing;
 
-    deleteThing(): void;
+    deleteThing(thingOrUri: string | Thing): void;
     //countStatementsAbout(subject: string | Resource, property?: string): number;
     hasStatementsAbout(subject: string | Resource, property?: string, ...hasValues: string[]): boolean;
     filter(predicate: (value: Thing, index: number, array: Thing[]) => boolean): Thing[];

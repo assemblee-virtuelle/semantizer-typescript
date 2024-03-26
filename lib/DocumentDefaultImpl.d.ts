@@ -13,6 +13,7 @@ export declare class DocumentDefaultImpl implements Document {
     expand(uri: string): string;
     shorten(uri: string): string;
     addThing(thing: Thing): Document;
+    protected setThings(things: Thing[]): void;
     addDocument(document: Document): Document;
     equals(other: Document): boolean;
     getThing(uri: string): Thing | null;
@@ -32,7 +33,7 @@ export declare class DocumentDefaultImpl implements Document {
     protected createAndAddRegularThing(uri: string): Thing;
     createThing(nameHintOrUri?: string): Thing;
     createThingWithoutUri(nameHint?: string): Thing;
-    deleteThing(): void;
+    deleteThing(thingOrUri: string | Thing): void;
     getUri(): string;
     setUri(uri: string): void;
     isEmpty(): boolean;
