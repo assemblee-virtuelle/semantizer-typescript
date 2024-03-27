@@ -3,7 +3,7 @@ import Thing from "./Thing";
 import Resource from "./Resource";
 import Context from "./Context";
 import DatasetExt from "rdf-ext/lib/Dataset";
-declare enum StateType {
+export declare enum StateType {
     ForDescribing = 0,
     Regular = 1,
     Anonymous = 2

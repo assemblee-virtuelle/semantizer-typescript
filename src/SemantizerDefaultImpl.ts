@@ -5,7 +5,7 @@ import { Document } from "./Document.js";
 import ResourceFactory from "./Factory.js";
 import ResourceFactoryDefault from "./FactoryDefault.js";
 
-export class SemantizerDefault implements Semantizer {
+export class SemantizerDefaultImpl implements Semantizer {
 
     private _context: Context;
     private _semanticResourceFactory: ResourceFactory;
@@ -60,4 +60,4 @@ export class SemantizerDefault implements Semantizer {
 
 }
 
-export default SemantizerDefault;
+export default SemantizerDefaultImpl;

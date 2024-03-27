@@ -19,6 +19,10 @@ export class DocumentDefaultImpl implements Document {
         this._context = context;
         this._things = [];
     }
+    
+    [Symbol.iterator](): Iterator<Thing, any, undefined> {
+        return this._getThings()[Symbol.iterator]();
+    }
 
     public setContext(context: Context): void {
         this._context = context;
@@ -156,8 +160,12 @@ export class DocumentDefaultImpl implements Document {
         return this.countThings() === 0;
     }
 
-    public getThingsAll(): Thing[] {
+    private _getThings(): Thing[] {
         return this._things;
+    }
+
+    public getThingsAll(): Thing[] {
+        return this._getThings();
     }
 
     public getThingThatSelfDescribes(): Thing | null {
@@ -165,16 +173,16 @@ export class DocumentDefaultImpl implements Document {
     }
 
     public countThings(): number {
-        return this.getThingsAll().length;
+        return this._getThings().length;
     }
 
     public hasStatementsAbout(subject: string | Resource, property?: string, ...hasValues: string[]): boolean {
         const uri = typeof subject === 'string'? subject: subject.getUri();
-        return this.getThingsAll().some(thing => thing.getUri() === uri);
+        return this._getThings().some(thing => thing.getUri() === uri);
     }
 
     public filter(predicate: (value: Thing, index: number, array: Thing[]) => boolean): Thing[] {
-        return this.getThingsAll().filter(predicate);
+        return this._getThings().filter(predicate);
     }
 
     public toRdfDatasetExt(): DatasetExt {

@@ -3,7 +3,7 @@ import Thing from "./Thing";
 import Resource from "./Resource";
 import Context from "./Context";
 
-export interface Document extends Resource {
+export interface Document extends Resource, Iterable<Thing> {
     getContext(): Context | undefined;
     setContext(context: Context): void;
     expand(uri: string): string;
@@ -17,7 +17,8 @@ export interface Document extends Resource {
     addDocument(document: Document): Document;
 
     getThing(uri: string): Thing | null;
-    getThingsAll(): Thing[];
+    getThingsAll(): Thing[]; // delete because use iterator instead?
+    // TODO: add forEach and other methods?
     getThingThatSelfDescribes(): Thing | null;
 
     createThingToSelfDescribe(): Thing;

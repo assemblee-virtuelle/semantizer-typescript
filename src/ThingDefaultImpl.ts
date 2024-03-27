@@ -7,7 +7,7 @@ import ThingStateRdfjsRegular from "./ThingStateRdfjsRegular.js";
 import ThingStateRdfjsAnonymous from "./ThingStateRdfjsAnonymous.js";
 import DatasetExt from "rdf-ext/lib/Dataset";
 
-enum StateType {
+export enum StateType {
     ForDescribing,
     Regular,
     Anonymous

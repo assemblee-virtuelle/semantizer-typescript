@@ -8,6 +8,7 @@ export declare class DocumentDefaultImpl implements Document {
     private _things;
     private _context?;
     constructor(uri?: string, context?: Context);
+    [Symbol.iterator](): Iterator<Thing, any, undefined>;
     setContext(context: Context): void;
     getContext(): Context | undefined;
     expand(uri: string): string;
@@ -37,6 +38,7 @@ export declare class DocumentDefaultImpl implements Document {
     getUri(): string;
     setUri(uri: string): void;
     isEmpty(): boolean;
+    private _getThings;
     getThingsAll(): Thing[];
     getThingThatSelfDescribes(): Thing | null;
     countThings(): number;

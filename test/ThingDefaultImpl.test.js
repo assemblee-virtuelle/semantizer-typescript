@@ -1,26 +1,77 @@
 import expect from 'node:assert';
 import { test } from 'node:test';
 import rdf from 'rdf-ext';
-import SemantizerDefault from "../lib/SemantizerDefault.js";
+import SemantizerDefault from "../lib/SemantizerDefaultImple.js";
 import SerializerJsonld from '@rdfjs/serializer-jsonld-ext';
 import { Readable } from 'readable-stream';
 
 const semantizer = new SemantizerDefault();
 
-test("ThingDefaultImpl:test", () => {
+const uris = [
+    "ex:predicate",
+    "ex:aA-_%&$!?=",
+    "ex:-predicate",
+    "ex:-aA_%&$!?=",
+    "ex:predicate-",
+    "ex:-predicate-",
+    "ex:_predicate",
+    "ex:123456",
+    "http://example.org",
+    "http://example.org/",
+    "http://example.org/?",
+    "http://example.org/?=",
+    "http://example.org/?=",
+    "http://example.org/example",
+    "http://example.org/example.ext",
+    "http://example.org/123456",
+    "http://example.org/123456.ext",
+    "http://example.org/example-example",
+    "http://example.org/example#fragment",
+    "https://example.org/example",
+    "https://example.org/example#fragment",
+];
 
+// getDocumentFromSelfDescribingThing
+test("ThingDefaultImpl:0000", () => {
+    const document = semantizer.createDocument();
+    const thing = document.createThingToSelfDescribe();
+    expect.strictEqual(thing.getDocument(), document);
 });
 
-test("ThingDefaultImpl:getDocument", () => {
+// getDocumentFromThing
+test("ThingDefaultImpl:0001", () => {
+    const document = semantizer.createDocument();
+    const thing = document.createThing();
+    expect.strictEqual(thing.getDocument(), document);
+});
 
+// getDocumentFromThingWithoutUri
+test("ThingDefaultImpl:0002", () => {
+    const document = semantizer.createDocument();
+    const thing = document.createThingWithoutUri();
+    expect.strictEqual(thing.getDocument(), document);
 });
 
 test("ThingDefaultImpl:filter", () => {
 
 });
 
-test("ThingDefaultImpl:isAnonymous", () => {
+test("ThingDefaultImpl:isAnonymous1", () => {
+    const document = semantizer.createDocument();
+    const thing = document.createThingToSelfDescribe();
+    expect.strictEqual(thing.isAnonymous(), false);
+});
 
+test("ThingDefaultImpl:isAnonymous2", () => {
+    const document = semantizer.createDocument();
+    const thing = document.createThing();
+    expect.strictEqual(thing.isAnonymous(), false);
+});
+
+test("ThingDefaultImpl:isAnonymous3", () => {
+    const document = semantizer.createDocument();
+    const thing = document.createThingWithoutUri();
+    expect.strictEqual(thing.isAnonymous(), true);
 });
 
 test("ThingDefaultImpl:getContext", () => {
@@ -52,8 +103,53 @@ test("ThingDefaultImpl:addStatementFrom", () => {
 
 });
 
-test("ThingDefaultImpl:addRdfTypeStatement", () => {
+test("ThingDefaultImpl:addRdfTypeStatement:0001", () => {
+    const document = semantizer.createDocument();
+    const thing = document.createThingToSelfDescribe();
+    expect.strictEqual(thing.getRdfTypeValue(), null);
+    expect.strictEqual(thing.getAllRdfTypeValues(), []);
+});
 
+test("ThingDefaultImpl:addRdfTypeStatement:0002", () => {
+    const document = semantizer.createDocument();
+    const thing = document.createThing();
+    expect.strictEqual(thing.getRdfTypeValue(), null);
+    expect.strictEqual(thing.getAllRdfTypeValues(), []);
+});
+
+test("ThingDefaultImpl:addRdfTypeStatement:0003", () => {
+    const document = semantizer.createDocument();
+    const thing = document.createThingWithoutUri();
+    expect.strictEqual(thing.getRdfTypeValue(), null);
+    expect.strictEqual(thing.getAllRdfTypeValues(), []);
+});
+
+test("ThingDefaultImpl:addRdfTypeStatement:0004", () => {
+    const document = semantizer.createDocument();
+    const thing = document.createThingToSelfDescribe();
+    thing.addRdfTypeStatement("ex:type");
+    expect.strictEqual(thing.getRdfTypeValue(), "ex:type");
+});
+
+test("ThingDefaultImpl:addRdfTypeStatement:0005", () => {
+    const document = semantizer.createDocument();
+    const thing = document.createThingToSelfDescribe();
+    thing.addRdfTypeStatement("http://example.org/type");
+    expect.strictEqual(thing.getRdfTypeValue(), "http://example.org/type");
+});
+
+test("ThingDefaultImpl:addRdfTypeStatement:0006", () => {
+    const document = semantizer.createDocument();
+    const thing = document.createThing();
+    thing.addRdfTypeStatement("http://example.org/type");
+    expect.strictEqual(thing.getRdfTypeValue(), "http://example.org/type");
+});
+
+test("ThingDefaultImpl:addRdfTypeStatement:0007", () => {
+    const document = semantizer.createDocument();
+    const thing = document.createThingWithoutUri();
+    thing.addRdfTypeStatement("http://example.org/type");
+    expect.strictEqual(thing.getRdfTypeValue(), "http://example.org/type");
 });
 
 test("ThingDefaultImpl:addBooleanStatement", () => {

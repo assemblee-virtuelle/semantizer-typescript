@@ -2,7 +2,7 @@ import DatasetExt from "rdf-ext/lib/Dataset";
 import Thing from "./Thing";
 import Resource from "./Resource";
 import Context from "./Context";
-export interface Document extends Resource {
+export interface Document extends Resource, Iterable<Thing> {
     getContext(): Context | undefined;
     setContext(context: Context): void;
     expand(uri: string): string;
