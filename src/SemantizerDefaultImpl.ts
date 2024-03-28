@@ -2,17 +2,17 @@ import ContextDefault from "./ContextDefault.js";
 import Context from "./Context.js";
 import { Semantizer, ImportFormat, ResourceCreationParameters } from "./Semantizer.js";
 import { Document } from "./Document.js";
-import ResourceFactory from "./Factory.js";
-import ResourceFactoryDefault from "./FactoryDefault.js";
+import SemantizerFactory from "./SemantizerFactory.js";
+import SemantizerFactoryDefault from "./SemantizerFactoryDefault.js";
 
 export class SemantizerDefaultImpl implements Semantizer {
 
     private _context: Context;
-    private _semanticResourceFactory: ResourceFactory;
+    private _semanticResourceFactory: SemantizerFactory;
 
-    public constructor(context: any = {}, semanticResourceFactory?: ResourceFactory) {
+    public constructor(context: any = {}, semanticResourceFactory?: SemantizerFactory) {
         this._context = new ContextDefault(context);
-        this._semanticResourceFactory = semanticResourceFactory || new ResourceFactoryDefault(this);
+        this._semanticResourceFactory = semanticResourceFactory || new SemantizerFactoryDefault(this);
     }
 
     public async exportDocument(...input: Document[]): Promise<string> {
@@ -20,16 +20,16 @@ export class SemantizerDefaultImpl implements Semantizer {
     }
 
     public createDocument(uri?: string, context?: Context): Document {
-        return this.getSemanticResourceFactory().createDocument(uri, context);
+        return this.getFactory().createDocument(uri, context);
     }
 
     public async importDocument(input: string, format?: ImportFormat, callback?: Function): Promise<Document> {
         // fetch the resource
         // pass the resource to the factory (as a Dataset ?)
-        return this.getSemanticResourceFactory().loadDocument(input);
+        return this.getFactory().loadDocument(input);
     }
 
-    public getSemanticResourceFactory(): ResourceFactory {
+    public getFactory(): SemantizerFactory {
         return this._semanticResourceFactory;
     }
 

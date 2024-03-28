@@ -1,43 +1,36 @@
-import Document from "./Document";
-import DocumentDefaultImpl from "./DocumentDefaultImpl"
-import Resource from "./Resource";
+import DocumentAbstractDefaultImpl from "./DocumentDefaultImpl";
+import Thing from "./Thing";
 import TypeIndex from "./TypeIndex";
+import { TypeIndexFactoryDefaultImpl } from "./TypeIndexFactoryDefaultImpl";
 import TypeIndexRegistration from "./TypeIndexRegistration";
-import { TypeIndexRegistrationDefaultImpl } from "./TypeIndexRegistrationDefaultImpl";
 
-export default class TypeIndexDefault extends DocumentDefaultImpl implements TypeIndex {
+export default class TypeIndexDefault extends DocumentAbstractDefaultImpl<TypeIndexRegistration, Thing> implements TypeIndex {
 
-    createRegistration(nameHintOrUri?: string | undefined): TypeIndexRegistration {
-        const thing = super.createThing(nameHintOrUri);
-        return new TypeIndexRegistrationDefaultImpl(thing);
+    public createRegistration(forClass?: string, nameHintOrUri?: string | undefined): TypeIndexRegistration {
+        const registration = this.createThing(nameHintOrUri);
+        if (forClass)
+            registration.addForClass(forClass);
+        return registration;
     }
 
-    addRegistration(regitration: TypeIndexRegistration): void {
-        throw new Error("Method not implemented.");
-    }
-
-    deleteRegistration(registration: string | TypeIndexRegistration): void {
-        throw new Error("Method not implemented.");
-    }
-
-    getRegistration(registration: string | Resource): TypeIndexRegistration | null {
-        throw new Error("Method not implemented.");
-    }
-
-    getRegistrationsAll(): TypeIndexRegistration[] {
-        throw new Error("Method not implemented.");
-    }
-
-    getRegistrationsAllForClass(forClass: string | Resource): TypeIndexRegistration[] {
-        throw new Error("Method not implemented.");
-    }
-
-    getRegistrationsAllForInstance(instance: string | Resource): TypeIndexRegistration[] {
-        throw new Error("Method not implemented.");
-    }
-
-    getRegistrationsAllForInstanceContainer(instanceContainer: string | Resource): TypeIndexRegistration[] {
-        throw new Error("Method not implemented.");
+    public forEachOfClass(forClass: string, callbackfn: (value: TypeIndexRegistration, index: number, array: TypeIndexRegistration[]) => void, thisArg?: any): void {
+        this.forEach((r, i, a) => r.isForClass(forClass)? callbackfn(r, i, a): null, thisArg);
     }
 
 }
+
+const factory = new TypeIndexFactoryDefaultImpl();
+const typeIndex = new TypeIndexDefault(factory);
+typeIndex.createRegistration("dfc-b:Catalog").addInstance("http://localhost/catalog");
+
+typeIndex.forEach(tir => {
+    tir.getForClass()
+});
+
+typeIndex.forEachOfClass("dfc-b:Catalog", r => console.log(f));
+
+const f = typeIndex.filter(tir => tir.getForClass() === "dfc-b:Address");
+
+const r = typeIndex.get("")
+
+typeIndex.createRegistration().addForClass("");

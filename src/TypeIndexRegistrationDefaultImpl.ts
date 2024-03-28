@@ -1,6 +1,7 @@
 import Resource from "./Resource";
 import Thing from "./Thing";
-import ThingDefaultImpl, { StateType } from "./ThingDefaultImpl";
+import ThingDefaultImpl, { ThingType } from "./ThingDefaultImpl";
+import TypeIndex from "./TypeIndex";
 import TypeIndexRegistration from "./TypeIndexRegistration";
 
 export class TypeIndexRegistrationDefaultImpl extends ThingDefaultImpl implements TypeIndexRegistration {
@@ -9,11 +10,15 @@ export class TypeIndexRegistrationDefaultImpl extends ThingDefaultImpl implement
     private _instance: string[];
     private _instanceContainer: string[];
 
-    constructor(thing: Thing) {
-        super(thing.getDocument(), StateType.Regular, thing.getUri());
+    constructor(document: TypeIndex, uri?: string) {
+        super(document, ThingType.Regular, uri);
         this._forClass = [];
         this._instance = [];
         this._instanceContainer = [];
+    }
+
+    public isForClass(forClass: string): boolean {
+        return this._getForClass().includes(forClass);
     }
 
     // TODO : move to utils class ?
@@ -57,7 +62,7 @@ export class TypeIndexRegistrationDefaultImpl extends ThingDefaultImpl implement
     }
 
     public getForClassAll(): string[] {
-        return this._getForClass(); // TODO: return copy
+        return this._getForClass().slice();
     }
 
     public getInstance(): string | null {
@@ -65,7 +70,7 @@ export class TypeIndexRegistrationDefaultImpl extends ThingDefaultImpl implement
     }
 
     public getInstanceAll(): string[] {
-        return this._getInstance(); // TODO: return copy
+        return this._getInstance().slice();
     }
 
     public getInstanceContainer(): string | null {
@@ -73,7 +78,7 @@ export class TypeIndexRegistrationDefaultImpl extends ThingDefaultImpl implement
     }
 
     public getInstanceContainerAll(): string[] {
-        return this._getInstanceContainer(); // TODO: return copy
+        return this._getInstanceContainer().slice();
     }
     
 }

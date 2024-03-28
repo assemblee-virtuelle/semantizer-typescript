@@ -3,18 +3,15 @@ import Thing from "./Thing";
 import Resource from "./Resource";
 import Context from "./Context";
 import DatasetExt from "rdf-ext/lib/Dataset";
-export declare enum StateType {
+export declare enum ThingType {
     ForDescribing = 0,
     Regular = 1,
     Anonymous = 2
 }
-declare class ThingDefaultImpl implements Thing {
+export declare class ThingDefaultImpl implements Thing {
     private _document;
     private _state;
-    static createThingToDescribeDocument(document: Document): Thing;
-    static createThing(document: Document, uri: string): Thing;
-    static createThingWithoutUri(document: Document, nameHint?: string): Thing;
-    protected constructor(document: Document, stateType: StateType, uri?: string);
+    constructor(document: Document, stateType: ThingType, uriOrNameHint?: string);
     private getState;
     isAnonymous(): boolean;
     getUri(): string;

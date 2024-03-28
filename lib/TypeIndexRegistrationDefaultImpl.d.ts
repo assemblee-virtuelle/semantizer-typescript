@@ -1,12 +1,13 @@
 import Resource from "./Resource";
-import Thing from "./Thing";
 import ThingDefaultImpl from "./ThingDefaultImpl";
+import TypeIndex from "./TypeIndex";
 import TypeIndexRegistration from "./TypeIndexRegistration";
 export declare class TypeIndexRegistrationDefaultImpl extends ThingDefaultImpl implements TypeIndexRegistration {
     private _forClass;
     private _instance;
     private _instanceContainer;
-    constructor(thing: Thing);
+    constructor(document: TypeIndex, uri?: string);
+    isForClass(forClass: string): boolean;
     protected getUriFromStringOrResource(stringOrResource: string | Resource): string;
     protected getFirstElementOrNull(collection: string[]): string | null;
     private _getForClass;

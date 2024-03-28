@@ -1,26 +1,38 @@
 import rdf from 'rdf-ext';
 import DatasetExt from "rdf-ext/lib/Dataset";
-import Context from "./Context";
-import { Document } from "./Document";
-import Resource from "./Resource";
-import Thing from "./Thing";
-import ThingDefaultImpl from "./ThingDefaultImpl.js";
+import Context from "./Context.js";
+import { Document } from "./Document.js";
+import Resource from "./Resource.js";
+import Thing from "./Thing.js";
+import ThingFactory from './ThingFactory.js';
 
 // states: Local | Distant
 // states: Created | Modified | Loaded
-export class DocumentDefaultImpl implements Document {
+export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> implements Document {
 
+    private _thingFactory: ThingFactory<ContainedThing, SelfDescribingThing>;
     private _uri: string;
-    private _things: Thing[];
+    private _selfDescribingThing: SelfDescribingThing | null;
+    private _things: ContainedThing[];
     private _context?: Context;
 
-    public constructor(uri?: string, context?: Context) {
+    public constructor(thingFactory: ThingFactory<ContainedThing, SelfDescribingThing>, uri?: string, context?: Context) {
+        this._thingFactory = thingFactory;
         this._uri = uri ?? '';
         this._context = context;
         this._things = [];
+        this._selfDescribingThing = null;
+    }
+
+    public forEach(callbackfn: (value: ContainedThing, index: number, array: ContainedThing[]) => void, thisArg?: any): void {
+        this._getThings().forEach(callbackfn, thisArg);
+    }
+
+    public map(callbackfn: (value: ContainedThing, index: number, array: ContainedThing[]) => unknown, thisArg?: any): unknown[] {
+        return this._getThings().map(callbackfn, thisArg);
     }
     
-    [Symbol.iterator](): Iterator<Thing, any, undefined> {
+    [Symbol.iterator](): Iterator<ContainedThing, any, undefined> {
         return this._getThings()[Symbol.iterator]();
     }
 
@@ -40,13 +52,22 @@ export class DocumentDefaultImpl implements Document {
         return this.getContext()?.shorten(uri) ?? uri;
     }
 
-    public addThing(thing: Thing): Document {
+    public add(thing: ContainedThing): Document {
         this._things.push(thing);
         return this;
     }
 
-    protected setThings(things: Thing[]): void {
+    public getThingFactory(): ThingFactory<ContainedThing, SelfDescribingThing> {
+        return this._thingFactory;
+    }
+
+    protected setThings(things: ContainedThing[]): void {
         this._things = things;
+    }
+
+    protected addAndReturnThing(thing: ContainedThing): ContainedThing {
+        this.add(thing);
+        return thing;
     }
 
     public addDocument(document: Document): Document {
@@ -57,8 +78,8 @@ export class DocumentDefaultImpl implements Document {
         return this.toRdfDatasetExt().equals(other.toRdfDatasetExt());
     }
 
-    public getThing(uri: string): Thing | null {
-        const things = this.filter((thing: Thing) => thing.getUri() === uri);
+    public get(uri: string): ContainedThing | null {
+        const things = this.filter((thing: ContainedThing) => thing.getUri() === uri);
         return things.length > 0? things[0]: null;
     }
 
@@ -99,10 +120,20 @@ export class DocumentDefaultImpl implements Document {
         return this.isUrl(nameHintOrUri)? this.getSafeUriFromUri(nameHintOrUri): this.getSafeUriFromName(nameHintOrUri);
     }
 
-    public createThingToSelfDescribe(): Thing {
-        const thing = ThingDefaultImpl.createThingToDescribeDocument(this);
-        this.addThing(thing);
+
+    public createThingToSelfDescribe(): SelfDescribingThing {
+        const thing = this.getThingFactory().createThingToDescribeDocument(this);
+        this.setThingThatSelfDescribes(thing);
         return thing;
+    }
+
+    public createThing(nameHintOrUri?: string): ContainedThing {
+        const uriOfNewRegularThing = this.validateOrCreateThingUri(nameHintOrUri);
+        return this.addAndReturnThing(this.getThingFactory().createThing(this, uriOfNewRegularThing));
+    }
+
+    public createThingWithoutUri(nameHint?: string): ContainedThing {
+        return this.addAndReturnThing(this.validateAndCreateThingWithoutUri(nameHint));
     }
 
     public generateThingName(): string {
@@ -118,31 +149,14 @@ export class DocumentDefaultImpl implements Document {
         throw new Error(`You are trying to add the anonymous thing "${nameHint}" but it is already part of the document.`);
     }
 
-    protected validateAndCreateThingWithoutUri(nameHint?: string): Thing {
+    protected validateAndCreateThingWithoutUri(nameHint?: string): ContainedThing {
         if (nameHint)
             this.validateNameHintForThingWithoutUri(nameHint);
-        return ThingDefaultImpl.createThingWithoutUri(this, nameHint);
+        return this.getThingFactory().createThingWithoutUri(this, nameHint);
     }
 
-    protected createAndAddRegularThing(uri: string): Thing {
-        const thing = ThingDefaultImpl.createThing(this, uri);
-        this.addThing(thing);
-        return thing;
-    }
-
-    public createThing(nameHintOrUri?: string): Thing {
-        const uriOfNewRegularThing = this.validateOrCreateThingUri(nameHintOrUri);
-        return this.createAndAddRegularThing(uriOfNewRegularThing);
-    }
-
-    public createThingWithoutUri(nameHint?: string): Thing {
-        const thing = this.validateAndCreateThingWithoutUri(nameHint);
-        this.addThing(thing);
-        return thing;
-    }
-
-    public deleteThing(thingOrUri: string | Thing): void {
-        const thing = typeof thingOrUri === 'string'? this.getThing(thingOrUri): thingOrUri;
+    public delete(thingOrUri: string | Thing): void {
+        const thing = typeof thingOrUri === 'string'? this.get(thingOrUri): thingOrUri;
         if (thing)
             this.setThings(this.filter((filteredThing: Thing) => thing.getUri() !== filteredThing.getUri())) // Maybe use equals instead
     }
@@ -157,22 +171,22 @@ export class DocumentDefaultImpl implements Document {
     }
 
     public isEmpty(): boolean {
-        return this.countThings() === 0;
+        return this.count() === 0;
     }
 
-    private _getThings(): Thing[] {
+    private _getThings(): ContainedThing[] {
         return this._things;
     }
 
-    public getThingsAll(): Thing[] {
-        return this._getThings();
+    public getThingThatSelfDescribes(): SelfDescribingThing | null {
+        return this._selfDescribingThing;
     }
 
-    public getThingThatSelfDescribes(): Thing | null {
-        return this.getThing(this.getUri());
+    protected setThingThatSelfDescribes(thing: SelfDescribingThing): SelfDescribingThing | null {
+        return this._selfDescribingThing = thing;
     }
 
-    public countThings(): number {
+    public count(): number {
         return this._getThings().length;
     }
 
@@ -181,7 +195,7 @@ export class DocumentDefaultImpl implements Document {
         return this._getThings().some(thing => thing.getUri() === uri);
     }
 
-    public filter(predicate: (value: Thing, index: number, array: Thing[]) => boolean): Thing[] {
+    public filter(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => boolean): ContainedThing[] {
         return this._getThings().filter(predicate);
     }
 
@@ -195,3 +209,4 @@ export class DocumentDefaultImpl implements Document {
 }
 
 export default DocumentDefaultImpl;
+

@@ -7,46 +7,35 @@ import ThingStateRdfjsRegular from "./ThingStateRdfjsRegular.js";
 import ThingStateRdfjsAnonymous from "./ThingStateRdfjsAnonymous.js";
 import DatasetExt from "rdf-ext/lib/Dataset";
 
-export enum StateType {
+export enum ThingType {
     ForDescribing,
     Regular,
     Anonymous
 }
 
-class ThingDefaultImpl implements Thing {
+export class ThingDefaultImpl implements Thing {
 
     private _document;
     private _state: ThingState;
 
-    public static createThingToDescribeDocument(document: Document): Thing {
-        return new ThingDefaultImpl(document, StateType.ForDescribing);
-    }
-
-    public static createThing(document: Document, uri: string): Thing {
-        return new ThingDefaultImpl(document, StateType.Regular, uri);
-    }
-
-    public static createThingWithoutUri(document: Document, nameHint?: string): Thing {
-        if (nameHint?.startsWith('http'))
-            throw new Error("You are trying to create an anonymous thing with an URI but anonymous thing can not have an URI. Please pass a name hint instead or leave it undefined.");
-        return new ThingDefaultImpl(document, StateType.Anonymous, nameHint);
-    }
-
-    protected constructor(document: Document, stateType: StateType, uri?: string) {
+    // TODO: add copy constructor
+    public constructor(document: Document, stateType: ThingType, uriOrNameHint?: string) {
         this._document = document;
 
         switch (stateType) {
-            case StateType.Regular:
-                if (!uri)
+            case ThingType.Regular:
+                if (!uriOrNameHint)
                     throw new Error();
-                this._state = new ThingStateRdfjsRegular(this, uri);
+                this._state = new ThingStateRdfjsRegular(this, uriOrNameHint);
                 break;
         
-            case StateType.Anonymous:
-                this._state = new ThingStateRdfjsAnonymous(this, uri);
+            case ThingType.Anonymous:
+                if (uriOrNameHint?.startsWith('http'))
+                    throw new Error("You are trying to create an anonymous thing with an URI but anonymous thing can not have an URI. Please pass a name hint instead or leave it undefined.");
+                this._state = new ThingStateRdfjsAnonymous(this, uriOrNameHint);
                 break;
 
-            case StateType.ForDescribing:
+            case ThingType.ForDescribing:
                 this._state = new ThingStateRdfjsRegular(this, document.getUri());
                 break;
         }

@@ -5,7 +5,7 @@ export interface TypeIndexRegistration extends Thing {
     addForClass(forClass: string | Resource): TypeIndexRegistration;
     addInstance(instance: string | Resource): TypeIndexRegistration;
     addInstanceContainer(instanceContainer: string | Resource): TypeIndexRegistration;
-
+    isForClass(forClass: string): boolean;
     getForClass(): string | null;
     getForClassAll(): string[];
     getInstance(): string | null;

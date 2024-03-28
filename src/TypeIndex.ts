@@ -1,15 +1,8 @@
 import Document from "./Document";
-import Resource from "./Resource";
+import Thing from "./Thing";
 import TypeIndexRegistration from "./TypeIndexRegistration";
 
-export default interface TypeIndex extends Document {
-    createRegistration(nameHintOrUri?: string): TypeIndexRegistration;
-    addRegistration(regitration: TypeIndexRegistration): void;
-    deleteRegistration(registration: string | TypeIndexRegistration): void;
-
-    getRegistration(registration: string | Resource): TypeIndexRegistration | null;
-    getRegistrationsAll(): TypeIndexRegistration[];
-    getRegistrationsAllForClass(forClass: string | Resource): TypeIndexRegistration[];
-    getRegistrationsAllForInstance(instance: string | Resource): TypeIndexRegistration[];
-    getRegistrationsAllForInstanceContainer(instanceContainer: string | Resource): TypeIndexRegistration[];
+export default interface TypeIndex extends Document<TypeIndexRegistration, Thing> {
+    createRegistration(forClass?: string, nameHintOrUri?: string): TypeIndexRegistration;
+    forEachOfClass(forClass: string, callbackfn: (value: TypeIndexRegistration, index: number, array: TypeIndexRegistration[]) => void, thisArg?: any): void;
 }

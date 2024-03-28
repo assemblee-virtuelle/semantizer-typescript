@@ -2,25 +2,26 @@ import DatasetExt from "rdf-ext/lib/Dataset";
 import Thing from "./Thing";
 import Resource from "./Resource";
 import Context from "./Context";
-export interface Document extends Resource, Iterable<Thing> {
+export interface Document<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> extends Resource, Iterable<ContainedThing> {
     getContext(): Context | undefined;
     setContext(context: Context): void;
     expand(uri: string): string;
     shorten(uri: string): string;
     isEmpty(): boolean;
-    countThings(): number;
+    count(): number;
     equals(other: Document): boolean;
-    addThing(thing: Thing): Document;
+    add(thing: ContainedThing): Document;
     addDocument(document: Document): Document;
-    getThing(uri: string): Thing | null;
-    getThingsAll(): Thing[];
-    getThingThatSelfDescribes(): Thing | null;
-    createThingToSelfDescribe(): Thing;
-    createThing(nameHintOrUri?: string): Thing;
-    createThingWithoutUri(nameHint?: string): Thing;
-    deleteThing(thingOrUri: string | Thing): void;
+    get(uri: string): ContainedThing | null;
+    getThingThatSelfDescribes(): SelfDescribingThing | null;
+    createThingToSelfDescribe(): SelfDescribingThing;
+    createThing(nameHintOrUri?: string): ContainedThing;
+    createThingWithoutUri(nameHint?: string): ContainedThing;
+    delete(thingOrUri: string | Thing): void;
     hasStatementsAbout(subject: string | Resource, property?: string, ...hasValues: string[]): boolean;
-    filter(predicate: (value: Thing, index: number, array: Thing[]) => boolean): Thing[];
+    forEach(callbackfn: (value: ContainedThing, index: number, array: ContainedThing[]) => void, thisArg?: any): void;
+    map(callbackfn: (value: ContainedThing, index: number, array: ContainedThing[]) => unknown, thisArg?: any): unknown[];
+    filter(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => boolean): ContainedThing[];
     toRdfDatasetExt(): DatasetExt;
 }
 export default Document;
