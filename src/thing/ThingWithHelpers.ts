@@ -27,4 +27,23 @@ export interface ThingWithHelper {
     getAllDatetimeStatementValues(about: string): Date[];
     getTimeStatementValue(about: string): Date;
     getAllTimeStatementValues(about: string): Date[];
+
+    setRdfTypeStatement(value: string): Thing;
+    setBooleanStatement(about: string, value: boolean): Thing;
+    setStringStatement(about: string, value: string, locale?: string): Thing;
+    setDecimalStatement(about: string, value: number): Thing;
+    setIntegerStatement(about: string, value: number): Thing;
+    setDateStatement(about: string, value: Date): Thing;
+    setDatetimeStatement(about: string, value: Date): Thing;
+    setTimeStatement(about: string, value: Date): Thing;
+
+    removeAllStatements(about: string): Thing;
+    removeRdfTypeStatement(value: string): Thing;
+    removeBooleanStatement(about: string, value: boolean): Thing;
+    removeStringStatement(about: string, value: string, locale?: string): Thing;
+    removeDecimalStatement(about: string, value: number): Thing;
+    removeIntegerStatement(about: string, value: number): Thing;
+    removeDateStatement(about: string, value: Date): Thing;
+    removeDatetimeStatement(about: string, value: Date): Thing;
+    removeTimeStatement(about: string, value: Date): Thing;
 }

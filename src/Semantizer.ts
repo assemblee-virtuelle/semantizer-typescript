@@ -1,5 +1,5 @@
-import Context from "./Context";
-import { Document } from "./Document";
+import Context from "./common/Context";
+import { Document } from "./document/Document";
 
 export enum ImportFormat {
     JSON_LD = "jsonld"

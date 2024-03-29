@@ -1,11 +1,13 @@
-import Document from "./Document";
+import Document from "../document/Document.js";
 import Thing from "./Thing";
-import Resource from "./Resource";
-import Context from "./Context";
+import Resource from "../common/Resource.js";
+import Context from "../common/Context.js";
 import ThingState from "./ThingState";
 import ThingStateRdfjsRegular from "./ThingStateRdfjsRegular.js";
 import ThingStateRdfjsAnonymous from "./ThingStateRdfjsAnonymous.js";
 import DatasetExt from "rdf-ext/lib/Dataset";
+import Statement from "../statement/Statement.js";
+import StatementDefaultImpl from "../statement/StatementDefaultImpl.js";
 
 export enum ThingType {
     ForDescribing,
@@ -16,11 +18,13 @@ export enum ThingType {
 export class ThingDefaultImpl implements Thing {
 
     private _document;
+    private _statements: Statement[];
     private _state: ThingState;
 
     // TODO: add copy constructor
     public constructor(document: Document, stateType: ThingType, uriOrNameHint?: string) {
         this._document = document;
+        this._statements = [];
 
         switch (stateType) {
             case ThingType.Regular:
@@ -39,6 +43,34 @@ export class ThingDefaultImpl implements Thing {
                 this._state = new ThingStateRdfjsRegular(this, document.getUri());
                 break;
         }
+    }
+
+    public count(): number {
+        return this._getStatements().length;
+    }
+
+    public isEmpty(): boolean {
+        return this._getStatements().length === 0;
+    }
+
+    public [Symbol.iterator](): Iterator<Statement, any, undefined> {
+        return this._getStatements()[Symbol.iterator]();
+    }
+
+    public forEach(callbackfn: (value: Statement, index: number, array: Statement[]) => void, thisArg?: any): void {
+        this._getStatements().forEach(callbackfn, thisArg);
+    }
+    
+    public map(callbackfn: (value: Statement, index: number, array: Statement[]) => unknown, thisArg?: any): unknown[] {
+        return this._getStatements().map(callbackfn);
+    }
+    
+    public filter(predicate: (value: Statement, index: number, array: Statement[]) => boolean): Statement[] {
+        return this._getStatements().filter(predicate);
+    }
+
+    private _getStatements(): Statement[] {
+        return this._statements;
     }
 
     private getState(): ThingState {
@@ -70,16 +102,30 @@ export class ThingDefaultImpl implements Thing {
         return this.getDocument().shorten(uri);
     }
 
-    public filter(by: (property?: string, value?: string, datatype?: string) => boolean): Thing {
-        throw new Error("Method not implemented.");
-    }
-
     public equals(other: Thing): boolean {
         return this.getState().equals(other);
     }
 
     public toRdfDatasetExt(): DatasetExt {
         return this.getState().toRdfDatasetExt();
+    }
+
+    public add(about: string, value: string | Resource, datatype?: string, language?: string): Thing {
+        const statement = new StatementDefaultImpl(this, about, value, datatype, language);
+        this._getStatements().push(statement);
+        return this;
+    }
+
+    public get(property: string): string {
+        throw new Error("Method not implemented.");
+    }
+
+    public set(about: string, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): Thing {
+        throw new Error("Method not implemented.");
+    }
+    
+    public remove(about: string, value: string | Resource, datatype?: string | undefined, language?: string | undefined): Thing {
+        throw new Error("Method not implemented.");
     }
 
     ////////////// Adder //////////////

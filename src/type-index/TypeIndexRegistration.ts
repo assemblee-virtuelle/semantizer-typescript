@@ -1,5 +1,5 @@
-import Resource from "./Resource";
-import Thing from "./Thing";
+import Resource from "../common/Resource";
+import Thing from "../thing/Thing";
 
 export interface TypeIndexRegistration extends Thing {
     addForClass(forClass: string | Resource): TypeIndexRegistration;

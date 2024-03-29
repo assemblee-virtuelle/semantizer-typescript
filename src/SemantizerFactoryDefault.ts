@@ -1,7 +1,7 @@
-import Context from "./Context.js";
-import { Document } from "./Document.js";
-import DocumentFactory from "./DocumentFactory.js";
-import DocumentFactoryDefaultImpl from "./DocumentFactoryDefaultImpl.js";
+import Context from "./common/Context.js";
+import { Document } from "./document/Document.js";
+import DocumentFactory from "./document/DocumentFactory.js";
+import DocumentFactoryDefaultImpl from "./document/DocumentFactoryDefaultImpl.js";
 import Semantizer from "./Semantizer.js";
 import SemantizerFactory from "./SemantizerFactory.js";
 

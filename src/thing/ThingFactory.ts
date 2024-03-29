@@ -1,4 +1,4 @@
-import Document from "./Document";
+import Document from "../document/Document";
 import Thing from "./Thing";
 
 export interface ThingFactory<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> {

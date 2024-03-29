@@ -1,7 +1,7 @@
-import Document from "./Document";
-import Thing from "./Thing";
-import ThingDefaultImpl, { ThingType } from "./ThingDefaultImpl";
-import ThingFactory from "./ThingFactory";
+import Document from "../document/Document";
+import Thing from "../thing/Thing";
+import ThingDefaultImpl, { ThingType } from "../thing/ThingDefaultImpl";
+import ThingFactory from "../thing/ThingFactory";
 import TypeIndex from "./TypeIndex";
 import TypeIndexRegistration from "./TypeIndexRegistration";
 import { TypeIndexRegistrationDefaultImpl } from "./TypeIndexRegistrationDefaultImpl";

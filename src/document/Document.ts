@@ -1,7 +1,7 @@
 import DatasetExt from "rdf-ext/lib/Dataset";
-import Thing from "./Thing";
-import Resource from "./Resource";
-import Context from "./Context";
+import Thing from "../thing/Thing";
+import Resource from "../common/Resource";
+import Context from "../common/Context";
 
 export interface Document<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> extends Resource, Iterable<ContainedThing> {
     getContext(): Context | undefined;

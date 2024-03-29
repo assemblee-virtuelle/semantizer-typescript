@@ -1,4 +1,4 @@
-import Resource from "./Resource";
+import Resource from "../common/Resource.js";
 import Thing from "./Thing";
 import rdf from 'rdf-ext'
 import ThingStateRdfjsRegular from "./ThingStateRdfjsRegular.js";

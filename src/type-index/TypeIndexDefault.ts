@@ -1,6 +1,6 @@
-import Context from "./Context";
-import DocumentAbstractDefaultImpl from "./DocumentDefaultImpl";
-import Thing from "./Thing";
+import Context from "../common/Context";
+import DocumentAbstractDefaultImpl from "../document/DocumentDefaultImpl";
+import Thing from "../thing/Thing";
 import TypeIndex from "./TypeIndex";
 import { TypeIndexFactoryDefaultImpl } from "./TypeIndexFactoryDefaultImpl";
 import TypeIndexRegistration from "./TypeIndexRegistration";

@@ -18,9 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import SemantizerDefaultImpl from './SemantizerDefaultImpl.js';
 
 export { default as Semantizer } from './Semantizer.js';
-export { default as Context } from './Context.js';
+export { default as Context } from './common/Context.js';
 export { default as SemantizerDefaultImpl } from './SemantizerDefaultImpl.js';
-export { default as ContextDefault } from './ContextDefault.js';
+export { default as ContextDefault } from './common/ContextDefault.js';
 
 const semantizer = new SemantizerDefaultImpl();
 

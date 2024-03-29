@@ -1,10 +1,10 @@
 import rdf from 'rdf-ext';
 import DatasetExt from "rdf-ext/lib/Dataset";
-import Context from "./Context.js";
+import Context from "../common/Context.js";
 import { Document } from "./Document.js";
-import Resource from "./Resource.js";
-import Thing from "./Thing.js";
-import ThingFactory from './ThingFactory.js';
+import Resource from "../common/Resource.js";
+import Thing from "../thing/Thing.js";
+import ThingFactory from '../thing/ThingFactory.js';
 
 // states: Local | Distant
 // states: Created | Modified | Loaded

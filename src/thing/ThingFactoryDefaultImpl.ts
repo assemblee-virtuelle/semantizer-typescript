@@ -1,4 +1,4 @@
-import Document from "./Document";
+import Document from "../document/Document";
 import Thing from "./Thing";
 import { ThingDefaultImpl, ThingType } from "./ThingDefaultImpl";
 import ThingFactory from "./ThingFactory";

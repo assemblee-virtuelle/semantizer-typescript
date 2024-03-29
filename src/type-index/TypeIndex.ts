@@ -1,5 +1,5 @@
-import Document from "./Document";
-import Thing from "./Thing";
+import Document from "../document/Document";
+import Thing from "../thing/Thing";
 import TypeIndexRegistration from "./TypeIndexRegistration";
 
 export default interface TypeIndex extends Document<TypeIndexRegistration, Thing> {

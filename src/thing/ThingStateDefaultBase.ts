@@ -1,8 +1,8 @@
 import DatasetExt from "rdf-ext/lib/Dataset";
-import Context from "./Context";
+import Context from "../common/Context";
 import Thing from "./Thing";
 import ThingState from "./ThingState";
-import Resource from "./Resource";
+import Resource from "../common/Resource";
 
 export abstract class ThingStateDefaultBase implements ThingState {
     

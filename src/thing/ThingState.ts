@@ -1,5 +1,5 @@
 import DatasetExt from "rdf-ext/lib/Dataset";
-import Resource from "./Resource";
+import Resource from "../common/Resource";
 import Thing from "./Thing";
 
 export default interface ThingState {
