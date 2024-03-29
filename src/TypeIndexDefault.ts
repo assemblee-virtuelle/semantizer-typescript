@@ -1,3 +1,4 @@
+import Context from "./Context";
 import DocumentAbstractDefaultImpl from "./DocumentDefaultImpl";
 import Thing from "./Thing";
 import TypeIndex from "./TypeIndex";
@@ -5,6 +6,10 @@ import { TypeIndexFactoryDefaultImpl } from "./TypeIndexFactoryDefaultImpl";
 import TypeIndexRegistration from "./TypeIndexRegistration";
 
 export default class TypeIndexDefault extends DocumentAbstractDefaultImpl<TypeIndexRegistration, Thing> implements TypeIndex {
+
+    public constructor(uri?: string, context?: Context) {
+        super(new TypeIndexFactoryDefaultImpl(), uri, context);
+    }
 
     public createRegistration(forClass?: string, nameHintOrUri?: string | undefined): TypeIndexRegistration {
         const registration = this.createThing(nameHintOrUri);
@@ -19,8 +24,7 @@ export default class TypeIndexDefault extends DocumentAbstractDefaultImpl<TypeIn
 
 }
 
-const factory = new TypeIndexFactoryDefaultImpl();
-const typeIndex = new TypeIndexDefault(factory);
+const typeIndex = new TypeIndexDefault();
 typeIndex.createRegistration("dfc-b:Catalog").addInstance("http://localhost/catalog");
 
 typeIndex.forEach(tir => {

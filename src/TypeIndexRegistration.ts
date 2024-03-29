@@ -12,6 +12,13 @@ export interface TypeIndexRegistration extends Thing {
     getInstanceAll(): string[];
     getInstanceContainer(): string | null;
     getInstanceContainerAll(): string[];
+    setForClass(forClass: string): TypeIndexRegistration;
+    removeForClass(forClass: string): TypeIndexRegistration;
+    removeInstance(instance: string): TypeIndexRegistration;
+    removeInstanceContainer(instanceContainer: string): TypeIndexRegistration;
+    removeForClassAll(): TypeIndexRegistration;
+    removeInstanceAll(): TypeIndexRegistration;
+    removeInstanceContainerAll(): TypeIndexRegistration;
 }
 
 export default TypeIndexRegistration;

@@ -9,7 +9,9 @@ import { TypeIndexRegistrationDefaultImpl } from "./TypeIndexRegistrationDefault
 export class TypeIndexFactoryDefaultImpl implements ThingFactory<TypeIndexRegistration, Thing> {
 
     public createThingToDescribeDocument(typeIndex: TypeIndex): Thing {
-        return new ThingDefaultImpl(typeIndex, ThingType.ForDescribing);
+        return new ThingDefaultImpl(typeIndex, ThingType.ForDescribing)
+            .addRdfTypeStatement("solid:TypeIndex")
+            .addRdfTypeStatement("solid:ListedDocument");
     }
 
     public createThing(typeIndex: TypeIndex, uri: string): TypeIndexRegistration {

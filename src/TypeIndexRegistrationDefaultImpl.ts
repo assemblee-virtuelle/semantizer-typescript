@@ -6,19 +6,12 @@ import TypeIndexRegistration from "./TypeIndexRegistration";
 
 export class TypeIndexRegistrationDefaultImpl extends ThingDefaultImpl implements TypeIndexRegistration {
 
-    private _forClass: string[];
-    private _instance: string[];
-    private _instanceContainer: string[];
-
     constructor(document: TypeIndex, uri?: string) {
         super(document, ThingType.Regular, uri);
-        this._forClass = [];
-        this._instance = [];
-        this._instanceContainer = [];
     }
 
     public isForClass(forClass: string): boolean {
-        return this._getForClass().includes(forClass);
+        return this.getForClassAll().includes(forClass);
     }
 
     // TODO : move to utils class ?
@@ -30,55 +23,77 @@ export class TypeIndexRegistrationDefaultImpl extends ThingDefaultImpl implement
         return collection.length > 0? collection[0]: null;
     }
 
-    private _getForClass(): string[] {
-        return this._forClass;
-    }
-
-    private _getInstance(): string[] {
-        return this._instance;
-    }
-
-    private _getInstanceContainer(): string[] {
-        return this._instanceContainer;
-    }
-
     public addForClass(forClass: string | Resource): TypeIndexRegistration {
-        this._getForClass().push(this.getUriFromStringOrResource(forClass));
+        this.addStatement("solid:forClass", this.getUriFromStringOrResource(forClass));
         return this;
     }
 
     public addInstance(instance: string | Resource): TypeIndexRegistration {
-        this._getInstance().push(this.getUriFromStringOrResource(instance));
+        this.addStatement("solid:instance", this.getUriFromStringOrResource(instance));
         return this;
     }
 
     public addInstanceContainer(instanceContainer: string | Resource): TypeIndexRegistration {
-        this._getInstanceContainer().push(this.getUriFromStringOrResource(instanceContainer));
+        this.addStatement("solid:instanceContainer", this.getUriFromStringOrResource(instanceContainer));
         return this;
     }
 
     public getForClass(): string | null {
-        return this.getFirstElementOrNull(this._getForClass());
+        return this.getFirstElementOrNull(this.getForClassAll());
     }
 
     public getForClassAll(): string[] {
-        return this._getForClass().slice();
+        return this.getAllValuesAboutStatement("solid:forClass");
     }
 
     public getInstance(): string | null {
-        return this.getFirstElementOrNull(this._getInstance());
+        return this.getFirstElementOrNull(this.getInstanceAll());
     }
 
     public getInstanceAll(): string[] {
-        return this._getInstance().slice();
+        return this.getAllValuesAboutStatement("solid:instance");
     }
 
     public getInstanceContainer(): string | null {
-        return this.getFirstElementOrNull(this._getInstanceContainer());
+        return this.getFirstElementOrNull(this.getInstanceContainerAll());
     }
 
     public getInstanceContainerAll(): string[] {
-        return this._getInstanceContainer().slice();
+        return this.getAllValuesAboutStatement("solid:instanceContainer");
     }
-    
+
+    public setForClass(forClass: string): TypeIndexRegistration {
+        throw new Error();
+    }
+ 
+    public removeForClass(forClass: string): TypeIndexRegistration {
+        this.removeStatement("solid:forClass", forClass);
+        return this;
+    }
+
+    public removeInstance(instance: string): TypeIndexRegistration {
+        this.removeStatement("solid:forClass", instance);
+        return this;
+    }
+
+    public removeInstanceContainer(instanceContainer: string): TypeIndexRegistration {
+        this.removeStatement("solid:forClass", instanceContainer);
+        return this;
+    }
+
+    public removeForClassAll(): TypeIndexRegistration {
+        this.removeAllStatements("solid:forClass");
+        return this;
+    }
+
+    public removeInstanceAll(): TypeIndexRegistration {
+        this.removeAllStatements("solid:instance");
+        return this;
+    }
+
+    public removeInstanceContainerAll(): TypeIndexRegistration {
+        this.removeAllStatements("solid:instanceContainer");
+        return this;
+    }
+
 }

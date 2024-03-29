@@ -199,6 +199,10 @@ export class ThingDefaultImpl implements Thing {
     }
 
     ////////////// Setters //////////////
+    public setStatement(about: string, value: string): Thing {
+        throw new Error("Method not implemented.");
+    }
+
     public setRdfTypeStatement(value: string): Thing {
         throw new Error("Method not implemented.");
     }
@@ -232,39 +236,43 @@ export class ThingDefaultImpl implements Thing {
     }
 
     ////////////// Removers //////////////
-    public removeAllStatements(about: string): void {
+    public removeStatement(about: string, value: string | Resource, datatype?: string, language?: string): Thing {
         throw new Error("Method not implemented.");
     }
 
-    public removeRdfTypeStatement(value: string): void {
+    public removeAllStatements(about: string): Thing {
         throw new Error("Method not implemented.");
     }
 
-    public removeBooleanStatement(about: string, value: boolean): void {
+    public removeRdfTypeStatement(value: string): Thing {
         throw new Error("Method not implemented.");
     }
 
-    public removeStringStatement(about: string, value: string, locale?: string): void {
+    public removeBooleanStatement(about: string, value: boolean): Thing {
         throw new Error("Method not implemented.");
     }
 
-    public removeDecimalStatement(about: string, value: number): void {
+    public removeStringStatement(about: string, value: string, locale?: string): Thing {
         throw new Error("Method not implemented.");
     }
 
-    public removeIntegerStatement(about: string, value: number): void {
+    public removeDecimalStatement(about: string, value: number): Thing {
         throw new Error("Method not implemented.");
     }
 
-    public removeDateStatement(about: string, value: Date): void {
+    public removeIntegerStatement(about: string, value: number): Thing {
         throw new Error("Method not implemented.");
     }
 
-    public removeDatetimeStatement(about: string, value: Date): void {
+    public removeDateStatement(about: string, value: Date): Thing {
         throw new Error("Method not implemented.");
     }
 
-    public removeTimeStatement(about: string, value: Date): void {
+    public removeDatetimeStatement(about: string, value: Date): Thing {
+        throw new Error("Method not implemented.");
+    }
+
+    public removeTimeStatement(about: string, value: Date): Thing {
         throw new Error("Method not implemented.");
     }
 
