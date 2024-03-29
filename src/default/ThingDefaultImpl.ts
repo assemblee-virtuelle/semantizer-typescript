@@ -11,11 +11,11 @@ export enum ThingType {
     Anonymous
 }
 
-export class ThingDefaultImpl implements Thing {
+export class ThingDefaultImpl<Datatype = Statement> implements Thing<Datatype> {
 
     private _uri: string;
     private _document: Document;
-    private _statements: Statement[];
+    private _statements: Iterable<Datatype>;
 
     // TODO: add copy constructor
     public constructor(document: Document, stateType: ThingType, uriOrNameHint?: string) {
@@ -38,23 +38,23 @@ export class ThingDefaultImpl implements Thing {
         return this._getStatements().length === 0;
     }
 
-    public [Symbol.iterator](): Iterator<Statement, any, undefined> {
+    public [Symbol.iterator](): Iterator<Datatype, any, undefined> {
         return this._getStatements()[Symbol.iterator]();
     }
 
-    public forEach(callbackfn: (value: Statement, index: number, array: Statement[]) => void, thisArg?: any): void {
+    public forEach(callbackfn: (value: Datatype, index: number, array: Datatype[]) => void, thisArg?: any): void {
         this._getStatements().forEach(callbackfn, thisArg);
     }
     
-    public map(callbackfn: (value: Statement, index: number, array: Statement[]) => unknown, thisArg?: any): unknown[] {
+    public map(callbackfn: (value: Datatype, index: number, array: Datatype[]) => unknown, thisArg?: any): unknown[] {
         return this._getStatements().map(callbackfn);
     }
     
-    public filter(predicate: (value: Statement, index: number, array: Statement[]) => boolean): Statement[] {
+    public filter(predicate: (value: Datatype, index: number, array: Datatype[]) => boolean): Datatype[] {
         return this._getStatements().filter(predicate);
     }
 
-    private _getStatements(): Statement[] {
+    private _getStatements(): Iterable<Datatype> {
         return this._statements;
     }
 

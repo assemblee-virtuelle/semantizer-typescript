@@ -6,7 +6,7 @@ import ThingFactory from '../contracts/ThingFactory.js';
 
 // states: Local | Distant
 // states: Created | Modified | Loaded
-export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> implements Document {
+export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> implements Document<ContainedThing, SelfDescribingThing> {
 
     private _thingFactory: ThingFactory<ContainedThing, SelfDescribingThing>;
     private _uri: string;
@@ -20,6 +20,131 @@ export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescr
         this._context = context;
         this._things = [];
         this._selfDescribingThing = null;
+    }
+
+    at(index: number): ContainedThing | null {
+        throw new Error("Method not implemented.");
+    }
+
+    public add(thing: ContainedThing): Document<ContainedThing, SelfDescribingThing> {
+        this._things.push(thing);
+        return this;
+    }
+
+    addAll(document: Document<any, any>): Document<ContainedThing, SelfDescribingThing> {
+        throw new Error("Method not implemented.");
+    }
+
+    createLocalCopy(): Document<ContainedThing, SelfDescribingThing> {
+        throw new Error("Method not implemented.");
+    }
+
+    public delete(thingOrUri: string | Thing): Document<ContainedThing, SelfDescribingThing> {
+        const thing = typeof thingOrUri === 'string'? this.get(thingOrUri): thingOrUri;
+        if (thing)
+            this.setThings(this.filter((filteredThing: Thing) => thing.getUri() !== filteredThing.getUri())) // Maybe use equals instead
+        return this;
+    }
+
+    deleteContext(): void {
+        throw new Error("Method not implemented.");
+    }
+
+    deleteMatches(uri?: string | Resource | undefined, property?: string | undefined, value?: string | undefined): Document<ContainedThing, SelfDescribingThing> {
+        throw new Error("Method not implemented.");
+    }
+
+    difference(other: Document<Thing, Thing>): Document<Thing, Thing> {
+        throw new Error("Method not implemented.");
+    }
+
+    every(callbackfn: (thing: ContainedThing, document: Document<Thing, Thing>) => boolean): boolean {
+        throw new Error("Method not implemented.");
+    }
+
+    find(): ContainedThing | null {
+        throw new Error("Method not implemented.");
+    }
+
+    findIndex(thing: string | Resource): number {
+        throw new Error("Method not implemented.");
+    }
+
+    public get(uri: string | Resource): ContainedThing | null {
+        // TODO uri or resource.getUri
+        const things = this.filter((thing: ContainedThing) => thing.getUri() === uri);
+        return things.length > 0? things[0]: null;
+    }
+
+    has(thing: string | Resource): boolean {
+        throw new Error("Method not implemented.");
+    }
+
+    hasThingThatSelfDescribes(): boolean {
+        throw new Error("Method not implemented.");
+    }
+
+    includes(other: Document<Thing, Thing>): boolean {
+        throw new Error("Method not implemented.");
+    }
+    indexOf(thing: string | Resource, fromIndex?: number | undefined): number {
+        throw new Error("Method not implemented.");
+    }
+
+    isLocal(): boolean {
+        throw new Error("Method not implemented.");
+    }
+
+    isDistant(): boolean {
+        throw new Error("Method not implemented.");
+    }
+
+    keys(): Iterator<string, any, undefined> {
+        throw new Error("Method not implemented.");
+    }
+    
+    pop(): ContainedThing {
+        throw new Error("Method not implemented.");
+    }
+
+    reduce(callbackfn: (accumulator: any, thing: ContainedThing, document: Document<Thing, Thing>) => any, initialValue?: any) {
+        throw new Error("Method not implemented.");
+    }
+
+    reverse(): void {
+        throw new Error("Method not implemented.");
+    }
+
+    shift(): ContainedThing {
+        throw new Error("Method not implemented.");
+    }
+
+    slice(start?: number | undefined, end?: number | undefined): Document<Thing, Thing> {
+        throw new Error("Method not implemented.");
+    }
+
+    some(callbackfn: (thing: ContainedThing, document: Document<ContainedThing, SelfDescribingThing>) => boolean): boolean {
+        throw new Error("Method not implemented.");
+    }
+
+    sort(compareFn?: ((a: ContainedThing, b: ContainedThing) => number) | undefined): Document<Thing, Thing> {
+        throw new Error("Method not implemented.");
+    }
+
+    splice(start: number, deleteCount?: number | undefined, ...items: ContainedThing[]): Document<Thing, Thing> {
+        throw new Error("Method not implemented.");
+    }
+
+    toCanonical(): string {
+        throw new Error("Method not implemented.");
+    }
+
+    toStream(): string {
+        throw new Error("Method not implemented.");
+    }
+
+    union(other: Document<Thing, Thing>): Document<Thing, Thing> {
+        throw new Error("Method not implemented.");
     }
 
     public forEach(callbackfn: (value: ContainedThing, index: number, array: ContainedThing[]) => void, thisArg?: any): void {
@@ -50,11 +175,6 @@ export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescr
         return this.getContext()?.shorten(uri) ?? uri;
     }
 
-    public add(thing: ContainedThing): Document {
-        this._things.push(thing);
-        return this;
-    }
-
     public getThingFactory(): ThingFactory<ContainedThing, SelfDescribingThing> {
         return this._thingFactory;
     }
@@ -68,18 +188,9 @@ export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescr
         return thing;
     }
 
-    public addDocument(document: Document): Document {
-        throw new Error("Method not implemented.");
-    }
-
     // TODO: check canonical form
     public equals(other: Document): boolean {
         throw new Error("Not implemented.")
-    }
-
-    public get(uri: string): ContainedThing | null {
-        const things = this.filter((thing: ContainedThing) => thing.getUri() === uri);
-        return things.length > 0? things[0]: null;
     }
 
     protected isUrl(input: string): boolean {
@@ -126,7 +237,7 @@ export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescr
         return thing;
     }
 
-    public createThing(nameHintOrUri?: string): ContainedThing {
+    public createThingWithUri(nameHintOrUri?: string): ContainedThing {
         const uriOfNewRegularThing = this.validateOrCreateThingUri(nameHintOrUri);
         return this.addAndReturnThing(this.getThingFactory().createThing(this, uriOfNewRegularThing));
     }
@@ -154,12 +265,6 @@ export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescr
         return this.getThingFactory().createThingWithoutUri(this, nameHint);
     }
 
-    public delete(thingOrUri: string | Thing): void {
-        const thing = typeof thingOrUri === 'string'? this.get(thingOrUri): thingOrUri;
-        if (thing)
-            this.setThings(this.filter((filteredThing: Thing) => thing.getUri() !== filteredThing.getUri())) // Maybe use equals instead
-    }
-
     public getUri(): string {
         return this._uri;
     }
@@ -185,7 +290,7 @@ export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescr
         return this._selfDescribingThing = thing;
     }
 
-    public count(): number {
+    public count(callbackfn?: ((thing: ContainedThing, document: Document<ContainedThing, SelfDescribingThing>) => boolean) | undefined): number {
         return this._getThings().length;
     }
 

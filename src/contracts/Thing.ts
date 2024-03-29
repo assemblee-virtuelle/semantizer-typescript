@@ -18,7 +18,7 @@ export interface Thing extends Resource, Iterable<Statement> {
     filter(predicate: (value: Statement, index: number, array: Statement[]) => boolean): Statement[];
     
     add(about: string, value: string | Resource, datatype?: string, language?: string): Thing;
-    // addStatement(statement: Statement): Thing;
+    // addStatement(statement: Datatype): Thing;
     get(property: string): string;
     set(about: string, value: string, oldValue?: string, datatype?: string, language?: string): Thing;
     remove(about: string, value: string | Resource, datatype?: string, language?: string): Thing;

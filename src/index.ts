@@ -74,7 +74,7 @@ catalog.add(catalogItem);
 
 // Ajout d'un document dans un document:
 const catalogItemDocument = semantizer.createDocument();
-catalog.addDocument(catalogItemDocument);
+catalog.addAll(catalogItemDocument);
 
 // Si resource distante alors pas possible de modifier le semanticID
 // SI resource locale, possible d'assigner un semantic ID
