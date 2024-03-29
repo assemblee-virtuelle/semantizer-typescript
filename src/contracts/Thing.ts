@@ -1,19 +1,17 @@
-import DatasetExt from "rdf-ext/lib/Dataset";
-import Context from "../common/Context";
-import Document from "../document/Document";
-import Resource from "../common/Resource";
-import Statement from "../statement/Statement";
+import Context from "./Context";
+import Document from "./Document";
+import Resource from "./Resource";
+import Statement from "./Statement";
 
 export interface Thing extends Resource, Iterable<Statement> {
     getDocument(): Document;
-    isAnonymous(): boolean;
+    hasUri(): boolean;
     getContext(): Context | undefined;
     expand(uri: string): string;
     shorten(uri: string): string;
     count(): number;
     isEmpty(): boolean;
     equals(other: Thing): boolean;
-    toRdfDatasetExt(): DatasetExt;
 
     forEach(callbackfn: (value: Statement, index: number, array: Statement[]) => void, thisArg?: any): void;
     map(callbackfn: (value: Statement, index: number, array: Statement[]) => unknown, thisArg?: any): unknown[];

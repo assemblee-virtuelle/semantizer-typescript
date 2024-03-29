@@ -1,10 +1,8 @@
-import rdf from 'rdf-ext';
-import DatasetExt from "rdf-ext/lib/Dataset";
-import Context from "../common/Context.js";
-import { Document } from "./Document.js";
-import Resource from "../common/Resource.js";
-import Thing from "../thing/Thing.js";
-import ThingFactory from '../thing/ThingFactory.js';
+import Context from "../contracts/Context.js";
+import { Document } from "../contracts/Document.js";
+import Resource from "../contracts/Resource.js";
+import Thing from "../contracts/Thing.js";
+import ThingFactory from '../contracts/ThingFactory.js';
 
 // states: Local | Distant
 // states: Created | Modified | Loaded
@@ -74,8 +72,9 @@ export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescr
         throw new Error("Method not implemented.");
     }
 
+    // TODO: check canonical form
     public equals(other: Document): boolean {
-        return this.toRdfDatasetExt().equals(other.toRdfDatasetExt());
+        throw new Error("Not implemented.")
     }
 
     public get(uri: string): ContainedThing | null {
@@ -197,13 +196,6 @@ export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescr
 
     public filter(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => boolean): ContainedThing[] {
         return this._getThings().filter(predicate);
-    }
-
-    public toRdfDatasetExt(): DatasetExt {
-        const result = rdf.dataset();
-        // @ts-ignore
-        this._things.forEach(thing => result.addAll(thing.toRdfDatasetExt()));
-        return result;
     }
 
 }

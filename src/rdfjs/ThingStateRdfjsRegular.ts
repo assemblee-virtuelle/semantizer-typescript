@@ -4,8 +4,8 @@ import DatasetExt from "rdf-ext/lib/Dataset";
 import LiteralExt from "rdf-ext/lib/Literal";
 import NamedNodeExt from "rdf-ext/lib/NamedNode";
 import QuadExt from "rdf-ext/lib/Quad";
-import Resource from "../common/Resource.js";
-import Thing from "./Thing.js";
+import Resource from "../contracts/Resource.js";
+import Thing from "../contracts/Thing.js";
 import { ThingStateDefaultBase } from "./ThingStateDefaultBase.js";
 
 export class ThingStateRdfjsRegular extends ThingStateDefaultBase {

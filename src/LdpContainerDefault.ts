@@ -1,5 +1,5 @@
 import LdpContainer from "./LdpContainer";
-import DocumentAbstractDefaultImpl from "./document/DocumentDefaultImpl";
+import DocumentAbstractDefaultImpl from "./default/DocumentDefaultImpl";
 
 export default class LdpContainerDefault extends DocumentAbstractDefaultImpl implements LdpContainer {
 

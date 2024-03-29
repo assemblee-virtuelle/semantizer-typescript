@@ -1,7 +1,6 @@
-import DatasetExt from "rdf-ext/lib/Dataset";
-import Thing from "../thing/Thing";
-import Resource from "../common/Resource";
-import Context from "../common/Context";
+import Thing from "./Thing";
+import Resource from "./Resource";
+import Context from "./Context";
 
 export interface Document<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> extends Resource, Iterable<ContainedThing> {
     getContext(): Context | undefined;
@@ -32,8 +31,6 @@ export interface Document<ContainedThing extends Thing = Thing, SelfDescribingTh
     filter(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => boolean): ContainedThing[];
 
     // TODO: add sort algorithms
-
-    toRdfDatasetExt(): DatasetExt;
 }
 
 export default Document;

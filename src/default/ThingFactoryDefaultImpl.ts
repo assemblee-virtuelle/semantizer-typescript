@@ -1,7 +1,7 @@
-import Document from "../document/Document";
-import Thing from "./Thing";
+import Document from "../contracts/Document";
+import Thing from "../contracts/Thing";
 import { ThingDefaultImpl, ThingType } from "./ThingDefaultImpl";
-import ThingFactory from "./ThingFactory";
+import ThingFactory from "../contracts/ThingFactory";
 
 export class ThingFactoryDefaultImpl implements ThingFactory<Thing, Thing> {
 

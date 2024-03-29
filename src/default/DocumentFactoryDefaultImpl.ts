@@ -1,10 +1,10 @@
-import Context from "../common/Context";
-import Document from "./Document";
+import Context from "../contracts/Context";
+import Document from "../contracts/Document";
 import DocumentDefaultImpl from "./DocumentDefaultImpl";
-import DocumentFactory from "./DocumentFactory";
-import Thing from "../thing/Thing";
-import ThingFactory from "../thing/ThingFactory";
-import ThingFactoryDefaultImpl from "../thing/ThingFactoryDefaultImpl";
+import DocumentFactory from "../contracts/DocumentFactory";
+import Thing from "../contracts/Thing";
+import ThingFactory from "../contracts/ThingFactory";
+import ThingFactoryDefaultImpl from "./ThingFactoryDefaultImpl";
 
 export class DocumentFactoryDefaultImpl implements DocumentFactory<Thing, Thing> {
 

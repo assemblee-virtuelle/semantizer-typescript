@@ -1,6 +1,6 @@
 import DatasetExt from "rdf-ext/lib/Dataset";
-import Resource from "../common/Resource";
-import Thing from "./Thing";
+import Resource from "../contracts/Resource";
+import Thing from "../contracts/Thing";
 
 export default interface ThingState {
     getUri(): string;

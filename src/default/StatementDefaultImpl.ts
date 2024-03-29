@@ -1,6 +1,6 @@
-import Resource from "../common/Resource";
-import Statement from "./Statement";
-import Thing from "../thing/Thing";
+import Resource from "../contracts/Resource";
+import Statement from "../contracts/Statement";
+import Thing from "../contracts/Thing";
 
 export class StatementDefaultImpl implements Statement {
 

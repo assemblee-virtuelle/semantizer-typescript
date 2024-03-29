@@ -1,4 +1,4 @@
-import Thing from "../thing/Thing";
+import Thing from "./Thing";
 
 export interface Statement {
     getThing(): Thing;

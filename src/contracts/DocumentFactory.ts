@@ -1,6 +1,6 @@
-import Context from "../common/Context";
+import Context from "./Context";
 import Document from "./Document";
-import Thing from "../thing/Thing";
+import Thing from "./Thing";
 
 export interface DocumentFactory<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> {
     createDocument(uri?: string, context?: Context): Document<ContainedThing, SelfDescribingThing>;

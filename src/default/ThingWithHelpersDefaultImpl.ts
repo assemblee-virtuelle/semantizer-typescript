@@ -1,132 +1,8 @@
-import Document from "../document/Document.js";
-import Thing from "./Thing";
-import Resource from "../common/Resource.js";
-import Context from "../common/Context.js";
-import ThingState from "./ThingState";
-import ThingStateRdfjsRegular from "./ThingStateRdfjsRegular.js";
-import ThingStateRdfjsAnonymous from "./ThingStateRdfjsAnonymous.js";
-import DatasetExt from "rdf-ext/lib/Dataset";
-import Statement from "../statement/Statement.js";
-import StatementDefaultImpl from "../statement/StatementDefaultImpl.js";
+import Resource from "../contracts/Resource";
+import Thing from "../contracts/Thing";
+import ThingDefaultImpl from "./ThingDefaultImpl";
 
-export enum ThingType {
-    ForDescribing,
-    Regular,
-    Anonymous
-}
-
-export class ThingDefaultImpl implements Thing {
-
-    private _document;
-    private _statements: Statement[];
-    private _state: ThingState;
-
-    // TODO: add copy constructor
-    public constructor(document: Document, stateType: ThingType, uriOrNameHint?: string) {
-        this._document = document;
-        this._statements = [];
-
-        switch (stateType) {
-            case ThingType.Regular:
-                if (!uriOrNameHint)
-                    throw new Error();
-                this._state = new ThingStateRdfjsRegular(this, uriOrNameHint);
-                break;
-        
-            case ThingType.Anonymous:
-                if (uriOrNameHint?.startsWith('http'))
-                    throw new Error("You are trying to create an anonymous thing with an URI but anonymous thing can not have an URI. Please pass a name hint instead or leave it undefined.");
-                this._state = new ThingStateRdfjsAnonymous(this, uriOrNameHint);
-                break;
-
-            case ThingType.ForDescribing:
-                this._state = new ThingStateRdfjsRegular(this, document.getUri());
-                break;
-        }
-    }
-
-    public count(): number {
-        return this._getStatements().length;
-    }
-
-    public isEmpty(): boolean {
-        return this._getStatements().length === 0;
-    }
-
-    public [Symbol.iterator](): Iterator<Statement, any, undefined> {
-        return this._getStatements()[Symbol.iterator]();
-    }
-
-    public forEach(callbackfn: (value: Statement, index: number, array: Statement[]) => void, thisArg?: any): void {
-        this._getStatements().forEach(callbackfn, thisArg);
-    }
-    
-    public map(callbackfn: (value: Statement, index: number, array: Statement[]) => unknown, thisArg?: any): unknown[] {
-        return this._getStatements().map(callbackfn);
-    }
-    
-    public filter(predicate: (value: Statement, index: number, array: Statement[]) => boolean): Statement[] {
-        return this._getStatements().filter(predicate);
-    }
-
-    private _getStatements(): Statement[] {
-        return this._statements;
-    }
-
-    private getState(): ThingState {
-        return this._state;
-    }
-
-    public isAnonymous(): boolean {
-        return this.getState().isAnonymous();
-    }
-
-    public getUri(): string {
-        return this.getState().getUri();
-    }
-
-    public setUri(uri: string): void {
-        // Todo: change state
-        // Todo: change dataset
-    }
-
-    public getContext(): Context | undefined {
-        return this.getDocument().getContext();
-    }
-
-    public expand(uri: string): string {
-        return this.getDocument().expand(uri);
-    }
-
-    public shorten(uri: string): string {
-        return this.getDocument().shorten(uri);
-    }
-
-    public equals(other: Thing): boolean {
-        return this.getState().equals(other);
-    }
-
-    public toRdfDatasetExt(): DatasetExt {
-        return this.getState().toRdfDatasetExt();
-    }
-
-    public add(about: string, value: string | Resource, datatype?: string, language?: string): Thing {
-        const statement = new StatementDefaultImpl(this, about, value, datatype, language);
-        this._getStatements().push(statement);
-        return this;
-    }
-
-    public get(property: string): string {
-        throw new Error("Method not implemented.");
-    }
-
-    public set(about: string, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): Thing {
-        throw new Error("Method not implemented.");
-    }
-    
-    public remove(about: string, value: string | Resource, datatype?: string | undefined, language?: string | undefined): Thing {
-        throw new Error("Method not implemented.");
-    }
+export class ThingWithHelpers extends ThingDefaultImpl implements ThingWithHelpers {
 
     ////////////// Adder //////////////
     public addStatement(about: string, value: string | Resource, datatype?: string, language?: string): Thing {
@@ -172,10 +48,6 @@ export class ThingDefaultImpl implements Thing {
     ////////////// Getters //////////////
     public getAllValuesAboutStatement(property: string): string[] {
         return this.getState().getAllValuesAboutStatement(property);
-    }
-
-    public getDocument(): Document {
-        return this._document;
     }
 
     public getRdfTypeValue(): string | null {
@@ -324,4 +196,4 @@ export class ThingDefaultImpl implements Thing {
 
 }
 
-export default ThingDefaultImpl;
+export default ThingWithHelpers;

@@ -1,6 +1,6 @@
 import Thing from "./Thing";
 
-export interface ThingWithHelper {
+export interface ThingWithHelpers {
     addStatementFrom(source: Thing): Thing;
     addRdfTypeStatement(value: string): Thing;
     addBooleanStatement(about: string, value: boolean): Thing;
