@@ -3,8 +3,8 @@ import Resource from "./Resource";
 import Context from "./Context";
 
 export interface Document<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> extends Resource, Iterable<ContainedThing> {
-    at(index: number): ContainedThing | null;
-    add(thing: ContainedThing): Document;
+    at(index: number): ContainedThing | undefined;
+    add(thing: ContainedThing): Document<ContainedThing, SelfDescribingThing>;
     addAll(document: Document<any, any>): Document<ContainedThing, SelfDescribingThing>;
     count(callbackfn?: (thing: ContainedThing, document: Document<ContainedThing, SelfDescribingThing>) => boolean): number;
     createLocalCopy(): Document<ContainedThing, SelfDescribingThing>;
@@ -16,7 +16,7 @@ export interface Document<ContainedThing extends Thing = Thing, SelfDescribingTh
     deleteMatches(uri?: string | Resource, property?: string, value?: string): Document<ContainedThing, SelfDescribingThing>;
     difference(other: Document): Document; // Types?
     equals(other: Document<any, any>): boolean;
-    every(callbackfn: (thing: ContainedThing, document: Document) => boolean): boolean;
+    every(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => value is ContainedThing, thisArg?: any): boolean;
     filter(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => boolean): ContainedThing[];
     find(): ContainedThing | null; // TODO
     findIndex(thing: string | Resource): number;
@@ -27,21 +27,21 @@ export interface Document<ContainedThing extends Thing = Thing, SelfDescribingTh
     has(thing: string | Resource): boolean;
     hasThingThatSelfDescribes(): boolean;
     includes(other: Document): boolean;
-    indexOf(thing: string | Resource, fromIndex?: number): number;
+    indexOf(searchElement: ContainedThing, fromIndex?: number | undefined): number;
     isEmpty(): boolean;
     isLocal(): boolean;
     isDistant(): boolean;
     // import
     // intersection
-    keys(): Iterator<string>; // to check
+    keys(): IterableIterator<number>; // to check
     map(callbackfn: (value: ContainedThing, index: number, array: ContainedThing[]) => unknown, thisArg?: any): unknown[];
-    pop(): ContainedThing;
-    reduce(callbackfn: (accumulator: any, thing: ContainedThing, document: Document) => any, initialValue?: any): any; 
+    pop(): ContainedThing | undefined;
+    reduce(callbackfn: (previousValue: ContainedThing, currentValue: ContainedThing, currentIndex: number, array: ContainedThing[]) => ContainedThing): ContainedThing; 
     reverse(): void;
     setContext(context: Context): void;
-    shift(): ContainedThing;
-    slice(start?: number, end?: number): Document;
-    some(callbackfn: (thing: ContainedThing, document: Document<ContainedThing, SelfDescribingThing>) => boolean): boolean;
+    shift(): ContainedThing | undefined;
+    slice(start?: number, end?: number): Document<ContainedThing, SelfDescribingThing>;
+    some(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => unknown, thisArg?: any): boolean;
     sort(compareFn?: (a: ContainedThing, b: ContainedThing) => number): Document;
     splice(start: number, deleteCount?: number, ...items: ContainedThing[]): Document;
     toCanonical(): string; // DOMString? See https://github.com/digitalbazaar/rdf-canonize

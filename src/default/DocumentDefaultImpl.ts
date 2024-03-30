@@ -22,8 +22,8 @@ export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescr
         this._selfDescribingThing = null;
     }
 
-    at(index: number): ContainedThing | null {
-        throw new Error("Method not implemented.");
+    public at(index: number): ContainedThing | undefined {
+        return this._getThings().at(index);
     }
 
     public add(thing: ContainedThing): Document<ContainedThing, SelfDescribingThing> {
@@ -47,7 +47,7 @@ export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescr
     }
 
     deleteContext(): void {
-        throw new Error("Method not implemented.");
+        this._context = undefined;
     }
 
     deleteMatches(uri?: string | Resource | undefined, property?: string | undefined, value?: string | undefined): Document<ContainedThing, SelfDescribingThing> {
@@ -58,8 +58,8 @@ export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescr
         throw new Error("Method not implemented.");
     }
 
-    every(callbackfn: (thing: ContainedThing, document: Document<Thing, Thing>) => boolean): boolean {
-        throw new Error("Method not implemented.");
+    every(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => value is ContainedThing, thisArg?: any): boolean {
+        return this._getThings().every(predicate);
     }
 
     find(): ContainedThing | null {
@@ -81,14 +81,19 @@ export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescr
     }
 
     hasThingThatSelfDescribes(): boolean {
-        throw new Error("Method not implemented.");
+        return this.getThingThatSelfDescribes() !== undefined;
     }
 
     includes(other: Document<Thing, Thing>): boolean {
         throw new Error("Method not implemented.");
     }
-    indexOf(thing: string | Resource, fromIndex?: number | undefined): number {
-        throw new Error("Method not implemented.");
+
+    protected getUriFromStringOrResource(stringOrResource: string | Resource): string {
+        return typeof stringOrResource === 'string'? stringOrResource: stringOrResource.getUri();
+    }
+
+    indexOf(searchElement: ContainedThing, fromIndex?: number | undefined): number {
+        return this._getThings().indexOf(searchElement, fromIndex);
     }
 
     isLocal(): boolean {
@@ -99,32 +104,32 @@ export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescr
         throw new Error("Method not implemented.");
     }
 
-    keys(): Iterator<string, any, undefined> {
-        throw new Error("Method not implemented.");
+    keys(): IterableIterator<number> {
+        return this._getThings().keys()
     }
     
-    pop(): ContainedThing {
-        throw new Error("Method not implemented.");
+    pop(): ContainedThing | undefined {
+        return this._getThings().pop();
     }
 
-    reduce(callbackfn: (accumulator: any, thing: ContainedThing, document: Document<Thing, Thing>) => any, initialValue?: any) {
-        throw new Error("Method not implemented.");
+    reduce(callbackfn: (previousValue: ContainedThing, currentValue: ContainedThing, currentIndex: number, array: ContainedThing[]) => ContainedThing): ContainedThing {
+        return this._getThings().reduce(callbackfn);
     }
 
     reverse(): void {
-        throw new Error("Method not implemented.");
+        this._getThings().reverse();
     }
 
-    shift(): ContainedThing {
-        throw new Error("Method not implemented.");
+    shift(): ContainedThing | undefined {
+        return this._getThings().shift();
     }
 
-    slice(start?: number | undefined, end?: number | undefined): Document<Thing, Thing> {
-        throw new Error("Method not implemented.");
+    slice(start?: number, end?: number): Document<ContainedThing, SelfDescribingThing> {
+        throw new Error("Method not implemented."); //return this._getThings().slice(start, end);
     }
 
-    some(callbackfn: (thing: ContainedThing, document: Document<ContainedThing, SelfDescribingThing>) => boolean): boolean {
-        throw new Error("Method not implemented.");
+    some(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => unknown, thisArg?: any): boolean {
+        return this._getThings().some(predicate);
     }
 
     sort(compareFn?: ((a: ContainedThing, b: ContainedThing) => number) | undefined): Document<Thing, Thing> {

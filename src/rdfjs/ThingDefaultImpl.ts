@@ -1,12 +1,13 @@
-import Thing from "./Thing";
-import DatasetExt from "rdf-ext/lib/Dataset";
 import { ThingDefaultImpl as ThingDefaultImplCore, ThingType } from "../default/ThingDefaultImpl";
 import Document from "../contracts/Document";
 import ThingStateRdfjsRegular from "./ThingStateRdfjsRegular";
 import ThingStateRdfjsAnonymous from "./ThingStateRdfjsAnonymous";
 import ThingState from "./ThingState";
+import Thing from "../contracts/Thing";
+import { RdfjsDatasetSerializable } from "./RdfjsDatasetSerializable";
+import DatasetCore from "@rdfjs/dataset/DatasetCore";
 
-export class ThingDefaultImpl extends ThingDefaultImplCore implements Thing {
+export class ThingDefaultImpl extends ThingDefaultImplCore implements Thing, RdfjsDatasetSerializable {
 
     private _state: ThingState;
 
@@ -44,7 +45,7 @@ export class ThingDefaultImpl extends ThingDefaultImplCore implements Thing {
         return this.getState().getUri();
     }
 
-    public toRdfDatasetExt(): DatasetExt {
+    public toRdfjsDataset(): DatasetCore {
         return this.getState().toRdfDatasetExt();
     }
 
