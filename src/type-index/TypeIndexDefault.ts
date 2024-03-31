@@ -1,5 +1,5 @@
 import Context from "../contracts/Context";
-import DocumentAbstractDefaultImpl from "../default/DocumentDefaultImpl";
+import DocumentAbstractDefaultImpl from "../default/DocumentSpecificDefaultImpl";
 import Thing from "../contracts/Thing";
 import TypeIndex from "./TypeIndex";
 import { TypeIndexFactoryDefaultImpl } from "./TypeIndexFactoryDefaultImpl";

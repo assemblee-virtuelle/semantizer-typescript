@@ -7,7 +7,7 @@ import ThingFactoryDefaultImpl from "./ThingFactoryDefaultImpl.js";
 
 // states: Local | Distant
 // states: Created | Modified | Loaded
-export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> implements Document<ContainedThing, SelfDescribingThing> {
+export class EditableDocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> implements Document<ContainedThing, SelfDescribingThing> {
 
     private _thingFactory: ThingFactory<ContainedThing, SelfDescribingThing>;
     private _uri: string;
@@ -33,6 +33,7 @@ export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescr
 
     public addAll(documentOrThings: Document<ContainedThing, SelfDescribingThing> | ContainedThing[]): Document<ContainedThing, SelfDescribingThing> {
         documentOrThings.forEach((thing: ContainedThing) => this.add(thing));
+        // TODO: add thing with new names/uri fo document
         return this;
     }
 
@@ -327,5 +328,4 @@ export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescr
 
 }
 
-export default DocumentDefaultImpl;
-
+export default EditableDocumentDefaultImpl;
