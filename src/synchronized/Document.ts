@@ -1,20 +1,12 @@
-import Resource from "./Resource";
-import Context from "./Context";
-import Thing from "./Thing";
+import Resource from "../contracts/Resource";
+import Thing from "../contracts/Thing";
+import Context from "../contracts/Context";
+import EditableDocument from "./EditableDocument";
 
 export interface Document<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> extends Resource, Iterable<ContainedThing> {
     at(index: number): ContainedThing | undefined;
-    add(thing: ContainedThing): Document<ContainedThing, SelfDescribingThing>;
-    // TODO: add meta description
-    addAll(documentOrThings: Document<ContainedThing, SelfDescribingThing> | ContainedThing[]): Document<ContainedThing, SelfDescribingThing>;
     contains(other: Document<ContainedThing, SelfDescribingThing>): boolean;
     count(callbackfn?: (thing: ContainedThing, document: Document<ContainedThing, SelfDescribingThing>) => boolean): number;
-    createThingToSelfDescribe(): SelfDescribingThing;
-    createThingWithUri(nameHintOrUri?: string): ContainedThing;
-    createThingWithoutUri(nameHint?: string): ContainedThing;
-    delete(thingOrUri: string | ContainedThing): Document<ContainedThing, SelfDescribingThing>;
-    deleteContext(): void;
-    deleteMatches(uri?: string | Resource, property?: string, value?: string): Document<ContainedThing, SelfDescribingThing>;
     difference(other: Document<ContainedThing, SelfDescribingThing>): Document<ContainedThing, SelfDescribingThing>;
     equals(other: Document<ContainedThing, SelfDescribingThing>): boolean;
     every(predicate: (value: ContainedThing, index?: number, array?: ContainedThing[]) => boolean, thisArg?: any): boolean;
@@ -29,25 +21,20 @@ export interface Document<ContainedThing extends Thing = Thing, SelfDescribingTh
     hasThingThatSelfDescribes(): boolean;
     includes(searchElement: ContainedThing, fromIndex?: number | undefined): boolean;
     indexOf(searchElement: ContainedThing, fromIndex?: number | undefined): number;
+    isEmpty(): boolean;
+    isLocal(): boolean;
+    isDistant(): boolean;
     // import
     // intersection
-    isEmpty(): boolean;
     keys(): IterableIterator<number>; // to check
     map(callbackfn: (value: ContainedThing, index: number, array: ContainedThing[]) => unknown, thisArg?: any): unknown[];
-    pop(): ContainedThing | undefined;
     reduce(callbackfn: (previousValue: ContainedThing, currentValue: ContainedThing, currentIndex: number, array: ContainedThing[]) => ContainedThing): ContainedThing; 
-    reverse(): void;
-    setContext(context: Context): void;
-    shift(): ContainedThing | undefined;
     slice(start?: number, end?: number): Document<ContainedThing, SelfDescribingThing>;
     some(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => unknown, thisArg?: any): boolean;
-    sort(compareFn?: (a: ContainedThing, b: ContainedThing) => number): Document<ContainedThing, SelfDescribingThing>;
-    splice(start: number, deleteCount?: number, ...items: ContainedThing[]): Document<ContainedThing, SelfDescribingThing>;
     toCanonical(): string; // DOMString? See https://github.com/digitalbazaar/rdf-canonize
     toGenericDocument(): Document<Thing, Thing>;
+    toLocalCopy(): EditableDocument<ContainedThing, SelfDescribingThing>;
     toStream(): string; // Stream
-    // TODO: add meta description
-    union(other: Document<ContainedThing, SelfDescribingThing>): Document<ContainedThing, SelfDescribingThing>;
 }
 
 export default Document;

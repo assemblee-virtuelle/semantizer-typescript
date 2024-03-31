@@ -1,6 +1,7 @@
-import Resource from "./Resource";
-import Context from "./Context";
-import Thing from "./Thing";
+
+import Resource from "../contracts/Resource";
+import Thing from "../contracts/Thing";
+import Context from "../contracts/Context";
 import Document from "./Document";
 
 export interface EditableDocument<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> extends Document<ContainedThing, SelfDescribingThing> {
@@ -19,7 +20,6 @@ export interface EditableDocument<ContainedThing extends Thing = Thing, SelfDesc
     reverse(): void;
     setContext(context: Context): void;
     shift(): ContainedThing | undefined;
-    slice(start?: number, end?: number): Document<ContainedThing, SelfDescribingThing>;
     sort(compareFn?: (a: ContainedThing, b: ContainedThing) => number): Document<ContainedThing, SelfDescribingThing>;
     splice(start: number, deleteCount?: number, ...items: ContainedThing[]): Document<ContainedThing, SelfDescribingThing>;
     // TODO: add meta description
