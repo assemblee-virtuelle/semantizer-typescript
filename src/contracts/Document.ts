@@ -1,7 +1,33 @@
 import Resource from "./Resource";
 import Context from "./Context";
 import Thing from "./Thing";
+import WithReadOperations from "./WithReadOperations";
+import WithWriteOperations from "./WithWriteOperations";
 
+export interface Document<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> extends Resource, Iterable<ContainedThing> {
+    get(uri: string | Resource): ContainedThing | undefined;
+    getDistantUri(): string | undefined;
+    getContext(): Context | undefined;
+    getThingThatSelfDescribes(): SelfDescribingThing | undefined;
+    has(thing: string | Resource): boolean;
+    hasThingThatSelfDescribes(): boolean;
+    isEmpty(): boolean;
+    isLocal(): boolean;
+    isDistant(): boolean;
+    //setContext(context: Context): void;
+    toCanonical(): string; // DOMString? See https://github.com/digitalbazaar/rdf-canonize
+    toGenericDocument(): Document<Thing, Thing>;
+    toStream(): string; // Stream
+    [Symbol.iterator](): Iterator<ContainedThing>;
+}
+
+export interface ReadableDocument<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> extends Document<ContainedThing, SelfDescribingThing>, WithReadOperations<ContainedThing, SelfDescribingThing> {}
+
+export interface WritableDocument<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> extends ReadableDocument<ContainedThing, SelfDescribingThing>, WithWriteOperations<ContainedThing, SelfDescribingThing> {}
+
+export default Document;
+
+/*
 export interface Document<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> extends Resource, Iterable<ContainedThing> {
     at(index: number): ContainedThing | undefined;
     add(thing: ContainedThing): Document<ContainedThing, SelfDescribingThing>;
@@ -49,5 +75,4 @@ export interface Document<ContainedThing extends Thing = Thing, SelfDescribingTh
     // TODO: add meta description
     union(other: Document<ContainedThing, SelfDescribingThing>): Document<ContainedThing, SelfDescribingThing>;
 }
-
-export default Document;
+*/

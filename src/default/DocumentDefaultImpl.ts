@@ -1,11 +1,16 @@
 import Context from "../contracts/Context.js";
-import Document from "../contracts/Document.js";
+import Document, { WritableDocument } from "../contracts/Document.js";
 import Resource from "../contracts/Resource.js";
 import Thing from "../contracts/Thing.js";
 import ThingFactory from '../contracts/ThingFactory.js';
+import WithReadOperations from "../contracts/WithReadOperations.js";
+import WithWriteOperations from "../contracts/WithWriteOperations.js";
 import ThingFactoryDefaultImpl from "./ThingFactoryDefaultImpl.js";
 
-export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> implements Document<ContainedThing, SelfDescribingThing> {
+type DocumentWithReadOperations<ContainedThing extends Thing, SelfDescribingThing  extends Thing> = Document<ContainedThing, SelfDescribingThing> & WithReadOperations<ContainedThing, SelfDescribingThing>;
+type DocumentWithWriteOperations<ContainedThing extends Thing, SelfDescribingThing  extends Thing> = Document<ContainedThing, SelfDescribingThing> & WithWriteOperations<ContainedThing, SelfDescribingThing>;
+
+export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> implements WritableDocument<ContainedThing, SelfDescribingThing> {
 
     protected _thingFactory: ThingFactory<ContainedThing, SelfDescribingThing>;
     protected _uri: string;
@@ -20,15 +25,27 @@ export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescr
         this._things = [];
     }
 
+    getDistantUri(): string | undefined {
+        throw new Error("Method not implemented.");
+    }
+
+    isLocal(): boolean {
+        throw new Error("Method not implemented.");
+    }
+    
+    isDistant(): boolean {
+        throw new Error("Method not implemented.");
+    }
+
     public at(index: number): ContainedThing | undefined {
         return this._getContainedThings().at(index);
     }
 
-    public contains(other: Document<ContainedThing, SelfDescribingThing>): boolean {
+    public contains(other: DocumentWithReadOperations<ContainedThing, SelfDescribingThing>): boolean {
         return other.every((thing: ContainedThing) => this.includes(thing));
     }
 
-    public difference(other: Document<ContainedThing, SelfDescribingThing>): Document<ContainedThing, SelfDescribingThing> {
+    public difference(other: DocumentWithReadOperations<ContainedThing, SelfDescribingThing>): DocumentWithReadOperations<ContainedThing, SelfDescribingThing> {
         throw new Error("Method not implemented.");
     }
 
@@ -82,7 +99,7 @@ export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescr
         return this._getContainedThings().reduce(callbackfn);
     }
 
-    public slice(start?: number, end?: number): Document<ContainedThing, SelfDescribingThing> {
+    public slice(start?: number, end?: number): DocumentWithReadOperations<ContainedThing, SelfDescribingThing> {
         throw new Error("Method not implemented."); //return this._getContainedThings().slice(start, end);
     }
 
@@ -113,7 +130,7 @@ export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescr
         return this._getContainedThings().map(callbackfn, thisArg);
     }
     
-    public [Symbol.iterator](): Iterator<ContainedThing, any, undefined> {
+    public [Symbol.iterator](): Iterator<ContainedThing> {
         return this._getContainedThings()[Symbol.iterator]();
     }
 
@@ -162,7 +179,7 @@ export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescr
         return this._selfDescribingThing;
     }
 
-    public count(callbackfn?: ((thing: ContainedThing, document: Document<ContainedThing, SelfDescribingThing>) => boolean) | undefined): number {
+    public count(callbackfn?: ((thing: ContainedThing, document?: DocumentWithReadOperations<ContainedThing, SelfDescribingThing>) => boolean) | undefined): number {
         return this._getContainedThings().length;
     }
 
@@ -176,18 +193,18 @@ export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescr
     }
 
     // DESTRUCTIVE OPERATIONS
-    public add(thing: ContainedThing): Document<ContainedThing, SelfDescribingThing> {
+    public add(thing: ContainedThing): DocumentWithWriteOperations<ContainedThing, SelfDescribingThing> {
         this._getContainedThings().push(thing);
         return this;
     }
 
-    public addAll(documentOrThings: Document<ContainedThing, SelfDescribingThing> | ContainedThing[]): Document<ContainedThing, SelfDescribingThing> {
+    public addAll(documentOrThings: DocumentWithReadOperations<ContainedThing, SelfDescribingThing> | ContainedThing[]): DocumentWithWriteOperations<ContainedThing, SelfDescribingThing> {
         documentOrThings.forEach((thing: ContainedThing) => this.add(thing));
         // TODO: add thing with new names/uri fo document
         return this;
     }
 
-    public delete(thingOrUri: string | ContainedThing): Document<ContainedThing, SelfDescribingThing> {
+    public delete(thingOrUri: string | ContainedThing): DocumentWithWriteOperations<ContainedThing, SelfDescribingThing> {
         const thing = typeof thingOrUri === 'string'? this.get(thingOrUri): thingOrUri;
         if (thing)
             this.setContainedThings(this.filter((filteredContainedThing: ContainedThing) => thing.getUri() !== filteredContainedThing.getUri())) // Maybe use equals instead
@@ -198,7 +215,7 @@ export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescr
         this._context = undefined;
     }
 
-    public deleteMatches(uri?: string | Resource | undefined, property?: string | undefined, value?: string | undefined): Document<ContainedThing, SelfDescribingThing> {
+    public deleteMatches(uri?: string | Resource | undefined, property?: string | undefined, value?: string | undefined): DocumentWithWriteOperations<ContainedThing, SelfDescribingThing> {
         throw new Error("Method not implemented.");
     }
     
@@ -214,16 +231,16 @@ export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescr
         return this._getContainedThings().shift();
     }
 
-    public sort(compareFn?: ((a: ContainedThing, b: ContainedThing) => number) | undefined): Document<ContainedThing, SelfDescribingThing> {
+    public sort(compareFn?: ((a: ContainedThing, b: ContainedThing) => number) | undefined): DocumentWithWriteOperations<ContainedThing, SelfDescribingThing> {
         this._getContainedThings().sort(compareFn);
         return this;
     }
 
-    public splice(start: number, deleteCount?: number | undefined, ...items: ContainedThing[]): Document<ContainedThing, SelfDescribingThing> {
+    public splice(start: number, deleteCount?: number | undefined, ...items: ContainedThing[]): DocumentWithWriteOperations<ContainedThing, SelfDescribingThing> {
         throw new Error("Method not implemented.");
     }
 
-    public union(other: Document<ContainedThing, SelfDescribingThing>): Document<ContainedThing, SelfDescribingThing> {
+    public union(other: Document<ContainedThing, SelfDescribingThing>): DocumentWithWriteOperations<ContainedThing, SelfDescribingThing> {
         throw new Error("Method not implemented.");
     }
 

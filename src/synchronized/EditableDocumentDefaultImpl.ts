@@ -1,5 +1,5 @@
 import Context from "../contracts/Context.js";
-import Document from "./Document.js";
+import SynchronizedDocument from "./SynchronizedDocument.js";
 import Resource from "../contracts/Resource.js";
 import Thing from "../contracts/Thing.js";
 import ThingFactory from '../contracts/ThingFactory.js';
@@ -14,18 +14,18 @@ export class EditableDocumentDefaultImpl<ContainedThing extends Thing = Thing, S
         super(thingFactory, uri, context);
     }
 
-    public add(thing: ContainedThing): Document<ContainedThing, SelfDescribingThing> {
+    public add(thing: ContainedThing): SynchronizedDocument<ContainedThing, SelfDescribingThing> {
         this._getContainedThings().push(thing);
         return this;
     }
 
-    public addAll(documentOrThings: Document<ContainedThing, SelfDescribingThing> | ContainedThing[]): Document<ContainedThing, SelfDescribingThing> {
+    public addAll(documentOrThings: SynchronizedDocument<ContainedThing, SelfDescribingThing> | ContainedThing[]): SynchronizedDocument<ContainedThing, SelfDescribingThing> {
         documentOrThings.forEach((thing: ContainedThing) => this.add(thing));
         // TODO: add thing with new names/uri fo document
         return this;
     }
 
-    public delete(thingOrUri: string | ContainedThing): Document<ContainedThing, SelfDescribingThing> {
+    public delete(thingOrUri: string | ContainedThing): SynchronizedDocument<ContainedThing, SelfDescribingThing> {
         const thing = typeof thingOrUri === 'string'? this.get(thingOrUri): thingOrUri;
         if (thing)
             this.setContainedThings(this.filter((filteredContainedThing: ContainedThing) => thing.getUri() !== filteredContainedThing.getUri())) // Maybe use equals instead
@@ -36,7 +36,7 @@ export class EditableDocumentDefaultImpl<ContainedThing extends Thing = Thing, S
         this._context = undefined;
     }
 
-    public deleteMatches(uri?: string | Resource | undefined, property?: string | undefined, value?: string | undefined): Document<ContainedThing, SelfDescribingThing> {
+    public deleteMatches(uri?: string | Resource | undefined, property?: string | undefined, value?: string | undefined): SynchronizedDocument<ContainedThing, SelfDescribingThing> {
         throw new Error("Method not implemented.");
     }
 
@@ -64,16 +64,16 @@ export class EditableDocumentDefaultImpl<ContainedThing extends Thing = Thing, S
         return this._getContainedThings().shift();
     }
 
-    public sort(compareFn?: ((a: ContainedThing, b: ContainedThing) => number) | undefined): Document<ContainedThing, SelfDescribingThing> {
+    public sort(compareFn?: ((a: ContainedThing, b: ContainedThing) => number) | undefined): SynchronizedDocument<ContainedThing, SelfDescribingThing> {
         this._getContainedThings().sort(compareFn);
         return this;
     }
 
-    public splice(start: number, deleteCount?: number | undefined, ...items: ContainedThing[]): Document<ContainedThing, SelfDescribingThing> {
+    public splice(start: number, deleteCount?: number | undefined, ...items: ContainedThing[]): SynchronizedDocument<ContainedThing, SelfDescribingThing> {
         throw new Error("Method not implemented.");
     }
 
-    public union(other: Document<ContainedThing, SelfDescribingThing>): Document<ContainedThing, SelfDescribingThing> {
+    public union(other: SynchronizedDocument<ContainedThing, SelfDescribingThing>): SynchronizedDocument<ContainedThing, SelfDescribingThing> {
         throw new Error("Method not implemented.");
     }
 
