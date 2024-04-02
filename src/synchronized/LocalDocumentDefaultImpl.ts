@@ -1,5 +1,5 @@
-import { DocumentWithReadAndWriteOperations } from "../contracts/Document.js";
-import Thing from "../contracts/Thing.js";
+import { DocumentWithReadAndWriteOperations } from "../core/Document.js";
+import Thing from "../core/Thing.js";
 import DecoratedDocumentWithReadAndWriteOperationsDefaultImpl from "../decorator/DecoratedDocumentWithReadAndWriteOperationsDefaultImpl.js";
 import { LocalDocument } from "./SynchronizedDocument.js";
 

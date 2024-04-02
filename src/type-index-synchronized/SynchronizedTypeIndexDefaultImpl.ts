@@ -1,7 +1,7 @@
-import Document, { DocumentWithReadOperations, DocumentWithReadAndWriteOperations } from "../contracts/Document";
-import Resource from "../contracts/Resource";
-import Thing from "../contracts/Thing";
-import DocumentDefaultImpl from "../default/DocumentDefaultImpl";
+import Document, { DocumentWithReadOperations, DocumentWithReadAndWriteOperations } from "../core/Document";
+import Resource from "../core/Resource";
+import Thing from "../core/Thing";
+import DocumentDefaultImpl from "../core-default/DocumentDefaultImpl";
 import { Context } from "../index";
 import { DistantDocument, LocalDocument } from "../synchronized/SynchronizedDocument";
 import { TypeIndexWithReadAndWriteOperations } from "../type-index/TypeIndex";

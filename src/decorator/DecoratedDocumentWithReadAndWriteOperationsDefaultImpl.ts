@@ -1,6 +1,6 @@
-import { Document, DocumentWithReadAndWriteOperations, DocumentWithReadOperations, WithWriteOperations } from "../contracts/Document";
-import Resource from "../contracts/Resource.js";
-import Thing from "../contracts/Thing.js";
+import { Document, DocumentWithReadAndWriteOperations, DocumentWithReadOperations, WithWriteOperations } from "../core/Document";
+import Resource from "../core/Resource.js";
+import Thing from "../core/Thing.js";
 import { Context } from "../index.js";
 import DocumentDecorator from "./DocumentDecorator";
 

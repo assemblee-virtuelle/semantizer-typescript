@@ -1,7 +1,7 @@
-import Context from "../contracts/Context";
-import { WritableDocument } from "../contracts/Document";
-import Thing from "../contracts/Thing";
-import DocumentDefaultImpl from "../default/DocumentDefaultImpl";
+import Context from "../core/Context";
+import { WritableDocument } from "../core/Document";
+import Thing from "../core/Thing";
+import DocumentDefaultImpl from "../core-default/DocumentDefaultImpl";
 import { DistantDocument } from "./DistantDocument";
 import DistantDocumentDefaultImpl from "./DistantDocumentDefaultImpl";
 import LocalDocument from "./LocalDocument";

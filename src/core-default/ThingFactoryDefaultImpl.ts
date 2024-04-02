@@ -1,7 +1,7 @@
-import Document from "../contracts/Document";
-import Thing from "../contracts/Thing";
+import Document from "../core/Document";
+import Thing from "../core/Thing";
 import { ThingDefaultImpl, ThingType } from "./ThingDefaultImpl";
-import ThingFactory from "../contracts/ThingFactory";
+import ThingFactory from "../core/ThingFactory";
 
 export class ThingFactoryDefaultImpl<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> implements ThingFactory<ContainedThing, SelfDescribingThing> {
 

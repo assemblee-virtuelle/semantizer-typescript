@@ -1,4 +1,4 @@
-import Thing from "../contracts/Thing";
+import Thing from "../core/Thing";
 import DecoratedDocumentWithReadAndWriteOperationsDefaultImpl from "../decorator/DecoratedDocumentWithReadAndWriteOperationsDefaultImpl";
 import { DocumentFactoryDefaultImpl } from "../synchronized/DocumentFactory";
 import TypeIndex, { TypeIndexWithReadAndWriteOperations } from "./TypeIndex";

@@ -1,5 +1,5 @@
-import Resource from "../contracts/Resource";
-import Thing from "../contracts/Thing";
+import Resource from "../core/Resource";
+import Thing from "../core/Thing";
 import ThingDefaultImpl from "./ThingDefaultImpl";
 
 export class ThingWithHelpers extends ThingDefaultImpl implements ThingWithHelpers {

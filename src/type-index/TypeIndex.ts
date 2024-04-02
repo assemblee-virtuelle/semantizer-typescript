@@ -1,5 +1,5 @@
-import Document, { DocumentWithReadAndWriteOperations, DocumentWithReadOperations } from "../contracts/Document";
-import Thing from "../contracts/Thing";
+import Document, { DocumentWithReadAndWriteOperations, DocumentWithReadOperations } from "../core/Document";
+import Thing from "../core/Thing";
 import TypeIndexRegistration from "./TypeIndexRegistration";
 
 export interface TypeIndex {}

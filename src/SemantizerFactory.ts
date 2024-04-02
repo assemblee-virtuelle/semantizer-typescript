@@ -1,5 +1,5 @@
-import Context from "./contracts/Context";
-import { Document } from "./contracts/Document";
+import Context from "./core/Context";
+import { Document } from "./core/Document";
 
 export default interface SemantizerFactory {
     loadDocument(semanticId: string): Document;

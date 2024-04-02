@@ -1,8 +1,8 @@
-import Context from "../contracts/Context.js";
-import Document from "../contracts/Document.js";
-import Resource from "../contracts/Resource.js";
-import Statement from "../contracts/Statement.js";
-import Thing from "../contracts/Thing.js";
+import Context from "../core/Context.js";
+import Document from "../core/Document.js";
+import Resource from "../core/Resource.js";
+import Statement from "../core/Statement.js";
+import Thing from "../core/Thing.js";
 import StatementDefaultImpl from "./StatementDefaultImpl.js";
 
 export enum ThingType {

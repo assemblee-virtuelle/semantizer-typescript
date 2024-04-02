@@ -1,5 +1,5 @@
-import Resource from "../contracts/Resource.js";
-import Thing from "../contracts/Thing.js";
+import Resource from "../core/Resource.js";
+import Thing from "../core/Thing.js";
 import rdf from 'rdf-ext'
 import ThingStateRdfjsRegular from "./ThingStateRdfjsRegular.js";
 import BlankNodeExt from "rdf-ext/lib/BlankNode";

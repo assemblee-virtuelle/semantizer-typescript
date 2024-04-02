@@ -1,8 +1,8 @@
-import Context from "../contracts/Context.js";
-import { Document, DocumentWithReadOperations, DocumentWithReadAndWriteOperations } from "../contracts/Document.js";
-import Resource from "../contracts/Resource.js";
-import Thing from "../contracts/Thing.js";
-import ThingFactory from '../contracts/ThingFactory.js';
+import Context from "../core/Context.js";
+import { Document, DocumentWithReadOperations, DocumentWithReadAndWriteOperations } from "../core/Document.js";
+import Resource from "../core/Resource.js";
+import Thing from "../core/Thing.js";
+import ThingFactory from '../core/ThingFactory.js';
 import ThingFactoryDefaultImpl from "./ThingFactoryDefaultImpl.js";
 
 //type DocumentWithReadOperations<ContainedThing extends Thing, SelfDescribingThing  extends Thing> = Document<ContainedThing, SelfDescribingThing> & WithReadOperations<ContainedThing, SelfDescribingThing>;

@@ -1,9 +1,9 @@
-import { ThingDefaultImpl as ThingDefaultImplCore, ThingType } from "../default/ThingDefaultImpl";
-import Document from "../contracts/Document";
+import { ThingDefaultImpl as ThingDefaultImplCore, ThingType } from "../core-default/ThingDefaultImpl";
+import Document from "../core/Document";
 import ThingStateRdfjsRegular from "./ThingStateRdfjsRegular";
 import ThingStateRdfjsAnonymous from "./ThingStateRdfjsAnonymous";
 import ThingState from "./ThingState";
-import Thing from "../contracts/Thing";
+import Thing from "../core/Thing";
 import { RdfjsDatasetSerializable } from "./RdfjsDatasetSerializable";
 import DatasetCore from "@rdfjs/dataset/DatasetCore";
 

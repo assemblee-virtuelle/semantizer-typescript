@@ -1,9 +1,9 @@
 import rdf from 'rdf-ext';
 import DatasetExt from "rdf-ext/lib/Dataset";
 import { Context } from "../index";
-import Document from "../contracts/Document";
-import Resource from "../contracts/Resource";
-import Thing from "../contracts/Thing";
+import Document from "../core/Document";
+import Resource from "../core/Resource";
+import Thing from "../core/Thing";
 import DatasetCore from "@rdfjs/dataset/DatasetCore";
 import RdfjsDatasetSerializable from './RdfjsDatasetSerializable';
 

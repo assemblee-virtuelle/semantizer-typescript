@@ -1,6 +1,6 @@
-import Resource from "../contracts/Resource";
-import Thing from "../contracts/Thing";
-import ThingDefaultImpl, { ThingType } from "../default/ThingDefaultImpl";
+import Resource from "../core/Resource";
+import Thing from "../core/Thing";
+import ThingDefaultImpl, { ThingType } from "../core-default/ThingDefaultImpl";
 import TypeIndex from "./TypeIndex";
 import TypeIndexRegistration from "./TypeIndexRegistration";
 

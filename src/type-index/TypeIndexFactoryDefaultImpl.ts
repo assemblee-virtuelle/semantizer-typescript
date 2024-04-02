@@ -1,4 +1,4 @@
-import { DocumentWithReadAndWriteOperations } from "../contracts/Document";
+import { DocumentWithReadAndWriteOperations } from "../core/Document";
 import { TypeIndexWithReadAndWriteOperations, TypeIndexWithReadOperations } from "./TypeIndex";
 import TypeIndexDefault from "./TypeIndexDefault";
 

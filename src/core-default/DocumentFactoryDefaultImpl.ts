@@ -1,7 +1,7 @@
-import Context from "../contracts/Context";
-import { WritableDocument } from "../contracts/Document";
-import Thing from "../contracts/Thing";
-import ThingFactory from "../contracts/ThingFactory";
+import Context from "../core/Context";
+import { WritableDocument } from "../core/Document";
+import Thing from "../core/Thing";
+import ThingFactory from "../core/ThingFactory";
 import DocumentDefaultImpl from "./DocumentDefaultImpl";
 import ThingFactoryDefaultImpl from "./ThingFactoryDefaultImpl";
 

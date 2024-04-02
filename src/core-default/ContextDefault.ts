@@ -1,4 +1,4 @@
-import Context from "../contracts/Context";
+import Context from "../core/Context";
 
 interface Prefix {
     prefix: string;

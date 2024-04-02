@@ -1,5 +1,5 @@
-import Resource from "../contracts/Resource";
-import Thing from "../contracts/Thing";
+import Resource from "../core/Resource";
+import Thing from "../core/Thing";
 
 export interface TypeIndexRegistration extends Thing {
     addForClass(forClass: string | Resource): TypeIndexRegistration;
