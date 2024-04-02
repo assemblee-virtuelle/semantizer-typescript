@@ -2,9 +2,9 @@ import Context from "./Context";
 import Document from "./Document";
 import Thing from "./Thing";
 
-export interface DocumentFactory<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> {
-    createDocument(uri?: string, context?: Context): Document<ContainedThing, SelfDescribingThing>;
-    loadDocument(uriOrData: string): Document<ContainedThing, SelfDescribingThing>;
+export interface DocumentFactory<CreatedDocument, LoadedDocument> {
+    createDocument(uri?: string, context?: Context): CreatedDocument; // Type concret
+    loadDocument(uriOrData: string): LoadedDocument;
 }
 
 export default DocumentFactory;

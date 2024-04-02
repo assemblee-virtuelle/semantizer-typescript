@@ -1,9 +1,16 @@
-import Thing from "../contracts/Thing";
-import EditableDocument from "./EditableDocument";
-import Document from "../contracts/Document";
+export interface SynchronizedDocument {
+    isLocal(): boolean;
+    isDistant(): boolean;
+    getDistantUri(): string | undefined;
+    getDistantUriAll(): string[];
+}
 
-export interface SynchronizedDocument<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> extends Document<ContainedThing, SelfDescribingThing> {
-    toLocalCopy(): EditableDocument<ContainedThing, SelfDescribingThing>;
+export interface LocalDocument extends SynchronizedDocument {
+    save(): void;
+}
+
+export interface DistantDocument<T> extends SynchronizedDocument {
+    toLocalCopy(): LocalDocument & T;
 }
 
 export default SynchronizedDocument;

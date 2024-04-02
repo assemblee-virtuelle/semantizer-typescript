@@ -97,3 +97,5 @@ export class TypeIndexRegistrationDefaultImpl extends ThingDefaultImpl implement
     }
 
 }
+
+export default TypeIndexRegistrationDefaultImpl;

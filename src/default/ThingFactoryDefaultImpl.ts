@@ -3,17 +3,17 @@ import Thing from "../contracts/Thing";
 import { ThingDefaultImpl, ThingType } from "./ThingDefaultImpl";
 import ThingFactory from "../contracts/ThingFactory";
 
-export class ThingFactoryDefaultImpl implements ThingFactory<Thing, Thing> {
+export class ThingFactoryDefaultImpl<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> implements ThingFactory<ContainedThing, SelfDescribingThing> {
 
-    public createThingToDescribeDocument(document: Document<Thing, Thing>): Thing {
+    public createThingToDescribeDocument(document: Document<ContainedThing, SelfDescribingThing>): SelfDescribingThing {
         return new ThingDefaultImpl(document, ThingType.ForDescribing);
     }
 
-    public createThing(document: Document<Thing, Thing>, uri: string): Thing {
+    public createThing(document: Document<ContainedThing, SelfDescribingThing>, uri: string): ContainedThing {
         return new ThingDefaultImpl(document, ThingType.Regular, uri);
     }
 
-    public createThingWithoutUri(document: Document<Thing, Thing>, nameHint?: string | undefined): Thing {
+    public createThingWithoutUri(document: Document<ContainedThing, SelfDescribingThing>, nameHint?: string | undefined): ContainedThing {
         return new ThingDefaultImpl(document, ThingType.Anonymous, nameHint);
     }
     
