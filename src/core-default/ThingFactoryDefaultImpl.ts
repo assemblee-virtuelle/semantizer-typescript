@@ -6,15 +6,15 @@ import ThingFactory from "../core/ThingFactory";
 export class ThingFactoryDefaultImpl<ContainedThing extends ThingBase = ThingBase, SelfDescribingThing extends ThingBase = ThingBase> implements ThingFactory<ContainedThing, SelfDescribingThing> {
 
     public createThingToDescribeDocument(document: DocumentBase<ContainedThing, SelfDescribingThing>): SelfDescribingThing {
-        return new ThingDefaultImpl(document, ThingType.ForDescribing);
+        return new ThingDefaultImpl<ContainedThing, SelfDescribingThing>(document, ThingType.ForDescribing);
     }
 
     public createThing(document: DocumentBase<ContainedThing, SelfDescribingThing>, uri: string): ContainedThing {
-        return new ThingDefaultImpl(document, ThingType.Regular, uri);
+        return new ThingDefaultImpl<ContainedThing, SelfDescribingThing>(document, ThingType.Regular, uri);
     }
 
     public createThingWithoutUri(document: DocumentBase<ContainedThing, SelfDescribingThing>, nameHint?: string | undefined): ContainedThing {
-        return new ThingDefaultImpl(document, ThingType.Anonymous, nameHint);
+        return new ThingDefaultImpl<ContainedThing, SelfDescribingThing>(document, ThingType.Anonymous, nameHint);
     }
     
 }
