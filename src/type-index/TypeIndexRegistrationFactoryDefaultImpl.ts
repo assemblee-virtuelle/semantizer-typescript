@@ -1,12 +1,12 @@
 import ThingDefaultImpl, { ThingType } from "../core-default/ThingDefaultImpl";
 import Thing from "../core/Thing";
 import ThingFactory from "../core/ThingFactory";
-import ThingHelpersMixin from "../thing-helpers/ThingHelpersMixin";
+import ThingWithHelpersMixin from "../thing-helpers/ThingWithHelpersMixin";
 import TypeIndexBase from "./TypeIndex";
 import TypeIndexRegistration from "./TypeIndexRegistration";
 import { TypeIndexRegistrationDefaultImpl } from "./TypeIndexRegistrationDefaultImpl";
 
-const ThingWithHelpers = ThingHelpersMixin(ThingDefaultImpl);
+const ThingWithHelpers = ThingWithHelpersMixin(ThingDefaultImpl);
 
 export class TypeIndexRegistrationFactoryDefaultImpl implements ThingFactory<TypeIndexRegistration, Thing> {
 

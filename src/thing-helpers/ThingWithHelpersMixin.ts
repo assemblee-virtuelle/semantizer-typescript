@@ -4,47 +4,47 @@ import ThingWithHelpers from "./ThingWithHelpers";
 
 type Constructor<T = {}> = new (...args: any[]) => T;
 
-export function ThingHelpersMixin<TBase extends Constructor<Thing>>(Base: TBase) {
-    return class ThingHelpers extends Base implements ThingWithHelpers {
+export function ThingWithHelpersMixin<TBase extends Constructor<Thing>>(Base: TBase) {
+    return class ThingWithHelpers extends Base implements ThingWithHelpers {
 
         ////////////// Adder //////////////
-    public addStatement(about: string, value: string | Resource, datatype?: string, language?: string): ThingHelpers {
+    public addStatement(about: string, value: string | Resource, datatype?: string, language?: string): ThingWithHelpers {
         return this.addStatement(about, value, datatype, language);
     }
 
-    public addStatementFrom(source: Thing): ThingHelpers {
+    public addStatementFrom(source: Thing): ThingWithHelpers {
         throw new Error("Method not implemented.");
     }
 
-    public addRdfTypeStatement(value: string): ThingHelpers {
+    public addRdfTypeStatement(value: string): ThingWithHelpers {
         return this.addStatement("http://www.w3.org/1999/02/22-rdf-syntax-ns#type", value);
     }
 
-    public addBooleanStatement(about: string, value: boolean): ThingHelpers {
+    public addBooleanStatement(about: string, value: boolean): ThingWithHelpers {
         return this.addStatement(about, value.toString(), "xsd:boolean");
     }
 
-    public addStringStatement(about: string, value: string, locale?: string): ThingHelpers {
+    public addStringStatement(about: string, value: string, locale?: string): ThingWithHelpers {
         return this.addStatement(about, value, "xsd:string", locale);
     }
 
-    public addDecimalStatement(about: string, value: number): ThingHelpers {
+    public addDecimalStatement(about: string, value: number): ThingWithHelpers {
         return this.addStatement(about, value.toString(), "xsd:decimal");
     }
 
-    public addIntegerStatement(about: string, value: number): ThingHelpers {
+    public addIntegerStatement(about: string, value: number): ThingWithHelpers {
         return this.addStatement(about, value.toString(), "xsd:integer");
     }
 
-    public addDateStatement(about: string, value: Date): ThingHelpers {
+    public addDateStatement(about: string, value: Date): ThingWithHelpers {
         return this.addStatement(about, value.toString(), "xsd:date");
     }
 
-    public addDatetimeStatement(about: string, value: Date): ThingHelpers {
+    public addDatetimeStatement(about: string, value: Date): ThingWithHelpers {
         return this.addStatement(about, value.toString(), "xsd:datetime");
     }
 
-    public addTimeStatement(about: string, value: Date): ThingHelpers {
+    public addTimeStatement(about: string, value: Date): ThingWithHelpers {
         return this.addStatement(about, value.toString(), "xsd:time");
     }
 
@@ -116,80 +116,80 @@ export function ThingHelpersMixin<TBase extends Constructor<Thing>>(Base: TBase)
     }
 
     ////////////// Setters //////////////
-    public setStatement(about: string, value: string): ThingHelpers {
+    public setStatement(about: string, value: string): ThingWithHelpers {
         throw new Error("Method not implemented.");
     }
 
-    public setRdfTypeStatement(value: string): ThingHelpers {
+    public setRdfTypeStatement(value: string): ThingWithHelpers {
         throw new Error("Method not implemented.");
     }
 
-    public setBooleanStatement(about: string, value: boolean): ThingHelpers {
+    public setBooleanStatement(about: string, value: boolean): ThingWithHelpers {
         throw new Error("Method not implemented.");
     }
 
-    public setStringStatement(about: string, value: string, locale?: string): ThingHelpers {
+    public setStringStatement(about: string, value: string, locale?: string): ThingWithHelpers {
         throw new Error("Method not implemented.");
     }
 
-    public setDecimalStatement(about: string, value: number): ThingHelpers {
+    public setDecimalStatement(about: string, value: number): ThingWithHelpers {
         throw new Error("Method not implemented.");
     }
 
-    public setIntegerStatement(about: string, value: number): ThingHelpers {
+    public setIntegerStatement(about: string, value: number): ThingWithHelpers {
         throw new Error("Method not implemented.");
     }
 
-    public setDateStatement(about: string, value: Date): ThingHelpers {
+    public setDateStatement(about: string, value: Date): ThingWithHelpers {
         throw new Error("Method not implemented.");
     }
 
-    public setDatetimeStatement(about: string, value: Date): ThingHelpers {
+    public setDatetimeStatement(about: string, value: Date): ThingWithHelpers {
         throw new Error("Method not implemented.");
     }
 
-    public setTimeStatement(about: string, value: Date): ThingHelpers {
+    public setTimeStatement(about: string, value: Date): ThingWithHelpers {
         throw new Error("Method not implemented.");
     }
 
     ////////////// Removers //////////////
-    public removeStatement(about: string, value: string | Resource, datatype?: string, language?: string): ThingHelpers {
+    public removeStatement(about: string, value: string | Resource, datatype?: string, language?: string): ThingWithHelpers {
         throw new Error("Method not implemented.");
     }
 
-    public removeRdfTypeStatement(value: string): ThingHelpers {
+    public removeRdfTypeStatement(value: string): ThingWithHelpers {
         throw new Error("Method not implemented.");
     }
 
-    public removeBooleanStatement(about: string, value: boolean): ThingHelpers {
+    public removeBooleanStatement(about: string, value: boolean): ThingWithHelpers {
         throw new Error("Method not implemented.");
     }
 
-    public removeStringStatement(about: string, value: string, locale?: string): ThingHelpers {
+    public removeStringStatement(about: string, value: string, locale?: string): ThingWithHelpers {
         throw new Error("Method not implemented.");
     }
 
-    public removeDecimalStatement(about: string, value: number): ThingHelpers {
+    public removeDecimalStatement(about: string, value: number): ThingWithHelpers {
         throw new Error("Method not implemented.");
     }
 
-    public removeIntegerStatement(about: string, value: number): ThingHelpers {
+    public removeIntegerStatement(about: string, value: number): ThingWithHelpers {
         throw new Error("Method not implemented.");
     }
 
-    public removeDateStatement(about: string, value: Date): ThingHelpers {
+    public removeDateStatement(about: string, value: Date): ThingWithHelpers {
         throw new Error("Method not implemented.");
     }
 
-    public removeDatetimeStatement(about: string, value: Date): ThingHelpers {
+    public removeDatetimeStatement(about: string, value: Date): ThingWithHelpers {
         throw new Error("Method not implemented.");
     }
 
-    public removeTimeStatement(about: string, value: Date): ThingHelpers {
+    public removeTimeStatement(about: string, value: Date): ThingWithHelpers {
         throw new Error("Method not implemented.");
     }
 
     }
 }
 
-export default ThingHelpersMixin;
+export default ThingWithHelpersMixin;
