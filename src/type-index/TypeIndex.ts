@@ -13,7 +13,5 @@ export interface WithWriteOperations {
 }
 
 export type ReadonlyTypeIndex = TypeIndexBase & ReadonlyDocument<TypeIndexRegistration, ThingBase> & WithReadOperations;
-
 export type TypeIndex = TypeIndexBase & Document<TypeIndexRegistration, ThingBase> & WithReadOperations & WithWriteOperations;
-
 export default TypeIndex;

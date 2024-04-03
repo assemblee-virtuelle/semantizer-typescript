@@ -1,5 +1,5 @@
 import Context from "../core/Context";
-import { WritableDocument } from "../core/Document";
+import Document from "../core/Document";
 import ThingBase from "../core/Thing";
 import ThingFactory from "../core/ThingFactory";
 import DocumentDefaultImpl from "./DocumentDefaultImpl";
@@ -17,11 +17,11 @@ export class DocumentFactoryDefaultImpl<ContainedThing extends ThingBase = Thing
         return this._thingFactory;
     }
 
-    public createDocument(uri?: string | undefined, context?: Context | undefined): WritableDocument<ContainedThing, SelfDescribingThing> {
+    public createDocument(uri?: string | undefined, context?: Context | undefined): Document<ContainedThing, SelfDescribingThing> {
         return new DocumentDefaultImpl<ContainedThing, SelfDescribingThing>(uri, context, this.getThingFactory());
     }
 
-    public loadDocument(uriOrData: string): WritableDocument<ContainedThing, SelfDescribingThing> {
+    public loadDocument(uriOrData: string): Document<ContainedThing, SelfDescribingThing> {
         throw new Error("Method not implemented.");
     }
 

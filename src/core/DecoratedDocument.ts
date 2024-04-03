@@ -39,7 +39,7 @@ export class DecoratedDocument<ContainedThing extends ThingBase = ThingBase, Sel
         return this._document.toCanonical();
     }
 
-    public toGenericDocument(): DocumentBase<ThingBase, ThingBase> {
+    public toGenericDocument(): DocumentBase<ContainedThing, SelfDescribingThing> {
         return this._document.toGenericDocument();
     }
 

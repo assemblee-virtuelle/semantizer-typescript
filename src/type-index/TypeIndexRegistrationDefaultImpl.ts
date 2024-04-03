@@ -24,17 +24,17 @@ export class TypeIndexRegistrationDefaultImpl extends ThingDefaultImpl implement
     }
 
     public addForClass(forClass: string | Resource): TypeIndexRegistration {
-        this.addStatement("solid:forClass", this.getUriFromStringOrResource(forClass));
+        this.add("solid:forClass", this.getUriFromStringOrResource(forClass));
         return this;
     }
 
     public addInstance(instance: string | Resource): TypeIndexRegistration {
-        this.addStatement("solid:instance", this.getUriFromStringOrResource(instance));
+        this.add("solid:instance", this.getUriFromStringOrResource(instance));
         return this;
     }
 
     public addInstanceContainer(instanceContainer: string | Resource): TypeIndexRegistration {
-        this.addStatement("solid:instanceContainer", this.getUriFromStringOrResource(instanceContainer));
+        this.add("solid:instanceContainer", this.getUriFromStringOrResource(instanceContainer));
         return this;
     }
 
@@ -43,7 +43,7 @@ export class TypeIndexRegistrationDefaultImpl extends ThingDefaultImpl implement
     }
 
     public getForClassAll(): string[] {
-        return this.getAllValuesAboutStatement("solid:forClass");
+        return this.getAll("solid:forClass");
     }
 
     public getInstance(): string | null {
@@ -51,7 +51,7 @@ export class TypeIndexRegistrationDefaultImpl extends ThingDefaultImpl implement
     }
 
     public getInstanceAll(): string[] {
-        return this.getAllValuesAboutStatement("solid:instance");
+        return this.getAll("solid:instance");
     }
 
     public getInstanceContainer(): string | null {
@@ -59,7 +59,7 @@ export class TypeIndexRegistrationDefaultImpl extends ThingDefaultImpl implement
     }
 
     public getInstanceContainerAll(): string[] {
-        return this.getAllValuesAboutStatement("solid:instanceContainer");
+        return this.getAll("solid:instanceContainer");
     }
 
     public setForClass(forClass: string): TypeIndexRegistration {
@@ -67,32 +67,32 @@ export class TypeIndexRegistrationDefaultImpl extends ThingDefaultImpl implement
     }
  
     public removeForClass(forClass: string): TypeIndexRegistration {
-        this.removeStatement("solid:forClass", forClass);
+        this.remove("solid:forClass", forClass);
         return this;
     }
 
     public removeInstance(instance: string): TypeIndexRegistration {
-        this.removeStatement("solid:forClass", instance);
+        this.remove("solid:forClass", instance);
         return this;
     }
 
     public removeInstanceContainer(instanceContainer: string): TypeIndexRegistration {
-        this.removeStatement("solid:forClass", instanceContainer);
+        this.remove("solid:forClass", instanceContainer);
         return this;
     }
 
     public removeForClassAll(): TypeIndexRegistration {
-        this.removeAllStatements("solid:forClass");
+        this.removeAll("solid:forClass");
         return this;
     }
 
     public removeInstanceAll(): TypeIndexRegistration {
-        this.removeAllStatements("solid:instance");
+        this.removeAll("solid:instance");
         return this;
     }
 
     public removeInstanceContainerAll(): TypeIndexRegistration {
-        this.removeAllStatements("solid:instanceContainer");
+        this.removeAll("solid:instanceContainer");
         return this;
     }
 

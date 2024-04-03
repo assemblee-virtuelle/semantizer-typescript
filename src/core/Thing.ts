@@ -4,16 +4,18 @@ import Resource from "./Resource";
 import Statement from "./Statement";
 
 export interface ThingBase extends Resource, Iterable<Statement> {
-    getDocument(): DocumentBase;
+    getDocument(): DocumentBase<any, any>;
     getContext(): Context | undefined;
     hasUri(): boolean;
-    expand(uri: string): string; // TODO: remove
-    shorten(uri: string): string; // TODO: remove
+    //expand(uri: string): string; // TODO: remove
+    //shorten(uri: string): string; // TODO: remove
     count(): number;
     isEmpty(): boolean;
     equals(other: ThingBase): boolean;
     // addStatement(statement: Datatype): Thing;
     get(property: string): string;
+    getAll(property: string): string[];
+    [Symbol.iterator](): Iterator<Statement>;
 }
 
 export interface WithReadOperations {
@@ -23,9 +25,10 @@ export interface WithReadOperations {
 }
 
 export interface WithWriteOperations {
-    add(about: string, value: string | Resource, datatype?: string, language?: string): ThingBase;
-    remove(about: string, value: string | Resource, datatype?: string, language?: string): ThingBase;
-    set(about: string, value: string, oldValue?: string, datatype?: string, language?: string): ThingBase;
+    add(about: string, value: string | Resource, datatype?: string, language?: string): Thing;
+    remove(about: string, value: string | Resource, datatype?: string, language?: string): Thing;
+    removeAll(about: string): Thing;
+    set(about: string, value: string, oldValue?: string, datatype?: string, language?: string): Thing;
 }
 
 export type ReadonlyThing = ThingBase & WithReadOperations;

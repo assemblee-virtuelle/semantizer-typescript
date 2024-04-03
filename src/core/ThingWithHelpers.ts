@@ -37,7 +37,6 @@ export interface ThingWithHelpers {
     setDatetimeStatement(about: string, value: Date): ThingBase;
     setTimeStatement(about: string, value: Date): ThingBase;
 
-    removeAllStatements(about: string): ThingBase;
     removeRdfTypeStatement(value: string): ThingBase;
     removeBooleanStatement(about: string, value: boolean): ThingBase;
     removeStringStatement(about: string, value: string, locale?: string): ThingBase;

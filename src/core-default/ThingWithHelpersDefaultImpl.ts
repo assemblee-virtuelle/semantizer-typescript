@@ -46,10 +46,6 @@ export class ThingWithHelpers extends ThingDefaultImpl implements ThingWithHelpe
     }
 
     ////////////// Getters //////////////
-    public getAllValuesAboutStatement(property: string): string[] {
-        return this.getState().getAllValuesAboutStatement(property);
-    }
-
     public getRdfTypeValue(): string | null {
         const values = this.getAllRdfTypeValues();
         return values.length >= 1? values[0]: null;
@@ -155,10 +151,6 @@ export class ThingWithHelpers extends ThingDefaultImpl implements ThingWithHelpe
 
     ////////////// Removers //////////////
     public removeStatement(about: string, value: string | Resource, datatype?: string, language?: string): ThingBase {
-        throw new Error("Method not implemented.");
-    }
-
-    public removeAllStatements(about: string): ThingBase {
         throw new Error("Method not implemented.");
     }
 
