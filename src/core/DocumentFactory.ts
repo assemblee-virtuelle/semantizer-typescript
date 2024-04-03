@@ -1,5 +1,5 @@
 import Context from "./Context";
-import Document from "./Document";
+import DocumentBase from "./Document";
 import Thing from "./Thing";
 
 export interface DocumentFactory<CreatedDocument, LoadedDocument> {

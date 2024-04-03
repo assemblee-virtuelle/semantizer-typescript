@@ -1,5 +1,5 @@
 import Context from "./core/Context.js";
-import { Document } from "./core/Document.js";
+import { DocumentBase } from "./core/Document.js";
 import DocumentFactory from "./core/DocumentFactory.js";
 import DocumentFactoryDefaultImpl from "./core-default/DocumentFactoryDefaultImpl.js";
 import Semantizer from "./Semantizer.js";
@@ -19,11 +19,11 @@ export default class SemantizerFactoryDefault implements SemantizerFactory {
         return this._documentFactory;
     }
 
-    public loadDocument(uri: string): Document {
+    public loadDocument(uri: string): DocumentBase {
         return this.getDocumentFactory().loadDocument(uri);
     }
 
-    public createDocument(uri?: string, context?: Context): Document {
+    public createDocument(uri?: string, context?: Context): DocumentBase {
         return this.getDocumentFactory().createDocument(uri, context);
     }
 

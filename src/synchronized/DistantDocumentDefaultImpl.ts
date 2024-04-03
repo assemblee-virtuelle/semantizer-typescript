@@ -1,16 +1,12 @@
-import { DocumentWithReadOperations } from "../core/Document.js";
+import DecoratedDocument from "../core/DecoratedDocument.js";
+import { ReadonlyDocument } from "../core/Document.js";
 import Thing from "../core/Thing.js";
-import DecoratedDocumentWithReadOperationsDefaultImpl from "../decorator/DecoratedDocumentWithReadOperationsDefaultImpl.js";
 import { DistantDocument, LocalDocument } from "./SynchronizedDocument.js";
 
 // states: Local | Distant
 // states: Created | Modified | Loaded
-export class DistantDocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> extends DecoratedDocumentWithReadOperationsDefaultImpl<ContainedThing, SelfDescribingThing> implements DocumentWithReadOperations<ContainedThing, SelfDescribingThing>, DistantDocument<DecoratedDocumentWithReadOperationsDefaultImpl<ContainedThing, SelfDescribingThing>> {
-    
-    public execute(): void {
-        throw new Error("Not implemented.");
-    }
-    
+export class DistantDocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> extends DecoratedDocument<ContainedThing, SelfDescribingThing> implements ReadonlyDocument<ContainedThing, SelfDescribingThing>, DistantDocument<DecoratedDocument<ContainedThing, SelfDescribingThing>> {
+      
     public isLocal(): boolean {
         return true;
     }
@@ -19,7 +15,7 @@ export class DistantDocumentDefaultImpl<ContainedThing extends Thing = Thing, Se
         return false;
     }
 
-    public toLocalCopy(): LocalDocument & DecoratedDocumentWithReadOperationsDefaultImpl<ContainedThing, SelfDescribingThing>{
+    public toLocalCopy(): LocalDocument & DecoratedDocument<ContainedThing, SelfDescribingThing>{
         throw new Error("Method not implemented.");
     }
 

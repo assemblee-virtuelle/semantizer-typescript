@@ -1,5 +1,5 @@
 import Context from "../core/Context.js";
-import Document from "../core/Document.js";
+import DocumentBase from "../core/Document.js";
 import Resource from "../core/Resource.js";
 import Statement from "../core/Statement.js";
 import Thing from "../core/Thing.js";
@@ -14,11 +14,11 @@ export enum ThingType {
 export class ThingDefaultImpl<Datatype = Statement> implements Thing<Datatype> {
 
     private _uri: string;
-    private _document: Document;
+    private _document: DocumentBase;
     private _statements: Iterable<Datatype>;
 
     // TODO: add copy constructor
-    public constructor(document: Document, stateType: ThingType, uriOrNameHint?: string) {
+    public constructor(document: DocumentBase, stateType: ThingType, uriOrNameHint?: string) {
         this._uri = uriOrNameHint ?? '';
         this._document = document;
         this._statements = [];
@@ -26,7 +26,7 @@ export class ThingDefaultImpl<Datatype = Statement> implements Thing<Datatype> {
         // TODO use factory
     }
 
-    public getDocument(): Document {
+    public getDocument(): DocumentBase {
         return this._document;
     }
 

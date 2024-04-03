@@ -1,17 +1,18 @@
-import Document, { DocumentWithReadOperations, DocumentWithReadAndWriteOperations } from "../core/Document";
+import DocumentBase, { ReadonlyDocument, Document } from "../core/Document";
 import Resource from "../core/Resource";
 import Thing from "../core/Thing";
 import DocumentDefaultImpl from "../core-default/DocumentDefaultImpl";
 import { Context } from "../index";
 import { DistantDocument, LocalDocument } from "../synchronized/SynchronizedDocument";
-import { TypeIndexWithReadAndWriteOperations } from "../type-index/TypeIndex";
-import TypeIndexDefault from "../type-index/TypeIndexDefault";
+import { TypeIndex } from "../type-index/TypeIndex";
+import TypeIndexDefaultImpl from "../type-index/TypeIndexDefaultImpl";
 import TypeIndexRegistration from "../type-index/TypeIndexRegistration";
 import { DistantTypeIndex } from "./SynchronizedTypeIndex";
 
-export class SynchronizedTypeIndexDefaultImpl extends TypeIndexDefault implements TypeIndexWithReadAndWriteOperations, LocalDocument, DistantDocument<TypeIndexWithReadAndWriteOperations> {
+// TODO: use mixin to extends multiple classes and don't need this class (it could be defined with a Type = Mixin1(Class))
+export class SynchronizedTypeIndexDefaultImpl extends TypeIndexDefaultImpl implements TypeIndex, LocalDocument, DistantDocument<TypeIndex> {
     
-    toLocalCopy(): LocalDocument & TypeIndexWithReadAndWriteOperations {
+    toLocalCopy(): LocalDocument & TypeIndex {
         throw new Error("Method not implemented.");
     }
 
@@ -35,9 +36,13 @@ export class SynchronizedTypeIndexDefaultImpl extends TypeIndexDefault implement
 
 export default SynchronizedTypeIndexDefaultImpl;
 
-const synchronizedTypeIndex = new SynchronizedTypeIndexDefaultImpl(new TypeIndexDefault(new DocumentDefaultImpl()));
-//synchronizedTypeIndex
-const readWrite: TypeIndexWithReadAndWriteOperations = synchronizedTypeIndex;
+// type SynchronizedTypeIndexDefault = SynchronizedMixin(TypeIndex(Document))
+
+const synchronizedTypeIndex = new SynchronizedTypeIndexDefaultImpl(new TypeIndexDefaultImpl(new DocumentDefaultImpl()));
+synchronizedTypeIndex.deleteContext();
+const readWrite: TypeIndex = synchronizedTypeIndex;
 const local = synchronizedTypeIndex.toLocalCopy();
 const distant: DistantTypeIndex = synchronizedTypeIndex;
-//distant. 
+local.deleteContext();
+local.save();
+distant.toLocalCopy();

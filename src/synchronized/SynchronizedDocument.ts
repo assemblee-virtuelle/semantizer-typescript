@@ -3,6 +3,7 @@ export interface SynchronizedDocument {
     isDistant(): boolean;
     getDistantUri(): string | undefined;
     getDistantUriAll(): string[];
+    // getLastFechedDateTime();
 }
 
 export interface LocalDocument extends SynchronizedDocument {

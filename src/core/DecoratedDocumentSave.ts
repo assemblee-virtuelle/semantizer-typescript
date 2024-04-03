@@ -1,14 +1,13 @@
-import { Document, DocumentWithReadOperations, WithReadOperations } from "../core/Document.js";
-import Resource from "../core/Resource.js";
-import Thing from "../core/Thing.js";
+import { DocumentBase, Document, ReadonlyDocument, WithWriteOperations } from "./Document.js";
+import Resource from "./Resource.js";
+import Thing from "./Thing.js";
 import { Context } from "../index.js";
-import DocumentDecorator from "./DocumentDecorator.js";
 
-export class DecoratedDocumentWithReadOperationsDefaultImpl<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> implements DocumentDecorator<ContainedThing, SelfDescribingThing>, WithReadOperations<ContainedThing, SelfDescribingThing> {
+export class DecoratedDocument<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> implements WithWriteOperations<ContainedThing, SelfDescribingThing> {
 
-    private _document: DocumentWithReadOperations<ContainedThing, SelfDescribingThing>;
+    private _document: Document<ContainedThing, SelfDescribingThing>;
 
-    public constructor(document: DocumentWithReadOperations<ContainedThing, SelfDescribingThing>) {
+    public constructor(document: Document<ContainedThing, SelfDescribingThing>) {
         this._document = document;
     }
 
@@ -40,7 +39,7 @@ export class DecoratedDocumentWithReadOperationsDefaultImpl<ContainedThing exten
         return this._document.toCanonical();
     }
 
-    public toGenericDocument(): Document<Thing, Thing> {
+    public toGenericDocument(): DocumentBase<Thing, Thing> {
         return this._document.toGenericDocument();
     }
 
@@ -60,19 +59,19 @@ export class DecoratedDocumentWithReadOperationsDefaultImpl<ContainedThing exten
         return this._document.at(index);
     }
 
-    public contains(other: DocumentWithReadOperations<ContainedThing, SelfDescribingThing>): boolean {
+    public contains(other: ReadonlyDocument<ContainedThing, SelfDescribingThing>): boolean {
         return this._document.contains(other);
     }
 
-    public count(callbackfn?: ((thing: ContainedThing, document?: (DocumentWithReadOperations<ContainedThing, SelfDescribingThing>) | undefined) => boolean) | undefined): number {
+    public count(callbackfn?: ((thing: ContainedThing, document?: (ReadonlyDocument<ContainedThing, SelfDescribingThing>) | undefined) => boolean) | undefined): number {
         return this._document.count(callbackfn);
     }
 
-    public difference(other: DocumentWithReadOperations<ContainedThing, SelfDescribingThing>): DocumentWithReadOperations<ContainedThing, SelfDescribingThing> {
+    public difference(other: ReadonlyDocument<ContainedThing, SelfDescribingThing>): ReadonlyDocument<ContainedThing, SelfDescribingThing> {
         return this._document.difference(other);
     }
 
-    public equals(other: DocumentWithReadOperations<ContainedThing, SelfDescribingThing>): boolean {
+    public equals(other: ReadonlyDocument<ContainedThing, SelfDescribingThing>): boolean {
         return this._document.equals(other);
     }
 
@@ -116,18 +115,74 @@ export class DecoratedDocumentWithReadOperationsDefaultImpl<ContainedThing exten
         return this._document.reduce(callbackfn);
     }
 
-    public slice(start?: number | undefined, end?: number | undefined): DocumentWithReadOperations<ContainedThing, SelfDescribingThing> {
+    public slice(start?: number | undefined, end?: number | undefined): ReadonlyDocument<ContainedThing, SelfDescribingThing> {
         return this._document.slice(start, end);
     }
 
     public some(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => unknown, thisArg?: any): boolean {
         return this._document.some(predicate);
     }
-    
-    public execute(): void {
 
+    public add(thing: ContainedThing): Document<ContainedThing, SelfDescribingThing> {
+        return this._document.add(thing);
+    }
+
+    public addAll(documentOrThings: ContainedThing[] | (ReadonlyDocument<ContainedThing, SelfDescribingThing>)): Document<ContainedThing, SelfDescribingThing> {
+        return this._document.addAll(documentOrThings);
+    }
+
+    public createThingToSelfDescribe(): SelfDescribingThing {
+        return this._document.createThingToSelfDescribe();
+    }
+
+    public createThingWithUri(nameHintOrUri?: string | undefined): ContainedThing {
+        return this._document.createThingWithUri(nameHintOrUri);
+    }
+
+    public createThingWithoutUri(nameHint?: string | undefined): ContainedThing {
+        return this._document.createThingWithoutUri(nameHint);
+    }
+
+    public delete(thingOrUri: string | ContainedThing): Document<ContainedThing, SelfDescribingThing> {
+        return this._document.delete(thingOrUri);
+    }
+
+    public deleteContext(): void {
+        return this._document.deleteContext()
+    }
+
+    public deleteMatches(uri?: string | Resource | undefined, property?: string | undefined, value?: string | undefined): Document<ContainedThing, SelfDescribingThing> {
+        return this._document.deleteMatches(uri, property, value);
+    }
+
+    public pop(): ContainedThing | undefined {
+        return this._document.pop();
+    }
+
+    public reverse(): void {
+        return this._document.reverse();
+    }
+
+    public setContext(context: Context): void {
+        return this._document.setContext(context);
+    }
+
+    public shift(): ContainedThing | undefined {
+        return this._document.shift();
+    }
+
+    public sort(compareFn?: ((a: ContainedThing, b: ContainedThing) => number) | undefined): Document<ContainedThing, SelfDescribingThing> {
+        return this._document.sort(compareFn);
+    }
+
+    public splice(start: number, deleteCount?: number | undefined, ...items: ContainedThing[]): Document<ContainedThing, SelfDescribingThing> {
+        return this._document.splice(start, deleteCount, ...items);
+    }
+
+    public union(other: ReadonlyDocument<ContainedThing, SelfDescribingThing>): Document<ContainedThing, SelfDescribingThing> {
+        return this._document.union(other);
     }
 
 }
 
-export default DecoratedDocumentWithReadOperationsDefaultImpl;
+export default DecoratedDocument;

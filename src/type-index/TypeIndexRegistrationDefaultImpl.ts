@@ -1,12 +1,12 @@
 import Resource from "../core/Resource";
 import Thing from "../core/Thing";
 import ThingDefaultImpl, { ThingType } from "../core-default/ThingDefaultImpl";
-import TypeIndex from "./TypeIndex";
+import TypeIndexBase from "./TypeIndex";
 import TypeIndexRegistration from "./TypeIndexRegistration";
 
 export class TypeIndexRegistrationDefaultImpl extends ThingDefaultImpl implements TypeIndexRegistration {
 
-    constructor(document: TypeIndex, uri?: string) {
+    constructor(document: TypeIndexBase, uri?: string) {
         super(document, ThingType.Regular, uri);
     }
 

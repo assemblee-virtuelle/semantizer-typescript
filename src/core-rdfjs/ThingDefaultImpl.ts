@@ -1,5 +1,5 @@
 import { ThingDefaultImpl as ThingDefaultImplCore, ThingType } from "../core-default/ThingDefaultImpl";
-import Document from "../core/Document";
+import DocumentBase from "../core/Document";
 import ThingStateRdfjsRegular from "./ThingStateRdfjsRegular";
 import ThingStateRdfjsAnonymous from "./ThingStateRdfjsAnonymous";
 import ThingState from "./ThingState";
@@ -11,7 +11,7 @@ export class ThingDefaultImpl extends ThingDefaultImplCore implements Thing, Rdf
 
     private _state: ThingState;
 
-    public constructor(document: Document, stateType: ThingType, uriOrNameHint?: string) {
+    public constructor(document: DocumentBase, stateType: ThingType, uriOrNameHint?: string) {
         super(document, stateType, uriOrNameHint);
 
         switch (stateType) {

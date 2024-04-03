@@ -5,7 +5,7 @@ interface Prefix {
     uri: string;
 }
 
-export default class ContextDefault implements Context {
+export class ContextDefault implements Context {
 
     private _prefixes: Prefix[];
 
@@ -37,3 +37,5 @@ export default class ContextDefault implements Context {
     }
 
 }
+
+export default ContextDefault;

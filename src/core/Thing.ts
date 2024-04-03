@@ -1,10 +1,10 @@
 import Context from "./Context";
-import Document from "./Document";
+import DocumentBase from "./Document";
 import Resource from "./Resource";
 import Statement from "./Statement";
 
 export interface Thing extends Resource, Iterable<Statement> {
-    getDocument(): Document;
+    getDocument(): DocumentBase;
     hasUri(): boolean;
     getContext(): Context | undefined;
     expand(uri: string): string;

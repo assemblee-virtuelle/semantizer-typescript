@@ -1,13 +1,13 @@
 import rdf from 'rdf-ext';
 import DatasetExt from "rdf-ext/lib/Dataset";
 import { Context } from "../index";
-import Document from "../core/Document";
+import DocumentBase from "../core/Document";
 import Resource from "../core/Resource";
 import Thing from "../core/Thing";
 import DatasetCore from "@rdfjs/dataset/DatasetCore";
 import RdfjsDatasetSerializable from './RdfjsDatasetSerializable';
 
-export class DocumentDefaultImpl<SelfDescribingThing extends Thing = Thing> implements Document<Thing, SelfDescribingThing>, RdfjsDatasetSerializable {
+export class DocumentDefaultImpl<SelfDescribingThing extends Thing = Thing> implements DocumentBase<Thing, SelfDescribingThing>, RdfjsDatasetSerializable {
     
     private _dataset: DatasetExt;
 
@@ -17,19 +17,19 @@ export class DocumentDefaultImpl<SelfDescribingThing extends Thing = Thing> impl
     at(index: number): Thing | undefined {
         throw new Error('Method not implemented.');
     }
-    add(thing: Thing): Document<Thing, SelfDescribingThing> {
+    add(thing: Thing): DocumentBase<Thing, SelfDescribingThing> {
         throw new Error('Method not implemented.');
     }
-    addAll(document: Document<Thing, SelfDescribingThing>): Document<Thing, SelfDescribingThing> {
+    addAll(document: DocumentBase<Thing, SelfDescribingThing>): DocumentBase<Thing, SelfDescribingThing> {
         throw new Error('Method not implemented.');
     }
-    contains(other: Document<Thing, SelfDescribingThing>): boolean {
+    contains(other: DocumentBase<Thing, SelfDescribingThing>): boolean {
         throw new Error('Method not implemented.');
     }
-    count(callbackfn?: ((thing: Thing, document: Document<Thing, SelfDescribingThing>) => boolean) | undefined): number {
+    count(callbackfn?: ((thing: Thing, document: DocumentBase<Thing, SelfDescribingThing>) => boolean) | undefined): number {
         throw new Error('Method not implemented.');
     }
-    createLocalCopy(): Document<Thing, SelfDescribingThing> {
+    createLocalCopy(): DocumentBase<Thing, SelfDescribingThing> {
         throw new Error('Method not implemented.');
     }
     createThingToSelfDescribe(): SelfDescribingThing {
@@ -41,19 +41,19 @@ export class DocumentDefaultImpl<SelfDescribingThing extends Thing = Thing> impl
     createThingWithoutUri(nameHint?: string | undefined): Thing {
         throw new Error('Method not implemented.');
     }
-    delete(thingOrUri: string | Thing): Document<Thing, SelfDescribingThing> {
+    delete(thingOrUri: string | Thing): DocumentBase<Thing, SelfDescribingThing> {
         throw new Error('Method not implemented.');
     }
     deleteContext(): void {
         throw new Error('Method not implemented.');
     }
-    deleteMatches(uri?: string | Resource | undefined, property?: string | undefined, value?: string | undefined): Document<Thing, SelfDescribingThing> {
+    deleteMatches(uri?: string | Resource | undefined, property?: string | undefined, value?: string | undefined): DocumentBase<Thing, SelfDescribingThing> {
         throw new Error('Method not implemented.');
     }
-    difference(other: Document<Thing, SelfDescribingThing>): Document<Thing, SelfDescribingThing> {
+    difference(other: DocumentBase<Thing, SelfDescribingThing>): DocumentBase<Thing, SelfDescribingThing> {
         throw new Error('Method not implemented.');
     }
-    equals(other: Document<Thing, SelfDescribingThing>): boolean {
+    equals(other: DocumentBase<Thing, SelfDescribingThing>): boolean {
         throw new Error('Method not implemented.');
     }
     every(predicate: (value: Thing, index?: number | undefined, array?: Thing[] | undefined) => boolean, thisArg?: any): boolean {
@@ -122,28 +122,28 @@ export class DocumentDefaultImpl<SelfDescribingThing extends Thing = Thing> impl
     shift(): Thing | undefined {
         throw new Error('Method not implemented.');
     }
-    slice(start?: number | undefined, end?: number | undefined): Document<Thing, SelfDescribingThing> {
+    slice(start?: number | undefined, end?: number | undefined): DocumentBase<Thing, SelfDescribingThing> {
         throw new Error('Method not implemented.');
     }
     some(predicate: (value: Thing, index: number, array: Thing[]) => unknown, thisArg?: any): boolean {
         throw new Error('Method not implemented.');
     }
-    sort(compareFn?: ((a: Thing, b: Thing) => number) | undefined): Document<Thing, SelfDescribingThing> {
+    sort(compareFn?: ((a: Thing, b: Thing) => number) | undefined): DocumentBase<Thing, SelfDescribingThing> {
         throw new Error('Method not implemented.');
     }
-    splice(start: number, deleteCount?: number | undefined, ...items: Thing[]): Document<Thing, SelfDescribingThing> {
+    splice(start: number, deleteCount?: number | undefined, ...items: Thing[]): DocumentBase<Thing, SelfDescribingThing> {
         throw new Error('Method not implemented.');
     }
     toCanonical(): string {
         throw new Error('Method not implemented.');
     }
-    toGenericDocument(): Document<Thing, Thing> {
+    toGenericDocument(): DocumentBase<Thing, Thing> {
         throw new Error('Method not implemented.');
     }
     toStream(): string {
         throw new Error('Method not implemented.');
     }
-    union(other: Document<Thing, SelfDescribingThing>): Document<Thing, SelfDescribingThing> {
+    union(other: DocumentBase<Thing, SelfDescribingThing>): DocumentBase<Thing, SelfDescribingThing> {
         throw new Error('Method not implemented.');
     }
     getUri(): string {

@@ -1,11 +1,11 @@
 import Thing from "../core/Thing";
-import DecoratedDocumentWithReadAndWriteOperationsDefaultImpl from "../decorator/DecoratedDocumentWithReadAndWriteOperationsDefaultImpl";
-import { DocumentFactoryDefaultImpl } from "../synchronized/DocumentFactory";
-import TypeIndex, { TypeIndexWithReadAndWriteOperations } from "./TypeIndex";
+import DecoratedDocument from "../core/DecoratedDocument";
+import DecoratedDocumentWithReadAndWriteOperationsDefaultImpl from "../core/DecoratedDocumentSave";
+import TypeIndexBase, { TypeIndex } from "./TypeIndex";
 import TypeIndexFactoryDefaultImpl from "./TypeIndexFactoryDefaultImpl";
 import TypeIndexRegistration from "./TypeIndexRegistration";
 
-export class TypeIndexDefault extends DecoratedDocumentWithReadAndWriteOperationsDefaultImpl<TypeIndexRegistration, Thing> implements TypeIndexWithReadAndWriteOperations {
+export class TypeIndexDefaultImpl extends DecoratedDocument<TypeIndexRegistration, Thing> implements TypeIndex {
 
     public createRegistration(forClass?: string, nameHintOrUri?: string | undefined): TypeIndexRegistration {
         const registration = this.createThingWithUri(nameHintOrUri);
@@ -20,9 +20,24 @@ export class TypeIndexDefault extends DecoratedDocumentWithReadAndWriteOperation
 
 }
 
-export default TypeIndexDefault;
+/*
+type Constructor<T = {}> = new (...args: any[]) => T;
+//type C<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> = new (document: DocumentWithReadOperations<ContainedThing, SelfDescribingThing>) => any;
+type GDocument<ContainedThing extends Thing, SelfDescribingThing extends Thing> = Constructor<{ getWrappedDocument: () => Document<ContainedThing, SelfDescribingThing> }>
 
-const factory = new DocumentFactoryDefaultImpl<TypeIndex>();
+export function SynchronizedDocumentMixin<TBase extends GDocument<ContainedThing, SelfDescribingThing>, ContainedThing extends Thing, SelfDescribingThing extends Thing>(Base: TBase) {
+    return class Scaling extends Base {
+        public get(uri: string | Resource): ContainedThing | undefined {
+            // PB: this.getWrappedDocument().contains... ERROR NOT DEFINED
+            return this.getWrappedDocument().get(uri);
+        }
+    }
+}
+*/
+
+export default TypeIndexDefaultImpl;
+
+//const factory = new DocumentFactoryDefaultImpl<TypeIndexBase>();
 //const doc = factory.createLocalObj(TypeIndexDefault);
 
 const typeIndexFactory = new TypeIndexFactoryDefaultImpl();
