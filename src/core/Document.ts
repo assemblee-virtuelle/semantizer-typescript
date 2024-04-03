@@ -1,8 +1,8 @@
 import Resource from "./Resource";
 import Context from "./Context";
-import Thing from "./Thing";
+import ThingBase from "./Thing";
 
-export interface DocumentBase<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> extends Resource, Iterable<ContainedThing> {
+export interface DocumentBase<ContainedThing extends ThingBase = ThingBase, SelfDescribingThing extends ThingBase = ThingBase> extends Resource, Iterable<ContainedThing> {
     get(uri: string | Resource): ContainedThing | undefined;
     getContext(): Context | undefined;
     getThingThatSelfDescribes(): SelfDescribingThing | undefined;
@@ -10,13 +10,13 @@ export interface DocumentBase<ContainedThing extends Thing = Thing, SelfDescribi
     hasThingThatSelfDescribes(): boolean;
     isEmpty(): boolean;
     toCanonical(): string; // DOMString? See https://github.com/digitalbazaar/rdf-canonize
-    toGenericDocument(): DocumentBase<Thing, Thing>; // PB returned type?
+    toGenericDocument(): DocumentBase<ThingBase, ThingBase>; // PB returned type?
     toStream(): string; // Stream
     [Symbol.iterator](): Iterator<ContainedThing>;
     // TODO: add meta data (acl, last time modified, headers...)
 }
 
-export interface WithReadOperations<ContainedThing extends Thing, SelfDescribingThing extends Thing> {
+export interface WithReadOperations<ContainedThing extends ThingBase, SelfDescribingThing extends ThingBase> {
     at(index: number): ContainedThing | undefined;
     contains(other: ReadonlyDocument<ContainedThing, SelfDescribingThing>): boolean;
     count(callbackfn?: (thing: ContainedThing, document?: ReadonlyDocument<ContainedThing, SelfDescribingThing>) => boolean): number;
@@ -36,7 +36,7 @@ export interface WithReadOperations<ContainedThing extends Thing, SelfDescribing
     some(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => unknown, thisArg?: any): boolean;
 }
 
-export interface WithWriteOperations<ContainedThing extends Thing, SelfDescribingThing extends Thing> {
+export interface WithWriteOperations<ContainedThing extends ThingBase, SelfDescribingThing extends ThingBase> {
     add(thing: ContainedThing): Document<ContainedThing, SelfDescribingThing>;
     // TODO: add meta description
     addAll(documentOrThings: ReadonlyDocument<ContainedThing, SelfDescribingThing> | ContainedThing[]): Document<ContainedThing, SelfDescribingThing>;
@@ -56,17 +56,6 @@ export interface WithWriteOperations<ContainedThing extends Thing, SelfDescribin
     union(other: ReadonlyDocument<ContainedThing, SelfDescribingThing>): Document<ContainedThing, SelfDescribingThing>;
 }
 
-export type ReadonlyDocument<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> = DocumentBase<ContainedThing, SelfDescribingThing> & WithReadOperations<ContainedThing, SelfDescribingThing>;
-
-export type Document<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> = DocumentBase<ContainedThing, SelfDescribingThing> & WithReadOperations<ContainedThing, SelfDescribingThing> & WithWriteOperations<ContainedThing, SelfDescribingThing>;
-
+export type ReadonlyDocument<ContainedThing extends ThingBase = ThingBase, SelfDescribingThing extends ThingBase = ThingBase> = DocumentBase<ContainedThing, SelfDescribingThing> & WithReadOperations<ContainedThing, SelfDescribingThing>;
+export type Document<ContainedThing extends ThingBase = ThingBase, SelfDescribingThing extends ThingBase = ThingBase> = DocumentBase<ContainedThing, SelfDescribingThing> & WithReadOperations<ContainedThing, SelfDescribingThing> & WithWriteOperations<ContainedThing, SelfDescribingThing>;
 export default Document;
-
-/*
-fetcher
-cache
-store-memory-default
-store-local-storage
-store-session-storage
-store-indexeddb
-*/

@@ -1,7 +1,7 @@
 import Resource from "../core/Resource";
-import Thing from "../core/Thing";
+import ThingBase from "../core/Thing";
 
-export interface TypeIndexRegistration extends Thing {
+export interface TypeIndexRegistration extends ThingBase {
     addForClass(forClass: string | Resource): TypeIndexRegistration;
     addInstance(instance: string | Resource): TypeIndexRegistration;
     addInstanceContainer(instanceContainer: string | Resource): TypeIndexRegistration;

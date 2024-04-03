@@ -3,11 +3,11 @@ import DocumentBase from "../core/Document";
 import ThingStateRdfjsRegular from "./ThingStateRdfjsRegular";
 import ThingStateRdfjsAnonymous from "./ThingStateRdfjsAnonymous";
 import ThingState from "./ThingState";
-import Thing from "../core/Thing";
+import ThingBase from "../core/Thing";
 import { RdfjsDatasetSerializable } from "./RdfjsDatasetSerializable";
 import DatasetCore from "@rdfjs/dataset/DatasetCore";
 
-export class ThingDefaultImpl extends ThingDefaultImplCore implements Thing, RdfjsDatasetSerializable {
+export class ThingDefaultImpl extends ThingDefaultImplCore implements ThingBase, RdfjsDatasetSerializable {
 
     private _state: ThingState;
 
@@ -37,7 +37,7 @@ export class ThingDefaultImpl extends ThingDefaultImplCore implements Thing, Rdf
         return this._state;
     }
 
-    public equals(other: Thing): boolean {
+    public equals(other: ThingBase): boolean {
         return this.getState().equals(other);
     }
 

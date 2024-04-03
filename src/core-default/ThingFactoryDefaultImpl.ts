@@ -1,9 +1,9 @@
 import DocumentBase from "../core/Document";
-import Thing from "../core/Thing";
+import ThingBase from "../core/Thing";
 import { ThingDefaultImpl, ThingType } from "./ThingDefaultImpl";
 import ThingFactory from "../core/ThingFactory";
 
-export class ThingFactoryDefaultImpl<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> implements ThingFactory<ContainedThing, SelfDescribingThing> {
+export class ThingFactoryDefaultImpl<ContainedThing extends ThingBase = ThingBase, SelfDescribingThing extends ThingBase = ThingBase> implements ThingFactory<ContainedThing, SelfDescribingThing> {
 
     public createThingToDescribeDocument(document: DocumentBase<ContainedThing, SelfDescribingThing>): SelfDescribingThing {
         return new ThingDefaultImpl(document, ThingType.ForDescribing);

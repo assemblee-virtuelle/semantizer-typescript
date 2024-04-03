@@ -1,15 +1,15 @@
-import Thing from "./Thing";
+import ThingBase from "./Thing";
 
 export interface ThingWithHelpers {
-    addStatementFrom(source: Thing): Thing;
-    addRdfTypeStatement(value: string): Thing;
-    addBooleanStatement(about: string, value: boolean): Thing;
-    addStringStatement(about: string, value: string, locale?: string): Thing;
-    addDecimalStatement(about: string, value: number): Thing;
-    addIntegerStatement(about: string, value: number): Thing;
-    addDateStatement(about: string, value: Date): Thing;
-    addDatetimeStatement(about: string, value: Date): Thing;
-    addTimeStatement(about: string, value: Date): Thing;
+    addStatementFrom(source: ThingBase): ThingBase;
+    addRdfTypeStatement(value: string): ThingBase;
+    addBooleanStatement(about: string, value: boolean): ThingBase;
+    addStringStatement(about: string, value: string, locale?: string): ThingBase;
+    addDecimalStatement(about: string, value: number): ThingBase;
+    addIntegerStatement(about: string, value: number): ThingBase;
+    addDateStatement(about: string, value: Date): ThingBase;
+    addDatetimeStatement(about: string, value: Date): ThingBase;
+    addTimeStatement(about: string, value: Date): ThingBase;
 
     getRdfTypeValue(): string | null;
     getAllRdfTypeValues(): string[];
@@ -28,22 +28,22 @@ export interface ThingWithHelpers {
     getTimeStatementValue(about: string): Date;
     getAllTimeStatementValues(about: string): Date[];
 
-    setRdfTypeStatement(value: string): Thing;
-    setBooleanStatement(about: string, value: boolean): Thing;
-    setStringStatement(about: string, value: string, locale?: string): Thing;
-    setDecimalStatement(about: string, value: number): Thing;
-    setIntegerStatement(about: string, value: number): Thing;
-    setDateStatement(about: string, value: Date): Thing;
-    setDatetimeStatement(about: string, value: Date): Thing;
-    setTimeStatement(about: string, value: Date): Thing;
+    setRdfTypeStatement(value: string): ThingBase;
+    setBooleanStatement(about: string, value: boolean): ThingBase;
+    setStringStatement(about: string, value: string, locale?: string): ThingBase;
+    setDecimalStatement(about: string, value: number): ThingBase;
+    setIntegerStatement(about: string, value: number): ThingBase;
+    setDateStatement(about: string, value: Date): ThingBase;
+    setDatetimeStatement(about: string, value: Date): ThingBase;
+    setTimeStatement(about: string, value: Date): ThingBase;
 
-    removeAllStatements(about: string): Thing;
-    removeRdfTypeStatement(value: string): Thing;
-    removeBooleanStatement(about: string, value: boolean): Thing;
-    removeStringStatement(about: string, value: string, locale?: string): Thing;
-    removeDecimalStatement(about: string, value: number): Thing;
-    removeIntegerStatement(about: string, value: number): Thing;
-    removeDateStatement(about: string, value: Date): Thing;
-    removeDatetimeStatement(about: string, value: Date): Thing;
-    removeTimeStatement(about: string, value: Date): Thing;
+    removeAllStatements(about: string): ThingBase;
+    removeRdfTypeStatement(value: string): ThingBase;
+    removeBooleanStatement(about: string, value: boolean): ThingBase;
+    removeStringStatement(about: string, value: string, locale?: string): ThingBase;
+    removeDecimalStatement(about: string, value: number): ThingBase;
+    removeIntegerStatement(about: string, value: number): ThingBase;
+    removeDateStatement(about: string, value: Date): ThingBase;
+    removeDatetimeStatement(about: string, value: Date): ThingBase;
+    removeTimeStatement(about: string, value: Date): ThingBase;
 }

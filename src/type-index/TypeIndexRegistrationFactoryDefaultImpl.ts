@@ -1,14 +1,14 @@
 import DocumentBase from "../core/Document";
-import Thing from "../core/Thing";
+import ThingBase from "../core/Thing";
 import ThingDefaultImpl, { ThingType } from "../core-default/ThingDefaultImpl";
 import ThingFactory from "../core/ThingFactory";
 import TypeIndexBase from "./TypeIndex";
 import TypeIndexRegistration from "./TypeIndexRegistration";
 import { TypeIndexRegistrationDefaultImpl } from "./TypeIndexRegistrationDefaultImpl";
 
-export class TypeIndexRegistrationFactoryDefaultImpl implements ThingFactory<TypeIndexRegistration, Thing> {
+export class TypeIndexRegistrationFactoryDefaultImpl implements ThingFactory<TypeIndexRegistration, ThingBase> {
 
-    public createThingToDescribeDocument(typeIndex: TypeIndexBase): Thing {
+    public createThingToDescribeDocument(typeIndex: TypeIndexBase): ThingBase {
         return new ThingDefaultImpl(typeIndex, ThingType.ForDescribing)
             .addRdfTypeStatement("solid:TypeIndex")
             .addRdfTypeStatement("solid:ListedDocument");

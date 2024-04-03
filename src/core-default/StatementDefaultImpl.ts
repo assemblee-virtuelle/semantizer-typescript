@@ -1,16 +1,16 @@
 import Resource from "../core/Resource";
 import Statement from "../core/Statement";
-import Thing from "../core/Thing";
+import ThingBase from "../core/Thing";
 
 export class StatementDefaultImpl implements Statement {
 
-    private _thing: Thing;
+    private _thing: ThingBase;
     private _subject: string;
     private _value: string;
     private _datatype?: string;
     private _language?: string;
 
-    public constructor(thing: Thing, subject: string, value: string | Resource, datatype?: string | Resource, language?: string) {
+    public constructor(thing: ThingBase, subject: string, value: string | Resource, datatype?: string | Resource, language?: string) {
         this._thing = thing;
         this._subject = subject;
         this._value = typeof value === 'string'? value: value.getUri();
@@ -18,7 +18,7 @@ export class StatementDefaultImpl implements Statement {
         this._language = language;
     }
 
-    public getThing(): Thing {
+    public getThing(): ThingBase {
         return this._thing;
     }
 

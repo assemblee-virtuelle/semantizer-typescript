@@ -5,14 +5,14 @@ import LiteralExt from "rdf-ext/lib/Literal";
 import NamedNodeExt from "rdf-ext/lib/NamedNode";
 import QuadExt from "rdf-ext/lib/Quad";
 import Resource from "../core/Resource.js";
-import Thing from "../core/Thing.js";
+import ThingBase from "../core/Thing.js";
 import { ThingStateDefaultBase } from "./ThingStateDefaultBase.js";
 
 export class ThingStateRdfjsRegular extends ThingStateDefaultBase {
 
     private _rdfjsDataset: any;
 
-    constructor(thing: Thing, uri: string) {
+    constructor(thing: ThingBase, uri: string) {
         super(thing, uri);
         this._rdfjsDataset = rdf.dataset();
     }
@@ -29,7 +29,7 @@ export class ThingStateRdfjsRegular extends ThingStateDefaultBase {
         return this.getDataset().clone();
     }
 
-    public equals(other: Thing): boolean {
+    public equals(other: ThingBase): boolean {
         return this.getDataset().equals(other.toRdfDatasetExt());
     }
 
@@ -46,7 +46,7 @@ export class ThingStateRdfjsRegular extends ThingStateDefaultBase {
         return this.getDataset().reduce(iteratee, []);
     }
 
-    public addStatement(about: string, value: string | Resource, datatype?: string, language?: string): Thing {
+    public addStatement(about: string, value: string | Resource, datatype?: string, language?: string): ThingBase {
         const languageOrDatatype = language? language: datatype? rdf.namedNode(datatype): undefined;
         this.addRdfQuad(this.createRdfQuad(about, value, languageOrDatatype));
         return this.getThing();

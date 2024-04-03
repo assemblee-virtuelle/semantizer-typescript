@@ -1,7 +1,7 @@
-import Thing from "./Thing";
+import ThingBase from "./Thing";
 
 export interface Statement {
-    getThing(): Thing;
+    getThing(): ThingBase;
     getSubject(): string;
     getValue(): string;
     getDatatype(): string | undefined;

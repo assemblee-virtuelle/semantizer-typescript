@@ -2,7 +2,7 @@ import Context from "../core/Context.js";
 import DocumentBase from "../core/Document.js";
 import Resource from "../core/Resource.js";
 import Statement from "../core/Statement.js";
-import Thing from "../core/Thing.js";
+import ThingBase from "../core/Thing.js";
 import StatementDefaultImpl from "./StatementDefaultImpl.js";
 
 export enum ThingType {
@@ -11,7 +11,7 @@ export enum ThingType {
     Anonymous
 }
 
-export class ThingDefaultImpl<Datatype = Statement> implements Thing<Datatype> {
+export class ThingDefaultImpl<Datatype = Statement> implements ThingBase<Datatype> {
 
     private _uri: string;
     private _document: DocumentBase;
@@ -83,11 +83,11 @@ export class ThingDefaultImpl<Datatype = Statement> implements Thing<Datatype> {
         return this.getDocument().shorten(uri);
     }
 
-    public equals(other: Thing): boolean {
+    public equals(other: ThingBase): boolean {
         throw new Error("Not implemented.");
     }
 
-    public add(about: string, value: string | Resource, datatype?: string, language?: string): Thing {
+    public add(about: string, value: string | Resource, datatype?: string, language?: string): ThingBase {
         const statement = new StatementDefaultImpl(this, about, value, datatype, language);
         this._getStatements().push(statement);
         return this;
@@ -97,11 +97,11 @@ export class ThingDefaultImpl<Datatype = Statement> implements Thing<Datatype> {
         throw new Error("Method not implemented.");
     }
 
-    public set(about: string, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): Thing {
+    public set(about: string, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): ThingBase {
         throw new Error("Method not implemented.");
     }
     
-    public remove(about: string, value: string | Resource, datatype?: string | undefined, language?: string | undefined): Thing {
+    public remove(about: string, value: string | Resource, datatype?: string | undefined, language?: string | undefined): ThingBase {
         throw new Error("Method not implemented.");
     }
 

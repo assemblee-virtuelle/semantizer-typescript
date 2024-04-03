@@ -1,11 +1,11 @@
 import Context from "../core/Context.js";
 import { DocumentBase, ReadonlyDocument, Document } from "../core/Document.js";
 import Resource from "../core/Resource.js";
-import Thing from "../core/Thing.js";
+import ThingBase from "../core/Thing.js";
 import ThingFactory from '../core/ThingFactory.js';
 import ThingFactoryDefaultImpl from "./ThingFactoryDefaultImpl.js";
 
-export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> implements Document<ContainedThing, SelfDescribingThing> {
+export class DocumentDefaultImpl<ContainedThing extends ThingBase = ThingBase, SelfDescribingThing extends ThingBase = ThingBase> implements Document<ContainedThing, SelfDescribingThing> {
 
     protected _thingFactory: ThingFactory<ContainedThing, SelfDescribingThing>;
     protected _uri: string;
@@ -96,9 +96,9 @@ export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescr
         throw new Error("Method not implemented.");
     }
 
-    public toGenericDocument(): DocumentBase<Thing, Thing> {
+    public toGenericDocument(): DocumentBase<ThingBase, ThingBase> {
         const factory = new ThingFactoryDefaultImpl();
-        const document: DocumentBase<Thing, Thing> = new DocumentDefaultImpl<Thing, Thing>(this._uri, this._context, factory);
+        const document: DocumentBase<ThingBase, ThingBase> = new DocumentDefaultImpl<ThingBase, ThingBase>(this._uri, this._context, factory);
         //this.forEach(thing => document.add(thing)); // We should be able to use addAll
         return document;
     }

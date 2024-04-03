@@ -1,5 +1,5 @@
 import Resource from "../core/Resource";
-import Thing from "../core/Thing";
+import ThingBase from "../core/Thing";
 import ThingDefaultImpl, { ThingType } from "../core-default/ThingDefaultImpl";
 import TypeIndexBase from "./TypeIndex";
 import TypeIndexRegistration from "./TypeIndexRegistration";

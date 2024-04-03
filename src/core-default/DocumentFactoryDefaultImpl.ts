@@ -1,11 +1,11 @@
 import Context from "../core/Context";
 import { WritableDocument } from "../core/Document";
-import Thing from "../core/Thing";
+import ThingBase from "../core/Thing";
 import ThingFactory from "../core/ThingFactory";
 import DocumentDefaultImpl from "./DocumentDefaultImpl";
 import ThingFactoryDefaultImpl from "./ThingFactoryDefaultImpl";
 
-export class DocumentFactoryDefaultImpl<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> {
+export class DocumentFactoryDefaultImpl<ContainedThing extends ThingBase = ThingBase, SelfDescribingThing extends ThingBase = ThingBase> {
 
     private _thingFactory: ThingFactory<ContainedThing, SelfDescribingThing>;
 

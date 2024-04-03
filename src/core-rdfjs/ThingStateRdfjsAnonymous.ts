@@ -1,5 +1,5 @@
 import Resource from "../core/Resource.js";
-import Thing from "../core/Thing.js";
+import ThingBase from "../core/Thing.js";
 import rdf from 'rdf-ext'
 import ThingStateRdfjsRegular from "./ThingStateRdfjsRegular.js";
 import BlankNodeExt from "rdf-ext/lib/BlankNode";
@@ -10,7 +10,7 @@ export class ThingStateRdfjsAnonymous extends ThingStateRdfjsRegular {
 
     private _blankNode: BlankNodeExt; // helper: we keep a pointer to the blank node quad
 
-    public constructor(thing: Thing, nameHint?: string) {
+    public constructor(thing: ThingBase, nameHint?: string) {
         super(thing, '');
         this._blankNode = rdf.blankNode(nameHint);
         this.addRdfQuad(this.createRdfQuad("", "")); // internal use

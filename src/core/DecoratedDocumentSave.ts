@@ -1,9 +1,9 @@
 import { DocumentBase, Document, ReadonlyDocument, WithWriteOperations } from "./Document.js";
 import Resource from "./Resource.js";
-import Thing from "./Thing.js";
+import ThingBase from "./Thing.js";
 import { Context } from "../index.js";
 
-export class DecoratedDocument<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> implements WithWriteOperations<ContainedThing, SelfDescribingThing> {
+export class DecoratedDocument<ContainedThing extends ThingBase = ThingBase, SelfDescribingThing extends ThingBase = ThingBase> implements WithWriteOperations<ContainedThing, SelfDescribingThing> {
 
     private _document: Document<ContainedThing, SelfDescribingThing>;
 
@@ -39,7 +39,7 @@ export class DecoratedDocument<ContainedThing extends Thing = Thing, SelfDescrib
         return this._document.toCanonical();
     }
 
-    public toGenericDocument(): DocumentBase<Thing, Thing> {
+    public toGenericDocument(): DocumentBase<ThingBase, ThingBase> {
         return this._document.toGenericDocument();
     }
 

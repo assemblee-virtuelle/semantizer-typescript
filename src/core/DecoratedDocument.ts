@@ -1,9 +1,9 @@
 import Document, { DocumentBase, ReadonlyDocument } from "./Document";
 import Resource from "./Resource";
-import Thing from "./Thing";
+import ThingBase from "./Thing";
 import { Context } from "../index";
 
-export class DecoratedDocument<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> implements Document<ContainedThing, SelfDescribingThing> {
+export class DecoratedDocument<ContainedThing extends ThingBase = ThingBase, SelfDescribingThing extends ThingBase = ThingBase> implements Document<ContainedThing, SelfDescribingThing> {
 
     private _document: Document<ContainedThing, SelfDescribingThing> | ReadonlyDocument<ContainedThing, SelfDescribingThing>;
 
@@ -39,7 +39,7 @@ export class DecoratedDocument<ContainedThing extends Thing = Thing, SelfDescrib
         return this._document.toCanonical();
     }
 
-    public toGenericDocument(): DocumentBase<Thing, Thing> {
+    public toGenericDocument(): DocumentBase<ThingBase, ThingBase> {
         return this._document.toGenericDocument();
     }
 

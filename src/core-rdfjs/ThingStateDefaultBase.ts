@@ -1,20 +1,20 @@
 import DatasetExt from "rdf-ext/lib/Dataset";
 import Context from "../core/Context";
-import Thing from "../core/Thing";
+import ThingBase from "../core/Thing";
 import ThingState from "./ThingState";
 import Resource from "../core/Resource";
 
 export abstract class ThingStateDefaultBase implements ThingState {
     
     private _uri: string;
-    private _thing: Thing;
+    private _thing: ThingBase;
 
-    constructor(thing: Thing, uri: string) {
+    constructor(thing: ThingBase, uri: string) {
         this._thing = thing;
         this._uri = uri;
     }
 
-    public getThing(): Thing {
+    public getThing(): ThingBase {
         return this._thing;
     }
 
@@ -35,10 +35,10 @@ export abstract class ThingStateDefaultBase implements ThingState {
     }
 
     abstract isAnonymous(): boolean;
-    abstract equals(other: Thing): boolean;
+    abstract equals(other: ThingBase): boolean;
     abstract getAllValuesAboutStatement(property: string): string[];
     abstract toRdfDatasetExt(): DatasetExt;
-    abstract addStatement(about: string, value: string | Resource, datatype?: string, language?: string): Thing;
+    abstract addStatement(about: string, value: string | Resource, datatype?: string, language?: string): ThingBase;
 
 }
 
