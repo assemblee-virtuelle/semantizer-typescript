@@ -1,0 +1,1 @@
+{"version":3,"file":"Statement.d.ts","sourceRoot":"","sources":["../../src/core/Statement.ts"],"names":[],"mappings":"AAAA,OAAO,SAAS,MAAM,SAAS,CAAC;AAEhC,MAAM,WAAW,SAAS;IACtB,QAAQ,IAAI,SAAS,CAAC;IACtB,UAAU,IAAI,MAAM,CAAC;IACrB,QAAQ,IAAI,MAAM,CAAC;IACnB,WAAW,IAAI,MAAM,GAAG,SAAS,CAAC;IAClC,WAAW,IAAI,MAAM,GAAG,SAAS,CAAC;CACrC;AAED,eAAe,SAAS,CAAC"}

@@ -30,7 +30,8 @@ export class ThingStateRdfjsRegular extends ThingStateDefaultBase {
     }
 
     public equals(other: ThingBase): boolean {
-        return this.getDataset().equals(other.toRdfDatasetExt());
+        throw new Error("Not implemented.");
+        // return this.getDataset().equals(other.toRdfDatasetExt());
     }
 
     public isAnonymous(): boolean {
@@ -57,7 +58,8 @@ export class ThingStateRdfjsRegular extends ThingStateDefaultBase {
     }
 
     protected getDocumentDataset(): DatasetExt {
-        return this.getThing().getDocument().toRdfDatasetExt();
+        throw new Error("Not implemented.");
+        //return this.getThing().getDocument().toRdfDatasetExt();
     }
 
     protected getBlankNode(resource: Resource): BlankNodeExt {

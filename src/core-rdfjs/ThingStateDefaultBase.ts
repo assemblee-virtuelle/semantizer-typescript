@@ -27,11 +27,11 @@ export abstract class ThingStateDefaultBase implements ThingState {
     }
 
     public expand(uri: string): string {
-        return this.getThing().expand(uri);
+        return this.getThing().getContext()?.expand(uri) ?? uri;
     }
 
     public shorten(uri: string): string {
-        return this.getThing().shorten(uri);
+        return this.getThing().getContext()?.shorten(uri) ?? uri;
     }
 
     abstract isAnonymous(): boolean;

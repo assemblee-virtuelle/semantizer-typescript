@@ -1,10 +1,10 @@
 import Context from "./Context";
-import DocumentBase from "./Document";
-import ThingBase from "./Thing";
+import { Document, ReadonlyDocument } from "./Document";
+import { Thing } from "./Thing";
 
-export interface DocumentFactory<CreatedDocument, LoadedDocument> {
-    createDocument(uri?: string, context?: Context): CreatedDocument; // Type concret
-    loadDocument(uriOrData: string): LoadedDocument;
+export interface DocumentFactory<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> {
+    createDocument(uri?: string, context?: Context): Document<ContainedThing, SelfDescribingThing>;
+    createReadonlyDocument(uri?: string, context?: Context): ReadonlyDocument<ContainedThing, SelfDescribingThing>;
 }
 
 export default DocumentFactory;

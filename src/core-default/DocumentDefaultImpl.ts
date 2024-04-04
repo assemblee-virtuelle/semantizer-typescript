@@ -1,28 +1,201 @@
 import Context from "../core/Context.js";
 import { DocumentBase, ReadonlyDocument, Document } from "../core/Document.js";
 import Resource from "../core/Resource.js";
-import Thing from "../core/Thing.js";
+import Thing, { ReadonlyThing } from "../core/Thing.js";
 import ThingFactory from '../core/ThingFactory.js';
 import ThingFactoryDefaultImpl from "./ThingFactoryDefaultImpl.js";
 
-export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> implements Document<ContainedThing, SelfDescribingThing> {
+export class ReadonlyDocumentDefaultImpl<ContainedThing extends ReadonlyThing = ReadonlyThing, SelfDescribingThing extends ReadonlyThing = ReadonlyThing> implements ReadonlyDocument<ContainedThing, SelfDescribingThing> {
 
-    protected _thingFactory: ThingFactory<ContainedThing, SelfDescribingThing>;
     protected _uri: string;
     protected _selfDescribingThing?: SelfDescribingThing;
     protected _things: ContainedThing[];
     protected _context?: Context;
 
-    public constructor(uri?: string, context?: Context, thingFactory?: ThingFactory<ContainedThing, SelfDescribingThing>);
-    public constructor(document: DocumentBase<ContainedThing, SelfDescribingThing>);
-    public constructor(documentOrUri?: DocumentBase<ContainedThing, SelfDescribingThing> | string, context?: Context, thingFactory?: ThingFactory<ContainedThing, SelfDescribingThing>) {
-        this._thingFactory = thingFactory ?? new ThingFactoryDefaultImpl<ContainedThing, SelfDescribingThing>();
+    //public constructor(uri?: string, context?: Context);
+    //public constructor(document: DocumentBase<ContainedThing, SelfDescribingThing>);
+    public constructor(documentOrUri?: DocumentBase<ContainedThing, SelfDescribingThing> | string, context?: Context) {
         this._uri = typeof documentOrUri === 'string'? documentOrUri ?? '': documentOrUri?.getUri() ?? '';
         this._context = context;
         this._things = [];
     }
 
     public at(index: number): ContainedThing | undefined {
+        return this._getContainedThings().at(index);
+    }
+
+    public contains(other: ReadonlyDocument<ContainedThing, SelfDescribingThing>): boolean {
+        return other.every((thing: ContainedThing) => this.includes(thing));
+    }
+
+    public difference(other: ReadonlyDocument<ContainedThing, SelfDescribingThing>): ReadonlyDocument<ContainedThing, SelfDescribingThing> {
+        throw new Error("Method not implemented.");
+    }
+
+    public every(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => boolean, thisArg?: any): boolean {
+        return this._getContainedThings().every(predicate);
+    }
+
+    public find(predicate: (value: ContainedThing, index: number, obj: ContainedThing[]) => value is ContainedThing, thisArg?: any): ContainedThing | undefined {
+        return this._getContainedThings().find(predicate);
+    }
+
+    public findIndex(predicate: (value: ContainedThing, index: number, obj: ContainedThing[]) => unknown, thisArg?: any): number {
+        return this._getContainedThings().findIndex(predicate);
+    }
+
+    public get(uri: string | Resource): ContainedThing | undefined {
+        // TODO uri or resource.getUri
+        const things = this.filter((thing: ContainedThing) => thing.getUri() === uri);
+        return things.length > 0? things[0]: undefined;
+    }
+
+    public has(uriOrResource: string | Resource): boolean {
+        return this.get(uriOrResource)? true: false;
+    }
+
+    public hasThingThatSelfDescribes(): boolean {
+        return this.getThingThatSelfDescribes() !== undefined;
+    }
+
+    public hasContainedThingThatSelfDescribes(): boolean {
+        return this.getThingThatSelfDescribes() !== undefined;
+    }
+
+    public includes(searchElement: ContainedThing, fromIndex?: number | undefined): boolean {
+        return this._getContainedThings().includes(searchElement, fromIndex);
+    }
+
+    protected getUriFromStringOrResource(stringOrResource: string | Resource): string {
+        return typeof stringOrResource === 'string'? stringOrResource: stringOrResource.getUri();
+    }
+
+    public indexOf(searchElement: ContainedThing, fromIndex?: number | undefined): number {
+        return this._getContainedThings().indexOf(searchElement, fromIndex);
+    }
+
+    public keys(): IterableIterator<number> {
+        return this._getContainedThings().keys()
+    }
+
+    public reduce(callbackfn: (previousValue: ContainedThing, currentValue: ContainedThing, currentIndex: number, array: ContainedThing[]) => ContainedThing): ContainedThing {
+        return this._getContainedThings().reduce(callbackfn);
+    }
+
+    public slice(start?: number, end?: number): ReadonlyDocument<ContainedThing, SelfDescribingThing> {
+        throw new Error("Method not implemented."); //return this._getContainedThings().slice(start, end);
+    }
+
+    public some(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => unknown, thisArg?: any): boolean {
+        return this._getContainedThings().some(predicate);
+    }
+
+    public toCanonical(): string {
+        throw new Error("Method not implemented.");
+    }
+
+    public toGenericDocument(): DocumentBase<Thing, Thing> {
+        const factory = new ThingFactoryDefaultImpl<Thing, Thing>();
+        const document: DocumentBase<Thing, Thing> = new DocumentDefaultImpl<Thing, Thing>(this._uri, this._context, factory);
+        //this.forEach(thing => document.add(thing)); // We should be able to use addAll
+        return document;
+    }
+
+    public toStream(): string {
+        throw new Error("Method not implemented.");
+    }
+
+    public forEach(callbackfn: (value: ContainedThing, index: number, array: ContainedThing[]) => void, thisArg?: any): void {
+        this._getContainedThings().forEach(callbackfn, thisArg);
+    }
+
+    public map(callbackfn: (value: ContainedThing, index: number, array: ContainedThing[]) => unknown, thisArg?: any): unknown[] {
+        return this._getContainedThings().map(callbackfn, thisArg);
+    }
+    
+    public [Symbol.iterator](): Iterator<ContainedThing> {
+        return this._getContainedThings()[Symbol.iterator]();
+    }
+
+    public setContext(context: Context): void {
+        this._context = context;
+    }
+
+    public getContext(): Context | undefined {
+        return this._context;
+    }
+
+    public expand(uri: string): string {
+        return this.getContext()?.expand(uri) ?? uri;
+    }
+
+    public shorten(uri: string): string {
+        return this.getContext()?.shorten(uri) ?? uri;
+    }
+
+    // TODO: check canonical form
+    public equals(other: DocumentBase<ContainedThing, SelfDescribingThing>): boolean {
+        throw new Error("Not implemented.")
+    }
+
+    protected isUrl(input: string): boolean {
+        return input.startsWith('http') || input.startsWith('#') || input === '';
+    }
+
+    public getUri(): string {
+        return this._uri;
+    }
+
+    public isEmpty(): boolean {
+        return this.count() === 0;
+    }
+
+    protected _getContainedThings(): ContainedThing[] {
+        return this._things;
+    }
+
+    public getThingThatSelfDescribes(): SelfDescribingThing | undefined {
+        return this._selfDescribingThing;
+    }
+
+    public count(callbackfn?: ((thing: ContainedThing, document?: ReadonlyDocument<ContainedThing, SelfDescribingThing>) => boolean) | undefined): number {
+        return this._getContainedThings().length;
+    }
+
+    public hasStatementsAbout(subject: string | Resource, property?: string, ...hasValues: string[]): boolean {
+        const uri = typeof subject === 'string'? subject: subject.getUri();
+        return this._getContainedThings().some(thing => thing.getUri() === uri);
+    }
+
+    public filter(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => boolean): ContainedThing[] {
+        return this._getContainedThings().filter(predicate);
+    }
+
+    public toGenericReadonlyDocument(): ReadonlyDocument<ContainedThing, SelfDescribingThing> {
+        throw new Error("Method not implemented.");
+    }
+
+}
+
+export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> extends ReadonlyDocumentDefaultImpl<ContainedThing, SelfDescribingThing> implements Document<ContainedThing, SelfDescribingThing> {
+
+    protected _thingFactory: ThingFactory<ContainedThing, SelfDescribingThing>;
+    //protected _uri: string;
+    //protected _selfDescribingThing?: SelfDescribingThing;
+    //protected _things: ContainedThing[];
+    //protected _context?: Context;
+
+    public constructor(uri?: string, context?: Context, thingFactory?: ThingFactory<ContainedThing, SelfDescribingThing>);
+    public constructor(document: DocumentBase<ContainedThing, SelfDescribingThing>);
+    public constructor(documentOrUri?: DocumentBase<ContainedThing, SelfDescribingThing> | string, context?: Context, thingFactory?: ThingFactory<ContainedThing, SelfDescribingThing>) {
+        super(documentOrUri, context)
+        this._thingFactory = thingFactory ?? new ThingFactoryDefaultImpl<ContainedThing, SelfDescribingThing>();
+        //this._uri = typeof documentOrUri === 'string'? documentOrUri ?? '': documentOrUri?.getUri() ?? '';
+        //this._context = context;
+        //this._things = [];
+    }
+
+    /*public at(index: number): ContainedThing | undefined {
         return this._getContainedThings().at(index);
     }
 
@@ -176,6 +349,11 @@ export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescr
     public filter(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => boolean): ContainedThing[] {
         return this._getContainedThings().filter(predicate);
     }
+*/
+
+    public getContainedThingFactory(): ThingFactory<ContainedThing, SelfDescribingThing> {
+        return this._thingFactory;
+    }
 
     // DESTRUCTIVE OPERATIONS
     public add(thing: ContainedThing): Document<ContainedThing, SelfDescribingThing> {
@@ -313,6 +491,10 @@ export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescr
 
     protected setThingThatSelfDescribes(thing: SelfDescribingThing): SelfDescribingThing | undefined {
         return this._selfDescribingThing = thing;
+    }
+
+    public toGenericDocument(): Document<ContainedThing, SelfDescribingThing> {
+        throw new Error("Method not implemented.");
     }
 
 }

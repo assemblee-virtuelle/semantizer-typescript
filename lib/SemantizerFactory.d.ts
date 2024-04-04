@@ -1,8 +1,8 @@
-import Context from "./Context";
-import { Document } from "./Document";
+import Context from "./core/Context";
+import { DocumentBase } from "./core/Document";
 export default interface SemantizerFactory {
-    loadDocument(semanticId: string): Document;
-    createDocument(uri?: string, context?: Context): Document;
+    loadDocument(semanticId: string): DocumentBase;
+    createDocument(uri?: string, context?: Context): DocumentBase;
     createContext(): Context;
 }
 //# sourceMappingURL=SemantizerFactory.d.ts.map

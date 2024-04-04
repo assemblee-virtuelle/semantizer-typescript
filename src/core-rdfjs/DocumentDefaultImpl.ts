@@ -137,7 +137,7 @@ export class DocumentDefaultImpl<SelfDescribingThing extends ThingBase = ThingBa
     toCanonical(): string {
         throw new Error('Method not implemented.');
     }
-    toGenericDocument(): DocumentBase<ThingBase, ThingBase> {
+    toGenericDocument(): DocumentBase<ThingBase, SelfDescribingThing> {
         throw new Error('Method not implemented.');
     }
     toStream(): string {

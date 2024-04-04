@@ -1,3 +1,6 @@
+import DecoratedDocument from "../core/DecoratedDocument";
+import Document from "../core/Document";
+
 export interface SynchronizedDocument {
     isLocal(): boolean;
     isDistant(): boolean;
@@ -10,7 +13,7 @@ export interface LocalDocument extends SynchronizedDocument {
     save(): void;
 }
 
-export interface DistantDocument<T> extends SynchronizedDocument {
+export interface DistantDocument<T extends Document<any, any>> extends SynchronizedDocument {
     toLocalCopy(): LocalDocument & T;
 }
 

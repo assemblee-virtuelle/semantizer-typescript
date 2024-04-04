@@ -3,6 +3,7 @@ import Context from "./Context";
 import { ThingBase, ReadonlyThing, Thing } from "./Thing";
 
 export interface DocumentBase<ContainedThing extends ThingBase = ThingBase, SelfDescribingThing extends ThingBase = ThingBase> extends Resource, Iterable<ContainedThing> {
+    //constructor(): DocumentBase<ContainedThing, SelfDescribingThing>;
     get(uri: string | Resource): ContainedThing | undefined;
     getContext(): Context | undefined;
     getThingThatSelfDescribes(): SelfDescribingThing | undefined;
@@ -10,7 +11,6 @@ export interface DocumentBase<ContainedThing extends ThingBase = ThingBase, Self
     hasThingThatSelfDescribes(): boolean;
     isEmpty(): boolean;
     toCanonical(): string; // DOMString? See https://github.com/digitalbazaar/rdf-canonize
-    toGenericDocument(): DocumentBase<ContainedThing, SelfDescribingThing>;
     toStream(): string; // Stream
     [Symbol.iterator](): Iterator<ContainedThing>;
     // TODO: add meta data (acl, last time modified, headers...)
@@ -34,6 +34,7 @@ export interface WithReadOperations<ContainedThing extends ReadonlyThing, SelfDe
     reduce(callbackfn: (previousValue: ContainedThing, currentValue: ContainedThing, currentIndex: number, array: ContainedThing[]) => ContainedThing): ContainedThing; 
     slice(start?: number, end?: number): ReadonlyDocument<ContainedThing, SelfDescribingThing>;
     some(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => unknown, thisArg?: any): boolean;
+    toGenericReadonlyDocument(): ReadonlyDocument<ContainedThing, SelfDescribingThing>;
 }
 
 export interface WithWriteOperations<ContainedThing extends Thing, SelfDescribingThing extends Thing> {
@@ -52,10 +53,12 @@ export interface WithWriteOperations<ContainedThing extends Thing, SelfDescribin
     shift(): ContainedThing | undefined;
     sort(compareFn?: (a: ContainedThing, b: ContainedThing) => number): Document<ContainedThing, SelfDescribingThing>;
     splice(start: number, deleteCount?: number, ...items: ContainedThing[]): Document<ContainedThing, SelfDescribingThing>;
+    toGenericDocument(): Document<ContainedThing, SelfDescribingThing>;
     // TODO: add meta description
     union(other: ReadonlyDocument<ContainedThing, SelfDescribingThing>): Document<ContainedThing, SelfDescribingThing>;
 }
 
 export type ReadonlyDocument<ContainedThing extends ReadonlyThing = ReadonlyThing, SelfDescribingThing extends ReadonlyThing = ReadonlyThing> = DocumentBase<ContainedThing, SelfDescribingThing> & WithReadOperations<ContainedThing, SelfDescribingThing>;
 export type Document<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> = DocumentBase<ContainedThing, SelfDescribingThing> & WithReadOperations<ContainedThing, SelfDescribingThing> & WithWriteOperations<ContainedThing, SelfDescribingThing>;
+//export type Document<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> = ReadonlyDocument<ContainedThing, SelfDescribingThing> & WithWriteOperations<ContainedThing, SelfDescribingThing>;
 export default Document;

@@ -1,6 +1,6 @@
 import { Document, ReadonlyDocument } from "../core/Document";
-import ThingBase from "../core/Thing";
-import TypeIndexRegistration from "./TypeIndexRegistration";
+import ThingBase, { ReadonlyThing, Thing } from "../core/Thing";
+import TypeIndexRegistration, { ReadonlyTypeIndexRegistration } from "./TypeIndexRegistration";
 
 export interface TypeIndexBase {}
 
@@ -12,6 +12,6 @@ export interface WithWriteOperations {
     createRegistration(forClass?: string, nameHintOrUri?: string): TypeIndexRegistration;
 }
 
-export type ReadonlyTypeIndex = TypeIndexBase & ReadonlyDocument<TypeIndexRegistration, ThingBase> & WithReadOperations;
-export type TypeIndex = TypeIndexBase & Document<TypeIndexRegistration, ThingBase> & WithReadOperations & WithWriteOperations;
+export type ReadonlyTypeIndex = TypeIndexBase & ReadonlyDocument<ReadonlyTypeIndexRegistration, ReadonlyThing> & WithReadOperations;
+export type TypeIndex = TypeIndexBase & Document<TypeIndexRegistration, Thing> & WithReadOperations & WithWriteOperations;
 export default TypeIndex;

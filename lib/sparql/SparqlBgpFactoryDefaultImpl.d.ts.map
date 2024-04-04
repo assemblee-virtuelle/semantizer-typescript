@@ -1,0 +1,1 @@
+{"version":3,"file":"SparqlBgpFactoryDefaultImpl.d.ts","sourceRoot":"","sources":["../../src/sparql/SparqlBgpFactoryDefaultImpl.ts"],"names":[],"mappings":"AAAA,qBAAa,2BAA2B;IAE7B,oBAAoB,CAAC,OAAO,EAAE,MAAM,EAAE,gBAAgB,GAAE,MAAc,GAAG,MAAM;IAI/E,kCAAkC,CAAC,OAAO,EAAE,MAAM,EAAE,gBAAgB,GAAE,MAAc,GAAG,MAAM;CAIvG;AAED,eAAe,2BAA2B,CAAC"}
