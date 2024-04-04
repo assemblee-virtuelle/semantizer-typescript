@@ -4,8 +4,7 @@ import Thing, { ReadonlyThing } from "../core/Thing";
 import TypeIndex, { ReadonlyTypeIndex } from "../type-index/TypeIndex";
 import TypeIndexMixin, { ReadonlyTypeIndexMixin } from "../type-index/TypeIndexMixin";
 import TypeIndexRegistration, { ReadonlyTypeIndexRegistration } from "../type-index/TypeIndexRegistration";
-import DistantDocumentDefaultImpl from "./DistantDocumentDefaultImpl";
-import LocalDocumentDefaultImpl from "./LocalDocumentDefaultImpl";
+import { LocalDocumentDefaultImpl, DistantDocumentDefaultImpl } from "./SynchronizedDocumentDefaultImpl";
 import { DistantDocument, LocalDocument } from "./SynchronizedDocument";
 
 type Constructor<T = {}> = new (...args: any[]) => T;

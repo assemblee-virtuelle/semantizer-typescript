@@ -1,7 +1,7 @@
-import Document, { DocumentBase, ReadonlyDocument } from "./Document";
-import Resource from "./Resource";
-import ThingBase, { ReadonlyThing, Thing } from "./Thing";
 import { Context } from "../index";
+import Document, { ReadonlyDocument } from "./Document";
+import Resource from "./Resource";
+import ThingBase, { ReadonlyThing } from "./Thing";
 
 export class DecoratedDocument<ContainedThing extends ThingBase = ThingBase, SelfDescribingThing extends ThingBase = ThingBase> implements Document<ContainedThing, SelfDescribingThing> {
 
@@ -127,128 +127,64 @@ export class DecoratedDocument<ContainedThing extends ThingBase = ThingBase, Sel
         return this._document.some(predicate);
     }
 
-    private makeReadonlyError(): Error {
-        return new Error("Document is Readonly.");
-    }
-
     public add(thing: ContainedThing): Document<ContainedThing, SelfDescribingThing> {
-        try {
-            return (this._document as Document<ContainedThing, SelfDescribingThing>).add(thing);
-        } catch(e) {
-            throw this.makeReadonlyError();
-        }
+        return this._document.add(thing);
     }
 
     public addAll(documentOrThings: ContainedThing[] | (ReadonlyDocument<ContainedThing, SelfDescribingThing>)): Document<ContainedThing, SelfDescribingThing> {
-        try {
-            return (this._document as Document<ContainedThing, SelfDescribingThing>).addAll(documentOrThings);
-        } catch(e) {
-            throw this.makeReadonlyError();
-        }
+        return this._document.addAll(documentOrThings);
     }
 
     public createThingToSelfDescribe(): SelfDescribingThing {
-        try {
-            return (this._document as Document<ContainedThing, SelfDescribingThing>).createThingToSelfDescribe();
-        } catch(e) {
-            throw this.makeReadonlyError();
-        }
+        return this._document.createThingToSelfDescribe();
     }
 
     public createThingWithUri(nameHintOrUri?: string | undefined): ContainedThing {
-        try {
-            return (this._document as Document<ContainedThing, SelfDescribingThing>).createThingWithUri(nameHintOrUri);
-        } catch(e) {
-            throw this.makeReadonlyError();
-        }
+        return this._document.createThingWithUri(nameHintOrUri);
     }
 
     public createThingWithoutUri(nameHint?: string | undefined): ContainedThing {
-        try {
-            return (this._document as Document<ContainedThing, SelfDescribingThing>).createThingWithoutUri(nameHint);
-        } catch(e) {
-            throw this.makeReadonlyError();
-        }
+        return this._document.createThingWithoutUri(nameHint);
     }
 
     public delete(thingOrUri: string | ContainedThing): Document<ContainedThing, SelfDescribingThing> {
-        try {
-            return (this._document as Document<ContainedThing, SelfDescribingThing>).delete(thingOrUri);
-        } catch(e) {
-            throw this.makeReadonlyError();
-        }
+        return this._document.delete(thingOrUri);
     }
 
     public deleteContext(): void {
-        try {
-            return (this._document as Document<ContainedThing, SelfDescribingThing>).deleteContext()
-        } catch(e) {
-            throw this.makeReadonlyError();
-        }
+        return this._document.deleteContext()
     }
 
     public deleteMatches(uri?: string | Resource | undefined, property?: string | undefined, value?: string | undefined): Document<ContainedThing, SelfDescribingThing> {
-        try {
-            return (this._document as Document<ContainedThing, SelfDescribingThing>).deleteMatches(uri, property, value);
-        } catch(e) {
-            throw this.makeReadonlyError();
-        }
+        return this._document.deleteMatches(uri, property, value);
     }
 
     public pop(): ContainedThing | undefined {
-        try {
-            return (this._document as Document<ContainedThing, SelfDescribingThing>).pop();
-        } catch(e) {
-            throw this.makeReadonlyError();
-        }
+        return this._document.pop();
     }
 
     public reverse(): void {
-        try {
-            return (this._document as Document<ContainedThing, SelfDescribingThing>).reverse();
-        } catch(e) {
-            throw this.makeReadonlyError();
-        }
+        return this._document.reverse();
     }
 
     public setContext(context: Context): void {
-        try {
-            return (this._document as Document<ContainedThing, SelfDescribingThing>).setContext(context);
-        } catch(e) {
-            throw this.makeReadonlyError();
-        }
+        return this._document.setContext(context);
     }
 
     public shift(): ContainedThing | undefined {
-        try {
-            return (this._document as Document<ContainedThing, SelfDescribingThing>).shift();
-        } catch(e) {
-            throw this.makeReadonlyError();
-        }
+        return this._document.shift();
     }
 
     public sort(compareFn?: ((a: ContainedThing, b: ContainedThing) => number) | undefined): Document<ContainedThing, SelfDescribingThing> {
-        try {
-            return (this._document as Document<ContainedThing, SelfDescribingThing>).sort(compareFn);
-        } catch(e) {
-            throw this.makeReadonlyError();
-        }
+        return this._document.sort(compareFn);
     }
 
     public splice(start: number, deleteCount?: number | undefined, ...items: ContainedThing[]): Document<ContainedThing, SelfDescribingThing> {
-        try {
-            return (this._document as Document<ContainedThing, SelfDescribingThing>).splice(start, deleteCount, ...items);
-        } catch(e) {
-            throw this.makeReadonlyError();
-        }
+        return this._document.splice(start, deleteCount, ...items);
     }
 
     public union(other: ReadonlyDocument<ContainedThing, SelfDescribingThing>): Document<ContainedThing, SelfDescribingThing> {
-        try {
-            return (this._document as Document<ContainedThing, SelfDescribingThing>).union(other);
-        } catch(e) {
-            throw this.makeReadonlyError();
-        }
+        return this._document.union(other);
     }
 
 }

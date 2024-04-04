@@ -23,7 +23,7 @@ export class TypeIndexRegistrationFactoryDefaultImpl implements ThingFactory<Typ
     public createThingWithoutUri(typeIndex: TypeIndexBase, nameHint?: string | undefined): TypeIndexRegistration {
         throw new Error("Adding blank nodes to TypeIndex is not allowed.");
     }
-    
+
 }
 
 export default TypeIndexRegistrationFactoryDefaultImpl;

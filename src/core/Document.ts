@@ -60,5 +60,4 @@ export interface WithWriteOperations<ContainedThing extends Thing, SelfDescribin
 
 export type ReadonlyDocument<ContainedThing extends ReadonlyThing = ReadonlyThing, SelfDescribingThing extends ReadonlyThing = ReadonlyThing> = DocumentBase<ContainedThing, SelfDescribingThing> & WithReadOperations<ContainedThing, SelfDescribingThing>;
 export type Document<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> = DocumentBase<ContainedThing, SelfDescribingThing> & WithReadOperations<ContainedThing, SelfDescribingThing> & WithWriteOperations<ContainedThing, SelfDescribingThing>;
-//export type Document<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> = ReadonlyDocument<ContainedThing, SelfDescribingThing> & WithWriteOperations<ContainedThing, SelfDescribingThing>;
 export default Document;

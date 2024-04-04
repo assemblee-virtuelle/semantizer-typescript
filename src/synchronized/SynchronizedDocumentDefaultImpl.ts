@@ -3,8 +3,34 @@ import { Document, ReadonlyDocument } from "../core/Document.js";
 import ThingBase, { ReadonlyThing, Thing } from "../core/Thing.js";
 import { DistantDocument, LocalDocument } from "./SynchronizedDocument.js";
 
-// states: Local | Distant
-// states: Created | Modified | Loaded
+export class LocalDocumentDefaultImpl<
+    ContainedThing extends ThingBase = ThingBase, 
+    SelfDescribingThing extends ThingBase = ThingBase
+> extends DecoratedDocument<ContainedThing, SelfDescribingThing> 
+implements Document<ContainedThing, SelfDescribingThing>, LocalDocument {
+    
+    public isLocal(): boolean {
+        return true;
+    }
+
+    public isDistant(): boolean {
+        return false;
+    }
+
+    public getDistantUri(): string | undefined {
+        return undefined;
+    }
+
+    public getDistantUriAll(): string[] {
+        return [];
+    }
+
+    public save(): void {
+        
+    }
+
+}
+
 export class DistantDocumentDefaultImpl<
     ContainedThing extends Thing = Thing, 
     SelfDescribingThing extends Thing = Thing, 
@@ -39,5 +65,3 @@ implements ReadonlyDocument<ContainedThingReadonly, SelfDescribingThingReadonly>
     }
 
 }
-
-export default DistantDocumentDefaultImpl;
