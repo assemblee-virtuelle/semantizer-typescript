@@ -1,6 +1,6 @@
-import DocumentDefaultImpl, { ReadonlyDocumentDefaultImpl } from "../core-default/DocumentDefaultImpl";
-import Document, { DocumentBase, ReadonlyDocument } from "../core/Document";
-import Thing, { ReadonlyThing } from "../core/Thing";
+import DocumentDefaultImpl, { DocumentReadonlyDefaultImpl } from "../core-default/DocumentDefaultImpl";
+import Document, { DocumentBase, DocumentReadonly } from "../core/Document";
+import Thing, { ThingReadonly } from "../core/Thing";
 import TypeIndex, { ReadonlyTypeIndex } from "../type-index/TypeIndex";
 import TypeIndexMixin, { ReadonlyTypeIndexMixin } from "../type-index/TypeIndexMixin";
 import TypeIndexRegistration, { ReadonlyTypeIndexRegistration } from "../type-index/TypeIndexRegistration";
@@ -9,7 +9,7 @@ import { DistantDocument, LocalDocument } from "./SynchronizedDocument";
 
 type Constructor<T = {}> = new (...args: any[]) => T;
 type MixinFunction<Type extends DocumentBase<any, any>> = <TSuper extends Document<any, any>>(base: Constructor<TSuper>) => Constructor<TSuper & Type>;
-type MixinFunctionReadonly<ContainedThingReadonly extends ReadonlyThing, SelfDescribingThingReadonly extends ReadonlyThing, Type extends ReadonlyDocument<ContainedThingReadonly, SelfDescribingThingReadonly>> = <TSuper extends ReadonlyDocument<ContainedThingReadonly, SelfDescribingThingReadonly>>(base: Constructor<TSuper>) => Constructor<TSuper & Type>;
+type MixinFunctionReadonly<ContainedThingReadonly extends ThingReadonly, SelfDescribingThingReadonly extends ThingReadonly, Type extends DocumentReadonly<ContainedThingReadonly, SelfDescribingThingReadonly>> = <TSuper extends DocumentReadonly<ContainedThingReadonly, SelfDescribingThingReadonly>>(base: Constructor<TSuper>) => Constructor<TSuper & Type>;
 
 export class SynchronizedDocumentFactoryDefaultImpl {
     
@@ -28,22 +28,22 @@ export class SynchronizedDocumentFactoryDefaultImpl {
     public load<
         ContainedThing extends Thing = Thing, 
         SelfDescribingThing extends Thing = Thing, 
-        ContainedThingReadonly extends ReadonlyThing = ReadonlyThing, 
-        SelfDescribingThingReadonly extends ReadonlyThing = ReadonlyThing
-    >(): DistantDocument<Document<ContainedThing, SelfDescribingThing>> & ReadonlyDocument<ContainedThingReadonly, SelfDescribingThingReadonly> {
-        return new DistantDocumentDefaultImpl<ContainedThing, SelfDescribingThing, ContainedThingReadonly, SelfDescribingThingReadonly>(new ReadonlyDocumentDefaultImpl<ContainedThingReadonly, SelfDescribingThingReadonly>());
+        ContainedThingReadonly extends ThingReadonly = ThingReadonly, 
+        SelfDescribingThingReadonly extends ThingReadonly = ThingReadonly
+    >(): DistantDocument<Document<ContainedThing, SelfDescribingThing>> & DocumentReadonly<ContainedThingReadonly, SelfDescribingThingReadonly> {
+        return new DistantDocumentDefaultImpl<ContainedThing, SelfDescribingThing, ContainedThingReadonly, SelfDescribingThingReadonly>(new DocumentReadonlyDefaultImpl<ContainedThingReadonly, SelfDescribingThingReadonly>());
     }
 
     public loadWithMixin<
         ContainedThing extends Thing = Thing, 
         SelfDescribingThing extends Thing = Thing, 
-        ContainedThingReadonly extends ReadonlyThing = ReadonlyThing, 
-        SelfDescribingThingReadonly extends ReadonlyThing = ReadonlyThing, 
+        ContainedThingReadonly extends ThingReadonly = ThingReadonly, 
+        SelfDescribingThingReadonly extends ThingReadonly = ThingReadonly, 
         Type extends Document<ContainedThing, SelfDescribingThing> = Document<ContainedThing, SelfDescribingThing>, 
-        ReadonlyType extends ReadonlyDocument<ContainedThingReadonly, SelfDescribingThingReadonly> = ReadonlyDocument<ContainedThingReadonly, SelfDescribingThingReadonly>
+        ReadonlyType extends DocumentReadonly<ContainedThingReadonly, SelfDescribingThingReadonly> = DocumentReadonly<ContainedThingReadonly, SelfDescribingThingReadonly>
     >(Mixin: MixinFunctionReadonly<ContainedThingReadonly, SelfDescribingThingReadonly, ReadonlyType>): DistantDocument<Type> & ReadonlyType {
-        const MixedInDistantDocument = Mixin<DistantDocument<Type> & ReadonlyDocument<ContainedThingReadonly, SelfDescribingThingReadonly>>(DistantDocumentDefaultImpl<ContainedThing, SelfDescribingThing, ContainedThingReadonly, SelfDescribingThingReadonly, Type>);
-        return new MixedInDistantDocument(new ReadonlyDocumentDefaultImpl());
+        const MixedInDistantDocument = Mixin<DistantDocument<Type> & DocumentReadonly<ContainedThingReadonly, SelfDescribingThingReadonly>>(DistantDocumentDefaultImpl<ContainedThing, SelfDescribingThing, ContainedThingReadonly, SelfDescribingThingReadonly, Type>);
+        return new MixedInDistantDocument(new DocumentReadonlyDefaultImpl());
     }
 
 }
@@ -53,6 +53,6 @@ const localDocument = syncFactory.create();
 const distantDocument = syncFactory.load();
 
 const localTypeIndex = syncFactory.createWithMixin<TypeIndex>(TypeIndexMixin);
-const distantTypeIndex = syncFactory.loadWithMixin<TypeIndexRegistration, Thing, ReadonlyTypeIndexRegistration, ReadonlyThing, TypeIndex, ReadonlyTypeIndex>(ReadonlyTypeIndexMixin);
+const distantTypeIndex = syncFactory.loadWithMixin<TypeIndexRegistration, Thing, ReadonlyTypeIndexRegistration, ThingReadonly, TypeIndex, ReadonlyTypeIndex>(ReadonlyTypeIndexMixin);
 distantTypeIndex.toLocalCopy();
 localTypeIndex.createRegistration("forClass");

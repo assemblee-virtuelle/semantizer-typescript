@@ -1,10 +1,14 @@
-import Document, { ReadonlyDocument } from "../core/Document";
+import DocumentDefaultImpl from "../core-default/DocumentDefaultImpl";
+import { ThingDefaultImpl } from "../core-default/ThingDefaultImpl";
+import Document, { DocumentReadonly } from "../core/Document";
+import Thing from "../core/Thing";
 import TypeIndex, { ReadonlyTypeIndex } from "./TypeIndex";
 import TypeIndexRegistration from "./TypeIndexRegistration";
+import TypeIndexRegistrationDefaultImpl from "./TypeIndexRegistrationDefaultImpl";
 
 type Constructor<T = {}> = new (...args: any[]) => T;
 
-export function ReadonlyTypeIndexMixin<TBase extends Constructor<ReadonlyDocument<any, any>>>(Base: TBase) {
+export function ReadonlyTypeIndexMixin<TBase extends Constructor<DocumentReadonly<any, any>>>(Base: TBase) {
     return class TypeIndexDefaultImpl extends Base implements ReadonlyTypeIndex {
 
         public forEachOfClass(forClass: string, callbackfn: (value: TypeIndexRegistration, index: number, array: TypeIndexRegistration[]) => void, thisArg?: any): void {
@@ -32,3 +36,9 @@ export function TypeIndexMixin<TBase extends Constructor<Document<any, any>>>(Ba
 }
 
 export default TypeIndexMixin;
+
+const TypeIndexDefault = TypeIndexMixin(DocumentDefaultImpl<TypeIndexRegistration, Thing>);
+const t = new TypeIndexDefault();
+const r = t.find((v: TypeIndexRegistration) => v.getForClass() === "");
+t.splice(0)
+//t.equals()

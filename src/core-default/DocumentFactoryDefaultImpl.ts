@@ -1,8 +1,8 @@
 import Context from "../core/Context";
-import Document, { ReadonlyDocument } from "../core/Document";
+import Document, { DocumentReadonly } from "../core/Document";
 import DocumentFactory from "../core/DocumentFactory";
-import { ReadonlyThing, Thing } from "../core/Thing";
-import { DocumentDefaultImpl, ReadonlyDocumentDefaultImpl } from "./DocumentDefaultImpl";
+import { ThingReadonly, Thing } from "../core/Thing";
+import { DocumentDefaultImpl, DocumentReadonlyDefaultImpl } from "./DocumentDefaultImpl";
 
 export class DocumentFactoryDefaultImpl implements DocumentFactory {
 
@@ -10,8 +10,8 @@ export class DocumentFactoryDefaultImpl implements DocumentFactory {
         return new DocumentDefaultImpl<ContainedThing, SelfDescribingThing>();
     }
 
-    public createReadonlyDocument<ContainedThing extends ReadonlyThing = ReadonlyThing, SelfDescribingThing extends ReadonlyThing = ReadonlyThing>(uri?: string, context?: Context): ReadonlyDocument<ContainedThing, SelfDescribingThing> {
-        return Object.freeze(new ReadonlyDocumentDefaultImpl<ContainedThing, SelfDescribingThing>());
+    public createReadonlyDocument<ContainedThing extends ThingReadonly = ThingReadonly, SelfDescribingThing extends ThingReadonly = ThingReadonly>(uri?: string, context?: Context): DocumentReadonly<ContainedThing, SelfDescribingThing> {
+        return Object.freeze(new DocumentReadonlyDefaultImpl<ContainedThing, SelfDescribingThing>());
     }
 
 }

@@ -1,9 +1,8 @@
 import Context from "../core/Context.js";
 import DocumentBase from "../core/Document.js";
 import Resource from "../core/Resource.js";
-import Statement from "../core/Statement.js";
-import { Thing, ThingBase } from "../core/Thing.js";
-import StatementDefaultImpl from "./StatementDefaultImpl.js";
+import Statement, { StatementBase, StatementReadonly } from "../core/Statement.js";
+import { Thing, ThingBase, ThingReadonly } from "../core/Thing.js";
 
 export enum ThingType {
     ForDescribing,
@@ -11,11 +10,13 @@ export enum ThingType {
     Anonymous
 }
 
-export class ThingDefaultImpl implements Thing {
+export class ThingBaseDefaultImpl<
+    ContainedStatement extends StatementBase = StatementBase
+> implements ThingBase<ContainedStatement> {
 
     private _uri: string;
     private _document: DocumentBase<any, any>;
-    private _statements: Statement[];
+    private _statements: ContainedStatement[];
 
     // TODO: add copy constructor
     public constructor(document: DocumentBase<any, any>, stateType: ThingType, uriOrNameHint?: string) {
@@ -38,23 +39,23 @@ export class ThingDefaultImpl implements Thing {
         return this._getStatements().length === 0;
     }
 
-    public [Symbol.iterator](): Iterator<Statement> {
+    public [Symbol.iterator](): Iterator<ContainedStatement> {
         return this._getStatements()[Symbol.iterator]();
     }
 
-    public forEach(callbackfn: (value: Statement, index: number, array: Statement[]) => void, thisArg?: any): void {
+    public forEach(callbackfn: (value: ContainedStatement, index: number, array: ContainedStatement[]) => void, thisArg?: any): void {
         this._getStatements().forEach(callbackfn, thisArg);
     }
     
-    public map(callbackfn: (value: Statement, index: number, array: Statement[]) => unknown, thisArg?: any): unknown[] {
+    public map(callbackfn: (value: ContainedStatement, index: number, array: ContainedStatement[]) => unknown, thisArg?: any): unknown[] {
         return this._getStatements().map(callbackfn);
     }
     
-    public filter(predicate: (value: Statement, index: number, array: Statement[]) => boolean): Statement[] {
+    public filter(predicate: (value: ContainedStatement, index: number, array: ContainedStatement[]) => boolean): ContainedStatement[] {
         return this._getStatements().filter(predicate);
     }
 
-    private _getStatements(): Statement[] {
+    private _getStatements(): ContainedStatement[] {
         return this._statements;
     }
 
@@ -87,25 +88,46 @@ export class ThingDefaultImpl implements Thing {
         throw new Error("Not implemented.");
     }
 
-    public add(about: string, value: string | Resource, Statement?: string, language?: string): Thing {
-        const statement = new StatementDefaultImpl(this, about, value, Statement, language);
-        this._getStatements().push(statement);
+    public get(property: string): ContainedStatement {
+        throw new Error("Method not implemented.");
+    }
+
+    public getAll(property: string): ContainedStatement[] {
+        throw new Error("Method not implemented.");
+    }
+
+}
+
+export class ThingReadonlyDefaultImpl<
+    ContainedStatement extends StatementReadonly = StatementReadonly
+> extends ThingBaseDefaultImpl<ContainedStatement> implements ThingReadonly<ContainedStatement> {
+
+    public toCopy(): ThingReadonly<ContainedStatement> {
+        throw new Error("Method not implemented.");
+    }
+
+    public toCopyWritable<ContainedStatementWritable extends Statement = Statement>(): Thing<ContainedStatementWritable> {
+        throw new Error("Method not implemented.");
+    }
+
+}
+
+export class ThingDefaultImpl<
+    ContainedStatement extends Statement = Statement
+> extends ThingBaseDefaultImpl<ContainedStatement> implements Thing<ContainedStatement> {
+
+    public add(about: string, value: string | Resource, ContainedStatement?: string, language?: string): Thing<ContainedStatement> {
+        //const statement = new ContainedStatementDefaultImpl(this, about, value, ContainedStatement, language);
+        //this._getStatements().push(statement);
+        // TODO: use factory
         return this;
     }
 
-    public get(property: string): string {
-        throw new Error("Method not implemented.");
-    }
-
-    public getAll(property: string): string[] {
-        throw new Error("Method not implemented.");
-    }
-
-    public set(about: string, value: string, oldValue?: string | undefined, Statement?: string | undefined, language?: string | undefined): Thing {
+    public set(about: string, value: string, oldValue?: string | undefined, ContainedStatement?: string | undefined, language?: string | undefined): Thing {
         throw new Error("Method not implemented.");
     }
     
-    public remove(about: string, value: string | Resource, Statement?: string | undefined, language?: string | undefined): Thing {
+    public remove(about: string, value: string | Resource, ContainedStatement?: string | undefined, language?: string | undefined): Thing {
         throw new Error("Method not implemented.");
     }
 
@@ -113,6 +135,15 @@ export class ThingDefaultImpl implements Thing {
         throw new Error("Method not implemented.");
     }
 
+    public toCopy(): Thing<ContainedStatement> {
+        throw new Error("Method not implemented.");
+    }
+
+    public toCopyReadonly<ContainedStatementReadonly extends StatementReadonly = StatementReadonly>(): ThingReadonly<ContainedStatementReadonly> {
+        throw new Error("Method not implemented.");
+    }
+
 }
+
 
 export default ThingDefaultImpl;

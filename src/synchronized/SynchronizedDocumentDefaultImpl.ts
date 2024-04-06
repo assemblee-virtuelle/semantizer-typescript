@@ -1,6 +1,6 @@
 import DecoratedDocument, { DecoratedReadonlyDocument } from "../core/DecoratedDocument.js";
-import { Document, ReadonlyDocument } from "../core/Document.js";
-import ThingBase, { ReadonlyThing, Thing } from "../core/Thing.js";
+import { Document, DocumentReadonly } from "../core/Document.js";
+import ThingBase, { ThingReadonly, Thing } from "../core/Thing.js";
 import { DistantDocument, LocalDocument } from "./SynchronizedDocument.js";
 
 export class LocalDocumentDefaultImpl<
@@ -34,11 +34,11 @@ implements Document<ContainedThing, SelfDescribingThing>, LocalDocument {
 export class DistantDocumentDefaultImpl<
     ContainedThing extends Thing = Thing, 
     SelfDescribingThing extends Thing = Thing, 
-    ContainedThingReadonly extends ReadonlyThing = ReadonlyThing, 
-    SelfDescribingThingReadonly extends ReadonlyThing = ReadonlyThing, 
+    ContainedThingReadonly extends ThingReadonly = ThingReadonly, 
+    SelfDescribingThingReadonly extends ThingReadonly = ThingReadonly, 
     Local extends Document<ContainedThing, SelfDescribingThing> = Document<ContainedThing, SelfDescribingThing>
 > extends DecoratedReadonlyDocument<ContainedThingReadonly, SelfDescribingThingReadonly> 
-implements ReadonlyDocument<ContainedThingReadonly, SelfDescribingThingReadonly>, DistantDocument<Local> {
+implements DocumentReadonly<ContainedThingReadonly, SelfDescribingThingReadonly>, DistantDocument<Local> {
       
     public isLocal(): boolean {
         return false;

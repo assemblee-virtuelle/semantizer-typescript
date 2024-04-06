@@ -2,7 +2,7 @@ import Resource from "../core/Resource";
 import Statement from "../core/Statement";
 import ThingBase from "../core/Thing";
 
-export class StatementDefaultImpl implements Statement {
+export class StatementBaseDefaultImpl implements Statement {
 
     private _thing: ThingBase;
     private _subject: string;
@@ -39,5 +39,7 @@ export class StatementDefaultImpl implements Statement {
     }
 
 }
+
+export class StatementReadonlyDefaultImpl extends StatementBaseDefaultImpl
 
 export default StatementDefaultImpl;

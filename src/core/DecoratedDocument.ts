@@ -1,7 +1,7 @@
 import { Context } from "../index";
-import Document, { ReadonlyDocument } from "./Document";
+import Document, { DocumentReadonly } from "./Document";
 import Resource from "./Resource";
-import ThingBase, { ReadonlyThing, Thing } from "./Thing";
+import ThingBase, { ThingReadonly, Thing } from "./Thing";
 
 export class DecoratedDocument<ContainedThing extends ThingBase = ThingBase, SelfDescribingThing extends ThingBase = ThingBase> implements Document<ContainedThing, SelfDescribingThing> {
 
@@ -43,7 +43,7 @@ export class DecoratedDocument<ContainedThing extends ThingBase = ThingBase, Sel
         return this._document.toCopy();
     }
 
-    public toCopyReadonly(): ReadonlyDocument<ContainedThing, SelfDescribingThing> {
+    public toCopyReadonly(): DocumentReadonly<ContainedThing, SelfDescribingThing> {
         return this._document.toCopyReadonly();
     }
 
@@ -131,7 +131,7 @@ export class DecoratedDocument<ContainedThing extends ThingBase = ThingBase, Sel
         return this._document.add(thing);
     }
 
-    public addAll(documentOrThings: ContainedThing[] | (ReadonlyDocument<ContainedThing, SelfDescribingThing>)): Document<ContainedThing, SelfDescribingThing> {
+    public addAll(documentOrThings: ContainedThing[] | (DocumentReadonly<ContainedThing, SelfDescribingThing>)): Document<ContainedThing, SelfDescribingThing> {
         return this._document.addAll(documentOrThings);
     }
 
@@ -183,17 +183,17 @@ export class DecoratedDocument<ContainedThing extends ThingBase = ThingBase, Sel
         return this._document.splice(start, deleteCount, ...items);
     }
 
-    public union(other: ReadonlyDocument<ContainedThing, SelfDescribingThing>): Document<ContainedThing, SelfDescribingThing> {
+    public union(other: DocumentReadonly<ContainedThing, SelfDescribingThing>): Document<ContainedThing, SelfDescribingThing> {
         return this._document.union(other);
     }
 
 }
 
-export class DecoratedReadonlyDocument<ContainedThing extends ReadonlyThing = ReadonlyThing, SelfDescribingThing extends ReadonlyThing = ReadonlyThing> implements ReadonlyDocument<ContainedThing, SelfDescribingThing> {
+export class DecoratedReadonlyDocument<ContainedThing extends ThingReadonly = ThingReadonly, SelfDescribingThing extends ThingReadonly = ThingReadonly> implements DocumentReadonly<ContainedThing, SelfDescribingThing> {
 
-    private _document: ReadonlyDocument<ContainedThing, SelfDescribingThing>;
+    private _document: DocumentReadonly<ContainedThing, SelfDescribingThing>;
 
-    public constructor(document: ReadonlyDocument<ContainedThing, SelfDescribingThing>) {
+    public constructor(document: DocumentReadonly<ContainedThing, SelfDescribingThing>) {
         this._document = document;
     }
 
@@ -225,7 +225,7 @@ export class DecoratedReadonlyDocument<ContainedThing extends ReadonlyThing = Re
         return this._document.toCanonical();
     }
 
-    public toCopy(): ReadonlyDocument<ContainedThing, SelfDescribingThing> {
+    public toCopy(): DocumentReadonly<ContainedThing, SelfDescribingThing> {
         return this._document.toCopy();
     }
 
@@ -249,19 +249,19 @@ export class DecoratedReadonlyDocument<ContainedThing extends ReadonlyThing = Re
         return this._document.at(index);
     }
 
-    public contains(other: ReadonlyDocument<ContainedThing, SelfDescribingThing>): boolean {
+    public contains(other: DocumentReadonly<ContainedThing, SelfDescribingThing>): boolean {
         return this._document.contains(other);
     }
 
-    public count(callbackfn?: ((thing: ContainedThing, document?: (ReadonlyDocument<ContainedThing, SelfDescribingThing>) | undefined) => boolean) | undefined): number {
+    public count(callbackfn?: ((thing: ContainedThing, document?: (DocumentReadonly<ContainedThing, SelfDescribingThing>) | undefined) => boolean) | undefined): number {
         return this._document.count(callbackfn);
     }
 
-    public difference(other: ReadonlyDocument<ContainedThing, SelfDescribingThing>): ReadonlyDocument<ContainedThing, SelfDescribingThing> {
+    public difference(other: DocumentReadonly<ContainedThing, SelfDescribingThing>): DocumentReadonly<ContainedThing, SelfDescribingThing> {
         return this._document.difference(other);
     }
 
-    public equals(other: ReadonlyDocument<ContainedThing, SelfDescribingThing>): boolean {
+    public equals(other: DocumentReadonly<ContainedThing, SelfDescribingThing>): boolean {
         return this._document.equals(other);
     }
 
@@ -305,7 +305,7 @@ export class DecoratedReadonlyDocument<ContainedThing extends ReadonlyThing = Re
         return this._document.reduce(callbackfn);
     }
 
-    public slice(start?: number | undefined, end?: number | undefined): ReadonlyDocument<ContainedThing, SelfDescribingThing> {
+    public slice(start?: number | undefined, end?: number | undefined): DocumentReadonly<ContainedThing, SelfDescribingThing> {
         return this._document.slice(start, end);
     }
 
