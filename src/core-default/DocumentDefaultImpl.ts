@@ -1,12 +1,12 @@
 import Context from "../core/Context.js";
-import { DocumentBase, ReadonlyDocument, Document } from "../core/Document.js";
+import { DocumentBase, ReadonlyDocument, Document, WithReadOperations } from "../core/Document.js";
 import Resource from "../core/Resource.js";
-import Thing, { ReadonlyThing } from "../core/Thing.js";
+import Thing, { ReadonlyThing, ThingBase } from "../core/Thing.js";
 import ThingFactory from '../core/ThingFactory.js';
 import ThingFactoryDefaultImpl from "./ThingFactoryDefaultImpl.js";
 
-export class ReadonlyDocumentDefaultImpl<ContainedThing extends ReadonlyThing = ReadonlyThing, SelfDescribingThing extends ReadonlyThing = ReadonlyThing> implements ReadonlyDocument<ContainedThing, SelfDescribingThing> {
-
+class DocumentBaseDefaultImpl<DocumentType extends (DocumentBase<ContainedThing, SelfDescribingThing> & WithReadOperations<DocumentType, ContainedThing, SelfDescribingThing>), ContainedThing extends ThingBase, SelfDescribingThing extends ThingBase> {
+    
     protected _uri: string;
     protected _selfDescribingThing?: SelfDescribingThing;
     protected _things: ContainedThing[];
@@ -24,11 +24,11 @@ export class ReadonlyDocumentDefaultImpl<ContainedThing extends ReadonlyThing = 
         return this._getContainedThings().at(index);
     }
 
-    public contains(other: ReadonlyDocument<ContainedThing, SelfDescribingThing>): boolean {
+    public contains(other: DocumentType): boolean {
         return other.every((thing: ContainedThing) => this.includes(thing));
     }
 
-    public difference(other: ReadonlyDocument<ContainedThing, SelfDescribingThing>): ReadonlyDocument<ContainedThing, SelfDescribingThing> {
+    public difference(other: DocumentType): DocumentType {
         throw new Error("Method not implemented.");
     }
 
@@ -82,7 +82,7 @@ export class ReadonlyDocumentDefaultImpl<ContainedThing extends ReadonlyThing = 
         return this._getContainedThings().reduce(callbackfn);
     }
 
-    public slice(start?: number, end?: number): ReadonlyDocument<ContainedThing, SelfDescribingThing> {
+    public slice(start?: number, end?: number): DocumentType {
         throw new Error("Method not implemented."); //return this._getContainedThings().slice(start, end);
     }
 
@@ -158,7 +158,7 @@ export class ReadonlyDocumentDefaultImpl<ContainedThing extends ReadonlyThing = 
         return this._selfDescribingThing;
     }
 
-    public count(callbackfn?: ((thing: ContainedThing, document?: ReadonlyDocument<ContainedThing, SelfDescribingThing>) => boolean) | undefined): number {
+    public count(callbackfn?: ((thing: ContainedThing, document?: DocumentType) => boolean) | undefined): number {
         return this._getContainedThings().length;
     }
 
@@ -170,19 +170,29 @@ export class ReadonlyDocumentDefaultImpl<ContainedThing extends ReadonlyThing = 
     public filter(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => boolean): ContainedThing[] {
         return this._getContainedThings().filter(predicate);
     }
+}
 
-    public toGenericReadonlyDocument(): ReadonlyDocument<ContainedThing, SelfDescribingThing> {
+export class ReadonlyDocumentDefaultImpl<ContainedThing extends ReadonlyThing = ReadonlyThing, SelfDescribingThing extends ReadonlyThing = ReadonlyThing> extends DocumentBaseDefaultImpl<ReadonlyDocument<ContainedThing, SelfDescribingThing>, ContainedThing, SelfDescribingThing> implements ReadonlyDocument<ContainedThing, SelfDescribingThing> {
+
+    public constructor(documentOrUri?: DocumentBase<ContainedThing, SelfDescribingThing> | string, context?: Context) {
+        super(documentOrUri, context);
+    }
+
+    public toCopy(): ReadonlyDocument<ContainedThing, SelfDescribingThing> {
         throw new Error("Method not implemented.");
     }
 
+    public toCopyWritable<ContainedWritableThing extends Thing = Thing, SelfDescribingWritableThing extends Thing = Thing>(): Document<ContainedWritableThing, SelfDescribingWritableThing> {
+        throw new Error("Method not implemented.");
+    }
 }
 
-export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> extends ReadonlyDocumentDefaultImpl<ContainedThing, SelfDescribingThing> implements Document<ContainedThing, SelfDescribingThing> {
+export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> extends DocumentBaseDefaultImpl<Document<ContainedThing, SelfDescribingThing>, ContainedThing, SelfDescribingThing> implements Document<ContainedThing, SelfDescribingThing> {
 
     protected _thingFactory: ThingFactory<ContainedThing, SelfDescribingThing>;
 
-    public constructor(uri?: string, context?: Context, thingFactory?: ThingFactory<ContainedThing, SelfDescribingThing>);
-    public constructor(document: DocumentBase<ContainedThing, SelfDescribingThing>);
+    //public constructor(uri?: string, context?: Context, thingFactory?: ThingFactory<ContainedThing, SelfDescribingThing>);
+    //public constructor(document: DocumentBase<ContainedThing, SelfDescribingThing>);
     public constructor(documentOrUri?: DocumentBase<ContainedThing, SelfDescribingThing> | string, context?: Context, thingFactory?: ThingFactory<ContainedThing, SelfDescribingThing>) {
         super(documentOrUri, context)
         this._thingFactory = thingFactory ?? new ThingFactoryDefaultImpl<ContainedThing, SelfDescribingThing>();
@@ -330,7 +340,11 @@ export class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescr
         return this._selfDescribingThing = thing;
     }
 
-    public toGenericDocument(): Document<ContainedThing, SelfDescribingThing> {
+    public toCopy(): Document<ContainedThing, SelfDescribingThing> {
+        throw new Error("Method not implemented.");
+    }
+
+    public toCopyReadonly(): ReadonlyDocument<ContainedThing, SelfDescribingThing> {
         throw new Error("Method not implemented.");
     }
 

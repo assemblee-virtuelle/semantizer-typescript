@@ -1,17 +1,17 @@
 import Context from "../core/Context.js";
-import { DocumentBase, ReadonlyDocument, Document } from "../core/Document.js";
+import { DocumentBase, ReadonlyDocument, Document, WithReadOperations } from "../core/Document.js";
 import Resource from "../core/Resource.js";
-import Thing, { ReadonlyThing } from "../core/Thing.js";
+import Thing, { ReadonlyThing, ThingBase } from "../core/Thing.js";
 import ThingFactory from '../core/ThingFactory.js';
-export declare class ReadonlyDocumentDefaultImpl<ContainedThing extends ReadonlyThing = ReadonlyThing, SelfDescribingThing extends ReadonlyThing = ReadonlyThing> implements ReadonlyDocument<ContainedThing, SelfDescribingThing> {
+declare class DocumentBaseDefaultImpl<DocumentType extends (DocumentBase<ContainedThing, SelfDescribingThing> & WithReadOperations<DocumentType, ContainedThing, SelfDescribingThing>), ContainedThing extends ThingBase, SelfDescribingThing extends ThingBase> {
     protected _uri: string;
     protected _selfDescribingThing?: SelfDescribingThing;
     protected _things: ContainedThing[];
     protected _context?: Context;
     constructor(documentOrUri?: DocumentBase<ContainedThing, SelfDescribingThing> | string, context?: Context);
     at(index: number): ContainedThing | undefined;
-    contains(other: ReadonlyDocument<ContainedThing, SelfDescribingThing>): boolean;
-    difference(other: ReadonlyDocument<ContainedThing, SelfDescribingThing>): ReadonlyDocument<ContainedThing, SelfDescribingThing>;
+    contains(other: DocumentType): boolean;
+    difference(other: DocumentType): DocumentType;
     every(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => boolean, thisArg?: any): boolean;
     find(predicate: (value: ContainedThing, index: number, obj: ContainedThing[]) => value is ContainedThing, thisArg?: any): ContainedThing | undefined;
     findIndex(predicate: (value: ContainedThing, index: number, obj: ContainedThing[]) => unknown, thisArg?: any): number;
@@ -24,7 +24,7 @@ export declare class ReadonlyDocumentDefaultImpl<ContainedThing extends Readonly
     indexOf(searchElement: ContainedThing, fromIndex?: number | undefined): number;
     keys(): IterableIterator<number>;
     reduce(callbackfn: (previousValue: ContainedThing, currentValue: ContainedThing, currentIndex: number, array: ContainedThing[]) => ContainedThing): ContainedThing;
-    slice(start?: number, end?: number): ReadonlyDocument<ContainedThing, SelfDescribingThing>;
+    slice(start?: number, end?: number): DocumentType;
     some(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => unknown, thisArg?: any): boolean;
     toCanonical(): string;
     toGenericDocument(): DocumentBase<Thing, Thing>;
@@ -42,15 +42,18 @@ export declare class ReadonlyDocumentDefaultImpl<ContainedThing extends Readonly
     isEmpty(): boolean;
     protected _getContainedThings(): ContainedThing[];
     getThingThatSelfDescribes(): SelfDescribingThing | undefined;
-    count(callbackfn?: ((thing: ContainedThing, document?: ReadonlyDocument<ContainedThing, SelfDescribingThing>) => boolean) | undefined): number;
+    count(callbackfn?: ((thing: ContainedThing, document?: DocumentType) => boolean) | undefined): number;
     hasStatementsAbout(subject: string | Resource, property?: string, ...hasValues: string[]): boolean;
     filter(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => boolean): ContainedThing[];
-    toGenericReadonlyDocument(): ReadonlyDocument<ContainedThing, SelfDescribingThing>;
 }
-export declare class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> extends ReadonlyDocumentDefaultImpl<ContainedThing, SelfDescribingThing> implements Document<ContainedThing, SelfDescribingThing> {
+export declare class ReadonlyDocumentDefaultImpl<ContainedThing extends ReadonlyThing = ReadonlyThing, SelfDescribingThing extends ReadonlyThing = ReadonlyThing> extends DocumentBaseDefaultImpl<ReadonlyDocument<ContainedThing, SelfDescribingThing>, ContainedThing, SelfDescribingThing> implements ReadonlyDocument<ContainedThing, SelfDescribingThing> {
+    constructor(documentOrUri?: DocumentBase<ContainedThing, SelfDescribingThing> | string, context?: Context);
+    toCopy(): ReadonlyDocument<ContainedThing, SelfDescribingThing>;
+    toCopyWritable<ContainedWritableThing extends Thing = Thing, SelfDescribingWritableThing extends Thing = Thing>(): Document<ContainedWritableThing, SelfDescribingWritableThing>;
+}
+export declare class DocumentDefaultImpl<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> extends DocumentBaseDefaultImpl<Document<ContainedThing, SelfDescribingThing>, ContainedThing, SelfDescribingThing> implements Document<ContainedThing, SelfDescribingThing> {
     protected _thingFactory: ThingFactory<ContainedThing, SelfDescribingThing>;
-    constructor(uri?: string, context?: Context, thingFactory?: ThingFactory<ContainedThing, SelfDescribingThing>);
-    constructor(document: DocumentBase<ContainedThing, SelfDescribingThing>);
+    constructor(documentOrUri?: DocumentBase<ContainedThing, SelfDescribingThing> | string, context?: Context, thingFactory?: ThingFactory<ContainedThing, SelfDescribingThing>);
     getContainedThingFactory(): ThingFactory<ContainedThing, SelfDescribingThing>;
     add(thing: ContainedThing): Document<ContainedThing, SelfDescribingThing>;
     addAll(documentOrThings: ReadonlyDocument<ContainedThing, SelfDescribingThing> | ContainedThing[]): Document<ContainedThing, SelfDescribingThing>;
@@ -81,7 +84,8 @@ export declare class DocumentDefaultImpl<ContainedThing extends Thing = Thing, S
     protected validateAndCreateContainedThingWithoutUri(nameHint?: string): ContainedThing;
     setUri(uri: string): void;
     protected setThingThatSelfDescribes(thing: SelfDescribingThing): SelfDescribingThing | undefined;
-    toGenericDocument(): Document<ContainedThing, SelfDescribingThing>;
+    toCopy(): Document<ContainedThing, SelfDescribingThing>;
+    toCopyReadonly(): ReadonlyDocument<ContainedThing, SelfDescribingThing>;
 }
 export default DocumentDefaultImpl;
 //# sourceMappingURL=DocumentDefaultImpl.d.ts.map

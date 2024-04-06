@@ -1,7 +1,7 @@
 import { Context } from "../index";
 import Document, { ReadonlyDocument } from "./Document";
 import Resource from "./Resource";
-import ThingBase, { ReadonlyThing } from "./Thing";
+import ThingBase, { ReadonlyThing, Thing } from "./Thing";
 
 export class DecoratedDocument<ContainedThing extends ThingBase = ThingBase, SelfDescribingThing extends ThingBase = ThingBase> implements Document<ContainedThing, SelfDescribingThing> {
 
@@ -39,12 +39,12 @@ export class DecoratedDocument<ContainedThing extends ThingBase = ThingBase, Sel
         return this._document.toCanonical();
     }
 
-    public toGenericDocument(): Document<ContainedThing, SelfDescribingThing> {
-        return this._document.toGenericDocument();
+    public toCopy(): Document<ContainedThing, SelfDescribingThing> {
+        return this._document.toCopy();
     }
 
-    public toGenericReadonlyDocument(): ReadonlyDocument<ContainedThing, SelfDescribingThing> {
-        return this._document.toGenericReadonlyDocument();
+    public toCopyReadonly(): ReadonlyDocument<ContainedThing, SelfDescribingThing> {
+        return this._document.toCopyReadonly();
     }
 
     public toStream(): string {
@@ -63,19 +63,19 @@ export class DecoratedDocument<ContainedThing extends ThingBase = ThingBase, Sel
         return this._document.at(index);
     }
 
-    public contains(other: ReadonlyDocument<ContainedThing, SelfDescribingThing>): boolean {
+    public contains(other: Document<ContainedThing, SelfDescribingThing>): boolean {
         return this._document.contains(other);
     }
 
-    public count(callbackfn?: ((thing: ContainedThing, document?: (ReadonlyDocument<ContainedThing, SelfDescribingThing>) | undefined) => boolean) | undefined): number {
+    public count(callbackfn?: ((thing: ContainedThing, document?: (Document<ContainedThing, SelfDescribingThing>) | undefined) => boolean) | undefined): number {
         return this._document.count(callbackfn);
     }
 
-    public difference(other: ReadonlyDocument<ContainedThing, SelfDescribingThing>): ReadonlyDocument<ContainedThing, SelfDescribingThing> {
+    public difference(other: Document<ContainedThing, SelfDescribingThing>): Document<ContainedThing, SelfDescribingThing> {
         return this._document.difference(other);
     }
 
-    public equals(other: ReadonlyDocument<ContainedThing, SelfDescribingThing>): boolean {
+    public equals(other: Document<ContainedThing, SelfDescribingThing>): boolean {
         return this._document.equals(other);
     }
 
@@ -119,7 +119,7 @@ export class DecoratedDocument<ContainedThing extends ThingBase = ThingBase, Sel
         return this._document.reduce(callbackfn);
     }
 
-    public slice(start?: number | undefined, end?: number | undefined): ReadonlyDocument<ContainedThing, SelfDescribingThing> {
+    public slice(start?: number | undefined, end?: number | undefined): Document<ContainedThing, SelfDescribingThing> {
         return this._document.slice(start, end);
     }
 
@@ -225,8 +225,12 @@ export class DecoratedReadonlyDocument<ContainedThing extends ReadonlyThing = Re
         return this._document.toCanonical();
     }
 
-    public toGenericReadonlyDocument(): ReadonlyDocument<ContainedThing, SelfDescribingThing> {
-        return this._document.toGenericReadonlyDocument();
+    public toCopy(): ReadonlyDocument<ContainedThing, SelfDescribingThing> {
+        return this._document.toCopy();
+    }
+
+    public toCopyWritable<ContainedWritableThing extends Thing = Thing, SelfDescribingWritableThing extends Thing = Thing>(): Document<ContainedWritableThing, SelfDescribingWritableThing> {
+        return this._document.toCopyWritable<ContainedWritableThing, SelfDescribingWritableThing>();
     }
 
     public toStream(): string {

@@ -1,7 +1,7 @@
+import { Context } from "../index";
 import Document, { ReadonlyDocument } from "./Document";
 import Resource from "./Resource";
-import ThingBase, { ReadonlyThing } from "./Thing";
-import { Context } from "../index";
+import ThingBase, { ReadonlyThing, Thing } from "./Thing";
 export declare class DecoratedDocument<ContainedThing extends ThingBase = ThingBase, SelfDescribingThing extends ThingBase = ThingBase> implements Document<ContainedThing, SelfDescribingThing> {
     private _document;
     constructor(document: Document<ContainedThing, SelfDescribingThing>);
@@ -12,16 +12,16 @@ export declare class DecoratedDocument<ContainedThing extends ThingBase = ThingB
     hasThingThatSelfDescribes(): boolean;
     isEmpty(): boolean;
     toCanonical(): string;
-    toGenericDocument(): Document<ContainedThing, SelfDescribingThing>;
-    toGenericReadonlyDocument(): ReadonlyDocument<ContainedThing, SelfDescribingThing>;
+    toCopy(): Document<ContainedThing, SelfDescribingThing>;
+    toCopyReadonly(): ReadonlyDocument<ContainedThing, SelfDescribingThing>;
     toStream(): string;
     [Symbol.iterator](): Iterator<ContainedThing>;
     getUri(): string;
     at(index: number): ContainedThing | undefined;
-    contains(other: ReadonlyDocument<ContainedThing, SelfDescribingThing>): boolean;
-    count(callbackfn?: ((thing: ContainedThing, document?: (ReadonlyDocument<ContainedThing, SelfDescribingThing>) | undefined) => boolean) | undefined): number;
-    difference(other: ReadonlyDocument<ContainedThing, SelfDescribingThing>): ReadonlyDocument<ContainedThing, SelfDescribingThing>;
-    equals(other: ReadonlyDocument<ContainedThing, SelfDescribingThing>): boolean;
+    contains(other: Document<ContainedThing, SelfDescribingThing>): boolean;
+    count(callbackfn?: ((thing: ContainedThing, document?: (Document<ContainedThing, SelfDescribingThing>) | undefined) => boolean) | undefined): number;
+    difference(other: Document<ContainedThing, SelfDescribingThing>): Document<ContainedThing, SelfDescribingThing>;
+    equals(other: Document<ContainedThing, SelfDescribingThing>): boolean;
     every(predicate: (value: ContainedThing, index?: number | undefined, array?: ContainedThing[] | undefined) => boolean, thisArg?: any): boolean;
     filter(predicate: (value: ContainedThing, index?: number | undefined, array?: ContainedThing[] | undefined) => boolean): ContainedThing[];
     find(predicate: (value: ContainedThing, index?: number | undefined, obj?: ContainedThing[] | undefined) => value is ContainedThing, thisArg?: any): ContainedThing | undefined;
@@ -32,9 +32,8 @@ export declare class DecoratedDocument<ContainedThing extends ThingBase = ThingB
     keys(): IterableIterator<number>;
     map(callbackfn: (value: ContainedThing, index: number, array: ContainedThing[]) => unknown, thisArg?: any): unknown[];
     reduce(callbackfn: (previousValue: ContainedThing, currentValue: ContainedThing, currentIndex: number, array: ContainedThing[]) => ContainedThing): ContainedThing;
-    slice(start?: number | undefined, end?: number | undefined): ReadonlyDocument<ContainedThing, SelfDescribingThing>;
+    slice(start?: number | undefined, end?: number | undefined): Document<ContainedThing, SelfDescribingThing>;
     some(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => unknown, thisArg?: any): boolean;
-    private makeReadonlyError;
     add(thing: ContainedThing): Document<ContainedThing, SelfDescribingThing>;
     addAll(documentOrThings: ContainedThing[] | (ReadonlyDocument<ContainedThing, SelfDescribingThing>)): Document<ContainedThing, SelfDescribingThing>;
     createThingToSelfDescribe(): SelfDescribingThing;
@@ -61,7 +60,8 @@ export declare class DecoratedReadonlyDocument<ContainedThing extends ReadonlyTh
     hasThingThatSelfDescribes(): boolean;
     isEmpty(): boolean;
     toCanonical(): string;
-    toGenericReadonlyDocument(): ReadonlyDocument<ContainedThing, SelfDescribingThing>;
+    toCopy(): ReadonlyDocument<ContainedThing, SelfDescribingThing>;
+    toCopyWritable<ContainedWritableThing extends Thing = Thing, SelfDescribingWritableThing extends Thing = Thing>(): Document<ContainedWritableThing, SelfDescribingWritableThing>;
     toStream(): string;
     [Symbol.iterator](): Iterator<ContainedThing>;
     getUri(): string;

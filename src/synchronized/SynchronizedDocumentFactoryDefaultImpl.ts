@@ -18,12 +18,20 @@ export class SynchronizedDocumentFactoryDefaultImpl {
         return new MixedInLocalDocument(new DocumentDefaultImpl());
     }
 
-    public create(): LocalDocument & Document {
-        return new LocalDocumentDefaultImpl(new DocumentDefaultImpl());
+    public create<
+        ContainedThing extends Thing = Thing, 
+        SelfDescribingThing extends Thing = Thing
+    >(): LocalDocument & Document<ContainedThing, SelfDescribingThing> {
+        return new LocalDocumentDefaultImpl(new DocumentDefaultImpl<ContainedThing, SelfDescribingThing>());
     }
 
-    public load(): DistantDocument<Document> & ReadonlyDocument {
-        return new DistantDocumentDefaultImpl<Thing, Thing, ReadonlyThing, ReadonlyThing>(new ReadonlyDocumentDefaultImpl());
+    public load<
+        ContainedThing extends Thing = Thing, 
+        SelfDescribingThing extends Thing = Thing, 
+        ContainedThingReadonly extends ReadonlyThing = ReadonlyThing, 
+        SelfDescribingThingReadonly extends ReadonlyThing = ReadonlyThing
+    >(): DistantDocument<Document<ContainedThing, SelfDescribingThing>> & ReadonlyDocument<ContainedThingReadonly, SelfDescribingThingReadonly> {
+        return new DistantDocumentDefaultImpl<ContainedThing, SelfDescribingThing, ContainedThingReadonly, SelfDescribingThingReadonly>(new ReadonlyDocumentDefaultImpl<ContainedThingReadonly, SelfDescribingThingReadonly>());
     }
 
     public loadWithMixin<
@@ -47,3 +55,4 @@ const distantDocument = syncFactory.load();
 const localTypeIndex = syncFactory.createWithMixin<TypeIndex>(TypeIndexMixin);
 const distantTypeIndex = syncFactory.loadWithMixin<TypeIndexRegistration, Thing, ReadonlyTypeIndexRegistration, ReadonlyThing, TypeIndex, ReadonlyTypeIndex>(ReadonlyTypeIndexMixin);
 distantTypeIndex.toLocalCopy();
+localTypeIndex.createRegistration("forClass");

@@ -4,6 +4,8 @@ type Constructor<T = {}> = new (...args: any[]) => T;
 export declare function ReadonlyTypeIndexMixin<TBase extends Constructor<ReadonlyDocument<any, any>>>(Base: TBase): {
     new (...args: any[]): {
         forEachOfClass(forClass: string, callbackfn: (value: TypeIndexRegistration, index: number, array: TypeIndexRegistration[]) => void, thisArg?: any): void;
+        toCopy(): ReadonlyDocument<any, any>;
+        toCopyWritable<ContainedWritableThing extends import("../core/Thing").Thing = import("../core/Thing").Thing, SelfDescribingWritableThing extends import("../core/Thing").Thing = import("../core/Thing").Thing>(): Document<ContainedWritableThing, SelfDescribingWritableThing>;
         get(uri: string | import("../core/Resource").Resource): any;
         getContext(): import("../index").Context | undefined;
         getThingThatSelfDescribes(): any;
@@ -31,13 +33,14 @@ export declare function ReadonlyTypeIndexMixin<TBase extends Constructor<Readonl
         reduce(callbackfn: (previousValue: any, currentValue: any, currentIndex: number, array: any[]) => any): any;
         slice(start?: number | undefined, end?: number | undefined): ReadonlyDocument<any, any>;
         some(predicate: (value: any, index: number, array: any[]) => unknown, thisArg?: any): boolean;
-        toGenericReadonlyDocument(): ReadonlyDocument<any, any>;
     };
 } & TBase;
 export declare function TypeIndexMixin<TBase extends Constructor<Document<any, any>>>(Base: TBase): {
     new (...args: any[]): {
         createRegistration(forClass?: string, nameHintOrUri?: string | undefined): TypeIndexRegistration;
         forEachOfClass(forClass: string, callbackfn: (value: TypeIndexRegistration, index: number, array: TypeIndexRegistration[]) => void, thisArg?: any): void;
+        toCopy(): Document<any, any>;
+        toCopyReadonly(): ReadonlyDocument<any, any>;
         get(uri: string | import("../core/Resource").Resource): any;
         getContext(): import("../index").Context | undefined;
         getThingThatSelfDescribes(): any;
@@ -49,10 +52,10 @@ export declare function TypeIndexMixin<TBase extends Constructor<Document<any, a
         [Symbol.iterator](): Iterator<any, any, undefined>;
         getUri(): string;
         at(index: number): any;
-        contains(other: ReadonlyDocument<any, any>): boolean;
-        count(callbackfn?: ((thing: any, document?: ReadonlyDocument<any, any> | undefined) => boolean) | undefined): number;
-        difference(other: ReadonlyDocument<any, any>): ReadonlyDocument<any, any>;
-        equals(other: ReadonlyDocument<any, any>): boolean;
+        contains(other: Document<any, any>): boolean;
+        count(callbackfn?: ((thing: any, document?: Document<any, any> | undefined) => boolean) | undefined): number;
+        difference(other: Document<any, any>): Document<any, any>;
+        equals(other: Document<any, any>): boolean;
         every(predicate: (value: any, index?: number | undefined, array?: any[] | undefined) => boolean, thisArg?: any): boolean;
         filter(predicate: (value: any, index?: number | undefined, array?: any[] | undefined) => boolean): any[];
         find(predicate: (value: any, index?: number | undefined, obj?: any[] | undefined) => value is any, thisArg?: any): any;
@@ -63,9 +66,8 @@ export declare function TypeIndexMixin<TBase extends Constructor<Document<any, a
         keys(): IterableIterator<number>;
         map(callbackfn: (value: any, index: number, array: any[]) => unknown, thisArg?: any): unknown[];
         reduce(callbackfn: (previousValue: any, currentValue: any, currentIndex: number, array: any[]) => any): any;
-        slice(start?: number | undefined, end?: number | undefined): ReadonlyDocument<any, any>;
+        slice(start?: number | undefined, end?: number | undefined): Document<any, any>;
         some(predicate: (value: any, index: number, array: any[]) => unknown, thisArg?: any): boolean;
-        toGenericReadonlyDocument(): ReadonlyDocument<any, any>;
         add(thing: any): Document<any, any>;
         addAll(documentOrThings: any[] | ReadonlyDocument<any, any>): Document<any, any>;
         createThingToSelfDescribe(): any;
@@ -80,7 +82,6 @@ export declare function TypeIndexMixin<TBase extends Constructor<Document<any, a
         shift(): any;
         sort(compareFn?: ((a: any, b: any) => number) | undefined): Document<any, any>;
         splice(start: number, deleteCount?: number | undefined, ...items: any[]): Document<any, any>;
-        toGenericDocument(): Document<any, any>;
         union(other: ReadonlyDocument<any, any>): Document<any, any>;
     };
 } & TBase;

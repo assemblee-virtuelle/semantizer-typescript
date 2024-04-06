@@ -6,8 +6,8 @@ type MixinFunction<Type extends DocumentBase<any, any>> = <TSuper extends Docume
 type MixinFunctionReadonly<ContainedThingReadonly extends ReadonlyThing, SelfDescribingThingReadonly extends ReadonlyThing, Type extends ReadonlyDocument<ContainedThingReadonly, SelfDescribingThingReadonly>> = <TSuper extends ReadonlyDocument<ContainedThingReadonly, SelfDescribingThingReadonly>>(base: Constructor<TSuper>) => Constructor<TSuper & Type>;
 export declare class SynchronizedDocumentFactoryDefaultImpl {
     createWithMixin<Type extends Document<any, any> = Document>(Mixin: MixinFunction<Type>): LocalDocument & Type;
-    create(): LocalDocument & Document;
-    load(): DistantDocument<Document> & ReadonlyDocument;
+    create<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing>(): LocalDocument & Document<ContainedThing, SelfDescribingThing>;
+    load<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing, ContainedThingReadonly extends ReadonlyThing = ReadonlyThing, SelfDescribingThingReadonly extends ReadonlyThing = ReadonlyThing>(): DistantDocument<Document<ContainedThing, SelfDescribingThing>> & ReadonlyDocument<ContainedThingReadonly, SelfDescribingThingReadonly>;
     loadWithMixin<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing, ContainedThingReadonly extends ReadonlyThing = ReadonlyThing, SelfDescribingThingReadonly extends ReadonlyThing = ReadonlyThing, Type extends Document<ContainedThing, SelfDescribingThing> = Document<ContainedThing, SelfDescribingThing>, ReadonlyType extends ReadonlyDocument<ContainedThingReadonly, SelfDescribingThingReadonly> = ReadonlyDocument<ContainedThingReadonly, SelfDescribingThingReadonly>>(Mixin: MixinFunctionReadonly<ContainedThingReadonly, SelfDescribingThingReadonly, ReadonlyType>): DistantDocument<Type> & ReadonlyType;
 }
 export {};

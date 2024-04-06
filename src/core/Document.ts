@@ -16,12 +16,12 @@ export interface DocumentBase<ContainedThing extends ThingBase = ThingBase, Self
     // TODO: add meta data (acl, last time modified, headers...)
 }
 
-export interface WithReadOperations<ContainedThing extends ReadonlyThing, SelfDescribingThing extends ReadonlyThing> {
+export interface WithReadOperations<DocumentType extends DocumentBase<ContainedThing, SelfDescribingThing>, ContainedThing extends ThingBase, SelfDescribingThing extends ThingBase> {
     at(index: number): ContainedThing | undefined;
-    contains(other: ReadonlyDocument<ContainedThing, SelfDescribingThing>): boolean;
-    count(callbackfn?: (thing: ContainedThing, document?: ReadonlyDocument<ContainedThing, SelfDescribingThing>) => boolean): number;
-    difference(other: ReadonlyDocument<ContainedThing, SelfDescribingThing>): ReadonlyDocument<ContainedThing, SelfDescribingThing>;
-    equals(other: ReadonlyDocument<ContainedThing, SelfDescribingThing>): boolean;
+    contains(other: DocumentType): boolean;
+    count(callbackfn?: (thing: ContainedThing, document?: DocumentType) => boolean): number;
+    difference(other: DocumentType): DocumentType;
+    equals(other: DocumentType): boolean;
     every(predicate: (value: ContainedThing, index?: number, array?: ContainedThing[]) => boolean, thisArg?: any): boolean;
     filter(predicate: (value: ContainedThing, index?: number, array?: ContainedThing[]) => boolean): ContainedThing[];
     find(predicate: (value: ContainedThing, index?: number, obj?: ContainedThing[]) => value is ContainedThing, thisArg?: any): ContainedThing | undefined;
@@ -32,9 +32,8 @@ export interface WithReadOperations<ContainedThing extends ReadonlyThing, SelfDe
     keys(): IterableIterator<number>; // to check
     map(callbackfn: (value: ContainedThing, index: number, array: ContainedThing[]) => unknown, thisArg?: any): unknown[];
     reduce(callbackfn: (previousValue: ContainedThing, currentValue: ContainedThing, currentIndex: number, array: ContainedThing[]) => ContainedThing): ContainedThing; 
-    slice(start?: number, end?: number): ReadonlyDocument<ContainedThing, SelfDescribingThing>;
+    slice(start?: number, end?: number): DocumentType;
     some(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => unknown, thisArg?: any): boolean;
-    toGenericReadonlyDocument(): ReadonlyDocument<ContainedThing, SelfDescribingThing>;
 }
 
 export interface WithWriteOperations<ContainedThing extends Thing, SelfDescribingThing extends Thing> {
@@ -53,11 +52,18 @@ export interface WithWriteOperations<ContainedThing extends Thing, SelfDescribin
     shift(): ContainedThing | undefined;
     sort(compareFn?: (a: ContainedThing, b: ContainedThing) => number): Document<ContainedThing, SelfDescribingThing>;
     splice(start: number, deleteCount?: number, ...items: ContainedThing[]): Document<ContainedThing, SelfDescribingThing>;
-    toGenericDocument(): Document<ContainedThing, SelfDescribingThing>;
     // TODO: add meta description
     union(other: ReadonlyDocument<ContainedThing, SelfDescribingThing>): Document<ContainedThing, SelfDescribingThing>;
 }
 
-export type ReadonlyDocument<ContainedThing extends ReadonlyThing = ReadonlyThing, SelfDescribingThing extends ReadonlyThing = ReadonlyThing> = DocumentBase<ContainedThing, SelfDescribingThing> & WithReadOperations<ContainedThing, SelfDescribingThing>;
-export type Document<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> = DocumentBase<ContainedThing, SelfDescribingThing> & WithReadOperations<ContainedThing, SelfDescribingThing> & WithWriteOperations<ContainedThing, SelfDescribingThing>;
+export interface ReadonlyDocument<ContainedThing extends ReadonlyThing = ReadonlyThing, SelfDescribingThing extends ReadonlyThing = ReadonlyThing> extends DocumentBase<ContainedThing, SelfDescribingThing>, WithReadOperations<ReadonlyDocument<ContainedThing, SelfDescribingThing>, ContainedThing, SelfDescribingThing> {
+    toCopy(): ReadonlyDocument<ContainedThing, SelfDescribingThing>;
+    toCopyWritable<ContainedWritableThing extends Thing = Thing, SelfDescribingWritableThing extends Thing = Thing>(): Document<ContainedWritableThing, SelfDescribingWritableThing>;
+}
+
+export interface Document<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> extends DocumentBase<ContainedThing, SelfDescribingThing>, WithReadOperations<Document<ContainedThing, SelfDescribingThing>, ContainedThing, SelfDescribingThing>, WithWriteOperations<ContainedThing, SelfDescribingThing> {
+    toCopy(): Document<ContainedThing, SelfDescribingThing>;
+    toCopyReadonly(): ReadonlyDocument<ContainedThing, SelfDescribingThing>;
+}
+
 export default Document;

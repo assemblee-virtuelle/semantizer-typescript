@@ -1,4 +1,3 @@
-import DecoratedDocument from "../core/DecoratedDocument";
 import Document from "../core/Document";
 
 export interface SynchronizedDocument {
