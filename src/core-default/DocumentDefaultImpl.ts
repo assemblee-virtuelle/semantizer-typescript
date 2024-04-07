@@ -1,21 +1,29 @@
 import Context from "../core/Context.js";
-import { Document, DocumentBase, DocumentReadonly, WithWriteOperations } from "../core/Document.js";
+import { Document, DocumentBase, DocumentReadonly, DocumentWrapped, WithReadOperations, WithWriteOperations } from "../core/Document.js";
 import Resource from "../core/Resource.js";
 import { StatementBase } from "../core/Statement.js";
 import Thing, { ThingBase, ThingReadonly } from "../core/Thing.js";
 import ThingFactory from '../core/ThingFactory.js';
 import ThingFactoryDefaultImpl from "./ThingFactoryDefaultImpl.js";
 
-export class DocumentBaseDefaultImpl<ContainedThing extends ThingBase<StatementBase> = ThingBase<StatementBase>, SelfDescribingThing extends ThingBase<StatementBase> = ThingBase<StatementBase>> implements DocumentBase<ContainedThing, SelfDescribingThing> {
+type ContainedThingOf<T extends DocumentBase> = T extends DocumentBase<infer TypeArg, any> ? TypeArg : never;
+type SelfDescribingThingOf<T extends DocumentBase> = T extends DocumentBase<any, infer TypeArg> ? TypeArg : never;
+
+// ContainedThing extends ThingBase<StatementBase> = ThingBase<StatementBase>, 
+// SelfDescribingThing extends ThingBase<StatementBase> = ThingBase<StatementBase>
+export class DocumentBaseDefaultImpl<
+    Wrapped extends DocumentWrapped<any>
+>
+implements DocumentWrapped<Wrapped> {
     
     protected _uri: string;
-    protected _selfDescribingThing?: SelfDescribingThing;
-    protected _things: ContainedThing[];
+    protected _selfDescribingThing?: SelfDescribingThingOf<Wrapped>;
+    protected _things: ContainedThingOf<Wrapped>[];
     protected _context?: Context;
 
     //public constructor(uri?: string, context?: Context);
-    //public constructor(document: DocumentBase<ContainedThing, SelfDescribingThing>);
-    public constructor() {//documentOrUri?: DocumentBase<ContainedThing, SelfDescribingThing> | string, context?: Context) {
+    //public constructor(document: DocumentBase<ContainedThing<Wrapped>, SelfDescribingThing<Wrapped>>);
+    public constructor() {//documentOrUri?: DocumentBase<ContainedThing<Wrapped>, SelfDescribingThing<Wrapped>> | string, context?: Context) {
         this._uri = ""; //typeof documentOrUri === 'string'? documentOrUri ?? '': documentOrUri?.getUri() ?? '';
         this._context = undefined; //context;
         this._things = [];
@@ -31,17 +39,17 @@ export class DocumentBaseDefaultImpl<ContainedThing extends ThingBase<StatementB
         return this._getContainedThings().some(thing => thing.getUri() === uri);
     }
 
-    protected _getContainedThings(): ContainedThing[] {
+    protected _getContainedThings(): ContainedThingOf<Wrapped>[] {
         return this._things;
     }
 
-    public count(callbackfn?: ((thing: ContainedThing, document?: DocumentBase<ContainedThing, SelfDescribingThing>) => boolean) | undefined): number {
+    public count(callbackfn?: ((thing: ContainedThingOf<Wrapped>, document?: Wrapped) => boolean) | undefined): number {
         return this._things.length;
     }
 
-    public get(uri: string | Resource): ContainedThing | undefined {
+    public get(uri: string | Resource): ContainedThingOf<Wrapped> | undefined {
         // TODO uri or resource.getUri
-        const things = this._things.filter((thing: ContainedThing) => thing.getUri() === uri);
+        const things = this._things.filter((thing: ContainedThingOf<Wrapped>) => thing.getUri() === uri);
         return things.length > 0? things[0]: undefined;
     }
     
@@ -49,7 +57,7 @@ export class DocumentBaseDefaultImpl<ContainedThing extends ThingBase<StatementB
         return this._context;
     }
 
-    public getThingThatSelfDescribes(): SelfDescribingThing | undefined {
+    public getThingThatSelfDescribes(): SelfDescribingThingOf<Wrapped> | undefined {
         return this._selfDescribingThing;
     }
     
@@ -77,39 +85,39 @@ export class DocumentBaseDefaultImpl<ContainedThing extends ThingBase<StatementB
         throw new Error("Method not implemented.");
     }
 
-    public [Symbol.iterator](): Iterator<ContainedThing> {
+    public [Symbol.iterator](): Iterator<ContainedThingOf<Wrapped>> {
         return this._things[Symbol.iterator]();
     }
 
-    public at(index: number): ContainedThing | undefined {
+    public at(index: number): ContainedThingOf<Wrapped> | undefined {
         return this._getContainedThings().at(index);
     }
 
-    public contains(other: DocumentBase<ContainedThing, SelfDescribingThing>): boolean {
-        return other.every((thing: ContainedThing) => this.includes(thing));
+    public contains(other: Wrapped): boolean {
+        return other.every((thing: ContainedThingOf<Wrapped>) => this.includes(thing));
     }
 
-    public difference(other: DocumentBase<ContainedThing, SelfDescribingThing>): DocumentBase<ContainedThing, SelfDescribingThing> {
+    public difference(other: Wrapped): Wrapped {
         throw new Error("Method not implemented.");
     }
 
-    public every(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => boolean, thisArg?: any): boolean {
+    public every(predicate: (value: ContainedThingOf<Wrapped>, index: number, array: ContainedThingOf<Wrapped>[]) => boolean, thisArg?: any): boolean {
         return this._getContainedThings().every(predicate);
     }
 
-    public find(predicate: (value: ContainedThing, index: number, obj: ContainedThing[]) => boolean, thisArg?: any): ContainedThing | undefined {
+    public find(predicate: (value: ContainedThingOf<Wrapped>, index: number, obj: ContainedThingOf<Wrapped>[]) => boolean, thisArg?: any): ContainedThingOf<Wrapped> | undefined {
         return this._getContainedThings().find(predicate);
     }
 
-    public findIndex(predicate: (value: ContainedThing, index: number, obj: ContainedThing[]) => unknown, thisArg?: any): number {
+    public findIndex(predicate: (value: ContainedThingOf<Wrapped>, index: number, obj: ContainedThingOf<Wrapped>[]) => unknown, thisArg?: any): number {
         return this._getContainedThings().findIndex(predicate);
     }
 
-    public includes(searchElement: ContainedThing, fromIndex?: number | undefined): boolean {
+    public includes(searchElement: ContainedThingOf<Wrapped>, fromIndex?: number | undefined): boolean {
         return this._getContainedThings().includes(searchElement, fromIndex);
     }
 
-    public indexOf(searchElement: ContainedThing, fromIndex?: number | undefined): number {
+    public indexOf(searchElement: ContainedThingOf<Wrapped>, fromIndex?: number | undefined): number {
         return this._getContainedThings().indexOf(searchElement, fromIndex);
     }
 
@@ -117,44 +125,44 @@ export class DocumentBaseDefaultImpl<ContainedThing extends ThingBase<StatementB
         return this._getContainedThings().keys()
     }
 
-    public reduce(callbackfn: (previousValue: ContainedThing, currentValue: ContainedThing, currentIndex: number, array: ContainedThing[]) => ContainedThing): ContainedThing {
+    public reduce(callbackfn: (previousValue: ContainedThingOf<Wrapped>, currentValue: ContainedThingOf<Wrapped>, currentIndex: number, array: ContainedThingOf<Wrapped>[]) => ContainedThingOf<Wrapped>): ContainedThingOf<Wrapped> {
         return this._getContainedThings().reduce(callbackfn);
     }
 
-    public slice(start?: number, end?: number): DocumentBase<ContainedThing, SelfDescribingThing> {
+    public slice(start?: number, end?: number): Wrapped {
         throw new Error("Method not implemented."); //return this._getContainedThings().slice(start, end);
     }
 
-    public some(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => unknown, thisArg?: any): boolean {
+    public some(predicate: (value: ContainedThingOf<Wrapped>, index: number, array: ContainedThingOf<Wrapped>[]) => unknown, thisArg?: any): boolean {
         return this._getContainedThings().some(predicate);
     }
 
-    public forEach(callbackfn: (value: ContainedThing, index: number, array: ContainedThing[]) => void, thisArg?: any): void {
+    public forEach(callbackfn: (value: ContainedThingOf<Wrapped>, index: number, array: ContainedThingOf<Wrapped>[]) => void, thisArg?: any): void {
         this._getContainedThings().forEach(callbackfn, thisArg);
     }
 
-    public map(callbackfn: (value: ContainedThing, index: number, array: ContainedThing[]) => unknown, thisArg?: any): unknown[] {
+    public map(callbackfn: (value: ContainedThingOf<Wrapped>, index: number, array: ContainedThingOf<Wrapped>[]) => unknown, thisArg?: any): unknown[] {
         return this._getContainedThings().map(callbackfn, thisArg);
     }
 
     // TODO: check canonical form
-    public equals(other: DocumentBase<ContainedThing, SelfDescribingThing>): boolean {
+    public equals(other: Wrapped): boolean {
         throw new Error("Not implemented.")
     }
 
-    public filter(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => boolean): ContainedThing[] {
+    public filter(predicate: (value: ContainedThingOf<Wrapped>, index: number, array: ContainedThingOf<Wrapped>[]) => boolean): ContainedThingOf<Wrapped>[] {
         return this._getContainedThings().filter(predicate);
     }
     
 }
 
-export class DocumentReadonlyDefaultImpl<ContainedThing extends ThingReadonly = ThingReadonly, SelfDescribingThing extends ThingReadonly = ThingReadonly> extends DocumentBaseDefaultImpl<ContainedThing, SelfDescribingThing> implements DocumentReadonly<ContainedThing, SelfDescribingThing> {
+export class DocumentReadonlyDefaultImpl<Wrapped extends DocumentReadonly<any>> extends DocumentBaseDefaultImpl<Wrapped> implements DocumentReadonly<Wrapped> {
 
-    public constructor(documentOrUri?: DocumentBase<ContainedThing, SelfDescribingThing> | string, context?: Context) {
+    public constructor() {
         super(); //documentOrUri, context);
     }
 
-    public toCopy(): DocumentReadonly<ContainedThing, SelfDescribingThing> {
+    public toCopy(): Wrapped {
         throw new Error("Method not implemented.");
     }
 

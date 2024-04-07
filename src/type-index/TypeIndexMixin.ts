@@ -1,4 +1,4 @@
-import DocumentDefaultImpl from "../core-default/DocumentDefaultImpl";
+import DocumentDefaultImpl, { DocumentReadonlyDefaultImpl } from "../core-default/DocumentDefaultImpl";
 import { ThingDefaultImpl } from "../core-default/ThingDefaultImpl";
 import Document, { DocumentReadonly } from "../core/Document";
 import Thing from "../core/Thing";
@@ -37,7 +37,10 @@ export function TypeIndexMixin<TBase extends Constructor<Document<any, any>>>(Ba
 
 export default TypeIndexMixin;
 
-const TypeIndexDefault = TypeIndexMixin(DocumentDefaultImpl<TypeIndexRegistration, Thing>);
+const test = new DocumentReadonlyDefaultImpl<ReadonlyTypeIndex>();
+test.toCopy();
+
+const TypeIndexDefault = TypeIndexMixin(DocumentDefaultImpl<TypeIndex>);
 const t = new TypeIndexDefault();
 const r = t.find((v: TypeIndexRegistration) => v.getForClass() === "");
 t.splice(0)
