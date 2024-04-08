@@ -1,5 +1,5 @@
 import Context from "../core/Context.js";
-import DocumentBase from "../core/Document.js";
+import { DocumentBase } from "../core/Document.js";
 import Resource from "../core/Resource.js";
 import Statement, { StatementBase, StatementReadonly } from "../core/Statement.js";
 import { Thing, ThingBase, ThingReadonly } from "../core/Thing.js";
@@ -19,7 +19,7 @@ export class ThingBaseDefaultImpl<
     private _statements: ContainedStatement[];
 
     // TODO: add copy constructor
-    public constructor(document: DocumentBase<any, any>, stateType: ThingType, uriOrNameHint?: string) {
+    public constructor(document: DocumentBase<any, any>, stateType?: ThingType, uriOrNameHint?: string) {
         this._uri = uriOrNameHint ?? '';
         this._document = document;
         this._statements = [];

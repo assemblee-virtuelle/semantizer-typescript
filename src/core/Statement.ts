@@ -1,7 +1,8 @@
-import ThingBase from "./Thing";
+import { ThingBase } from "./Thing";
 
 export interface StatementBase {
-    getThing(): ThingBase;
+    getThing(): ThingBase<any>;
+    toCopy(): this;
 }
 
 export interface WithReadOperations {
@@ -12,19 +13,25 @@ export interface WithReadOperations {
 }
 
 export interface WithWriteOperations {
-    setValue(): Statement;
-    setDatatype(): Statement;
-    setLanguage(): Statement;
+    setValue(): this;
+    setDatatype(): this;
+    setLanguage(): this;
 }
 
-export interface StatementReadonly extends StatementBase, WithReadOperations {
-    toCopy(): StatementReadonly;
-    toCopyWritable(): Statement;
-}
-
-export interface Statement extends StatementBase, WithReadOperations, WithWriteOperations {
-    toCopy(): Statement;
+export interface WithCopyOperations {
     toCopyReadonly(): StatementReadonly;
 }
 
-export default Statement;
+export interface WithCopyWritableOperations {
+    toCopyWritable(): Statement;
+}
+
+export type Statement = StatementBase & 
+    WithReadOperations & 
+    WithWriteOperations & 
+    WithCopyOperations & 
+    WithCopyWritableOperations;
+
+export type StatementReadonly = StatementBase &
+    WithReadOperations & 
+    WithCopyWritableOperations;
