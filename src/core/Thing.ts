@@ -6,7 +6,7 @@ import Statement, { StatementBase, StatementReadonly } from "./Statement";
 export interface ThingBase<
     ContainedStatement extends StatementBase = StatementBase
 > extends Resource, Iterable<ContainedStatement>, WithReadOperations<ContainedStatement> {
-    getDocument(): DocumentBase<any, any>;
+    getDocument(): DocumentBase<any>;
     getContext(): Context | undefined;
     hasUri(): boolean;
     //expand(uri: string): string; // TODO: remove

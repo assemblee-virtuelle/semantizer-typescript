@@ -1,9 +1,9 @@
 import DocumentDefaultImpl, { DocumentReadonlyDefaultImpl } from "../core-default/DocumentDefaultImpl";
 import Document, { DocumentBase, DocumentReadonly } from "../core/Document";
 import Thing, { ThingReadonly } from "../core/Thing";
-import TypeIndex, { ReadonlyTypeIndex } from "../type-index/TypeIndex";
+import TypeIndex, { TypeIndexReadonly } from "../type-index/TypeIndex";
 import TypeIndexMixin, { ReadonlyTypeIndexMixin } from "../type-index/TypeIndexMixin";
-import TypeIndexRegistration, { ReadonlyTypeIndexRegistration } from "../type-index/TypeIndexRegistration";
+import TypeIndexRegistration, { TypeIndexRegistrationReadonly } from "../type-index/TypeIndexRegistration";
 import { LocalDocumentDefaultImpl, DistantDocumentDefaultImpl } from "./SynchronizedDocumentDefaultImpl";
 import { DistantDocument, LocalDocument } from "./SynchronizedDocument";
 
@@ -53,6 +53,6 @@ const localDocument = syncFactory.create();
 const distantDocument = syncFactory.load();
 
 const localTypeIndex = syncFactory.createWithMixin<TypeIndex>(TypeIndexMixin);
-const distantTypeIndex = syncFactory.loadWithMixin<TypeIndexRegistration, Thing, ReadonlyTypeIndexRegistration, ThingReadonly, TypeIndex, ReadonlyTypeIndex>(ReadonlyTypeIndexMixin);
+const distantTypeIndex = syncFactory.loadWithMixin<TypeIndexRegistration, Thing, TypeIndexRegistrationReadonly, ThingReadonly, TypeIndex, TypeIndexReadonly>(ReadonlyTypeIndexMixin);
 distantTypeIndex.toLocalCopy();
 localTypeIndex.createRegistration("forClass");

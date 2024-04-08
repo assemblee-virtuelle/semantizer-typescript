@@ -1,10 +1,9 @@
-import DocumentBase from "./Document";
-import ThingBase from "./Thing";
+import { DocumentBase, ContainedThingOf, SelfDescribingThingOf } from "./Document";
 
-export interface ThingFactory<ContainedThing extends ThingBase = ThingBase, SelfDescribingThing extends ThingBase = ThingBase> {
-    createThingToDescribeDocument(document: DocumentBase<ContainedThing, SelfDescribingThing>): SelfDescribingThing;
-    createThing(document: DocumentBase<ContainedThing, SelfDescribingThing>, uri: string): ContainedThing;
-    createThingWithoutUri(document: DocumentBase<ContainedThing, SelfDescribingThing>, nameHint?: string): ContainedThing;
+export interface ThingFactory<Wrapped extends DocumentBase<any, any>> {
+    createThingToDescribeDocument(document: Wrapped): SelfDescribingThingOf<Wrapped>;
+    createThing(document: Wrapped, uri: string): ContainedThingOf<Wrapped>;
+    createThingWithoutUri(document: Wrapped, nameHint?: string): ContainedThingOf<Wrapped>;
 }
 
 export default ThingFactory;

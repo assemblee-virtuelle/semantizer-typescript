@@ -1,21 +1,18 @@
-import DocumentBase from "../core/Document";
-import ThingBase from "../core/Thing";
-import { ThingDefaultImpl, ThingType } from "./ThingDefaultImpl";
-import ThingFactory from "../core/ThingFactory";
+import { DocumentBase, ContainedThingOf, SelfDescribingThingOf } from "../core/Document";
 
-export class ThingFactoryDefaultImpl<ContainedThing extends ThingBase = ThingBase, SelfDescribingThing extends ThingBase = ThingBase> implements ThingFactory<ContainedThing, SelfDescribingThing> {
+export class ThingFactoryDefaultImpl<Wrapped extends DocumentBase<any, any>> {
 
-    public createThingToDescribeDocument(document: DocumentBase<ContainedThing, SelfDescribingThing>): SelfDescribingThing {
+    public createThingToDescribeDocument(document: Wrapped): SelfDescribingThingOf<Wrapped> {
         throw new Error("Not implemented.");
         //return new ThingDefaultImpl(document, ThingType.ForDescribing);
     }
 
-    public createThing(document: DocumentBase<ContainedThing, SelfDescribingThing>, uri: string): ContainedThing {
+    public createThing(document: Wrapped, uri: string): ContainedThingOf<Wrapped> {
         throw new Error("Not implemented.");
         // return new ThingDefaultImpl(document, ThingType.Regular, uri);
     }
 
-    public createThingWithoutUri(document: DocumentBase<ContainedThing, SelfDescribingThing>, nameHint?: string | undefined): ContainedThing {
+    public createThingWithoutUri(document: Wrapped, nameHint?: string | undefined): ContainedThingOf<Wrapped> {
         throw new Error("Not implemented.");
         // return new ThingDefaultImpl(document, ThingType.Anonymous, nameHint);
     }

@@ -1,7 +1,7 @@
 import Resource from "../core/Resource";
-import ThingBase from "../core/Thing";
+import ThingBase, { Thing, ThingReadonly } from "../core/Thing";
 
-export interface TypeIndexRegistrationBase extends ThingBase {
+export interface TypeIndexRegistrationBase { // extends ThingBase {
     isForClass(forClass: string): boolean;
     getForClass(): string | null;
     getForClassAll(): string[];
@@ -28,6 +28,6 @@ export interface WithWriteOperations {
     removeInstanceContainerAll(): TypeIndexRegistration; 
 }
 
-export type ReadonlyTypeIndexRegistration = TypeIndexRegistrationBase & WithReadOperations;
-export type TypeIndexRegistration = TypeIndexRegistrationBase & WithReadOperations & WithWriteOperations;
+export type TypeIndexRegistrationReadonly = TypeIndexRegistrationBase & ThingReadonly & WithReadOperations;
+export type TypeIndexRegistration = TypeIndexRegistrationBase & Thing & WithReadOperations & WithWriteOperations;
 export default TypeIndexRegistration;
