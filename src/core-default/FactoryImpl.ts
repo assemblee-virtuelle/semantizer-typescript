@@ -4,7 +4,7 @@ import Factory, { ContainedThingOf, SelfDescribingThingOf } from "../core/Factor
 import { Statement, StatementReadonly } from "../core/Statement";
 import { Thing, ThingReadonly } from "../core/Thing";
 import { DocumentImpl } from "./DocumentImpl";
-import ThingDefaultImpl from "./ThingImpl";
+import ThingImpl from "./ThingImpl";
 
 type DocumentTypeReadonly = DocumentReadonly<ThingReadonly<StatementReadonly>, ThingReadonly<StatementReadonly>>;
 type DocumentDefaultImplReadonly = DocumentImpl<ThingReadonly<StatementReadonly>, ThingReadonly<StatementReadonly>>;
@@ -18,15 +18,15 @@ export class FactoryImpl<
     }
 
     public createThingToDescribeDocument(document: DocumentType): SelfDescribingThingOf<DocumentType> {
-        return new ThingDefaultImpl(document) as SelfDescribingThingOf<DocumentType>;
+        return new ThingImpl(document) as SelfDescribingThingOf<DocumentType>;
     }
 
     public createThing(document: DocumentType, uri: string): ContainedThingOf<DocumentType> {
-        return new ThingDefaultImpl(document) as ContainedThingOf<DocumentType>;
+        return new ThingImpl(document) as ContainedThingOf<DocumentType>;
     }
 
     public createThingWithoutUri(document: DocumentType, nameHint?: string): ContainedThingOf<DocumentType> {
-        return new ThingDefaultImpl(document) as ContainedThingOf<DocumentType>;
+        return new ThingImpl(document) as ContainedThingOf<DocumentType>;
     }
 
     public createStatement(thing: Thing<Statement>): void {
@@ -35,7 +35,7 @@ export class FactoryImpl<
 
 }
 
-export class FactoryDefaultImplReadonly implements Factory<DocumentTypeReadonly> {
+export class FactoryImplReadonly implements Factory<DocumentTypeReadonly> {
 
     private _factory = new FactoryImpl<DocumentDefaultImplReadonly>();
 
@@ -70,7 +70,7 @@ const document = factory.createDocument();
 document.deleteContext();
 document.createThingToSelfDescribe().add("ex:prop", "");
 
-const factoryReadonly = new FactoryDefaultImplReadonly();
+const factoryReadonly = new FactoryImplReadonly();
 const documentReadonly = factoryReadonly.createDocument();
 
 // @ts-expect-error

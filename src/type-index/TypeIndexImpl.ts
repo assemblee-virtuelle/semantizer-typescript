@@ -6,7 +6,7 @@ import { Thing, ThingBase, ThingReadonly } from "../core/Thing";
 import { TypeIndexReadonly, WithReadOperations, WithWriteOperations } from "./TypeIndex";
 import { TypeIndexRegistration, TypeIndexRegistrationReadonly } from "./TypeIndexRegistration";
 
-export class TypeIndexDefaultImplReadOrWrite<
+export class TypeIndexImplReadOrWrite<
     ContainedThing extends TypeIndexRegistration<any> | TypeIndexRegistrationReadonly<any>,
     SelfDescribingThing extends ThingBase<any> | ThingReadonly<any>
 >
@@ -19,11 +19,11 @@ implements WithReadOperations<ContainedThing> {
 
 }
 
-export class TypeIndexDefaultImpl<
+export class TypeIndexImpl<
     ContainedThing extends TypeIndexRegistration<any> = TypeIndexRegistration<Statement>, 
     SelfDescribingThing extends ThingBase<any> = Thing<Statement>
 >
-extends TypeIndexDefaultImplReadOrWrite<ContainedThing, SelfDescribingThing> 
+extends TypeIndexImplReadOrWrite<ContainedThing, SelfDescribingThing> 
 implements WithWriteOperations {
     
     public createRegistration(forClass?: string, nameHintOrUri?: string | undefined): ContainedThing {
@@ -35,19 +35,19 @@ implements WithWriteOperations {
 
 }
 
-export function TypeIndexDefaultMixin<TBase extends Constructor<DocumentBase<any, any>>>(Base: TBase) {
-    return TypeIndexDefaultImpl<TypeIndexRegistration<Statement>, Thing<Statement>>;
+export function TypeIndexMixin<TBase extends Constructor<DocumentBase<any, any>>>(Base: TBase) {
+    return TypeIndexImpl<TypeIndexRegistration<Statement>, Thing<Statement>>;
 }
 
-export function TypeIndexDefaultMixinReadonly<TBase extends Constructor<DocumentBase<any, any>>>(Base: TBase) {
-    return TypeIndexDefaultImplReadOrWrite<TypeIndexRegistrationReadonly<StatementReadonly>, ThingReadonly<StatementReadonly>>;
+export function TypeIndexMixinReadonly<TBase extends Constructor<DocumentBase<any, any>>>(Base: TBase) {
+    return TypeIndexImplReadOrWrite<TypeIndexRegistrationReadonly<StatementReadonly>, ThingReadonly<StatementReadonly>>;
 }
 
 
-const typeIndexDefaultInstance = new TypeIndexDefaultImpl(new DocumentImpl<TypeIndexRegistration, Thing>());
+const typeIndexDefaultInstance = new TypeIndexImpl(new DocumentImpl<TypeIndexRegistration, Thing>());
 typeIndexDefaultInstance.forEachOfClass("", (t => {}));
 
-const typeIndexDefaultInstanceReadonly = new TypeIndexDefaultImplReadOrWrite(new DocumentImpl<TypeIndexRegistrationReadonly, ThingReadonly>());
+const typeIndexDefaultInstanceReadonly = new TypeIndexImplReadOrWrite(new DocumentImpl<TypeIndexRegistrationReadonly, ThingReadonly>());
 typeIndexDefaultInstance.deleteContext();
 typeIndexDefaultInstanceReadonly.forEachOfClass("", (t => {}));
 
@@ -57,11 +57,11 @@ got?.removeForClass("");
 const gotReadonly = typeIndexDefaultInstanceReadonly.get("");
 gotReadonly?.getForClass();
 
-const WithRead = TypeIndexDefaultMixin(DocumentImpl<TypeIndexRegistration, Thing>);
+const WithRead = TypeIndexMixin(DocumentImpl<TypeIndexRegistration, Thing>);
 const mixWithRead = new WithRead(new DocumentImpl<TypeIndexRegistration, Thing>());
 mixWithRead.deleteContext();
 
-const ReadOnly = TypeIndexDefaultMixinReadonly(DocumentImpl<TypeIndexRegistrationReadonly, ThingReadonly>);
+const ReadOnly = TypeIndexMixinReadonly(DocumentImpl<TypeIndexRegistrationReadonly, ThingReadonly>);
 
 // TODO: a contraindre dans la factory
 const mixReadOnly = new ReadOnly(new DocumentImpl<TypeIndexRegistrationReadonly, Thing>()) as TypeIndexReadonly;
