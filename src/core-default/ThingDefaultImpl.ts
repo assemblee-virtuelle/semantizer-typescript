@@ -1,7 +1,7 @@
 import Context from "../core/Context.js";
 import { DocumentBase } from "../core/Document.js";
 import Resource from "../core/Resource.js";
-import Statement, { StatementBase, StatementReadonly } from "../core/Statement.js";
+import { Statement, StatementBase, StatementReadonly } from "../core/Statement.js";
 import { Thing, ThingBase, ThingReadonly } from "../core/Thing.js";
 
 export enum ThingType {
@@ -25,6 +25,10 @@ export class ThingBaseDefaultImpl<
         this._statements = [];
 
         // TODO use factory
+    }
+    
+    public toCopy(): this {
+        return this;
     }
 
     public getDocument(): DocumentBase<any, any> {
@@ -102,10 +106,6 @@ export class ThingReadonlyDefaultImpl<
     ContainedStatement extends StatementReadonly = StatementReadonly
 > extends ThingBaseDefaultImpl<ContainedStatement> implements ThingReadonly<ContainedStatement> {
 
-    public toCopy(): ThingReadonly<ContainedStatement> {
-        throw new Error("Method not implemented.");
-    }
-
     public toCopyWritable<ContainedStatementWritable extends Statement = Statement>(): Thing<ContainedStatementWritable> {
         throw new Error("Method not implemented.");
     }
@@ -115,31 +115,31 @@ export class ThingReadonlyDefaultImpl<
 export class ThingDefaultImpl<
     ContainedStatement extends Statement = Statement
 > extends ThingBaseDefaultImpl<ContainedStatement> implements Thing<ContainedStatement> {
-
-    public add(about: string, value: string | Resource, ContainedStatement?: string, language?: string): Thing<ContainedStatement> {
+    
+    public add(about: string, value: string | Resource, ContainedStatement?: string, language?: string): this {
         //const statement = new ContainedStatementDefaultImpl(this, about, value, ContainedStatement, language);
         //this._getStatements().push(statement);
         // TODO: use factory
         return this;
     }
 
-    public set(about: string, value: string, oldValue?: string | undefined, ContainedStatement?: string | undefined, language?: string | undefined): Thing {
+    public set(about: string, value: string, oldValue?: string | undefined, ContainedStatement?: string | undefined, language?: string | undefined): this {
         throw new Error("Method not implemented.");
     }
     
-    public remove(about: string, value: string | Resource, ContainedStatement?: string | undefined, language?: string | undefined): Thing {
+    public remove(about: string, value: string | Resource, ContainedStatement?: string | undefined, language?: string | undefined): this {
         throw new Error("Method not implemented.");
     }
 
-    public removeAll(about: string): Thing {
-        throw new Error("Method not implemented.");
-    }
-
-    public toCopy(): Thing<ContainedStatement> {
+    public removeAll(about: string): this {
         throw new Error("Method not implemented.");
     }
 
     public toCopyReadonly<ContainedStatementReadonly extends StatementReadonly = StatementReadonly>(): ThingReadonly<ContainedStatementReadonly> {
+        throw new Error("Method not implemented.");
+    }
+
+    public toCopyWritable<ContainedStatementWritable extends Statement = Statement>(): Thing<ContainedStatementWritable> {
         throw new Error("Method not implemented.");
     }
 

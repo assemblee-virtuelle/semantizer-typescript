@@ -2,6 +2,8 @@ import Context from "./Context";
 import Resource from "./Resource";
 import { ThingBase, ThingReadonly } from "./Thing";
 
+export type Constructor<T = {}> = new (...args: any[]) => T;
+
 export interface DocumentBase<
     ContainedThing extends ThingBase<any> = ThingBase, 
     SelfDescribingThing extends ThingBase<any> = ThingBase,
@@ -25,7 +27,7 @@ export interface WithReadOperations<
 > {
     at(index: number): ContainedThing | undefined;
     contains(other: ThisType<this>): boolean;
-    count(callbackfn?: (thing: ContainedThing, document?: this) => boolean): number;
+    count(callbackfn?: (thing: ContainedThing, document?: ThisType<this>) => boolean): number;
     difference(other: ThisType<this>): this;
     equals(other: ThisType<this>): boolean;
     every(predicate: (value: ContainedThing, index?: number, array?: ContainedThing[]) => boolean, thisArg?: any): boolean;

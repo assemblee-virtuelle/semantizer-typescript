@@ -1,25 +1,21 @@
 import Context from "../core/Context.js";
 import { Document, DocumentBase, DocumentReadonly } from "../core/Document.js";
+import Factory from "../core/Factory.js";
 import Resource from "../core/Resource.js";
 import { ThingBase, ThingReadonly } from "../core/Thing.js";
-
-//type ContainedThingOf<T extends DocumentBase<any, any>> = T extends DocumentBase<infer TypeArg, any> ? TypeArg : never;
-//type SelfDescribingThingOf<T extends DocumentBase<any, any>> = T extends DocumentBase<any, infer TypeArg> ? TypeArg : never;
+import { FactoryDefaultImpl } from "./FactoryDefaultImpl.js";
 
 export class DocumentDefaultImpl<
     ContainedThing extends ThingBase<any> = ThingBase, 
     SelfDescribingThing extends ThingBase<any> = ThingBase,
-    //Wrapped extends DocumentBase<ContainedThing, SelfDescribingThing> & WithReadOperations<Wrapped> = DocumentBaseDefaultImpl<ContainedThing, SelfDescribingThing, DocumentBase<ContainedThing, SelfDescribingThing> & WithReadOperations<DocumentBase<ContainedThing, SelfDescribingThing>>>
 >
-implements Document<ContainedThing, SelfDescribingThing>
-{
-//WithReadOperations<Wrapped> {
-//WithReadOperations<DocumentBase<ContainedThing, SelfDescribingThing>> {
+implements Document<ContainedThing, SelfDescribingThing> {
     
     protected _uri: string;
     protected _selfDescribingThing?: SelfDescribingThing;
     protected _things: ContainedThing[];
     protected _context?: Context;
+    protected _factory: Factory<Document<ContainedThing, SelfDescribingThing>>;
 
     //public constructor(uri?: string, context?: Context);
     //public constructor(document: DocumentBase<ContainedThing<Wrapped>, SelfDescribingThing<Wrapped>>);
@@ -27,68 +23,84 @@ implements Document<ContainedThing, SelfDescribingThing>
         this._uri = ""; //typeof documentOrUri === 'string'? documentOrUri ?? '': documentOrUri?.getUri() ?? '';
         this._context = undefined; //context;
         this._things = [];
+        this._factory = new FactoryDefaultImpl<DocumentDefaultImpl<ContainedThing, SelfDescribingThing>>();
     }
 
-    toCopy(): this {
+    public getFactory(): Factory<Document<ContainedThing, SelfDescribingThing>> {
+        return this._factory;
+    }
+
+    public toCopy(): this {
         throw new Error("Method not implemented.");
     }
 
-    toCopyReadonly<ContainedThingReadonly extends ThingReadonly<any>, SelfDescribingThingReadonly extends ThingReadonly<any>>(): DocumentReadonly<ContainedThingReadonly, SelfDescribingThingReadonly> {
+    public toCopyReadonly<ContainedThingReadonly extends ThingReadonly<any>, SelfDescribingThingReadonly extends ThingReadonly<any>>(): DocumentReadonly<ContainedThingReadonly, SelfDescribingThingReadonly> {
         throw new Error("Method not implemented.");
     }
 
-    toCopyWritable(): Document<ContainedThing, SelfDescribingThing> {
+    public toCopyWritable(): Document<ContainedThing, SelfDescribingThing> {
         throw new Error("Method not implemented.");
     }
    
-    createThingToSelfDescribe(): SelfDescribingThing {
-        throw new Error("Method not implemented.");
-    }
-    createThingWithoutUri(nameHint?: string | undefined): ContainedThing {
-        throw new Error("Method not implemented.");
+    public createThingToSelfDescribe(): SelfDescribingThing {
+        return this.getFactory().createThingToDescribeDocument(this);
     }
 
-    add(thing: ContainedThing): this {
+    public createThingWithoutUri(nameHint?: string | undefined): ContainedThing {
+        return this.getFactory().createThingWithoutUri(this);
+    }
+
+    public add(thing: ContainedThing): this {
         throw new Error("Method not implemented.");
     }
-    addAll(documentOrThings: this | ContainedThing[]): this {
+    
+    public addAll(documentOrThings: this | ContainedThing[]): this {
         throw new Error("Method not implemented.");
     }
-    delete(thingOrUri: string | ContainedThing): this {
+    
+    public delete(thingOrUri: string | ContainedThing): this {
         throw new Error("Method not implemented.");
     }
-    deleteContext(): void {
+    
+    public deleteContext(): void {
         throw new Error("Method not implemented.");
     }
-    deleteMatches(uri?: string | Resource | undefined, property?: string | undefined, value?: string | undefined): this {
+    
+    public deleteMatches(uri?: string | Resource | undefined, property?: string | undefined, value?: string | undefined): this {
         throw new Error("Method not implemented.");
     }
-    pop(): ContainedThing | undefined {
+    
+    public pop(): ContainedThing | undefined {
         throw new Error("Method not implemented.");
     }
-    reverse(): void {
+    
+    public reverse(): void {
         throw new Error("Method not implemented.");
     }
-    setContext(context: Context): void {
+    
+    public setContext(context: Context): void {
+        this._context = context;
+    }
+    
+    public shift(): ContainedThing | undefined {
         throw new Error("Method not implemented.");
     }
-    shift(): ContainedThing | undefined {
+    
+    public sort(compareFn?: ((a: ContainedThing, b: ContainedThing) => number) | undefined): this {
         throw new Error("Method not implemented.");
     }
-    sort(compareFn?: ((a: ContainedThing, b: ContainedThing) => number) | undefined): this {
+    
+    public splice(start: number, deleteCount?: number | undefined, ...items: ContainedThing[]): this {
         throw new Error("Method not implemented.");
     }
-    splice(start: number, deleteCount?: number | undefined, ...items: ContainedThing[]): this {
-        throw new Error("Method not implemented.");
-    }
-    union(other: this): this {
+    
+    public union(other: this): this {
         throw new Error("Method not implemented.");
     }
 
     public createThingWithUri(nameHintOrUri?: string): ContainedThing {
-        throw new Error("Method not implemented.");
-        // const uriOfNewRegularContainedThing = this.validateOrCreateContainedThingUri(nameHintOrUri);
-        // return new ThingBaseDefaultImpl(this);
+        //const uriOfNewRegularContainedThing = this.validateOrCreateContainedThingUri(nameHintOrUri);
+        return this.getFactory().createThing(this, "");
     }
 
     // TODO: move to utils class?
@@ -105,7 +117,7 @@ implements Document<ContainedThing, SelfDescribingThing>
         return this._things;
     }
 
-    public count(callbackfn?: ((thing: ContainedThing, document?: this) => boolean) | undefined): number {
+    public count(callbackfn?: (thing: ContainedThing, document?: this) => boolean): number {
         return this._things.length;
     }
 
@@ -160,7 +172,6 @@ implements Document<ContainedThing, SelfDescribingThing>
     }
 
     public difference(other: this): this {
-        //throw new Error("Method not implemented.");
         return this;
     }
 
@@ -235,58 +246,71 @@ implements Document<ContainedThing, SelfDescribingThing> { //ContainedThingReado
         this._wrapped = wrapped; //new DocumentBaseDefaultImpl<ContainedThingOf<Wrapped>, SelfDescribingThingOf<Wrapped>>();
     }
 
-    toCopy(): this {
+    public toCopy(): this {
         throw new Error("Method not implemented.");
     }
 
-    toCopyReadonly<ContainedThingReadonly extends ThingReadonly<any>, SelfDescribingThingReadonly extends ThingReadonly<any>>(): DocumentReadonly<ContainedThingReadonly, SelfDescribingThingReadonly> {
+    public toCopyReadonly<ContainedThingReadonly extends ThingReadonly<any>, SelfDescribingThingReadonly extends ThingReadonly<any>>(): DocumentReadonly<ContainedThingReadonly, SelfDescribingThingReadonly> {
         throw new Error("Method not implemented.");
     }
-    toCopyWritable(): Document<ContainedThing, SelfDescribingThing> {
-        throw new Error("Method not implemented.");
-    }
-
-    createThingToSelfDescribe(): SelfDescribingThing {
-        throw new Error("Method not implemented.");
-    }
-    createThingWithoutUri(nameHint?: string | undefined): ContainedThing {
+    
+    public toCopyWritable(): Document<ContainedThing, SelfDescribingThing> {
         throw new Error("Method not implemented.");
     }
 
-    add(thing: ContainedThing): this {
+    public createThingToSelfDescribe(): SelfDescribingThing {
+        return this.getWrappedDocument().createThingToSelfDescribe();
+    }
+   
+    public createThingWithoutUri(nameHint?: string | undefined): ContainedThing {
+        return this.getWrappedDocument().createThingWithoutUri(nameHint);
+    }
+
+    public add(thing: ContainedThing): this {
         return this.getWrappedDocument().add(thing) as this;
     }
-    addAll(documentOrThings: this | ContainedThing[]): this {
+    
+    public addAll(documentOrThings: this | ContainedThing[]): this {
         throw new Error("Method not implemented.");
     }
-    delete(thingOrUri: string | ContainedThing): this {
+    
+    public delete(thingOrUri: string | ContainedThing): this {
         throw new Error("Method not implemented.");
     }
-    deleteContext(): void {
+    
+    public deleteContext(): void {
         throw new Error("Method not implemented.");
     }
-    deleteMatches(uri?: string | Resource | undefined, property?: string | undefined, value?: string | undefined): this {
+    
+    public deleteMatches(uri?: string | Resource | undefined, property?: string | undefined, value?: string | undefined): this {
         throw new Error("Method not implemented.");
     }
-    pop(): ContainedThing | undefined {
+    
+    public pop(): ContainedThing | undefined {
         throw new Error("Method not implemented.");
     }
-    reverse(): void {
+    
+    public reverse(): void {
         throw new Error("Method not implemented.");
     }
-    setContext(context: Context): void {
+    
+    public setContext(context: Context): void {
+        this.getWrappedDocument().setContext(context);
+    }
+    
+    public shift(): ContainedThing | undefined {
         throw new Error("Method not implemented.");
     }
-    shift(): ContainedThing | undefined {
+    
+    public sort(compareFn?: ((a: ContainedThing, b: ContainedThing) => number) | undefined): this {
         throw new Error("Method not implemented.");
     }
-    sort(compareFn?: ((a: ContainedThing, b: ContainedThing) => number) | undefined): this {
+    
+    public splice(start: number, deleteCount?: number | undefined, ...items: ContainedThing[]): this {
         throw new Error("Method not implemented.");
     }
-    splice(start: number, deleteCount?: number | undefined, ...items: ContainedThing[]): this {
-        throw new Error("Method not implemented.");
-    }
-    union(other: this): this {
+    
+    public union(other: this): this {
         throw new Error("Method not implemented.");
     }
 
@@ -346,7 +370,7 @@ implements Document<ContainedThing, SelfDescribingThing> { //ContainedThingReado
         return this.getWrappedDocument().contains(other);
     }
 
-    public count(callbackfn?: ((thing: ContainedThing, document?: this | undefined) => boolean) | undefined): number {
+    public count(callbackfn?: (thing: ContainedThing, document?: ThisType<this>) => boolean): number {
         return this.getWrappedDocument().count(callbackfn);
     }
 

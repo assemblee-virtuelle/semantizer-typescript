@@ -10,17 +10,19 @@ import { TypeIndexRegistration, TypeIndexRegistrationReadonly } from "./TypeInde
 export interface WithReadOperations<
     ContainedRegistration extends ThingBase<any> = ThingBase
 > {
-    forEachOfClass(forClass: string, callbackfn: (value: ContainedRegistration, index: number, array: ContainedRegistration[]) => void, thisArg?: any): void;
+    forEachOfClass(forClass: string, callbackfn: (value: ContainedRegistration, index?: number, array?: ContainedRegistration[]) => void, thisArg?: any): void;
 }
 
-export interface WithWriteOperations {
-    createRegistration(forClass?: string, nameHintOrUri?: string): TypeIndexRegistration;
+export interface WithWriteOperations<
+    ContainedStatement extends StatementBase = StatementBase
+> {
+    createRegistration(forClass?: string, nameHintOrUri?: string): TypeIndexRegistration<ContainedStatement>;
 }
 
 export type TypeIndex<
     ContainedStatement extends StatementBase = StatementBase
 > = Document<TypeIndexRegistration<ContainedStatement>, Thing<ContainedStatement>> & 
-    WithReadOperations<TypeIndexRegistration<Statement>> & 
+    WithReadOperations<TypeIndexRegistration<ContainedStatement>> & 
     WithWriteOperations;
 
 export type TypeIndexReadonly = DocumentReadonly<TypeIndexRegistrationReadonly, ThingReadonly> & 

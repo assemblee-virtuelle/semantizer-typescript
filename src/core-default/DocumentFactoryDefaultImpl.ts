@@ -10,7 +10,7 @@ export class DocumentFactoryDefaultImpl implements DocumentFactory {
         return new DocumentDefaultImpl<ContainedThing, SelfDescribingThing>();
     }
 
-    public createReadonlyDocument<ContainedThing extends ThingReadonly = ThingReadonly, SelfDescribingThing extends ThingReadonly = ThingReadonly>(uri?: string, context?: Context): DocumentReadonly<ContainedThing, SelfDescribingThing> {
+    public createDocumentReadonly<ContainedThing extends ThingReadonly = ThingReadonly, SelfDescribingThing extends ThingReadonly = ThingReadonly>(uri?: string, context?: Context): DocumentReadonly<ContainedThing, SelfDescribingThing> {
         return Object.freeze(new DocumentReadonlyDefaultImpl<ContainedThing, SelfDescribingThing>());
     }
 
@@ -19,5 +19,5 @@ export class DocumentFactoryDefaultImpl implements DocumentFactory {
 export default DocumentFactoryDefaultImpl;
 
 const f = new DocumentFactoryDefaultImpl();
-const r = f.createReadonlyDocument();
+const r = f.createDocumentReadonly();
 r.toCopyWritable().deleteContext();
