@@ -1,4 +1,4 @@
-import { ThingDefaultImpl as ThingDefaultImplCore, ThingType } from "../core-default/ThingDefaultImpl";
+import { ThingDefaultImpl as ThingDefaultImplCore, ThingType } from "../core-default/ThingImpl";
 import DocumentBase from "../core/Document";
 import ThingStateRdfjsRegular from "./ThingStateRdfjsRegular";
 import ThingStateRdfjsAnonymous from "./ThingStateRdfjsAnonymous";

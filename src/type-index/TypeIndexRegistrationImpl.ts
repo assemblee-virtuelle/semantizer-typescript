@@ -1,12 +1,13 @@
-import ThingDefaultImpl, { ThingType } from "../core-default/ThingDefaultImpl";
+import ThingImpl, { ThingType } from "../core-default/ThingImpl";
 import Resource from "../core/Resource";
 import { Statement, StatementBase } from "../core/Statement";
 import { TypeIndex } from "./TypeIndex";
 import { TypeIndexRegistration } from "./TypeIndexRegistration";
 
-export class TypeIndexRegistrationDefaultImpl<
+export class TypeIndexRegistrationImpl<
     ContainedStatement extends StatementBase = Statement
-> extends ThingDefaultImpl<ContainedStatement> implements TypeIndexRegistration {
+> extends ThingImpl<ContainedStatement> 
+implements TypeIndexRegistration<ContainedStatement> {
 
     constructor(document: TypeIndex, uri?: string) {
         super(document, ThingType.Regular, uri);
@@ -25,17 +26,17 @@ export class TypeIndexRegistrationDefaultImpl<
         return collection.length > 0? collection[0]: null;
     }
 
-    public addForClass(forClass: string | Resource): TypeIndexRegistration {
+    public addForClass(forClass: string | Resource): this {
         this.add("solid:forClass", this.getUriFromStringOrResource(forClass));
         return this;
     }
 
-    public addInstance(instance: string | Resource): TypeIndexRegistration {
+    public addInstance(instance: string | Resource): this {
         this.add("solid:instance", this.getUriFromStringOrResource(instance));
         return this;
     }
 
-    public addInstanceContainer(instanceContainer: string | Resource): TypeIndexRegistration {
+    public addInstanceContainer(instanceContainer: string | Resource): this {
         this.add("solid:instanceContainer", this.getUriFromStringOrResource(instanceContainer));
         return this;
     }
@@ -64,40 +65,40 @@ export class TypeIndexRegistrationDefaultImpl<
         return this.getAll("solid:instanceContainer");
     }
 
-    public setForClass(forClass: string): TypeIndexRegistration {
+    public setForClass(forClass: string): this {
         throw new Error();
     }
  
-    public removeForClass(forClass: string): TypeIndexRegistration {
+    public removeForClass(forClass: string): this {
         this.remove("solid:forClass", forClass);
         return this;
     }
 
-    public removeInstance(instance: string): TypeIndexRegistration {
+    public removeInstance(instance: string): this {
         this.remove("solid:forClass", instance);
         return this;
     }
 
-    public removeInstanceContainer(instanceContainer: string): TypeIndexRegistration {
+    public removeInstanceContainer(instanceContainer: string): this {
         this.remove("solid:forClass", instanceContainer);
         return this;
     }
 
-    public removeForClassAll(): TypeIndexRegistration {
+    public removeForClassAll(): this {
         this.removeAll("solid:forClass");
         return this;
     }
 
-    public removeInstanceAll(): TypeIndexRegistration {
+    public removeInstanceAll(): this {
         this.removeAll("solid:instance");
         return this;
     }
 
-    public removeInstanceContainerAll(): TypeIndexRegistration {
+    public removeInstanceContainerAll(): this {
         this.removeAll("solid:instanceContainer");
         return this;
     }
 
 }
 
-export default TypeIndexRegistrationDefaultImpl;
+export default TypeIndexRegistrationImpl;

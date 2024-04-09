@@ -1,8 +1,8 @@
-import DocumentDefaultImpl, { DocumentReadonlyDefaultImpl } from "../core-default/DocumentDefaultImpl";
+import DocumentImpl, { DocumentReadonlyDefaultImpl } from "../core-default/DocumentImpl";
 import Document, { DocumentBase, DocumentReadonly } from "../core/Document";
 import Thing, { ThingReadonly } from "../core/Thing";
 import TypeIndex, { TypeIndexReadonly } from "../type-index/TypeIndex";
-import TypeIndexMixin, { ReadonlyTypeIndexMixin } from "../type-index/TypeIndexMixin";
+import TypeIndexMixin, { ReadonlyTypeIndexMixin } from "../type-index/TypeIndexImpl";
 import TypeIndexRegistration, { TypeIndexRegistrationReadonly } from "../type-index/TypeIndexRegistration";
 import { LocalDocumentDefaultImpl, DistantDocumentDefaultImpl } from "./SynchronizedDocumentDefaultImpl";
 import { DistantDocument, LocalDocument } from "./SynchronizedDocument";
@@ -15,14 +15,14 @@ export class SynchronizedDocumentFactoryDefaultImpl {
     
     public createWithMixin<Type extends Document<any, any> = Document>(Mixin: MixinFunction<Type>): LocalDocument & Type {
         const MixedInLocalDocument = Mixin<LocalDocument & Document<any, any>>(LocalDocumentDefaultImpl);
-        return new MixedInLocalDocument(new DocumentDefaultImpl());
+        return new MixedInLocalDocument(new DocumentImpl());
     }
 
     public create<
         ContainedThing extends Thing = Thing, 
         SelfDescribingThing extends Thing = Thing
     >(): LocalDocument & Document<ContainedThing, SelfDescribingThing> {
-        return new LocalDocumentDefaultImpl(new DocumentDefaultImpl<ContainedThing, SelfDescribingThing>());
+        return new LocalDocumentDefaultImpl(new DocumentImpl<ContainedThing, SelfDescribingThing>());
     }
 
     public load<

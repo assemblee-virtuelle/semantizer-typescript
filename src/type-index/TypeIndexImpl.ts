@@ -1,4 +1,4 @@
-import { DocumentDefaultImpl } from "../core-default/DocumentDefaultImpl";
+import { DocumentImpl } from "../core-default/DocumentImpl";
 import { Constructor, DocumentBase } from "../core/Document";
 import DocumentDecorated from "../core/DocumentDecorated";
 import { Statement, StatementReadonly } from "../core/Statement";
@@ -44,10 +44,10 @@ export function TypeIndexDefaultMixinReadonly<TBase extends Constructor<Document
 }
 
 
-const typeIndexDefaultInstance = new TypeIndexDefaultImpl(new DocumentDefaultImpl<TypeIndexRegistration, Thing>());
+const typeIndexDefaultInstance = new TypeIndexDefaultImpl(new DocumentImpl<TypeIndexRegistration, Thing>());
 typeIndexDefaultInstance.forEachOfClass("", (t => {}));
 
-const typeIndexDefaultInstanceReadonly = new TypeIndexDefaultImplReadOrWrite(new DocumentDefaultImpl<TypeIndexRegistrationReadonly, ThingReadonly>());
+const typeIndexDefaultInstanceReadonly = new TypeIndexDefaultImplReadOrWrite(new DocumentImpl<TypeIndexRegistrationReadonly, ThingReadonly>());
 typeIndexDefaultInstance.deleteContext();
 typeIndexDefaultInstanceReadonly.forEachOfClass("", (t => {}));
 
@@ -57,13 +57,13 @@ got?.removeForClass("");
 const gotReadonly = typeIndexDefaultInstanceReadonly.get("");
 gotReadonly?.getForClass();
 
-const WithRead = TypeIndexDefaultMixin(DocumentDefaultImpl<TypeIndexRegistration, Thing>);
-const mixWithRead = new WithRead(new DocumentDefaultImpl<TypeIndexRegistration, Thing>());
+const WithRead = TypeIndexDefaultMixin(DocumentImpl<TypeIndexRegistration, Thing>);
+const mixWithRead = new WithRead(new DocumentImpl<TypeIndexRegistration, Thing>());
 mixWithRead.deleteContext();
 
-const ReadOnly = TypeIndexDefaultMixinReadonly(DocumentDefaultImpl<TypeIndexRegistrationReadonly, ThingReadonly>);
+const ReadOnly = TypeIndexDefaultMixinReadonly(DocumentImpl<TypeIndexRegistrationReadonly, ThingReadonly>);
 
 // TODO: a contraindre dans la factory
-const mixReadOnly = new ReadOnly(new DocumentDefaultImpl<TypeIndexRegistrationReadonly, Thing>()) as TypeIndexReadonly;
+const mixReadOnly = new ReadOnly(new DocumentImpl<TypeIndexRegistrationReadonly, Thing>()) as TypeIndexReadonly;
 // @ts-expect-error
 mixReadOnly.deleteContext();

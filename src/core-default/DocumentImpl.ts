@@ -3,9 +3,9 @@ import { Document, DocumentBase, DocumentReadonly } from "../core/Document.js";
 import Factory from "../core/Factory.js";
 import Resource from "../core/Resource.js";
 import { ThingBase, ThingReadonly } from "../core/Thing.js";
-import { FactoryDefaultImpl } from "./FactoryDefaultImpl.js";
+import { FactoryImpl } from "./FactoryImpl.js";
 
-export class DocumentDefaultImpl<
+export class DocumentImpl<
     ContainedThing extends ThingBase<any> = ThingBase, 
     SelfDescribingThing extends ThingBase<any> = ThingBase,
 >
@@ -23,7 +23,7 @@ implements Document<ContainedThing, SelfDescribingThing> {
         this._uri = ""; //typeof documentOrUri === 'string'? documentOrUri ?? '': documentOrUri?.getUri() ?? '';
         this._context = undefined; //context;
         this._things = [];
-        this._factory = new FactoryDefaultImpl<DocumentDefaultImpl<ContainedThing, SelfDescribingThing>>();
+        this._factory = new FactoryImpl<DocumentImpl<ContainedThing, SelfDescribingThing>>();
     }
 
     public getFactory(): Factory<Document<ContainedThing, SelfDescribingThing>> {
@@ -206,7 +206,7 @@ implements Document<ContainedThing, SelfDescribingThing> {
     public slice(start?: number, end?: number): this {
         //throw new Error("Method not implemented."); //return this._getContainedThings().slice(start, end);
         const things = this._getContainedThings().slice(start, end);
-        const sliced = new DocumentDefaultImpl<ContainedThing, SelfDescribingThing>();
+        const sliced = new DocumentImpl<ContainedThing, SelfDescribingThing>();
         sliced._things = things;
         return sliced as this;
     }
@@ -234,4 +234,4 @@ implements Document<ContainedThing, SelfDescribingThing> {
     
 }
 
-export default DocumentDefaultImpl;
+export default DocumentImpl;

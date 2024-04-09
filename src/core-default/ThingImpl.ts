@@ -10,7 +10,7 @@ export enum ThingType {
     Anonymous
 }
 
-export class ThingBaseDefaultImpl<
+export class ThingBaseImpl<
     ContainedStatement extends StatementBase = StatementBase
 > implements ThingBase<ContainedStatement> {
 
@@ -102,9 +102,9 @@ export class ThingBaseDefaultImpl<
 
 }
 
-export class ThingReadonlyDefaultImpl<
+export class ThingReadonlyImpl<
     ContainedStatement extends StatementReadonly = StatementReadonly
-> extends ThingBaseDefaultImpl<ContainedStatement> implements ThingReadonly<ContainedStatement> {
+> extends ThingBaseImpl<ContainedStatement> implements ThingReadonly<ContainedStatement> {
 
     public toCopyWritable<ContainedStatementWritable extends Statement = Statement>(): Thing<ContainedStatementWritable> {
         throw new Error("Method not implemented.");
@@ -112,9 +112,9 @@ export class ThingReadonlyDefaultImpl<
 
 }
 
-export class ThingDefaultImpl<
+export class ThingImpl<
     ContainedStatement extends Statement = Statement
-> extends ThingBaseDefaultImpl<ContainedStatement> implements Thing<ContainedStatement> {
+> extends ThingBaseImpl<ContainedStatement> implements Thing<ContainedStatement> {
     
     public add(about: string, value: string | Resource, ContainedStatement?: string, language?: string): this {
         //const statement = new ContainedStatementDefaultImpl(this, about, value, ContainedStatement, language);
@@ -146,4 +146,4 @@ export class ThingDefaultImpl<
 }
 
 
-export default ThingDefaultImpl;
+export default ThingImpl;

@@ -1,11 +1,7 @@
 import { Document, DocumentReadonly } from "../core/Document";
-import { Statement, StatementBase, StatementReadonly } from "../core/Statement";
+import { StatementBase, StatementReadonly } from "../core/Statement";
 import { Thing, ThingBase, ThingReadonly } from "../core/Thing";
 import { TypeIndexRegistration, TypeIndexRegistrationReadonly } from "./TypeIndexRegistration";
-
-// export interface TypeIndexBase extends DocumentBase<TypeIndexRegistration, Thing> {}
-
-// export interface TypeIndexBaseReadonly extends DocumentBaseReadonly<TypeIndexRegistrationReadonly, ThingReadonly> {}
 
 export interface WithReadOperations<
     ContainedRegistration extends ThingBase<any> = ThingBase
