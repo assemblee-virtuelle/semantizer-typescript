@@ -1,6 +1,6 @@
 import Resource from "../core/Resource";
-import Statement from "../core/Statement";
-import ThingBase from "../core/Thing";
+import { Statement, StatementReadonly } from "../core/Statement";
+import { ThingBase } from "../core/Thing";
 
 export class StatementBaseDefaultImpl implements Statement {
 
@@ -16,6 +16,24 @@ export class StatementBaseDefaultImpl implements Statement {
         this._value = typeof value === 'string'? value: value.getUri();
         this._datatype = typeof datatype === 'string'? datatype: datatype?.getUri();
         this._language = language;
+    }
+    toCopy(): this {
+        throw new Error("Method not implemented.");
+    }
+    setValue(): this {
+        throw new Error("Method not implemented.");
+    }
+    setDatatype(): this {
+        throw new Error("Method not implemented.");
+    }
+    setLanguage(): this {
+        throw new Error("Method not implemented.");
+    }
+    toCopyReadonly(): StatementReadonly {
+        throw new Error("Method not implemented.");
+    }
+    toCopyWritable(): Statement {
+        throw new Error("Method not implemented.");
     }
 
     public getThing(): ThingBase {
@@ -40,6 +58,6 @@ export class StatementBaseDefaultImpl implements Statement {
 
 }
 
-export class StatementReadonlyDefaultImpl extends StatementBaseDefaultImpl
+//export class StatementReadonlyDefaultImpl extends StatementBaseDefaultImpl
 
-export default StatementDefaultImpl;
+export default StatementBaseDefaultImpl;

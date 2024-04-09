@@ -1,4 +1,4 @@
-import Context from "./Context";
+import { Context } from "./Context";
 import { DocumentBase } from "./Document";
 import Resource from "./Resource";
 import { Statement, StatementBase, StatementReadonly } from "./Statement";

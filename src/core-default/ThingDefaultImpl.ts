@@ -1,4 +1,4 @@
-import Context from "../core/Context.js";
+import { Context } from "../core/Context.js";
 import { DocumentBase } from "../core/Document.js";
 import Resource from "../core/Resource.js";
 import { Statement, StatementBase, StatementReadonly } from "../core/Statement.js";

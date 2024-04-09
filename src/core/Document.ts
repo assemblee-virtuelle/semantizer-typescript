@@ -1,4 +1,4 @@
-import Context from "./Context";
+import { Context } from "./Context";
 import Resource from "./Resource";
 import { ThingBase, ThingReadonly } from "./Thing";
 

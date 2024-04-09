@@ -1,5 +1,6 @@
-import { DocumentDecoratedDefaultImpl, DocumentDefaultImpl } from "../core-default/DocumentDefaultImpl";
+import { DocumentDefaultImpl } from "../core-default/DocumentDefaultImpl";
 import { Constructor, DocumentBase } from "../core/Document";
+import DocumentDecorated from "../core/DocumentDecorated";
 import { Statement, StatementReadonly } from "../core/Statement";
 import { Thing, ThingBase, ThingReadonly } from "../core/Thing";
 import { TypeIndexReadonly, WithReadOperations, WithWriteOperations } from "./TypeIndex";
@@ -9,7 +10,7 @@ export class TypeIndexDefaultImplReadOrWrite<
     ContainedThing extends TypeIndexRegistration<any> | TypeIndexRegistrationReadonly<any>,
     SelfDescribingThing extends ThingBase<any> | ThingReadonly<any>
 >
-extends DocumentDecoratedDefaultImpl<ContainedThing, SelfDescribingThing> 
+extends DocumentDecorated<ContainedThing, SelfDescribingThing> 
 implements WithReadOperations<ContainedThing> {
     
     public forEachOfClass(forClass: string, callbackfn: (value: ContainedThing, index?: number, array?: ContainedThing[]) => void, thisArg?: any): void {

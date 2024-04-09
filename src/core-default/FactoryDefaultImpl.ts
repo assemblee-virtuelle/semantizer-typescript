@@ -1,8 +1,8 @@
+import { Context } from "../core/Context";
 import { DocumentReadonly } from "../core/Document";
 import Factory, { ContainedThingOf, SelfDescribingThingOf } from "../core/Factory";
 import { Statement, StatementReadonly } from "../core/Statement";
 import { Thing, ThingReadonly } from "../core/Thing";
-import ContextDefault from "./ContextDefault";
 import { DocumentDefaultImpl } from "./DocumentDefaultImpl";
 import ThingDefaultImpl from "./ThingDefaultImpl";
 
@@ -13,7 +13,7 @@ export class FactoryDefaultImpl<
     DocumentType extends DocumentDefaultImpl<any, any> = DocumentDefaultImpl<Thing<Statement>, Thing<Statement>>
 >  implements Factory<DocumentType> {
 
-    public createDocument(uri?: string, context?: ContextDefault): DocumentType {
+    public createDocument(uri?: string, context?: Context): DocumentType {
         return new DocumentDefaultImpl<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>>() as DocumentType;
     }
 
@@ -39,7 +39,7 @@ export class FactoryDefaultImplReadonly implements Factory<DocumentTypeReadonly>
 
     private _factory = new FactoryDefaultImpl<DocumentDefaultImplReadonly>();
 
-    public createDocument(uri?: string, context?: ContextDefault): DocumentReadonly<ContainedThingOf<DocumentTypeReadonly>, SelfDescribingThingOf<DocumentTypeReadonly>> {
+    public createDocument(uri?: string, context?: Context): DocumentReadonly<ContainedThingOf<DocumentTypeReadonly>, SelfDescribingThingOf<DocumentTypeReadonly>> {
         const document = this._factory.createDocument() as DocumentTypeReadonly;
         return Object.freeze(document);
     }
@@ -68,6 +68,7 @@ export class FactoryDefaultImplReadonly implements Factory<DocumentTypeReadonly>
 const factory = new FactoryDefaultImpl();
 const document = factory.createDocument();
 document.deleteContext();
+document.createThingToSelfDescribe().add("ex:prop", "");
 
 const factoryReadonly = new FactoryDefaultImplReadonly();
 const documentReadonly = factoryReadonly.createDocument();
