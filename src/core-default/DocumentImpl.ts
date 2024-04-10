@@ -2,31 +2,32 @@ import { Context } from "../core/Context.js";
 import { Document, DocumentBase, DocumentReadonly } from "../core/Document.js";
 import Factory from "../core/Factory.js";
 import Resource from "../core/Resource.js";
-import { ThingBase, ThingReadonly } from "../core/Thing.js";
+import { ThingBase } from "../core/Thing.js";
 import { FactoryImpl } from "./FactoryImpl.js";
 
 export class DocumentImpl<
-    ContainedThing extends ThingBase<any> = ThingBase, 
-    SelfDescribingThing extends ThingBase<any> = ThingBase,
+    ContainedThing extends ThingBase<any>,
+    SelfDescribingThing extends ThingBase<any>,
+    //DocumentType extends Document<any>
 >
-implements Document<ContainedThing, SelfDescribingThing> {
+implements Document<DocumentImpl<ContainedThing, SelfDescribingThing>> {
     
     protected _uri: string;
     protected _selfDescribingThing?: SelfDescribingThing;
     protected _things: ContainedThing[];
     protected _context?: Context;
-    protected _factory: Factory<Document<ContainedThing, SelfDescribingThing>>;
+    protected _factory: Factory<DocumentImpl<ContainedThing, SelfDescribingThing>>;
 
     //public constructor(uri?: string, context?: Context);
     //public constructor(document: DocumentBase<ContainedThing<Wrapped>, SelfDescribingThing<Wrapped>>);
-    public constructor() {//documentOrUri?: DocumentBase<ContainedThing<Wrapped>, SelfDescribingThing<Wrapped>> | string, context?: Context) {
+    public constructor(factory: Factory<DocumentImpl<ContainedThing, SelfDescribingThing>>) {//documentOrUri?: DocumentBase<ContainedThing<Wrapped>, SelfDescribingThing<Wrapped>> | string, context?: Context) {
         this._uri = ""; //typeof documentOrUri === 'string'? documentOrUri ?? '': documentOrUri?.getUri() ?? '';
         this._context = undefined; //context;
         this._things = [];
-        this._factory = new FactoryImpl<DocumentImpl<ContainedThing, SelfDescribingThing>>();
+        this._factory = factory; //new FactoryImpl<DocumentImpl<ContainedThing, SelfDescribingThing>>();
     }
 
-    public getFactory(): Factory<Document<ContainedThing, SelfDescribingThing>> {
+    public getFactory(): Factory<DocumentImpl<ContainedThing, SelfDescribingThing>> {
         return this._factory;
     }
 
@@ -34,11 +35,11 @@ implements Document<ContainedThing, SelfDescribingThing> {
         throw new Error("Method not implemented.");
     }
 
-    public toCopyReadonly<ContainedThingReadonly extends ThingReadonly<any>, SelfDescribingThingReadonly extends ThingReadonly<any>>(): DocumentReadonly<ContainedThingReadonly, SelfDescribingThingReadonly> {
+    public toCopyReadonly<DocumentCopied extends DocumentReadonly<any>>(): DocumentCopied {
         throw new Error("Method not implemented.");
     }
 
-    public toCopyWritable(): Document<ContainedThing, SelfDescribingThing> {
+    public toCopyWritable<DocumentCopied extends Document<any>>(): DocumentCopied {
         throw new Error("Method not implemented.");
     }
    
@@ -51,10 +52,11 @@ implements Document<ContainedThing, SelfDescribingThing> {
     }
 
     public add(thing: ContainedThing): this {
-        throw new Error("Method not implemented.");
+        this._getContainedThings().push(thing);
+        return this;
     }
     
-    public addAll(documentOrThings: this | ContainedThing[]): this {
+    public addAll(documentOrThings: DocumentBase<any, any> | ContainedThing[]): this {
         throw new Error("Method not implemented.");
     }
     
@@ -94,13 +96,59 @@ implements Document<ContainedThing, SelfDescribingThing> {
         throw new Error("Method not implemented.");
     }
     
-    public union(other: this): this {
+    public union(other: DocumentBase<any, any>): this {
         throw new Error("Method not implemented.");
     }
 
+    protected addAndReturnContainedThing(thing: ContainedThing): ContainedThing {
+        this.add(thing);
+        return thing;
+    }
+
+    public generateContainedThingName(): string {
+        return "generatedName"; // TODO
+    }
+
+    protected generateUriWithFragment(): string {
+        return this.createUriWithFragment(this.generateContainedThingName());
+    }
+
+    protected getOrCreateNameWithHash(nameWithOrWithoutHash: string): string {
+        return nameWithOrWithoutHash.startsWith('#')? nameWithOrWithoutHash: `#${nameWithOrWithoutHash}`;
+    }
+
+    protected createUriWithFragment(name: string): string {
+        return this.getUri() + this.getOrCreateNameWithHash(name);
+    }
+
+    protected checkUriCanBeAddedToTheDocument<ContainedThing, SelfDescribingThing>(uri: string): boolean {
+        return this.isUrl(uri) && !this.hasStatementsAbout(uri);
+    }
+
+    protected getSafeUriFromUri(uri: string): string {
+        if (!this.checkUriCanBeAddedToTheDocument<ContainedThing, SelfDescribingThing>(uri))
+            throw new Error(`You are trying to add the thing "${uri}" but it is already part of the document.`);
+        return uri;
+    }
+
+    protected getSafeUriFromName(name: string): string {
+        const uri = this.createUriWithFragment(name);
+        if (!this.checkUriCanBeAddedToTheDocument<ContainedThing, SelfDescribingThing>(uri))
+            throw new Error(`You are trying to add the thing "${uri}" but it is already part of the document.`);
+        return uri;
+    }
+
+    protected getSafeUriFromNameHintOrUri(nameHintOrUri: string): string {
+        return this.isUrl(nameHintOrUri)? this.getSafeUriFromUri(nameHintOrUri): this.getSafeUriFromName(nameHintOrUri);
+    }
+
+    protected validateOrCreateContainedThingUri(nameHintOrUri?: string): string {
+        return nameHintOrUri? this.getSafeUriFromNameHintOrUri(nameHintOrUri): this.generateUriWithFragment();
+    }
+
     public createThingWithUri(nameHintOrUri?: string): ContainedThing {
-        //const uriOfNewRegularContainedThing = this.validateOrCreateContainedThingUri(nameHintOrUri);
-        return this.getFactory().createThing(this, "");
+        const uriOfNewRegularContainedThing = this.validateOrCreateContainedThingUri(nameHintOrUri);
+        return this.addAndReturnContainedThing(this.getFactory().createThing(this, uriOfNewRegularContainedThing));
     }
 
     // TODO: move to utils class?
@@ -171,8 +219,8 @@ implements Document<ContainedThing, SelfDescribingThing> {
         return other.every((thing: ContainedThing) => this.includes(thing));
     }
 
-    public difference(other: this): this {
-        return this;
+    public difference(other: DocumentBase<any, any>): this {
+        throw new Error("Method not implemented.");
     }
 
     public every(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => boolean, thisArg?: any): boolean {
@@ -204,11 +252,11 @@ implements Document<ContainedThing, SelfDescribingThing> {
     }
 
     public slice(start?: number, end?: number): this {
-        //throw new Error("Method not implemented."); //return this._getContainedThings().slice(start, end);
-        const things = this._getContainedThings().slice(start, end);
-        const sliced = new DocumentImpl<ContainedThing, SelfDescribingThing>();
-        sliced._things = things;
-        return sliced as this;
+        throw new Error("Method not implemented.");
+        // const things = this._getContainedThings().slice(start, end);
+        // const sliced = new DocumentImpl<ContainedThing, SelfDescribingThing>();
+        // sliced._things = things;
+        // return sliced as this;
     }
 
     public some(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => unknown, thisArg?: any): boolean {
@@ -224,7 +272,7 @@ implements Document<ContainedThing, SelfDescribingThing> {
     }
 
     // TODO: check canonical form
-    public equals(other: DocumentBase<ContainedThing, SelfDescribingThing>): boolean {
+    public equals(other: DocumentBase<any, any>): boolean {
         throw new Error("Not implemented.")
     }
 

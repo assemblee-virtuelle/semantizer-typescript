@@ -1,8 +1,13 @@
-import { ThingBase } from "./Thing";
+import { ContainedThingOf, Document, DocumentBase, DocumentReadonly, StatementOf } from "./Document";
 
 export interface StatementBase {
-    getThing(): ThingBase<any>;
     toCopy(): this;
+}
+
+export interface WithThing<
+    DocumentType extends DocumentBase<any, any>
+> {
+    getThing(): ContainedThingOf<DocumentType>;
 }
 
 export interface WithReadOperations {
@@ -19,19 +24,25 @@ export interface WithWriteOperations {
 }
 
 export interface WithCopyOperations {
-    toCopyReadonly(): StatementReadonly;
+    toCopyReadonly<DocumentType extends DocumentReadonly<any>>(): StatementOf<DocumentType>;
 }
 
 export interface WithCopyWritableOperations {
-    toCopyWritable(): Statement;
+    toCopyWritable<DocumentType extends Document<any>>(): StatementOf<DocumentType>;
 }
 
-export type Statement = StatementBase & 
+export type Statement<
+    DocumentType extends Document<any>
+> = StatementBase & 
+    WithThing<DocumentType> & 
     WithReadOperations & 
     WithWriteOperations & 
     WithCopyOperations & 
     WithCopyWritableOperations;
 
-export type StatementReadonly = StatementBase &
+export type StatementReadonly<
+    DocumentType extends DocumentReadonly<any>
+> = StatementBase &
+    WithThing<DocumentType> & 
     WithReadOperations & 
     WithCopyWritableOperations;

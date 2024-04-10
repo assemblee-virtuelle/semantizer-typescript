@@ -1,24 +1,29 @@
 import { Context } from "./Context";
-import { DocumentBase } from "./Document";
+import { ContainedThingOf, Document, DocumentBase, DocumentReadonly, StatementOf } from "./Document";
 import Resource from "./Resource";
-import { Statement, StatementBase, StatementReadonly } from "./Statement";
+import { StatementBase } from "./Statement";
 
 export interface ThingBase<
-    ContainedStatement extends StatementBase = StatementBase
+    ContainedStatement extends StatementBase
 > extends Resource, Iterable<ContainedStatement> {
-    getDocument(): DocumentBase<this>;
     getContext(): Context | undefined;
     hasUri(): boolean;
     //expand(uri: string): string; // TODO: remove
     //shorten(uri: string): string; // TODO: remove
     count(): number;
     isEmpty(): boolean;
-    equals(other: ThingBase<ContainedStatement>): boolean;
+    equals(other: ThingBase<any>): boolean;
     // addStatement(statement: Datatype): Thing;
     get(property: string): ContainedStatement | undefined;
     getAll(property: string): ContainedStatement[];
     [Symbol.iterator](): Iterator<ContainedStatement>;
     toCopy(): this;
+}
+
+export interface WithDocument<
+    DocumentType extends DocumentBase<any, any>
+> {
+    getDocument(): DocumentType;
 }
 
 export interface WithReadOperations<
@@ -41,28 +46,30 @@ export interface WithWriteOperations<
 export interface WithCreateOperations<
     ContainedStatement extends StatementBase = StatementBase
 > {
-    createStatement(about: string, value: string | Resource, datatype?: string, language?: string): ContainedStatement
+    createStatement(about: string, value: string | Resource, datatype?: string, language?: string): this
 }
 
 export interface WithCopyOperations {
-    toCopyReadonly<ContainedStatementReadonly extends StatementReadonly = StatementReadonly>(): ThingReadonly<ContainedStatementReadonly>;
+    toCopyReadonly<DocumentType extends DocumentReadonly<any>>(): ContainedThingOf<DocumentType>;
 }
 
 export interface WithCopyWritableOperations {  
-    toCopyWritable<ContainedStatementWritable extends Statement = Statement>(): Thing<ContainedStatementWritable>;
+    toCopyWritable<DocumentType extends Document<any>>(): ContainedThingOf<DocumentType>;
 }
 
 export type Thing<
-    ContainedStatement extends StatementBase = Statement
-> = ThingBase<ContainedStatement> & 
+    DocumentType extends Document<any>
+> = ThingBase<StatementOf<DocumentType>> & 
+WithDocument<DocumentType> & 
 WithReadOperations & 
-WithWriteOperations<ContainedStatement> &
-WithCreateOperations<ContainedStatement> & 
+WithWriteOperations<StatementOf<DocumentType>> &
+WithCreateOperations<StatementOf<DocumentType>> & 
 WithCopyOperations &
 WithCopyWritableOperations;
 
 export type ThingReadonly<
-    ContainedStatement extends StatementReadonly = StatementReadonly
-> = ThingBase<ContainedStatement> & 
+    DocumentType extends DocumentReadonly<any>
+> = ThingBase<StatementOf<DocumentType>> & 
+WithDocument<DocumentType> & 
 WithReadOperations & 
 WithCopyWritableOperations;

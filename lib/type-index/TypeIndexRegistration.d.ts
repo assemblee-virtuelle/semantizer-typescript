@@ -1,6 +1,7 @@
 import Resource from "../core/Resource";
-import ThingBase from "../core/Thing";
-export interface TypeIndexRegistrationBase extends ThingBase {
+import { Statement, StatementBase, StatementReadonly } from "../core/Statement";
+import { ThingBase, ThingReadonly } from "../core/Thing";
+export interface TypeIndexRegistrationBase {
     isForClass(forClass: string): boolean;
     getForClass(): string | null;
     getForClassAll(): string[];
@@ -9,21 +10,20 @@ export interface TypeIndexRegistrationBase extends ThingBase {
     getInstanceContainer(): string | null;
     getInstanceContainerAll(): string[];
 }
-export interface WithReadOperations {
-}
 export interface WithWriteOperations {
-    addForClass(forClass: string | Resource): TypeIndexRegistration;
-    addInstance(instance: string | Resource): TypeIndexRegistration;
-    addInstanceContainer(instanceContainer: string | Resource): TypeIndexRegistration;
-    setForClass(forClass: string): TypeIndexRegistration;
-    removeForClass(forClass: string): TypeIndexRegistration;
-    removeInstance(instance: string): TypeIndexRegistration;
-    removeInstanceContainer(instanceContainer: string): TypeIndexRegistration;
-    removeForClassAll(): TypeIndexRegistration;
-    removeInstanceAll(): TypeIndexRegistration;
-    removeInstanceContainerAll(): TypeIndexRegistration;
+    addForClass(forClass: string | Resource): this;
+    addInstance(instance: string | Resource): this;
+    addInstanceContainer(instanceContainer: string | Resource): this;
+    setForClass(forClass: string): this;
+    removeForClass(forClass: string): this;
+    removeInstance(instance: string): this;
+    removeInstanceContainer(instanceContainer: string): this;
+    removeForClassAll(): this;
+    removeInstanceAll(): this;
+    removeInstanceContainerAll(): this;
 }
-export type ReadonlyTypeIndexRegistration = TypeIndexRegistrationBase & WithReadOperations;
-export type TypeIndexRegistration = TypeIndexRegistrationBase & WithReadOperations & WithWriteOperations;
-export default TypeIndexRegistration;
+export interface TypeIndexRegistration<ContainedStatement extends StatementBase = Statement> extends ThingBase<ContainedStatement>, TypeIndexRegistrationBase, WithWriteOperations {
+}
+export interface TypeIndexRegistrationReadonly<ContainedStatement extends StatementReadonly = StatementReadonly> extends ThingReadonly<ContainedStatement>, TypeIndexRegistrationBase {
+}
 //# sourceMappingURL=TypeIndexRegistration.d.ts.map

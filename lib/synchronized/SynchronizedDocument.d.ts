@@ -1,4 +1,4 @@
-import Document from "../core/Document";
+import { Document } from "../core/Document";
 export interface SynchronizedDocument {
     isLocal(): boolean;
     isDistant(): boolean;

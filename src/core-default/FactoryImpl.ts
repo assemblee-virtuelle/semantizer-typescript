@@ -1,22 +1,20 @@
 import { Context } from "../core/Context";
-import { DocumentReadonly } from "../core/Document";
-import Factory, { ContainedThingOf, SelfDescribingThingOf, StatementOf } from "../core/Factory";
+import { ContainedThingOf, DocumentReadonly, SelfDescribingThingOf, StatementOf } from "../core/Document";
+import Factory from "../core/Factory";
 import Resource from "../core/Resource";
-import { Statement, StatementBase, StatementReadonly } from "../core/Statement";
-import { Thing, ThingReadonly } from "../core/Thing";
-import { DocumentImpl } from "./DocumentImpl";
-import StatementImpl from "./StatementImpl";
-import ThingImpl from "./ThingImpl";
+import { DocumentImpl } from "./DocumentImpl.js";
+import StatementImpl from "./StatementImpl.js";
+import ThingImpl from "./ThingImpl.js";
 
-type DocumentTypeReadonly = DocumentReadonly<ThingReadonly<StatementReadonly>, ThingReadonly<StatementReadonly>>;
-type DocumentDefaultImplReadonly = DocumentImpl<ThingReadonly<StatementReadonly>, ThingReadonly<StatementReadonly>>;
+type DocumentTypeReadonly = DocumentReadonly<DocumentDefaultImplReadonly>;
+type DocumentDefaultImplReadonly = DocumentImpl<ThingImpl<StatementImpl>, ThingImpl<StatementImpl>>;
 
 export class FactoryImpl<
-    DocumentType extends DocumentImpl<any, any> = DocumentImpl<Thing<Statement>, Thing<Statement>>
+    DocumentType extends DocumentImpl<any, any> = DocumentImpl<ThingImpl<StatementImpl>, ThingImpl<StatementImpl>>
 >  implements Factory<DocumentType> {
 
     public createDocument(uri?: string, context?: Context): DocumentType {
-        return new DocumentImpl<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>>() as DocumentType;
+        return new DocumentImpl<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>>(this) as DocumentType;
     }
 
     public createThingToDescribeDocument(document: DocumentType): SelfDescribingThingOf<DocumentType> {
@@ -41,42 +39,42 @@ export class FactoryImplReadonly implements Factory<DocumentTypeReadonly> {
 
     private _factory = new FactoryImpl<DocumentDefaultImplReadonly>();
 
-    public createDocument(uri?: string, context?: Context): DocumentReadonly<ContainedThingOf<DocumentTypeReadonly>, SelfDescribingThingOf<DocumentTypeReadonly>> {
+    public createDocument(uri?: string, context?: Context): DocumentTypeReadonly {
         const document = this._factory.createDocument() as DocumentTypeReadonly;
         return Object.freeze(document);
     }
 
-    public createThingToDescribeDocument(document: DocumentTypeReadonly): ThingReadonly<StatementReadonly> {
+    public createThingToDescribeDocument(document: DocumentTypeReadonly): SelfDescribingThingOf<DocumentTypeReadonly> {
         const thing = this._factory.createThingToDescribeDocument(document as DocumentDefaultImplReadonly);
-        return Object.freeze(thing);
+        return Object.freeze(thing) as SelfDescribingThingOf<DocumentTypeReadonly>;
     }
 
-    public createThing(document: DocumentTypeReadonly, uri: string): ThingReadonly<StatementReadonly> {
+    public createThing(document: DocumentTypeReadonly, uri: string): ContainedThingOf<DocumentTypeReadonly> {
         const thing = this._factory.createThing(document as DocumentDefaultImplReadonly, uri);
-        return Object.freeze(thing);
+        return Object.freeze(thing) as ContainedThingOf<DocumentTypeReadonly>;
     }
 
-    public createThingWithoutUri(document: DocumentTypeReadonly, nameHint?: string): ThingReadonly<StatementReadonly> {
+    public createThingWithoutUri(document: DocumentTypeReadonly, nameHint?: string): ContainedThingOf<DocumentTypeReadonly> {
         const thing = this._factory.createThingWithoutUri(document as DocumentDefaultImplReadonly);
-        return Object.freeze(thing);
+        return Object.freeze(thing) as ContainedThingOf<DocumentTypeReadonly>;
     }
 
-    public createStatement(thing: ThingReadonly<StatementReadonly>, about: string, value: string | Resource, datatype?: string | Resource, language?: string): StatementReadonly {
+    public createStatement(thing: ContainedThingOf<DocumentTypeReadonly>, about: string, value: string | Resource, datatype?: string | Resource, language?: string): StatementOf<DocumentTypeReadonly> {
         throw new Error("Not implemented.");
     }
 
 }
 
-const factory = new FactoryImpl();
-const document = factory.createDocument();
-document.deleteContext();
-document.createThingToSelfDescribe().createStatement("ex:prop", "");
+// const factory = new FactoryImpl();
+// const document = factory.createDocument();
+// document.deleteContext();
+// document.createThingToSelfDescribe().createStatement("ex:prop", "");
 
-const factoryReadonly = new FactoryImplReadonly();
-const documentReadonly = factoryReadonly.createDocument();
+// const factoryReadonly = new FactoryImplReadonly();
+// const documentReadonly = factoryReadonly.createDocument();
 
-// @ts-expect-error
-documentReadonly.deleteContext();
+// // @ts-expect-error
+// documentReadonly.deleteContext();
 
-const getted = documentReadonly.get("");
-const copied = getted?.toCopy()
+// const getted = documentReadonly.get("");
+// const copied = getted?.toCopy()

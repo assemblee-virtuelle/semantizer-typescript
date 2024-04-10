@@ -1,18 +1,14 @@
 import { Context } from "./Context";
-import { Document, DocumentBase, DocumentReadonly } from "./Document";
+import { ContainedThingOf, Document, DocumentBase, DocumentReadonly, SelfDescribingThingOf, StatementOf } from "./Document";
 import Resource from "./Resource";
 import { Statement, StatementBase, StatementReadonly } from "./Statement";
 import { ThingReadonly, Thing, ThingBase } from "./Thing";
-
-export type ContainedThingOf<T extends DocumentBase<any, any>> = T extends DocumentBase<infer TypeArg, any> ? TypeArg : never;
-export type SelfDescribingThingOf<T extends DocumentBase<any, any>> = T extends DocumentBase<any, infer TypeArg> ? TypeArg : never;
-export type StatementOf<T extends DocumentBase<any, any>> = T extends DocumentBase<infer TypeArg, any> ? TypeArg extends ThingBase<infer StatementType> ? StatementType: never : never;
 
 // export type ContainedThingOf<T extends DocumentBase<any, any>> = T extends DocumentBase<infer TypeArg, any> ? TypeArg : never;
 // export type SelfDescribingThingOf<T extends DocumentBase<any, any>> = T extends DocumentBase<any, infer TypeArg> ? TypeArg : never;
 
 export interface Factory<
-    DocumentType extends DocumentBase<any, any> = Document<Thing<Statement>>,
+    DocumentType extends DocumentBase<any, any>
 > {
     createDocument(uri?: string, context?: Context): DocumentType;
 
@@ -24,7 +20,7 @@ export interface Factory<
 }
 
 export interface FactoryReadonly<
-    DocumentTypeReadonly extends DocumentReadonly<any, any> = DocumentReadonly<ThingReadonly<StatementReadonly>, ThingReadonly<StatementReadonly>>
+    DocumentTypeReadonly extends DocumentReadonly<any>
 > extends Factory<DocumentTypeReadonly> {}
 
 export default Factory;

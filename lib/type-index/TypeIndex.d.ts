@@ -1,15 +1,13 @@
-import { Document, ReadonlyDocument } from "../core/Document";
-import { ReadonlyThing, Thing } from "../core/Thing";
-import TypeIndexRegistration, { ReadonlyTypeIndexRegistration } from "./TypeIndexRegistration";
-export interface TypeIndexBase {
+import { Document, DocumentReadonly } from "../core/Document";
+import { StatementBase, StatementReadonly } from "../core/Statement";
+import { Thing, ThingBase, ThingReadonly } from "../core/Thing";
+import { TypeIndexRegistration, TypeIndexRegistrationReadonly } from "./TypeIndexRegistration";
+export interface WithReadOperations<ContainedRegistration extends ThingBase<any> = ThingBase> {
+    forEachOfClass(forClass: string, callbackfn: (value: ContainedRegistration, index?: number, array?: ContainedRegistration[]) => void, thisArg?: any): void;
 }
-export interface WithReadOperations {
-    forEachOfClass(forClass: string, callbackfn: (value: TypeIndexRegistration, index: number, array: TypeIndexRegistration[]) => void, thisArg?: any): void;
+export interface WithWriteOperations<ContainedStatement extends StatementBase = StatementBase> {
+    createRegistration(forClass?: string, nameHintOrUri?: string): TypeIndexRegistration<ContainedStatement>;
 }
-export interface WithWriteOperations {
-    createRegistration(forClass?: string, nameHintOrUri?: string): TypeIndexRegistration;
-}
-export type ReadonlyTypeIndex = TypeIndexBase & ReadonlyDocument<ReadonlyTypeIndexRegistration, ReadonlyThing> & WithReadOperations;
-export type TypeIndex = TypeIndexBase & Document<TypeIndexRegistration, Thing> & WithReadOperations & WithWriteOperations;
-export default TypeIndex;
+export type TypeIndex<ContainedStatement extends StatementBase = StatementBase> = Document<TypeIndexRegistration<ContainedStatement>, Thing<ContainedStatement>> & WithReadOperations<TypeIndexRegistration<ContainedStatement>> & WithWriteOperations;
+export type TypeIndexReadonly = DocumentReadonly<TypeIndexRegistrationReadonly, ThingReadonly> & WithReadOperations<TypeIndexRegistrationReadonly<StatementReadonly>>;
 //# sourceMappingURL=TypeIndex.d.ts.map

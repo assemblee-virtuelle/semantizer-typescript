@@ -1,8 +1,9 @@
 import { Context } from "../core/Context.js";
-import { DocumentBase } from "../core/Document.js";
+import { ContainedThingOf, Document, DocumentReadonly, StatementOf } from "../core/Document.js";
 import Resource from "../core/Resource.js";
-import { Statement, StatementBase, StatementReadonly } from "../core/Statement.js";
-import { Thing, ThingBase, ThingReadonly } from "../core/Thing.js";
+import { StatementBase } from "../core/Statement.js";
+import { Thing, ThingBase } from "../core/Thing.js";
+import DocumentImpl from "./DocumentImpl.js";
 
 export enum ThingType {
     ForDescribing,
@@ -10,16 +11,18 @@ export enum ThingType {
     Anonymous
 }
 
+type DocumentType<ContainedStatement extends StatementBase> = Document<DocumentImpl<ThingImpl<ContainedStatement>, ThingImpl<ContainedStatement>>>;
+
 export class ThingImpl<
-    ContainedStatement extends StatementBase = StatementBase
-> implements Thing<ContainedStatement> {
+    ContainedStatement extends StatementBase // DocumentType extends DocumentBase<any, any> & WithFactory<DocumentType>
+> implements Thing<DocumentType<ContainedStatement>> { // Thing<DocumentType> {
 
     private _uri: string;
-    private _document: DocumentBase<any, any>;
-    private _statements: ContainedStatement[];
+    private _document: DocumentType<ContainedStatement>;
+    private _statements: StatementOf<DocumentType<ContainedStatement>>[];
 
     // TODO: add copy constructor
-    public constructor(document: DocumentBase<any, any>, stateType?: ThingType, uriOrNameHint?: string) {
+    public constructor(document: DocumentType<ContainedStatement>, stateType?: ThingType, uriOrNameHint?: string) {
         this._uri = uriOrNameHint ?? '';
         this._document = document;
         this._statements = [];
@@ -31,13 +34,13 @@ export class ThingImpl<
         return this;
     }
 
-    public createStatement(about: string, value: string | Resource, datatype?: string, language?: string): ContainedStatement {
+    public createStatement(about: string, value: string | Resource, datatype?: string, language?: string): this {
         const statement = this.getDocument().getFactory().createStatement(this, about, value, datatype, language);
         this._getStatements().push(statement);
-        return statement;
+        return this; // as StatementOf<DocumentType>;
     }
 
-    public add(statement: ContainedStatement): this {
+    public add(statement: StatementOf<DocumentType<ContainedStatement>>): this {
         // TODO: set thing of statement
         // this._getStatements().push(statement);
         return this;
@@ -55,15 +58,15 @@ export class ThingImpl<
         throw new Error("Method not implemented.");
     }
 
-    public toCopyReadonly<ContainedStatementReadonly extends StatementReadonly = StatementReadonly>(): ThingReadonly<ContainedStatementReadonly> {
+    public toCopyReadonly<DocumentType extends DocumentReadonly<any>>(): ContainedThingOf<DocumentType> {
         throw new Error("Method not implemented.");
     }
 
-    public toCopyWritable<ContainedStatementWritable extends Statement = Statement>(): Thing<ContainedStatementWritable> {
+    public toCopyWritable<DocumentType extends Document<any>>(): ContainedThingOf<DocumentType> {
         throw new Error("Method not implemented.");
     }
 
-    public getDocument(): DocumentBase<this, any> {
+    public getDocument(): DocumentType<ContainedStatement> {
         return this._document;
     }
 
@@ -79,19 +82,19 @@ export class ThingImpl<
         return this._getStatements()[Symbol.iterator]();
     }
 
-    public forEach(callbackfn: (value: ContainedStatement, index: number, array: ContainedStatement[]) => void, thisArg?: any): void {
+    public forEach(callbackfn: (value: StatementOf<DocumentType<ContainedStatement>>, index: number, array: StatementOf<DocumentType<ContainedStatement>>[]) => void, thisArg?: any): void {
         this._getStatements().forEach(callbackfn, thisArg);
     }
     
-    public map(callbackfn: (value: ContainedStatement, index: number, array: ContainedStatement[]) => unknown, thisArg?: any): unknown[] {
+    public map(callbackfn: (value: StatementOf<DocumentType<ContainedStatement>>, index: number, array: StatementOf<DocumentType<ContainedStatement>>[]) => unknown, thisArg?: any): unknown[] {
         return this._getStatements().map(callbackfn);
     }
     
-    public filter(predicate: (value: ContainedStatement, index: number, array: ContainedStatement[]) => boolean): ContainedStatement[] {
+    public filter(predicate: (value: StatementOf<DocumentType<ContainedStatement>>, index: number, array: StatementOf<DocumentType<ContainedStatement>>[]) => boolean): StatementOf<DocumentType<ContainedStatement>>[] {
         return this._getStatements().filter(predicate);
     }
 
-    private _getStatements(): ContainedStatement[] {
+    private _getStatements(): StatementOf<DocumentType<ContainedStatement>>[] {
         return this._statements;
     }
 
@@ -120,7 +123,7 @@ export class ThingImpl<
         return this.getDocument().shorten(uri);
     }*/
 
-    public equals(other: ThingBase): boolean {
+    public equals(other: ThingBase<any>): boolean {
         throw new Error("Not implemented.");
     }
 
