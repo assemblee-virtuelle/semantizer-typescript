@@ -1,9 +1,11 @@
 import { Context } from "../core/Context";
 import { DocumentReadonly } from "../core/Document";
-import Factory, { ContainedThingOf, SelfDescribingThingOf } from "../core/Factory";
-import { Statement, StatementReadonly } from "../core/Statement";
+import Factory, { ContainedThingOf, SelfDescribingThingOf, StatementOf } from "../core/Factory";
+import Resource from "../core/Resource";
+import { Statement, StatementBase, StatementReadonly } from "../core/Statement";
 import { Thing, ThingReadonly } from "../core/Thing";
 import { DocumentImpl } from "./DocumentImpl";
+import StatementImpl from "./StatementImpl";
 import ThingImpl from "./ThingImpl";
 
 type DocumentTypeReadonly = DocumentReadonly<ThingReadonly<StatementReadonly>, ThingReadonly<StatementReadonly>>;
@@ -29,8 +31,8 @@ export class FactoryImpl<
         return new ThingImpl(document) as ContainedThingOf<DocumentType>;
     }
 
-    public createStatement(thing: Thing<Statement>): void {
-
+    public createStatement(thing: ContainedThingOf<DocumentType>, about: string, value: string | Resource, datatype?: string | Resource, language?: string): StatementOf<DocumentType> {
+        return new StatementImpl(thing, about, value, datatype, language) as StatementOf<DocumentType>;
     }
 
 }
@@ -59,8 +61,8 @@ export class FactoryImplReadonly implements Factory<DocumentTypeReadonly> {
         return Object.freeze(thing);
     }
 
-    public createStatement(thing: ThingReadonly<StatementReadonly>): void {
-
+    public createStatement(thing: ThingReadonly<StatementReadonly>, about: string, value: string | Resource, datatype?: string | Resource, language?: string): StatementReadonly {
+        throw new Error("Not implemented.");
     }
 
 }
@@ -68,7 +70,7 @@ export class FactoryImplReadonly implements Factory<DocumentTypeReadonly> {
 const factory = new FactoryImpl();
 const document = factory.createDocument();
 document.deleteContext();
-document.createThingToSelfDescribe().add("ex:prop", "");
+document.createThingToSelfDescribe().createStatement("ex:prop", "");
 
 const factoryReadonly = new FactoryImplReadonly();
 const documentReadonly = factoryReadonly.createDocument();

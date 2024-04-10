@@ -6,7 +6,7 @@ import { Statement, StatementBase, StatementReadonly } from "./Statement";
 export interface ThingBase<
     ContainedStatement extends StatementBase = StatementBase
 > extends Resource, Iterable<ContainedStatement> {
-    getDocument(): DocumentBase<any>;
+    getDocument(): DocumentBase<this>;
     getContext(): Context | undefined;
     hasUri(): boolean;
     //expand(uri: string): string; // TODO: remove
@@ -29,11 +29,19 @@ export interface WithReadOperations<
     filter(predicate: (value: ContainedStatement, index: number, array: ContainedStatement[]) => boolean): ContainedStatement[];
 }
 
-export interface WithWriteOperations {
-    add(about: string, value: string | Resource, datatype?: string, language?: string): this;
+export interface WithWriteOperations<
+    ContainedStatement extends StatementBase = StatementBase
+> {
+    add(statement: ContainedStatement): this;
     remove(about: string, value: string | Resource, datatype?: string, language?: string): this;
     removeAll(about: string): this;
     set(about: string, value: string, oldValue?: string, datatype?: string, language?: string): this;
+}
+
+export interface WithCreateOperations<
+    ContainedStatement extends StatementBase = StatementBase
+> {
+    createStatement(about: string, value: string | Resource, datatype?: string, language?: string): ContainedStatement
 }
 
 export interface WithCopyOperations {
@@ -48,7 +56,8 @@ export type Thing<
     ContainedStatement extends StatementBase = Statement
 > = ThingBase<ContainedStatement> & 
 WithReadOperations & 
-WithWriteOperations &
+WithWriteOperations<ContainedStatement> &
+WithCreateOperations<ContainedStatement> & 
 WithCopyOperations &
 WithCopyWritableOperations;
 

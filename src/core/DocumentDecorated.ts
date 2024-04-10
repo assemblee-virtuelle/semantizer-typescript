@@ -1,5 +1,6 @@
 import { Context } from "./Context";
-import { Document, DocumentReadonly } from "./Document";
+import { Document, DocumentBase, DocumentReadonly } from "./Document";
+import Factory from "./Factory";
 import Resource from "./Resource";
 import { ThingBase, ThingReadonly } from "./Thing";
 
@@ -13,6 +14,10 @@ implements Document<ContainedThing, SelfDescribingThing> {
 
     public constructor(wrapped: Document<ContainedThing, SelfDescribingThing>) {
         this._wrapped = wrapped;
+    }
+
+    public getFactory(): Factory<DocumentBase<ContainedThing, SelfDescribingThing>> {
+        return this.getWrappedDocument().getFactory();
     }
 
     public toCopy(): this {

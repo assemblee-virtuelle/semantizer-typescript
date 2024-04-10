@@ -60,6 +60,7 @@ gotReadonly?.getForClass();
 const WithRead = TypeIndexMixin(DocumentImpl<TypeIndexRegistration, Thing>);
 const mixWithRead = new WithRead(new DocumentImpl<TypeIndexRegistration, Thing>());
 mixWithRead.deleteContext();
+mixWithRead.createRegistration("").addInstance("");
 
 const ReadOnly = TypeIndexMixinReadonly(DocumentImpl<TypeIndexRegistrationReadonly, ThingReadonly>);
 

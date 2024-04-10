@@ -1,4 +1,5 @@
 import { Context } from "./Context";
+import Factory from "./Factory";
 import Resource from "./Resource";
 import { ThingBase, ThingReadonly } from "./Thing";
 
@@ -9,6 +10,7 @@ export interface DocumentBase<
     SelfDescribingThing extends ThingBase<any> = ThingBase,
 > extends Resource, Iterable<ContainedThing> {
         //constructor(): DocumentBase<ContainedThing, SelfDescribingThing>;
+    getFactory(): Factory<DocumentBase<ContainedThing, SelfDescribingThing>>
     get(uri: string | Resource): ContainedThing | undefined;
     getContext(): Context | undefined;
     getThingThatSelfDescribes(): SelfDescribingThing | undefined;

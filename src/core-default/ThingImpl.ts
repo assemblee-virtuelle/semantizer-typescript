@@ -10,9 +10,9 @@ export enum ThingType {
     Anonymous
 }
 
-export class ThingBaseImpl<
+export class ThingImpl<
     ContainedStatement extends StatementBase = StatementBase
-> implements ThingBase<ContainedStatement> {
+> implements Thing<ContainedStatement> {
 
     private _uri: string;
     private _document: DocumentBase<any, any>;
@@ -31,7 +31,39 @@ export class ThingBaseImpl<
         return this;
     }
 
-    public getDocument(): DocumentBase<any, any> {
+    public createStatement(about: string, value: string | Resource, datatype?: string, language?: string): ContainedStatement {
+        const statement = this.getDocument().getFactory().createStatement(this, about, value, datatype, language);
+        this._getStatements().push(statement);
+        return statement;
+    }
+
+    public add(statement: ContainedStatement): this {
+        // TODO: set thing of statement
+        // this._getStatements().push(statement);
+        return this;
+    }
+
+    public set(about: string, value: string, oldValue?: string | undefined, ContainedStatement?: string | undefined, language?: string | undefined): this {
+        throw new Error("Method not implemented.");
+    }
+    
+    public remove(about: string, value: string | Resource, ContainedStatement?: string | undefined, language?: string | undefined): this {
+        throw new Error("Method not implemented.");
+    }
+
+    public removeAll(about: string): this {
+        throw new Error("Method not implemented.");
+    }
+
+    public toCopyReadonly<ContainedStatementReadonly extends StatementReadonly = StatementReadonly>(): ThingReadonly<ContainedStatementReadonly> {
+        throw new Error("Method not implemented.");
+    }
+
+    public toCopyWritable<ContainedStatementWritable extends Statement = Statement>(): Thing<ContainedStatementWritable> {
+        throw new Error("Method not implemented.");
+    }
+
+    public getDocument(): DocumentBase<this, any> {
         return this._document;
     }
 
@@ -101,49 +133,5 @@ export class ThingBaseImpl<
     }
 
 }
-
-export class ThingReadonlyImpl<
-    ContainedStatement extends StatementReadonly = StatementReadonly
-> extends ThingBaseImpl<ContainedStatement> implements ThingReadonly<ContainedStatement> {
-
-    public toCopyWritable<ContainedStatementWritable extends Statement = Statement>(): Thing<ContainedStatementWritable> {
-        throw new Error("Method not implemented.");
-    }
-
-}
-
-export class ThingImpl<
-    ContainedStatement extends Statement = Statement
-> extends ThingBaseImpl<ContainedStatement> implements Thing<ContainedStatement> {
-    
-    public add(about: string, value: string | Resource, ContainedStatement?: string, language?: string): this {
-        //const statement = new ContainedStatementDefaultImpl(this, about, value, ContainedStatement, language);
-        //this._getStatements().push(statement);
-        // TODO: use factory
-        return this;
-    }
-
-    public set(about: string, value: string, oldValue?: string | undefined, ContainedStatement?: string | undefined, language?: string | undefined): this {
-        throw new Error("Method not implemented.");
-    }
-    
-    public remove(about: string, value: string | Resource, ContainedStatement?: string | undefined, language?: string | undefined): this {
-        throw new Error("Method not implemented.");
-    }
-
-    public removeAll(about: string): this {
-        throw new Error("Method not implemented.");
-    }
-
-    public toCopyReadonly<ContainedStatementReadonly extends StatementReadonly = StatementReadonly>(): ThingReadonly<ContainedStatementReadonly> {
-        throw new Error("Method not implemented.");
-    }
-
-    public toCopyWritable<ContainedStatementWritable extends Statement = Statement>(): Thing<ContainedStatementWritable> {
-        throw new Error("Method not implemented.");
-    }
-
-}
-
 
 export default ThingImpl;
