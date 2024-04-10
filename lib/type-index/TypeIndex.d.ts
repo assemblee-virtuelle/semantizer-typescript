@@ -1,13 +1,13 @@
-import { Document, DocumentReadonly } from "../core/Document";
-import { StatementBase, StatementReadonly } from "../core/Statement";
-import { Thing, ThingBase, ThingReadonly } from "../core/Thing";
-import { TypeIndexRegistration, TypeIndexRegistrationReadonly } from "./TypeIndexRegistration";
-export interface WithReadOperations<ContainedRegistration extends ThingBase<any> = ThingBase> {
-    forEachOfClass(forClass: string, callbackfn: (value: ContainedRegistration, index?: number, array?: ContainedRegistration[]) => void, thisArg?: any): void;
+import { Document } from "../core/Document";
+import { ThingBase } from "../core/Thing";
+import { TypeIndexRegistration } from "./TypeIndexRegistration";
+export interface WithReadOperations<ContainedThing extends ThingBase<any>> {
+    forEachOfClass(forClass: string, callbackfn: (value: ContainedThing, index?: number, array?: ContainedThing[]) => void, thisArg?: any): void;
 }
-export interface WithWriteOperations<ContainedStatement extends StatementBase = StatementBase> {
-    createRegistration(forClass?: string, nameHintOrUri?: string): TypeIndexRegistration<ContainedStatement>;
+export interface WithWriteOperations<ContainedThing extends ThingBase<any>> {
+    createRegistration(forClass?: string, nameHintOrUri?: string): ContainedThing;
 }
-export type TypeIndex<ContainedStatement extends StatementBase = StatementBase> = Document<TypeIndexRegistration<ContainedStatement>, Thing<ContainedStatement>> & WithReadOperations<TypeIndexRegistration<ContainedStatement>> & WithWriteOperations;
-export type TypeIndexReadonly = DocumentReadonly<TypeIndexRegistrationReadonly, ThingReadonly> & WithReadOperations<TypeIndexRegistrationReadonly<StatementReadonly>>;
+export type TypeIndex<ContainedThing extends ThingBase<any>, SelfDescribingThing extends ThingBase<any>> = Document<ContainedThing, SelfDescribingThing> & WithReadOperations<ContainedThing> & WithWriteOperations<ContainedThing>;
+export type TypeIndexRegistrationThing = TypeIndexRegistration<TypeIndexDocument>;
+export type TypeIndexDocument = TypeIndex<TypeIndexRegistrationThing, TypeIndexRegistrationThing>;
 //# sourceMappingURL=TypeIndex.d.ts.map

@@ -22,6 +22,9 @@ export type TypeIndex<
     WithReadOperations<ContainedThing> & 
     WithWriteOperations<ContainedThing>;
 
+export type TypeIndexRegistrationThing = TypeIndexRegistration<TypeIndexDocument>;
+export type TypeIndexDocument = TypeIndex<TypeIndexRegistrationThing, TypeIndexRegistrationThing>;
+
 //  & 
 //     WithFactory<Document<ContainedThing, SelfDescribingThing>> & // Should be this
 //     WithReadOperations<Document<ContainedThing, SelfDescribingThing>> &

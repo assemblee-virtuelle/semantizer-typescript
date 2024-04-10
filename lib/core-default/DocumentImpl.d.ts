@@ -2,15 +2,15 @@ import { Context } from "../core/Context.js";
 import { Document, DocumentBase, DocumentReadonly } from "../core/Document.js";
 import Factory from "../core/Factory.js";
 import Resource from "../core/Resource.js";
-import { ThingBase } from "../core/Thing.js";
-export declare class DocumentImpl<ContainedThing extends ThingBase<any>, SelfDescribingThing extends ThingBase<any>> implements Document<ContainedThing, SelfDescribingThing> {
+import { Thing, ThingOfDocument, ThingReadonly } from "../core/Thing.js";
+export declare class DocumentImpl<ContainedThing extends Thing<any> | ThingReadonly<any> | ThingOfDocument<any>, SelfDescribingThing extends Thing<any> | ThingReadonly<any> | ThingOfDocument<any>> implements Document<ContainedThing, SelfDescribingThing> {
     protected _uri: string;
     protected _selfDescribingThing?: SelfDescribingThing;
     protected _things: ContainedThing[];
     protected _context?: Context;
-    protected _factory: Factory<DocumentImpl<ContainedThing, SelfDescribingThing>>;
-    constructor(factory: Factory<DocumentImpl<ContainedThing, SelfDescribingThing>>);
-    getFactory(): Factory<DocumentImpl<ContainedThing, SelfDescribingThing>>;
+    protected _factory: Factory<this>;
+    constructor(factory: Factory<any>);
+    getFactory(): Factory<Document<ContainedThing, SelfDescribingThing>>;
     toCopy(): this;
     toCopyReadonly<DocumentCopied extends DocumentReadonly<any, any>>(): DocumentCopied;
     toCopyWritable<DocumentCopied extends Document<any, any>>(): DocumentCopied;

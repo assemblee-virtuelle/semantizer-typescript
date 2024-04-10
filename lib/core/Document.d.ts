@@ -25,8 +25,8 @@ export interface WithReadOperations<DocumentType extends DocumentBase<any, any>>
     at(index: number): ContainedThingOf<DocumentType> | undefined;
     contains(other: ThisType<this>): boolean;
     count(callbackfn?: (thing: ContainedThingOf<DocumentType>, document?: ThisType<this>) => boolean): number;
-    difference(other: DocumentType): DocumentType;
-    equals(other: DocumentType): boolean;
+    difference(other: ThisType<this>): this;
+    equals(other: ThisType<this>): boolean;
     every(predicate: (value: ContainedThingOf<DocumentType>, index?: number, array?: ContainedThingOf<DocumentType>[]) => boolean, thisArg?: any): boolean;
     filter(predicate: (value: ContainedThingOf<DocumentType>, index?: number, array?: ContainedThingOf<DocumentType>[]) => boolean): ContainedThingOf<DocumentType>[];
     find(predicate: (value: ContainedThingOf<DocumentType>, index?: number, obj?: ContainedThingOf<DocumentType>[]) => boolean, thisArg?: any): ContainedThingOf<DocumentType> | undefined;
@@ -65,7 +65,8 @@ export interface WithCopyOperations {
 export interface WithCopyWritableOperations {
     toCopyWritable<DocumentType extends Document<any, any>>(): DocumentType;
 }
-export type Document<ContainedThing extends ThingBase<any>, SelfDescribingThing extends ThingBase<any>> = DocumentBase<ContainedThing, SelfDescribingThing> & WithFactory<Document<ContainedThing, SelfDescribingThing>> & WithReadOperations<Document<ContainedThing, SelfDescribingThing>> & WithWriteOperations<Document<ContainedThing, SelfDescribingThing>> & WithCreateOperations<Document<ContainedThing, SelfDescribingThing>> & WithCopyOperations & WithCopyWritableOperations;
+export type Document<ContainedThing extends ThingBase<any>, SelfDescribingThing extends ThingBase<any>> = DocumentBase<ContainedThing, SelfDescribingThing> & WithFactory<Document<ContainedThing, SelfDescribingThing>> & // Should be this
+WithReadOperations<Document<ContainedThing, SelfDescribingThing>> & WithWriteOperations<Document<ContainedThing, SelfDescribingThing>> & WithCreateOperations<Document<ContainedThing, SelfDescribingThing>> & WithCopyOperations & WithCopyWritableOperations;
 export type DocumentReadonly<ContainedThing extends ThingBase<any>, // TODO: add readonly constraint
 SelfDescribingThing extends ThingBase<any>> = DocumentBase<ContainedThing, SelfDescribingThing> & WithFactory<DocumentReadonly<ContainedThing, SelfDescribingThing>> & WithReadOperations<DocumentReadonly<ContainedThing, SelfDescribingThing>> & WithCopyWritableOperations;
 //# sourceMappingURL=Document.d.ts.map

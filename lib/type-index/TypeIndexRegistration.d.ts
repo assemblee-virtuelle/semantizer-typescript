@@ -1,6 +1,6 @@
+import { Document } from "../core/Document";
 import Resource from "../core/Resource";
-import { Statement, StatementBase, StatementReadonly } from "../core/Statement";
-import { ThingBase, ThingReadonly } from "../core/Thing";
+import { ThingOfDocument } from "../core/Thing";
 export interface TypeIndexRegistrationBase {
     isForClass(forClass: string): boolean;
     getForClass(): string | null;
@@ -22,8 +22,6 @@ export interface WithWriteOperations {
     removeInstanceAll(): this;
     removeInstanceContainerAll(): this;
 }
-export interface TypeIndexRegistration<ContainedStatement extends StatementBase = Statement> extends ThingBase<ContainedStatement>, TypeIndexRegistrationBase, WithWriteOperations {
-}
-export interface TypeIndexRegistrationReadonly<ContainedStatement extends StatementReadonly = StatementReadonly> extends ThingReadonly<ContainedStatement>, TypeIndexRegistrationBase {
+export interface TypeIndexRegistration<DocumentType extends Document<any, any>> extends ThingOfDocument<DocumentType>, TypeIndexRegistrationBase, WithWriteOperations {
 }
 //# sourceMappingURL=TypeIndexRegistration.d.ts.map

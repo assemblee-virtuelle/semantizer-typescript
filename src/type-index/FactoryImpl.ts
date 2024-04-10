@@ -4,23 +4,22 @@ import { Context } from "../core/Context";
 import { Document, StatementOf } from "../core/Document";
 import { Factory } from "../core/Factory";
 import Resource from "../core/Resource";
-import { Statement } from "../core/Statement";
 import ThingWithHelpersMixin from "../thing-helpers/ThingWithHelpersMixin";
-import { TypeIndex } from "./TypeIndex";
+import { TypeIndex, TypeIndexDocument, TypeIndexRegistrationThing } from "./TypeIndex";
 import { TypeIndexImpl } from "./TypeIndexImpl";
 import { TypeIndexRegistration } from "./TypeIndexRegistration";
 
-type TypeIndexRegistrationThing = TypeIndexRegistration<TypeIndexDocument>;
-type TypeIndexDocument = TypeIndex<TypeIndexRegistrationThing, TypeIndexRegistrationThing>;
-//type Doc = Document<TypeIndexRegistrationThing, TypeIndexRegistrationThing>;
+// type TypeIndexRegistrationThing = TypeIndexRegistration<TypeIndexDocument>;
+// type TypeIndexDocument = TypeIndex<TypeIndexRegistrationThing, TypeIndexRegistrationThing>;
+type Doc = Document<TypeIndexRegistrationThing, TypeIndexRegistrationThing>;
 
 const ThingWithHelpers = ThingWithHelpersMixin(ThingImpl);
 
 export class FactoryImpl implements Factory<TypeIndexDocument> {
     
     public createDocument(uri?: string | undefined, context?: Context | undefined): TypeIndexDocument {
-        //const doc: Doc = new DocumentImpl<TypeIndexRegistrationThing, TypeIndexRegistrationThing>(this);
-        return new TypeIndexImpl(new DocumentImpl<TypeIndexRegistrationThing, TypeIndexRegistrationThing>(this));
+        const doc: Doc = new DocumentImpl<TypeIndexRegistrationThing, TypeIndexRegistrationThing>(this);
+        return new TypeIndexImpl(doc);
     }
     
     public createThingToDescribeDocument(document: TypeIndexDocument): TypeIndexRegistrationThing {
@@ -44,3 +43,7 @@ export class FactoryImpl implements Factory<TypeIndexDocument> {
     }
 
 }
+
+const factory = new FactoryImpl();
+const typeIndex = factory.createDocument();
+typeIndex.createRegistration("ex:class");

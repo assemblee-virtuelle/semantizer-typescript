@@ -2,10 +2,10 @@ import { Context } from "./Context";
 import { ContainedThingOf, Document, DocumentReadonly, SelfDescribingThingOf } from "./Document";
 import Factory from "./Factory";
 import Resource from "./Resource";
-export declare class DocumentDecorated<DocumentType extends Document<any, any>> implements Document<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>> {
-    protected _wrapped: Document<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>>;
-    constructor(wrapped: Document<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>>);
-    getFactory(): Factory<Document<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>>>;
+export declare class DocumentDecorated<DocumentType extends Document<any, any> | DocumentReadonly<any, any>> implements Document<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>> {
+    protected _wrapped: DocumentType;
+    constructor(wrapped: DocumentType);
+    getFactory(): Factory<this>;
     toCopy(): this;
     toCopyReadonly<DocumentCopied extends DocumentReadonly<any, any>>(): DocumentCopied;
     toCopyWritable<DocumentCopied extends Document<any, any>>(): DocumentCopied;
@@ -24,7 +24,7 @@ export declare class DocumentDecorated<DocumentType extends Document<any, any>> 
     splice(start: number, deleteCount?: number | undefined, ...items: ContainedThingOf<DocumentType>[]): this;
     union(other: DocumentType): this;
     createThingWithUri(nameHintOrUri?: string): ContainedThingOf<DocumentType>;
-    protected getWrappedDocument(): Document<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>>;
+    protected getWrappedDocument(): DocumentType;
     get(uri: string | Resource): ContainedThingOf<DocumentType> | undefined;
     getContext(): Context | undefined;
     getThingThatSelfDescribes(): SelfDescribingThingOf<DocumentType> | undefined;
@@ -38,8 +38,8 @@ export declare class DocumentDecorated<DocumentType extends Document<any, any>> 
     at(index: number): ContainedThingOf<DocumentType> | undefined;
     contains(other: this): boolean;
     count(callbackfn?: (thing: ContainedThingOf<DocumentType>, document?: ThisType<this>) => boolean): number;
-    difference(other: DocumentType): DocumentType;
-    equals(other: DocumentType): boolean;
+    difference(other: this): this;
+    equals(other: this): boolean;
     every(predicate: (value: ContainedThingOf<DocumentType>, index?: number | undefined, array?: ContainedThingOf<DocumentType>[] | undefined) => boolean, thisArg?: any): boolean;
     filter(predicate: (value: ContainedThingOf<DocumentType>, index?: number | undefined, array?: ContainedThingOf<DocumentType>[] | undefined) => boolean): ContainedThingOf<DocumentType>[];
     find(predicate: (value: ContainedThingOf<DocumentType>, index?: number | undefined, obj?: ContainedThingOf<DocumentType>[] | undefined) => boolean, thisArg?: any): ContainedThingOf<DocumentType> | undefined;

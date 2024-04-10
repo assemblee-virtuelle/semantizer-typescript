@@ -1,10 +1,12 @@
 import ThingImpl from "../core-default/ThingImpl";
 import Resource from "../core/Resource";
-import { Statement, StatementBase } from "../core/Statement";
 import { TypeIndex } from "./TypeIndex";
 import { TypeIndexRegistration } from "./TypeIndexRegistration";
-export declare class TypeIndexRegistrationImpl<ContainedStatement extends StatementBase = Statement> extends ThingImpl<ContainedStatement> implements TypeIndexRegistration<ContainedStatement> {
-    constructor(document: TypeIndex, uri?: string);
+type TypeIndexRegistrationThing = TypeIndexRegistration<TypeIndexDocument>;
+type TypeIndexDocument = TypeIndex<TypeIndexRegistrationThing, TypeIndexRegistrationThing>;
+export declare class TypeIndexRegistrationImpl extends ThingImpl<TypeIndexDocument>//ContainedStatement> 
+ implements TypeIndexRegistration<TypeIndexDocument> {
+    constructor(document: TypeIndexDocument, uri?: string);
     isForClass(forClass: string): boolean;
     protected getUriFromStringOrResource(stringOrResource: string | Resource): string;
     protected getFirstElementOrNull(collection: string[]): string | null;
