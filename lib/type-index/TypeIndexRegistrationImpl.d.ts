@@ -1,9 +1,7 @@
 import ThingImpl from "../core-default/ThingImpl";
 import Resource from "../core/Resource";
-import { TypeIndex } from "./TypeIndex";
+import { TypeIndexDocument } from "./TypeIndex";
 import { TypeIndexRegistration } from "./TypeIndexRegistration";
-type TypeIndexRegistrationThing = TypeIndexRegistration<TypeIndexDocument>;
-type TypeIndexDocument = TypeIndex<TypeIndexRegistrationThing, TypeIndexRegistrationThing>;
 export declare class TypeIndexRegistrationImpl extends ThingImpl<TypeIndexDocument>//ContainedStatement> 
  implements TypeIndexRegistration<TypeIndexDocument> {
     constructor(document: TypeIndexDocument, uri?: string);
