@@ -1,6 +1,7 @@
+import { Document } from "../core/Document";
 import Resource from "../core/Resource";
-import { Statement, StatementBase, StatementReadonly } from "../core/Statement";
-import { ThingBase, ThingReadonly } from "../core/Thing";
+import { ThingOfDocument, ThingReadonly } from "../core/Thing";
+//import { TypeIndexReadonly } from "./TypeIndex";
 
 export interface TypeIndexRegistrationBase {
     isForClass(forClass: string): boolean;
@@ -26,12 +27,16 @@ export interface WithWriteOperations {
 }
 
 export interface TypeIndexRegistration<
-    ContainedStatement extends StatementBase = Statement
-> extends ThingBase<ContainedStatement>, 
+    DocumentType extends Document<any, any>
+> extends ThingOfDocument<DocumentType>, 
     TypeIndexRegistrationBase, 
     WithWriteOperations {}
 
-export interface TypeIndexRegistrationReadonly<
-    ContainedStatement extends StatementReadonly = StatementReadonly
-> extends ThingReadonly<ContainedStatement>, 
-    TypeIndexRegistrationBase {}
+/*export interface TypeIndexRegistrationReadonly
+extends ThingReadonly<TypeIndexReadonly>, 
+    TypeIndexRegistrationBase {}*/
+
+/*
+<
+    ContainedStatement extends StatementReadonly<any> = StatementReadonly<TypeIndexReadonly>
+>*/

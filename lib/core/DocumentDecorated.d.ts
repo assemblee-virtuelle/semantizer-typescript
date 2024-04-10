@@ -2,13 +2,13 @@ import { Context } from "./Context";
 import { ContainedThingOf, Document, DocumentReadonly, SelfDescribingThingOf } from "./Document";
 import Factory from "./Factory";
 import Resource from "./Resource";
-export declare class DocumentDecorated<DocumentType extends Document<any>> implements Document<DocumentType> {
-    protected _wrapped: Document<DocumentType>;
-    constructor(wrapped: Document<DocumentType>);
-    getFactory(): Factory<DocumentType>;
+export declare class DocumentDecorated<DocumentType extends Document<any, any>> implements Document<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>> {
+    protected _wrapped: Document<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>>;
+    constructor(wrapped: Document<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>>);
+    getFactory(): Factory<Document<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>>>;
     toCopy(): this;
-    toCopyReadonly<DocumentCopied extends DocumentReadonly<any>>(): DocumentCopied;
-    toCopyWritable<DocumentCopied extends Document<any>>(): DocumentCopied;
+    toCopyReadonly<DocumentCopied extends DocumentReadonly<any, any>>(): DocumentCopied;
+    toCopyWritable<DocumentCopied extends Document<any, any>>(): DocumentCopied;
     createThingToSelfDescribe(): SelfDescribingThingOf<DocumentType>;
     createThingWithoutUri(nameHint?: string | undefined): ContainedThingOf<DocumentType>;
     add(thing: ContainedThingOf<DocumentType>): this;
@@ -24,7 +24,7 @@ export declare class DocumentDecorated<DocumentType extends Document<any>> imple
     splice(start: number, deleteCount?: number | undefined, ...items: ContainedThingOf<DocumentType>[]): this;
     union(other: DocumentType): this;
     createThingWithUri(nameHintOrUri?: string): ContainedThingOf<DocumentType>;
-    protected getWrappedDocument(): Document<DocumentType>;
+    protected getWrappedDocument(): Document<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>>;
     get(uri: string | Resource): ContainedThingOf<DocumentType> | undefined;
     getContext(): Context | undefined;
     getThingThatSelfDescribes(): SelfDescribingThingOf<DocumentType> | undefined;

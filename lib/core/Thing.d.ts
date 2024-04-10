@@ -31,11 +31,11 @@ export interface WithCreateOperations<ContainedStatement extends StatementBase =
     createStatement(about: string, value: string | Resource, datatype?: string, language?: string): this;
 }
 export interface WithCopyOperations {
-    toCopyReadonly<DocumentType extends DocumentReadonly<any>>(): ContainedThingOf<DocumentType>;
+    toCopyReadonly<DocumentType extends DocumentReadonly<any, any>>(): ContainedThingOf<DocumentType>;
 }
 export interface WithCopyWritableOperations {
-    toCopyWritable<DocumentType extends Document<any>>(): ContainedThingOf<DocumentType>;
+    toCopyWritable<DocumentType extends Document<any, any>>(): ContainedThingOf<DocumentType>;
 }
-export type Thing<DocumentType extends Document<any>> = ThingBase<StatementOf<DocumentType>> & WithDocument<DocumentType> & WithReadOperations & WithWriteOperations<StatementOf<DocumentType>> & WithCreateOperations<StatementOf<DocumentType>> & WithCopyOperations & WithCopyWritableOperations;
-export type ThingReadonly<DocumentType extends DocumentReadonly<any>> = ThingBase<StatementOf<DocumentType>> & WithDocument<DocumentType> & WithReadOperations & WithCopyWritableOperations;
+export type Thing<DocumentType extends Document<any, any>> = ThingBase<StatementOf<DocumentType>> & WithDocument<DocumentType> & WithReadOperations & WithWriteOperations<StatementOf<DocumentType>> & WithCreateOperations<StatementOf<DocumentType>> & WithCopyOperations & WithCopyWritableOperations;
+export type ThingReadonly<DocumentType extends DocumentReadonly<any, any>> = ThingBase<StatementOf<DocumentType>> & WithDocument<DocumentType> & WithReadOperations & WithCopyWritableOperations;
 //# sourceMappingURL=Thing.d.ts.map

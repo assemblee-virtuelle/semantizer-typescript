@@ -5,8 +5,7 @@ import Resource from "../core/Resource";
 import { DocumentImpl } from "./DocumentImpl.js";
 import StatementImpl from "./StatementImpl.js";
 import ThingImpl from "./ThingImpl.js";
-type DocumentTypeReadonly = DocumentReadonly<DocumentDefaultImplReadonly>;
-type DocumentDefaultImplReadonly = DocumentImpl<ThingImpl<StatementImpl>, ThingImpl<StatementImpl>>;
+type DocumentTypeReadonly = DocumentReadonly<ThingImpl<StatementImpl>, ThingImpl<StatementImpl>>;
 export declare class FactoryImpl<DocumentType extends DocumentImpl<any, any> = DocumentImpl<ThingImpl<StatementImpl>, ThingImpl<StatementImpl>>> implements Factory<DocumentType> {
     createDocument(uri?: string, context?: Context): DocumentType;
     createThingToDescribeDocument(document: DocumentType): SelfDescribingThingOf<DocumentType>;

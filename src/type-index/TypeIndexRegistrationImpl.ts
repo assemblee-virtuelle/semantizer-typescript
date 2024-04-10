@@ -1,15 +1,16 @@
 import ThingImpl, { ThingType } from "../core-default/ThingImpl";
 import Resource from "../core/Resource";
-import { Statement, StatementBase } from "../core/Statement";
 import { TypeIndex } from "./TypeIndex";
 import { TypeIndexRegistration } from "./TypeIndexRegistration";
 
-export class TypeIndexRegistrationImpl<
-    ContainedStatement extends StatementBase = Statement
-> extends ThingImpl<ContainedStatement> 
-implements TypeIndexRegistration<ContainedStatement> {
+type TypeIndexRegistrationThing = TypeIndexRegistration<TypeIndexDocument>;
+type TypeIndexDocument = TypeIndex<TypeIndexRegistrationThing, TypeIndexRegistrationThing>;
 
-    constructor(document: TypeIndex, uri?: string) {
+export class TypeIndexRegistrationImpl
+extends ThingImpl<TypeIndexDocument> //ContainedStatement> 
+implements TypeIndexRegistration<TypeIndexDocument> {
+
+    constructor(document: TypeIndexDocument, uri?: string) {
         super(document, ThingType.Regular, uri);
     }
 
@@ -27,17 +28,17 @@ implements TypeIndexRegistration<ContainedStatement> {
     }
 
     public addForClass(forClass: string | Resource): this {
-        this.add("solid:forClass", this.getUriFromStringOrResource(forClass));
+        //this.add("solid:forClass", this.getUriFromStringOrResource(forClass));
         return this;
     }
 
     public addInstance(instance: string | Resource): this {
-        this.add("solid:instance", this.getUriFromStringOrResource(instance));
+        //this.add("solid:instance", this.getUriFromStringOrResource(instance));
         return this;
     }
 
     public addInstanceContainer(instanceContainer: string | Resource): this {
-        this.add("solid:instanceContainer", this.getUriFromStringOrResource(instanceContainer));
+        //this.add("solid:instanceContainer", this.getUriFromStringOrResource(instanceContainer));
         return this;
     }
 
@@ -46,7 +47,7 @@ implements TypeIndexRegistration<ContainedStatement> {
     }
 
     public getForClassAll(): string[] {
-        return this.getAll("solid:forClass");
+        return []// this.getAll("solid:forClass");
     }
 
     public getInstance(): string | null {
@@ -54,7 +55,7 @@ implements TypeIndexRegistration<ContainedStatement> {
     }
 
     public getInstanceAll(): string[] {
-        return this.getAll("solid:instance");
+        return []// this.getAll("solid:instance");
     }
 
     public getInstanceContainer(): string | null {
@@ -62,7 +63,7 @@ implements TypeIndexRegistration<ContainedStatement> {
     }
 
     public getInstanceContainerAll(): string[] {
-        return this.getAll("solid:instanceContainer");
+        return []// this.getAll("solid:instanceContainer");
     }
 
     public setForClass(forClass: string): this {

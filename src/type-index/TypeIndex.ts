@@ -1,25 +1,42 @@
-import { Document, DocumentReadonly } from "../core/Document";
-import { StatementBase, StatementReadonly } from "../core/Statement";
-import { Thing, ThingBase, ThingReadonly } from "../core/Thing";
-import { TypeIndexRegistration, TypeIndexRegistrationReadonly } from "./TypeIndexRegistration";
+import { Document, DocumentBase, DocumentReadonly } from "../core/Document";
+import { StatementBase } from "../core/Statement";
+import { ThingBase, ThingReadonly } from "../core/Thing";
+import { TypeIndexRegistration } from "./TypeIndexRegistration";
 
 export interface WithReadOperations<
-    ContainedRegistration extends ThingBase<any> = ThingBase
+    ContainedThing extends ThingBase<any>
 > {
-    forEachOfClass(forClass: string, callbackfn: (value: ContainedRegistration, index?: number, array?: ContainedRegistration[]) => void, thisArg?: any): void;
+    forEachOfClass(forClass: string, callbackfn: (value: ContainedThing, index?: number, array?: ContainedThing[]) => void, thisArg?: any): void;
 }
 
 export interface WithWriteOperations<
-    ContainedStatement extends StatementBase = StatementBase
+    ContainedThing extends ThingBase<any>
 > {
-    createRegistration(forClass?: string, nameHintOrUri?: string): TypeIndexRegistration<ContainedStatement>;
+    createRegistration(forClass?: string, nameHintOrUri?: string): ContainedThing; //<ContainedStatement>;
 }
 
 export type TypeIndex<
-    ContainedStatement extends StatementBase = StatementBase
-> = Document<TypeIndexRegistration<ContainedStatement>, Thing<ContainedStatement>> & 
-    WithReadOperations<TypeIndexRegistration<ContainedStatement>> & 
-    WithWriteOperations;
+    ContainedThing extends ThingBase<any>,
+    SelfDescribingThing extends ThingBase<any>
+> = Document<ContainedThing, SelfDescribingThing> & 
+    WithReadOperations<ContainedThing> & 
+    WithWriteOperations<ContainedThing>;
 
-export type TypeIndexReadonly = DocumentReadonly<TypeIndexRegistrationReadonly, ThingReadonly> & 
+//  & 
+//     WithFactory<Document<ContainedThing, SelfDescribingThing>> & // Should be this
+//     WithReadOperations<Document<ContainedThing, SelfDescribingThing>> &
+//     WithWriteOperations<Document<ContainedThing, SelfDescribingThing>> &
+//     WithCreateOperations<Document<ContainedThing, SelfDescribingThing>> &
+//     WithCopyOperations & 
+//     WithCopyWritableOperations;
+
+/*export type TypeIndexReadonly<
+    ContainedThing extends ThingReadonly<any> = ThingReadonly<any>,
+    SelfDescribingThing extends ThingReadonly<any> = ThingReadonly<any>
+> = DocumentReadonly<ContainedThing, SelfDescribingThing> & 
+    WithReadOperations<ContainedThing>;*/
+
+/*
+= DocumentReadonly<TypeIndexRegistrationReadonly, ThingReadonly> & 
     WithReadOperations<TypeIndexRegistrationReadonly<StatementReadonly>>;
+    */

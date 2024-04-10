@@ -60,11 +60,12 @@ export interface WithCreateOperations<DocumentType extends DocumentBase<any, any
     createThingWithoutUri(nameHint?: string): ContainedThingOf<DocumentType>;
 }
 export interface WithCopyOperations {
-    toCopyReadonly<DocumentType extends DocumentReadonly<any>>(): DocumentType;
+    toCopyReadonly<DocumentType extends DocumentReadonly<any, any>>(): DocumentType;
 }
 export interface WithCopyWritableOperations {
-    toCopyWritable<DocumentType extends Document<any>>(): DocumentType;
+    toCopyWritable<DocumentType extends Document<any, any>>(): DocumentType;
 }
-export type Document<DocumentType extends Document<any>> = DocumentBase<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>> & WithFactory<DocumentType> & WithReadOperations<DocumentType> & WithWriteOperations<DocumentType> & WithCreateOperations<DocumentType> & WithCopyOperations & WithCopyWritableOperations;
-export type DocumentReadonly<DocumentType extends DocumentReadonly<any>> = DocumentBase<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>> & WithFactory<DocumentType> & WithReadOperations<DocumentType> & WithCopyWritableOperations;
+export type Document<ContainedThing extends ThingBase<any>, SelfDescribingThing extends ThingBase<any>> = DocumentBase<ContainedThing, SelfDescribingThing> & WithFactory<Document<ContainedThing, SelfDescribingThing>> & WithReadOperations<Document<ContainedThing, SelfDescribingThing>> & WithWriteOperations<Document<ContainedThing, SelfDescribingThing>> & WithCreateOperations<Document<ContainedThing, SelfDescribingThing>> & WithCopyOperations & WithCopyWritableOperations;
+export type DocumentReadonly<ContainedThing extends ThingBase<any>, // TODO: add readonly constraint
+SelfDescribingThing extends ThingBase<any>> = DocumentBase<ContainedThing, SelfDescribingThing> & WithFactory<DocumentReadonly<ContainedThing, SelfDescribingThing>> & WithReadOperations<DocumentReadonly<ContainedThing, SelfDescribingThing>> & WithCopyWritableOperations;
 //# sourceMappingURL=Document.d.ts.map

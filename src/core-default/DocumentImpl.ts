@@ -2,44 +2,50 @@ import { Context } from "../core/Context.js";
 import { Document, DocumentBase, DocumentReadonly } from "../core/Document.js";
 import Factory from "../core/Factory.js";
 import Resource from "../core/Resource.js";
-import { ThingBase } from "../core/Thing.js";
+import { Thing, ThingBase, ThingOfDocument, ThingReadonly } from "../core/Thing.js";
 import { FactoryImpl } from "./FactoryImpl.js";
 
 export class DocumentImpl<
-    ContainedThing extends ThingBase<any>,
-    SelfDescribingThing extends ThingBase<any>,
+    ContainedThing extends Thing<any> | ThingReadonly<any> | ThingOfDocument<any>,
+    SelfDescribingThing extends Thing<any> | ThingReadonly<any> | ThingOfDocument<any>,
     //DocumentType extends Document<any>
 >
-implements Document<DocumentImpl<ContainedThing, SelfDescribingThing>> {
+implements Document<ContainedThing, SelfDescribingThing> {
     
     protected _uri: string;
     protected _selfDescribingThing?: SelfDescribingThing;
     protected _things: ContainedThing[];
     protected _context?: Context;
-    protected _factory: Factory<DocumentImpl<ContainedThing, SelfDescribingThing>>;
+    protected _factory: Factory<this>;
 
     //public constructor(uri?: string, context?: Context);
     //public constructor(document: DocumentBase<ContainedThing<Wrapped>, SelfDescribingThing<Wrapped>>);
-    public constructor(factory: Factory<DocumentImpl<ContainedThing, SelfDescribingThing>>) {//documentOrUri?: DocumentBase<ContainedThing<Wrapped>, SelfDescribingThing<Wrapped>> | string, context?: Context) {
+    public constructor(factory: Factory<any> /*TODO: add constraint to this type */) {//documentOrUri?: DocumentBase<ContainedThing<Wrapped>, SelfDescribingThing<Wrapped>> | string, context?: Context) {
         this._uri = ""; //typeof documentOrUri === 'string'? documentOrUri ?? '': documentOrUri?.getUri() ?? '';
         this._context = undefined; //context;
         this._things = [];
         this._factory = factory; //new FactoryImpl<DocumentImpl<ContainedThing, SelfDescribingThing>>();
     }
 
-    public getFactory(): Factory<DocumentImpl<ContainedThing, SelfDescribingThing>> {
+    public getFactory(): Factory<Document<ContainedThing, SelfDescribingThing>> {
         return this._factory;
     }
 
     public toCopy(): this {
-        throw new Error("Method not implemented.");
+        //throw new Error("Method not implemented.");
+        const copy = new DocumentImpl<ContainedThing, SelfDescribingThing>(this._factory);
+        copy._uri = this._uri;
+        return copy as this;
     }
 
-    public toCopyReadonly<DocumentCopied extends DocumentReadonly<any>>(): DocumentCopied {
+    public toCopyReadonly<DocumentCopied extends DocumentReadonly<any, any>>(): DocumentCopied {
         throw new Error("Method not implemented.");
+        // const readonlyThings = [];
+        // this.forEach(thing => readonlyThings.push(thing.toCopyReadonly())); // or use this.reduce
+        // return this as DocumentReadonly<ContainedThing, SelfDescribingThing>;
     }
 
-    public toCopyWritable<DocumentCopied extends Document<any>>(): DocumentCopied {
+    public toCopyWritable<DocumentCopied extends Document<any, any>>(): DocumentCopied {
         throw new Error("Method not implemented.");
     }
    

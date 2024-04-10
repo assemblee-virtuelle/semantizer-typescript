@@ -8,7 +8,7 @@ export interface Factory<DocumentType extends DocumentBase<any, any>> {
     createThingWithoutUri(document: DocumentType, nameHint?: string): ContainedThingOf<DocumentType>;
     createStatement(thing: ContainedThingOf<DocumentType>, about: string, value: string | Resource, datatype?: string | Resource, language?: string): StatementOf<DocumentType>;
 }
-export interface FactoryReadonly<DocumentTypeReadonly extends DocumentReadonly<any>> extends Factory<DocumentTypeReadonly> {
+export interface FactoryReadonly<DocumentTypeReadonly extends DocumentReadonly<any, any>> extends Factory<DocumentTypeReadonly> {
 }
 export default Factory;
 //# sourceMappingURL=Factory.d.ts.map

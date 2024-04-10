@@ -17,11 +17,11 @@ export interface WithWriteOperations {
     setLanguage(): this;
 }
 export interface WithCopyOperations {
-    toCopyReadonly<DocumentType extends DocumentReadonly<any>>(): StatementOf<DocumentType>;
+    toCopyReadonly<DocumentType extends DocumentReadonly<any, any>>(): StatementOf<DocumentType>;
 }
 export interface WithCopyWritableOperations {
-    toCopyWritable<DocumentType extends Document<any>>(): StatementOf<DocumentType>;
+    toCopyWritable<DocumentType extends Document<any, any>>(): StatementOf<DocumentType>;
 }
-export type Statement<DocumentType extends Document<any>> = StatementBase & WithThing<DocumentType> & WithReadOperations & WithWriteOperations & WithCopyOperations & WithCopyWritableOperations;
-export type StatementReadonly<DocumentType extends DocumentReadonly<any>> = StatementBase & WithThing<DocumentType> & WithReadOperations & WithCopyWritableOperations;
+export type Statement<DocumentType extends Document<any, any>> = StatementBase & WithThing<DocumentType> & WithReadOperations & WithWriteOperations & WithCopyOperations & WithCopyWritableOperations;
+export type StatementReadonly<DocumentType extends DocumentReadonly<any, any>> = StatementBase & WithThing<DocumentType> & WithReadOperations & WithCopyWritableOperations;
 //# sourceMappingURL=Statement.d.ts.map

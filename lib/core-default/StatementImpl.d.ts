@@ -1,9 +1,8 @@
 import { ContainedThingOf, Document, DocumentReadonly, StatementOf } from "../core/Document";
 import Resource from "../core/Resource";
 import { Statement } from "../core/Statement";
-import DocumentImpl from "./DocumentImpl";
 import ThingImpl from "./ThingImpl";
-type DocumentType = Document<DocumentImpl<ThingImpl<StatementImpl>, ThingImpl<StatementImpl>>>;
+type DocumentType = Document<ThingImpl<StatementImpl>, ThingImpl<StatementImpl>>;
 export declare class StatementImpl implements Statement<DocumentType> {
     private _thing;
     private _subject;
@@ -15,8 +14,8 @@ export declare class StatementImpl implements Statement<DocumentType> {
     setValue(): this;
     setDatatype(): this;
     setLanguage(): this;
-    toCopyReadonly<DocumentType extends DocumentReadonly<any>>(): StatementOf<DocumentType>;
-    toCopyWritable<DocumentType extends Document<any>>(): StatementOf<DocumentType>;
+    toCopyReadonly<DocumentType extends DocumentReadonly<any, any>>(): StatementOf<DocumentType>;
+    toCopyWritable<DocumentType extends Document<any, any>>(): StatementOf<DocumentType>;
     getThing(): ContainedThingOf<DocumentType>;
     getSubject(): string;
     getValue(): string;

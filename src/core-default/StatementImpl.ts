@@ -1,20 +1,23 @@
 import { ContainedThingOf, Document, DocumentReadonly, StatementOf } from "../core/Document";
 import Resource from "../core/Resource";
-import { Statement } from "../core/Statement";
+import { Statement, StatementOfThing } from "../core/Statement";
+import { ThingBase } from "../core/Thing";
 import DocumentImpl from "./DocumentImpl";
 import ThingImpl from "./ThingImpl";
 
-type DocumentType = Document<DocumentImpl<ThingImpl<StatementImpl>, ThingImpl<StatementImpl>>>;
+//type DocumentType = Document<ThingImpl<StatementImpl>, ThingImpl<StatementImpl>>;
 
-export class StatementImpl implements Statement<DocumentType> {
+export class StatementImpl<
+    ThingType extends ThingBase<any>
+> implements StatementOfThing<ThingType> {
 
-    private _thing: ContainedThingOf<DocumentType>;
+    private _thing: ThingType;
     private _subject: string;
     private _value: string;
     private _datatype?: string;
     private _language?: string;
 
-    public constructor(thing: ContainedThingOf<DocumentType>, subject: string, value: string | Resource, datatype?: string | Resource, language?: string) {
+    public constructor(thing: ThingType, subject: string, value: string | Resource, datatype?: string | Resource, language?: string) {
         this._thing = thing;
         this._subject = subject;
         this._value = typeof value === 'string'? value: value.getUri();
@@ -38,15 +41,15 @@ export class StatementImpl implements Statement<DocumentType> {
         throw new Error("Method not implemented.");
     }
 
-    public toCopyReadonly<DocumentType extends DocumentReadonly<any>>(): StatementOf<DocumentType> {
+    public toCopyReadonly<DocumentType extends DocumentReadonly<any, any>>(): StatementOf<DocumentType> {
         throw new Error("Method not implemented.");
     }
 
-    public toCopyWritable<DocumentType extends Document<any>>(): StatementOf<DocumentType> {
+    public toCopyWritable<DocumentType extends Document<any, any>>(): StatementOf<DocumentType> {
         throw new Error("Method not implemented.");
     }
 
-    public getThing(): ContainedThingOf<DocumentType> {
+    public getThing(): ThingType {
         return this._thing;
     }
 

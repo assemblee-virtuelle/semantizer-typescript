@@ -1,11 +1,6 @@
 import { Context } from "./Context";
-import { ContainedThingOf, Document, DocumentBase, DocumentReadonly, SelfDescribingThingOf, StatementOf } from "./Document";
+import { ContainedThingOf, DocumentBase, DocumentReadonly, SelfDescribingThingOf, StatementOf } from "./Document";
 import Resource from "./Resource";
-import { Statement, StatementBase, StatementReadonly } from "./Statement";
-import { ThingReadonly, Thing, ThingBase } from "./Thing";
-
-// export type ContainedThingOf<T extends DocumentBase<any, any>> = T extends DocumentBase<infer TypeArg, any> ? TypeArg : never;
-// export type SelfDescribingThingOf<T extends DocumentBase<any, any>> = T extends DocumentBase<any, infer TypeArg> ? TypeArg : never;
 
 export interface Factory<
     DocumentType extends DocumentBase<any, any>
@@ -20,7 +15,7 @@ export interface Factory<
 }
 
 export interface FactoryReadonly<
-    DocumentTypeReadonly extends DocumentReadonly<any>
+    DocumentTypeReadonly extends DocumentReadonly<any, any>
 > extends Factory<DocumentTypeReadonly> {}
 
 export default Factory;

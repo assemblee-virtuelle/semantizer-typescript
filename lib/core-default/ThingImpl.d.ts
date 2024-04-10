@@ -3,13 +3,12 @@ import { ContainedThingOf, Document, DocumentReadonly, StatementOf } from "../co
 import Resource from "../core/Resource.js";
 import { StatementBase } from "../core/Statement.js";
 import { Thing, ThingBase } from "../core/Thing.js";
-import DocumentImpl from "./DocumentImpl.js";
 export declare enum ThingType {
     ForDescribing = 0,
     Regular = 1,
     Anonymous = 2
 }
-type DocumentType<ContainedStatement extends StatementBase> = Document<DocumentImpl<ThingImpl<ContainedStatement>, ThingImpl<ContainedStatement>>>;
+type DocumentType<ContainedStatement extends StatementBase> = Document<ThingImpl<ContainedStatement>, ThingImpl<ContainedStatement>>;
 export declare class ThingImpl<ContainedStatement extends StatementBase> implements Thing<DocumentType<ContainedStatement>> {
     private _uri;
     private _document;
@@ -21,8 +20,8 @@ export declare class ThingImpl<ContainedStatement extends StatementBase> impleme
     set(about: string, value: string, oldValue?: string | undefined, ContainedStatement?: string | undefined, language?: string | undefined): this;
     remove(about: string, value: string | Resource, ContainedStatement?: string | undefined, language?: string | undefined): this;
     removeAll(about: string): this;
-    toCopyReadonly<DocumentType extends DocumentReadonly<any>>(): ContainedThingOf<DocumentType>;
-    toCopyWritable<DocumentType extends Document<any>>(): ContainedThingOf<DocumentType>;
+    toCopyReadonly<DocumentType extends DocumentReadonly<any, any>>(): ContainedThingOf<DocumentType>;
+    toCopyWritable<DocumentType extends Document<any, any>>(): ContainedThingOf<DocumentType>;
     getDocument(): DocumentType<ContainedStatement>;
     count(): number;
     isEmpty(): boolean;

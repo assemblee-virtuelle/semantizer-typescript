@@ -1,7 +1,7 @@
 import { Context } from "./Context";
 import { ContainedThingOf, Document, DocumentBase, DocumentReadonly, StatementOf } from "./Document";
 import Resource from "./Resource";
-import { StatementBase } from "./Statement";
+import { Statement, StatementBase } from "./Statement";
 
 export interface ThingBase<
     ContainedStatement extends StatementBase
@@ -50,26 +50,37 @@ export interface WithCreateOperations<
 }
 
 export interface WithCopyOperations {
-    toCopyReadonly<DocumentType extends DocumentReadonly<any>>(): ContainedThingOf<DocumentType>;
+    toCopyReadonly<DocumentType extends DocumentReadonly<any, any>>(): ContainedThingOf<DocumentType>;
 }
 
 export interface WithCopyWritableOperations {  
-    toCopyWritable<DocumentType extends Document<any>>(): ContainedThingOf<DocumentType>;
+    toCopyWritable<DocumentType extends Document<any, any>>(): ContainedThingOf<DocumentType>;
 }
 
 export type Thing<
-    DocumentType extends Document<any>
-> = ThingBase<StatementOf<DocumentType>> & 
-WithDocument<DocumentType> & 
-WithReadOperations & 
-WithWriteOperations<StatementOf<DocumentType>> &
-WithCreateOperations<StatementOf<DocumentType>> & 
-WithCopyOperations &
-WithCopyWritableOperations;
+    ContainedStatement extends StatementBase = StatementBase,
+    //DocumentType extends Document<any, any> | undefined = Document<Thing<Statement, undefined>, Thing<Statement, undefined>>
+> = ThingBase<ContainedStatement> &  
+    WithDocument<Document<Thing<Statement>, Thing<Statement>>> & 
+    WithReadOperations & 
+    WithWriteOperations<ContainedStatement> & 
+    WithCreateOperations<ContainedStatement> & 
+    WithCopyOperations & 
+    WithCopyWritableOperations;
+
+export type ThingOfDocument<
+    DocumentType extends Document<any, any> = Document<Thing<Statement>, Thing<Statement>>
+> = ThingBase<StatementOf<DocumentType>> &  
+    WithDocument<DocumentType> & 
+    WithReadOperations & 
+    WithWriteOperations<StatementOf<DocumentType>> & 
+    WithCreateOperations<StatementOf<DocumentType>> & 
+    WithCopyOperations & 
+    WithCopyWritableOperations;
 
 export type ThingReadonly<
-    DocumentType extends DocumentReadonly<any>
+    DocumentType extends DocumentReadonly<any, any>
 > = ThingBase<StatementOf<DocumentType>> & 
-WithDocument<DocumentType> & 
-WithReadOperations & 
-WithCopyWritableOperations;
+    WithDocument<DocumentType> & 
+    WithReadOperations & 
+    WithCopyWritableOperations;
