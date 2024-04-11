@@ -1,8 +1,8 @@
 import { Constructor, Document, DocumentBase } from "../core/Document";
 import DocumentDecorated from "../core/DocumentDecorated.js";
-import { TypeIndexRegistrationThing, TypeIndexSelfDescribingThing, WithReadOperations, WithWriteOperations } from "./TypeIndex";
+import { TypeIndexRegistrationThing, TypeIndexRegistrationThingReadonly, TypeIndexSelfDescribingThing, TypeIndexSelfDescribingThingReadonly, WithReadOperations, WithWriteOperations } from "./TypeIndex";
 export declare class TypeIndexImplReadOrWrite//<
- extends DocumentDecorated<Document<TypeIndexRegistrationThing, TypeIndexSelfDescribingThing>>//TypeIndex<ContainedThing, SelfDescribingThing>> 
+ extends DocumentDecorated<Document<TypeIndexRegistrationThing, TypeIndexSelfDescribingThing, TypeIndexRegistrationThingReadonly, TypeIndexSelfDescribingThingReadonly>>//TypeIndex<ContainedThing, SelfDescribingThing>> 
  implements WithReadOperations<TypeIndexRegistrationThing> {
     forEachOfClass(forClass: string, callbackfn: (value: TypeIndexRegistrationThing, index?: number, array?: TypeIndexRegistrationThing[]) => void, thisArg?: any): void;
 }

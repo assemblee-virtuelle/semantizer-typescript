@@ -1,7 +1,7 @@
-import { Document } from "../core/Document";
+import { Document, DocumentReadonly } from "../core/Document";
 import Resource from "../core/Resource";
-import { Statement } from "../core/Statement";
-import { Thing } from "../core/Thing";
+import { Statement, StatementReadonly } from "../core/Statement";
+import { Thing, ThingReadonly } from "../core/Thing";
 export interface TypeIndexRegistrationBase {
     isForClass(forClass: string): boolean;
     getForClass(): string | null;
@@ -23,8 +23,12 @@ export interface WithWriteOperations {
     removeInstanceAll(): this;
     removeInstanceContainerAll(): this;
 }
-export interface TypeIndexRegistration<DocumentType extends Document<any, any>> extends Thing<Statement<TypeIndexRegistration<any>>, DocumentType>, TypeIndexRegistrationBase, WithWriteOperations {
+export interface TypeIndexRegistration<DocumentType extends Document<any, any, any, any>> extends Thing<Statement<TypeIndexRegistration<any>>, DocumentType>, TypeIndexRegistrationBase, WithWriteOperations {
 }
-export interface TypeIndexSelfDescribing<DocumentType extends Document<any, any>> extends Thing<Statement<TypeIndexSelfDescribing<any>>, DocumentType> {
+export interface TypeIndexRegistrationReadonly<DocumentType extends DocumentReadonly<any, any, any, any>> extends ThingReadonly<StatementReadonly<TypeIndexRegistrationReadonly<any>>, DocumentType>, TypeIndexRegistrationBase {
+}
+export interface TypeIndexSelfDescribing<DocumentType extends Document<any, any, any, any>> extends Thing<Statement<TypeIndexSelfDescribing<any>>, DocumentType> {
+}
+export interface TypeIndexSelfDescribingReadonly<DocumentType extends DocumentReadonly<any, any, any, any>> extends ThingReadonly<StatementReadonly<TypeIndexSelfDescribingReadonly<any>>, DocumentType> {
 }
 //# sourceMappingURL=TypeIndexRegistration.d.ts.map

@@ -1,20 +1,22 @@
 import { Context } from "../core/Context.js";
 import { Document, DocumentBase, DocumentReadonly } from "../core/Document.js";
-import Factory from "../core/Factory.js";
+import Factory, { FactoryForCopying } from "../core/Factory.js";
 import Resource from "../core/Resource.js";
+import { Statement, StatementReadonly } from "../core/Statement.js";
 import { Thing, ThingReadonly } from "../core/Thing.js";
-export declare class DocumentImpl<ContainedThing extends Thing<any, any> | ThingReadonly<any>, // | ThingOfDocument<any>,
-SelfDescribingThing extends Thing<any, any> | ThingReadonly<any>> implements Document<ContainedThing, SelfDescribingThing> {
+export declare class DocumentImpl<ContainedThing extends Thing<any, any> | ThingReadonly<any, any>, // | ThingOfDocument<any>,
+SelfDescribingThing extends Thing<any, any> | ThingReadonly<any, any>, // | ThingOfDocument<any>,
+ContainedThingReadonly extends ThingReadonly<any, any>, SelfDescribingThingReadonly extends ThingReadonly<any, any>> implements Document<ContainedThing, SelfDescribingThing, ContainedThingReadonly, SelfDescribingThingReadonly> {
     protected _uri: string;
     protected _selfDescribingThing?: SelfDescribingThing;
     protected _things: ContainedThing[];
     protected _context?: Context;
     protected _factory: Factory<this>;
     constructor(factory: Factory<any>);
-    getFactory(): Factory<Document<ContainedThing, SelfDescribingThing>>;
+    getFactoryForCopying(): FactoryForCopying<DocumentBase<ContainedThing, SelfDescribingThing>, DocumentReadonly<ContainedThingReadonly, SelfDescribingThingReadonly, ContainedThing, SelfDescribingThing>>;
+    getFactory(): Factory<Document<ContainedThing, SelfDescribingThing, ContainedThingReadonly, SelfDescribingThingReadonly>>;
     toCopy(): this;
-    toCopyReadonly<DocumentCopied extends DocumentReadonly<any, any>>(): DocumentCopied;
-    toCopyWritable<DocumentCopied extends Document<any, any>>(): DocumentCopied;
+    toCopyReadonly(): DocumentReadonly<ContainedThingReadonly, SelfDescribingThingReadonly, ContainedThing, SelfDescribingThing>;
     createThingToSelfDescribe(): SelfDescribingThing;
     createThingWithoutUri(nameHint?: string | undefined): ContainedThing;
     add(thing: ContainedThing): this;
@@ -70,6 +72,39 @@ SelfDescribingThing extends Thing<any, any> | ThingReadonly<any>> implements Doc
     map(callbackfn: (value: ContainedThing, index: number, array: ContainedThing[]) => unknown, thisArg?: any): unknown[];
     equals(other: DocumentBase<any, any>): boolean;
     filter(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => boolean): ContainedThing[];
+}
+export declare class DocumentImplReadonly<ContainedThing extends ThingReadonly<StatementReadonly<any>, any>, SelfDescribingThing extends ThingReadonly<StatementReadonly<any>, any>, ContainedThingWritable extends Thing<Statement<any>, any> | ThingReadonly<any, any>, SelfDescribingThingWritable extends Thing<Statement<any>, any> | ThingReadonly<any, any>> implements DocumentReadonly<ContainedThing, SelfDescribingThing, ContainedThingWritable, SelfDescribingThingWritable> {
+    constructor(document: Document<any, any, any, any>);
+    get(uri: string | Resource): ContainedThing | undefined;
+    getContext(): Context | undefined;
+    getThingThatSelfDescribes(): SelfDescribingThing | undefined;
+    has(thing: string | Resource): boolean;
+    hasThingThatSelfDescribes(): boolean;
+    isEmpty(): boolean;
+    toCanonical(): string;
+    toStream(): string;
+    toCopy(): ThisType<this>;
+    [Symbol.iterator](): Iterator<ContainedThing, any, undefined>;
+    getUri(): string;
+    getFactoryForCopying(): FactoryForCopying<DocumentBase<ContainedThing, SelfDescribingThing>, Document<ContainedThingWritable, SelfDescribingThingWritable, ContainedThing, SelfDescribingThing>>;
+    at(index: number): ContainedThing | undefined;
+    contains(other: ThisType<this>): boolean;
+    count(callbackfn?: ((thing: ContainedThing, document?: ThisType<this> | undefined) => boolean) | undefined): number;
+    difference(other: ThisType<this>): ThisType<this>;
+    equals(other: ThisType<this>): boolean;
+    every(predicate: (value: ContainedThing, index?: number | undefined, array?: ContainedThing[] | undefined) => boolean, thisArg?: any): boolean;
+    filter(predicate: (value: ContainedThing, index?: number | undefined, array?: ContainedThing[] | undefined) => boolean): ContainedThing[];
+    find(predicate: (value: ContainedThing, index?: number | undefined, obj?: ContainedThing[] | undefined) => boolean, thisArg?: any): ContainedThing | undefined;
+    findIndex(predicate: (value: ContainedThing, index?: number | undefined, obj?: ContainedThing[] | undefined) => unknown, thisArg?: any): number;
+    forEach(callbackfn: (value: ContainedThing, index?: number | undefined, array?: ContainedThing[] | undefined) => void, thisArg?: any): void;
+    includes(searchElement: ContainedThing, fromIndex?: number | undefined): boolean;
+    indexOf(searchElement: ContainedThing, fromIndex?: number | undefined): number;
+    keys(): IterableIterator<number>;
+    map(callbackfn: (value: ContainedThing, index: number, array: ContainedThing[]) => unknown, thisArg?: any): unknown[];
+    reduce(callbackfn: (previousValue: ContainedThing, currentValue: ContainedThing, currentIndex: number, array: ContainedThing[]) => ContainedThing): ContainedThing;
+    slice(start?: number | undefined, end?: number | undefined): ThisType<this>;
+    some(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => unknown, thisArg?: any): boolean;
+    toCopyWritable<DocumentType extends Document<any, any, any, any>>(): DocumentType;
 }
 export default DocumentImpl;
 //# sourceMappingURL=DocumentImpl.d.ts.map

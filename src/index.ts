@@ -37,3 +37,9 @@ typeIndexDocument.forEach(thing => {
     console.log("Thing ", thing.getUri());
     thing.forEach(s => console.log(s.getSubject(), s.getValue()));
 });
+
+// const typeIndexReadonly = typeIndexDocument.getFactoryForCopying().createDocument(typeIndexDocument);
+// const registrationReadonly = typeIndexReadonly.get("");
+
+// const documentReadonly = document.toCopyReadonly();
+// const thingReadonly = documentReadonly.get("");

@@ -1,10 +1,10 @@
 import { Context } from "../core/Context";
 import { Document, ContainedThingOf, DocumentReadonly, SelfDescribingThingOf, StatementOf } from "../core/Document";
-import Factory from "../core/Factory";
+import Factory, { FactoryForCopying } from "../core/Factory";
 import Resource from "../core/Resource";
-import { Statement } from "../core/Statement";
-import { Thing } from "../core/Thing";
-import { DocumentImpl } from "./DocumentImpl.js";
+import { Statement, StatementReadonly } from "../core/Statement";
+import { Thing, ThingReadonly } from "../core/Thing";
+import { DocumentImpl, DocumentImplReadonly } from "./DocumentImpl.js";
 import StatementImpl from "./StatementImpl.js";
 import ThingImpl from "./ThingImpl.js";
 
@@ -13,13 +13,21 @@ import ThingImpl from "./ThingImpl.js";
 
 //type DocumentType = Document<Thing<Statement>, Thing<Statement>>;
 type StatementType = Statement<Thing<any, any>>;
-type ThingType = Thing<StatementType, Document<any, any>>;
-type DocumentType = Document<ThingType, ThingType>;
+type StatementTypeReadonly = StatementReadonly<ThingReadonly<any, any>>;
+type ThingType = Thing<StatementType, Document<any, any, any, any>>;
+type ThingTypeReadonly = ThingReadonly<StatementTypeReadonly, DocumentReadonly<any, any, any, any>>;
+
+type DocumentType = Document<ThingType, ThingType, ThingTypeReadonly, ThingTypeReadonly>;
+type DocumentTypeReadonly = DocumentReadonly<ThingTypeReadonly, ThingTypeReadonly, ThingType, ThingType>;
 
 export class FactoryImpl implements Factory<DocumentType> {
 
     public createDocument(uri?: string, context?: Context): DocumentType {
-        return new DocumentImpl<ThingType, ThingType>(this as Factory<DocumentType>);// as DocumentType;
+        return new DocumentImpl<ThingType, ThingType, ThingTypeReadonly, ThingTypeReadonly>(this as Factory<DocumentType>);// as DocumentType;
+    }
+
+    public createDocumentReadonly(document: DocumentType): DocumentTypeReadonly {
+        throw new Error("Method not implemented.");
     }
 
     public createThingToDescribeDocument(document: DocumentType): ThingType { //Of<typeof document> {
@@ -36,6 +44,26 @@ export class FactoryImpl implements Factory<DocumentType> {
 
     public createStatement(thing: ContainedThingOf<DocumentType>, about: string, value: string | Resource, datatype?: string | Resource, language?: string): StatementType {
         return new StatementImpl(thing, about, value, datatype, language);// as StatementOf<DocumentType>;
+    }
+
+}
+
+export class FactoryImplForCopying implements FactoryForCopying<DocumentType, DocumentTypeReadonly> {
+
+    createDocument(document: DocumentType): DocumentTypeReadonly {
+        return new DocumentImplReadonly<ThingTypeReadonly, ThingTypeReadonly, ThingType, ThingType>(document);
+    }
+    createThingToDescribeDocument(thing: ThingType): ThingTypeReadonly {
+        throw new Error("Method not implemented.");
+    }
+    createThing(thing: ThingType): ThingTypeReadonly {
+        throw new Error("Method not implemented.");
+    }
+    createThingWithoutUri(thing: ThingType): ThingTypeReadonly {
+        throw new Error("Method not implemented.");
+    }
+    createStatement(statement: StatementType): StatementTypeReadonly {
+        throw new Error("Method not implemented.");
     }
 
 }

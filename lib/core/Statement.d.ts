@@ -1,5 +1,5 @@
-import { ContainedThingOf, Document, DocumentReadonly, StatementOf } from "./Document";
-import { ThingBase } from "./Thing";
+import { Document, DocumentReadonly, StatementOf } from "./Document";
+import { ThingBase, ThingReadonly } from "./Thing";
 export interface StatementBase {
     toCopy(): ThisType<this>;
 }
@@ -18,13 +18,12 @@ export interface WithWriteOperations {
     setLanguage(): this;
 }
 export interface WithCopyOperations {
-    toCopyReadonly<DocumentType extends DocumentReadonly<any, any>>(): StatementOf<DocumentType>;
+    toCopyReadonly<DocumentType extends DocumentReadonly<any, any, any, any>>(): StatementOf<DocumentType>;
 }
 export interface WithCopyWritableOperations {
-    toCopyWritable<DocumentType extends Document<any, any>>(): StatementOf<DocumentType>;
+    toCopyWritable<DocumentType extends Document<any, any, any, any>>(): StatementOf<DocumentType>;
 }
 export type Statement<//OfThing<
 ThingType extends ThingBase<any>> = StatementBase & WithThing<ThingType> & WithReadOperations & WithWriteOperations & WithCopyOperations & WithCopyWritableOperations;
-export type StatementReadonly<DocumentType extends DocumentReadonly<any, any>> = StatementBase & WithThing<ContainedThingOf<DocumentType>> & // TODO
-WithReadOperations & WithCopyWritableOperations;
+export type StatementReadonly<ThingType extends ThingReadonly<StatementReadonly<ThingType>, any>> = StatementBase & WithThing<ThingType> & WithReadOperations & WithCopyWritableOperations;
 //# sourceMappingURL=Statement.d.ts.map

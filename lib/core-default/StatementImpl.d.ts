@@ -13,8 +13,8 @@ export declare class StatementImpl<ThingType extends ThingBase<any>> implements 
     setValue(): this;
     setDatatype(): this;
     setLanguage(): this;
-    toCopyReadonly<DocumentType extends DocumentReadonly<any, any>>(): StatementOf<DocumentType>;
-    toCopyWritable<DocumentType extends Document<any, any>>(): StatementOf<DocumentType>;
+    toCopyReadonly<DocumentType extends DocumentReadonly<any, any, any, any>>(): StatementOf<DocumentType>;
+    toCopyWritable<DocumentType extends Document<any, any, any, any>>(): StatementOf<DocumentType>;
     getThing(): ThingType;
     getSubject(): string;
     getValue(): string;

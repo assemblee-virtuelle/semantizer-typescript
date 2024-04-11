@@ -8,7 +8,7 @@ export declare enum ThingType {
     Regular = 1,
     Anonymous = 2
 }
-export declare class ThingImpl<ContainedStatement extends Statement<any>, DocumentType extends Document<any, any>> implements Thing<ContainedStatement, DocumentType> {
+export declare class ThingImpl<ContainedStatement extends Statement<any>, DocumentType extends Document<any, any, any, any>> implements Thing<ContainedStatement, DocumentType> {
     private _uri;
     private _document;
     private _statements;
@@ -19,8 +19,8 @@ export declare class ThingImpl<ContainedStatement extends Statement<any>, Docume
     set(about: string, value: string, oldValue?: string | undefined, ContainedStatement?: string | undefined, language?: string | undefined): this;
     remove(about: string, value: string | Resource, ContainedStatement?: string | undefined, language?: string | undefined): this;
     removeAll(about: string): this;
-    toCopyReadonly<DocumentType extends DocumentReadonly<any, any>>(): ContainedThingOf<DocumentType>;
-    toCopyWritable<DocumentType extends Document<any, any>>(): ContainedThingOf<DocumentType>;
+    toCopyReadonly<DocumentType extends DocumentReadonly<any, any, any, any>>(): ContainedThingOf<DocumentType>;
+    toCopyWritable<DocumentType extends Document<any, any, any, any>>(): ContainedThingOf<DocumentType>;
     getDocument(): DocumentType;
     count(): number;
     isEmpty(): boolean;

@@ -1,16 +1,19 @@
 import { Context } from "../core/Context.js";
-import { Document, DocumentBase, DocumentReadonly } from "../core/Document.js";
-import Factory from "../core/Factory.js";
+import { Document, DocumentBase, DocumentReadonly, WithCopyWritableOperations } from "../core/Document.js";
+import Factory, { FactoryForCopying } from "../core/Factory.js";
 import Resource from "../core/Resource.js";
+import { Statement, StatementReadonly } from "../core/Statement.js";
 import { Thing, ThingBase, ThingReadonly } from "../core/Thing.js";
 import { FactoryImpl } from "./FactoryImpl.js";
 
 export class DocumentImpl<
-    ContainedThing extends Thing<any, any> | ThingReadonly<any>,// | ThingOfDocument<any>,
-    SelfDescribingThing extends Thing<any, any> | ThingReadonly<any>// | ThingOfDocument<any>,
+    ContainedThing extends Thing<any, any> | ThingReadonly<any, any>,// | ThingOfDocument<any>,
+    SelfDescribingThing extends Thing<any, any> | ThingReadonly<any, any>,// | ThingOfDocument<any>,
     //DocumentType extends Document<any>
+    ContainedThingReadonly extends ThingReadonly<any, any>,
+    SelfDescribingThingReadonly extends ThingReadonly<any, any>
 >
-implements Document<ContainedThing, SelfDescribingThing> {
+implements Document<ContainedThing, SelfDescribingThing, ContainedThingReadonly, SelfDescribingThingReadonly> {
     
     protected _uri: string;
     protected _selfDescribingThing?: SelfDescribingThing;
@@ -26,27 +29,24 @@ implements Document<ContainedThing, SelfDescribingThing> {
         this._things = [];
         this._factory = factory; //new FactoryImpl<DocumentImpl<ContainedThing, SelfDescribingThing>>();
     }
+    
+    public getFactoryForCopying(): FactoryForCopying<DocumentBase<ContainedThing, SelfDescribingThing>, DocumentReadonly<ContainedThingReadonly, SelfDescribingThingReadonly, ContainedThing, SelfDescribingThing>> {
+        throw new Error("Method not implemented.");
+    }
 
-    public getFactory(): Factory<Document<ContainedThing, SelfDescribingThing>> {
+    public getFactory(): Factory<Document<ContainedThing, SelfDescribingThing, ContainedThingReadonly, SelfDescribingThingReadonly>> {
         return this._factory;
     }
 
     public toCopy(): this {
         //throw new Error("Method not implemented.");
-        const copy = new DocumentImpl<ContainedThing, SelfDescribingThing>(this._factory);
+        const copy = new DocumentImpl<ContainedThing, SelfDescribingThing, ContainedThingReadonly, SelfDescribingThingReadonly>(this._factory);
         copy._uri = this._uri;
         return copy as this;
     }
 
-    public toCopyReadonly<DocumentCopied extends DocumentReadonly<any, any>>(): DocumentCopied {
-        throw new Error("Method not implemented.");
-        // const readonlyThings = [];
-        // this.forEach(thing => readonlyThings.push(thing.toCopyReadonly())); // or use this.reduce
-        // return this as DocumentReadonly<ContainedThing, SelfDescribingThing>;
-    }
-
-    public toCopyWritable<DocumentCopied extends Document<any, any>>(): DocumentCopied {
-        throw new Error("Method not implemented.");
+    public toCopyReadonly(): DocumentReadonly<ContainedThingReadonly, SelfDescribingThingReadonly, ContainedThing, SelfDescribingThing> {
+        return this.getFactoryForCopying().createDocument(this);
     }
    
     public createThingToSelfDescribe(): SelfDescribingThing {
@@ -288,6 +288,110 @@ implements Document<ContainedThing, SelfDescribingThing> {
         return this._getContainedThings().filter(predicate);
     }
     
+}
+
+export class DocumentImplReadonly<
+    ContainedThing extends ThingReadonly<StatementReadonly<any>, any>,
+    SelfDescribingThing extends ThingReadonly<StatementReadonly<any>, any>, 
+    ContainedThingWritable extends Thing<Statement<any>, any> | ThingReadonly<any, any>,
+    SelfDescribingThingWritable extends Thing<Statement<any>, any> | ThingReadonly<any, any>,
+> implements DocumentReadonly<ContainedThing, SelfDescribingThing, ContainedThingWritable, SelfDescribingThingWritable> {
+
+    constructor(document: Document<any, any, any, any>) {
+        // execute copy code
+    }
+
+    get(uri: string | Resource): ContainedThing | undefined {
+        throw new Error("Method not implemented.");
+    }
+    getContext(): Context | undefined {
+        throw new Error("Method not implemented.");
+    }
+    getThingThatSelfDescribes(): SelfDescribingThing | undefined {
+        throw new Error("Method not implemented.");
+    }
+    has(thing: string | Resource): boolean {
+        throw new Error("Method not implemented.");
+    }
+    hasThingThatSelfDescribes(): boolean {
+        throw new Error("Method not implemented.");
+    }
+    isEmpty(): boolean {
+        throw new Error("Method not implemented.");
+    }
+    toCanonical(): string {
+        throw new Error("Method not implemented.");
+    }
+    toStream(): string {
+        throw new Error("Method not implemented.");
+    }
+    toCopy(): ThisType<this> {
+        throw new Error("Method not implemented.");
+    }
+    [Symbol.iterator](): Iterator<ContainedThing, any, undefined> {
+        throw new Error("Method not implemented.");
+    }
+    getUri(): string {
+        throw new Error("Method not implemented.");
+    }
+    getFactoryForCopying(): FactoryForCopying<DocumentBase<ContainedThing, SelfDescribingThing>, Document<ContainedThingWritable, SelfDescribingThingWritable, ContainedThing, SelfDescribingThing>> {
+        throw new Error("Method not implemented.");
+    }
+    at(index: number): ContainedThing | undefined {
+        throw new Error("Method not implemented.");
+    }
+    contains(other: ThisType<this>): boolean {
+        throw new Error("Method not implemented.");
+    }
+    count(callbackfn?: ((thing: ContainedThing, document?: ThisType<this> | undefined) => boolean) | undefined): number {
+        throw new Error("Method not implemented.");
+    }
+    difference(other: ThisType<this>): ThisType<this> {
+        throw new Error("Method not implemented.");
+    }
+    equals(other: ThisType<this>): boolean {
+        throw new Error("Method not implemented.");
+    }
+    every(predicate: (value: ContainedThing, index?: number | undefined, array?: ContainedThing[] | undefined) => boolean, thisArg?: any): boolean {
+        throw new Error("Method not implemented.");
+    }
+    filter(predicate: (value: ContainedThing, index?: number | undefined, array?: ContainedThing[] | undefined) => boolean): ContainedThing[] {
+        throw new Error("Method not implemented.");
+    }
+    find(predicate: (value: ContainedThing, index?: number | undefined, obj?: ContainedThing[] | undefined) => boolean, thisArg?: any): ContainedThing | undefined {
+        throw new Error("Method not implemented.");
+    }
+    findIndex(predicate: (value: ContainedThing, index?: number | undefined, obj?: ContainedThing[] | undefined) => unknown, thisArg?: any): number {
+        throw new Error("Method not implemented.");
+    }
+    forEach(callbackfn: (value: ContainedThing, index?: number | undefined, array?: ContainedThing[] | undefined) => void, thisArg?: any): void {
+        throw new Error("Method not implemented.");
+    }
+    includes(searchElement: ContainedThing, fromIndex?: number | undefined): boolean {
+        throw new Error("Method not implemented.");
+    }
+    indexOf(searchElement: ContainedThing, fromIndex?: number | undefined): number {
+        throw new Error("Method not implemented.");
+    }
+    keys(): IterableIterator<number> {
+        throw new Error("Method not implemented.");
+    }
+    map(callbackfn: (value: ContainedThing, index: number, array: ContainedThing[]) => unknown, thisArg?: any): unknown[] {
+        throw new Error("Method not implemented.");
+    }
+    reduce(callbackfn: (previousValue: ContainedThing, currentValue: ContainedThing, currentIndex: number, array: ContainedThing[]) => ContainedThing): ContainedThing {
+        throw new Error("Method not implemented.");
+    }
+    slice(start?: number | undefined, end?: number | undefined): ThisType<this> {
+        throw new Error("Method not implemented.");
+    }
+    some(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => unknown, thisArg?: any): boolean {
+        throw new Error("Method not implemented.");
+    }
+    toCopyWritable<DocumentType extends Document<any, any, any, any>>(): DocumentType {
+        throw new Error("Method not implemented.");
+    }
+
 }
 
 export default DocumentImpl;

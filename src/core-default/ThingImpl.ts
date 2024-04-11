@@ -14,7 +14,7 @@ export enum ThingType {
 
 export class ThingImpl<
     ContainedStatement extends Statement<any>,
-    DocumentType extends Document<any, any> // = Document<Thing<Statement>, Thing<Statement>> //ContainedStatement extends StatementBase // DocumentType extends DocumentBase<any, any> & WithFactory<DocumentType>
+    DocumentType extends Document<any, any, any, any> // = Document<Thing<Statement>, Thing<Statement>> //ContainedStatement extends StatementBase // DocumentType extends DocumentBase<any, any> & WithFactory<DocumentType>
 > implements Thing/*OfDocument*/<ContainedStatement, DocumentType> { //Thing<DocumentType<ContainedStatement>> { // Thing<DocumentType> {
 
     private _uri: string;
@@ -58,11 +58,11 @@ export class ThingImpl<
         throw new Error("Method not implemented.");
     }
 
-    public toCopyReadonly<DocumentType extends DocumentReadonly<any, any>>(): ContainedThingOf<DocumentType> {
+    public toCopyReadonly<DocumentType extends DocumentReadonly<any, any, any, any>>(): ContainedThingOf<DocumentType> {
         throw new Error("Method not implemented.");
     }
 
-    public toCopyWritable<DocumentType extends Document<any, any>>(): ContainedThingOf<DocumentType> {
+    public toCopyWritable<DocumentType extends Document<any, any, any, any>>(): ContainedThingOf<DocumentType> {
         throw new Error("Method not implemented.");
     }
 

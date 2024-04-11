@@ -1,14 +1,15 @@
 import { Context } from "./Context";
-import { ContainedThingOf, Document, DocumentReadonly, SelfDescribingThingOf } from "./Document";
-import Factory from "./Factory";
+import { ContainedThingOf, ContainedThingOfReadonly, Document, DocumentBase, DocumentReadonly, SelfDescribingThingOf, SelfDescribingThingOfReadonly } from "./Document";
+import Factory, { FactoryForCopying } from "./Factory";
 import Resource from "./Resource";
-export declare class DocumentDecorated<DocumentType extends Document<any, any> | DocumentReadonly<any, any>> implements Document<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>> {
+export declare class DocumentDecorated<DocumentType extends Document<any, any, any, any>> implements Document<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>, ContainedThingOfReadonly<DocumentType>, SelfDescribingThingOfReadonly<DocumentType>> {
     protected _wrapped: DocumentType;
     constructor(wrapped: DocumentType);
-    getFactory(): Factory<this>;
+    getFactoryForCopying(): FactoryForCopying<DocumentBase<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>>, DocumentReadonly<ContainedThingOfReadonly<DocumentType>, SelfDescribingThingOfReadonly<DocumentType>, ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>>>;
+    getFactory(): Factory<Document<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>, ContainedThingOfReadonly<DocumentType>, SelfDescribingThingOfReadonly<DocumentType>>>;
     toCopy(): this;
-    toCopyReadonly<DocumentCopied extends DocumentReadonly<any, any>>(): DocumentCopied;
-    toCopyWritable<DocumentCopied extends Document<any, any>>(): DocumentCopied;
+    toCopyReadonly<DocumentCopied extends DocumentReadonly<any, any, any, any>>(): DocumentCopied;
+    toCopyWritable<DocumentCopied extends Document<any, any, any, any>>(): DocumentCopied;
     createThingToSelfDescribe(): SelfDescribingThingOf<DocumentType>;
     createThingWithoutUri(nameHint?: string | undefined): ContainedThingOf<DocumentType>;
     add(thing: ContainedThingOf<DocumentType>): this;

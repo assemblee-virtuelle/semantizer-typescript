@@ -50,26 +50,26 @@ export interface WithCreateOperations<
 }
 
 export interface WithCopyOperations {
-    toCopyReadonly<DocumentType extends DocumentReadonly<any, any>>(): ContainedThingOf<DocumentType>;
+    toCopyReadonly<DocumentType extends DocumentReadonly<any, any, any, any>>(): ContainedThingOf<DocumentType>;
 }
 
 export interface WithCopyWritableOperations {  
-    toCopyWritable<DocumentType extends Document<any, any>>(): ContainedThingOf<DocumentType>;
+    toCopyWritable<DocumentType extends Document<any, any, any, any>>(): ContainedThingOf<DocumentType>;
 }
 
 export type Thing<
     ContainedStatement extends Statement<any>, // = StatementBase,
-    DocumentType extends Document<any, any> // = Document<Thing<Statement, Statement>, Thing<Statement, Statement>>
+    DocumentType extends Document<any, any, any, any> // = Document<Thing<Statement, Statement>, Thing<Statement, Statement>>
 > = ThingBase<ContainedStatement> &  
     WithDocument<DocumentType> & //Document<Thing<Statement>, Thing<Statement>>> & 
     WithReadOperations & 
     WithWriteOperations<ContainedStatement> & 
     WithCreateOperations<ContainedStatement> & 
     WithCopyOperations & 
-    WithCopyWritableOperations;
+    WithCopyWritableOperations; // should be removed
 
 /*export type ThingOfDocument<
-    DocumentType extends Document<any, any> = Document<Thing<Statement>, Thing<Statement>>
+    DocumentType extends Document<any, any, any, any> = Document<Thing<Statement>, Thing<Statement>>
 > = ThingBase<StatementOf<DocumentType>> &  
     WithDocument<DocumentType> & 
     WithReadOperations & 
@@ -79,8 +79,9 @@ export type Thing<
     WithCopyWritableOperations;*/
 
 export type ThingReadonly<
-    DocumentType extends DocumentReadonly<any, any>
-> = ThingBase<StatementOf<DocumentType>> & 
+    ContainedStatement extends StatementReadonly<any>,
+    DocumentType extends DocumentReadonly<ThingReadonly<ContainedStatement, any>, ThingReadonly<ContainedStatement, any>, any, any>
+> = ThingBase<ContainedStatement> & 
     WithDocument<DocumentType> & 
     WithReadOperations & 
     WithCopyWritableOperations;

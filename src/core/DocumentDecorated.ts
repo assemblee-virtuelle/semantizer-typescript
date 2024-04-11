@@ -1,6 +1,6 @@
 import { Context } from "./Context";
-import { ContainedThingOf, Document, DocumentBase, DocumentReadonly, SelfDescribingThingOf, WithReadOperations } from "./Document";
-import Factory from "./Factory";
+import { ContainedThingOf, ContainedThingOfReadonly, Document, DocumentBase, DocumentReadonly, SelfDescribingThingOf, SelfDescribingThingOfReadonly, WithReadOperations } from "./Document";
+import Factory, { FactoryForCopying } from "./Factory";
 import Resource from "./Resource";
 import { ThingBase, ThingReadonly } from "./Thing";
 
@@ -135,29 +135,33 @@ implements DocumentBase<ContainedThingOf<DocumentType>, SelfDescribingThingOf<Do
 
 // The @ts-ignore should never throw as the methods should never be called by a readonly object.
 export class DocumentDecorated<
-    DocumentType extends Document<any, any> | DocumentReadonly<any, any>
+    DocumentType extends Document<any, any, any, any>// | DocumentReadonly<any, any, any, any>
 >
-implements Document<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>> {
+implements Document<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>, ContainedThingOfReadonly<DocumentType>, SelfDescribingThingOfReadonly<DocumentType>> {
     
     protected _wrapped: DocumentType; //<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>>;
 
     public constructor(wrapped: DocumentType) { //<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>>) {
         this._wrapped = wrapped;
     }
+    
+    public getFactoryForCopying(): FactoryForCopying<DocumentBase<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>>, DocumentReadonly<ContainedThingOfReadonly<DocumentType>, SelfDescribingThingOfReadonly<DocumentType>, ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>>> {
+        throw new Error("Method not implemented.");
+    }
 
-    public getFactory(): Factory<this> { //<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>>> {
-        return this.getWrappedDocument().getFactory() as Factory<this>;
+    public getFactory(): Factory<Document<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>, ContainedThingOfReadonly<DocumentType>, SelfDescribingThingOfReadonly<DocumentType>>> { //<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>>> {
+        return this.getWrappedDocument().getFactory(); // as Factory<this>;
     }
 
     public toCopy(): this {
         throw new Error("Method not implemented.");
     }
 
-    public toCopyReadonly<DocumentCopied extends DocumentReadonly<any, any>>(): DocumentCopied {
+    public toCopyReadonly<DocumentCopied extends DocumentReadonly<any, any, any, any>>(): DocumentCopied {
         throw new Error("Method not implemented.");
     }
     
-    public toCopyWritable<DocumentCopied extends Document<any, any>>(): DocumentCopied {
+    public toCopyWritable<DocumentCopied extends Document<any, any, any, any>>(): DocumentCopied {
         throw new Error("Method not implemented.");
     }
 

@@ -1,5 +1,5 @@
 import { ContainedThingOf, Document, DocumentBase, DocumentReadonly, StatementOf } from "./Document";
-import { Thing, ThingBase } from "./Thing";
+import { Thing, ThingBase, ThingReadonly } from "./Thing";
 
 export interface StatementBase {
     toCopy(): ThisType<this>;
@@ -25,11 +25,11 @@ export interface WithWriteOperations {
 }
 
 export interface WithCopyOperations {
-    toCopyReadonly<DocumentType extends DocumentReadonly<any, any>>(): StatementOf<DocumentType>;
+    toCopyReadonly<DocumentType extends DocumentReadonly<any, any, any, any>>(): StatementOf<DocumentType>;
 }
 
 export interface WithCopyWritableOperations {
-    toCopyWritable<DocumentType extends Document<any, any>>(): StatementOf<DocumentType>;
+    toCopyWritable<DocumentType extends Document<any, any, any, any>>(): StatementOf<DocumentType>;
 }
 
 /*export type Statement = StatementBase & 
@@ -49,8 +49,8 @@ export type Statement<//OfThing<
     WithCopyWritableOperations;
 
 export type StatementReadonly<
-    DocumentType extends DocumentReadonly<any, any>
+    ThingType extends ThingReadonly<StatementReadonly<ThingType>, any>
 > = StatementBase &
-    WithThing<ContainedThingOf<DocumentType>> & // TODO
+    WithThing<ThingType> & 
     WithReadOperations & 
     WithCopyWritableOperations;

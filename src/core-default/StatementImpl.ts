@@ -41,11 +41,11 @@ export class StatementImpl<
         throw new Error("Method not implemented.");
     }
 
-    public toCopyReadonly<DocumentType extends DocumentReadonly<any, any>>(): StatementOf<DocumentType> {
+    public toCopyReadonly<DocumentType extends DocumentReadonly<any, any, any, any>>(): StatementOf<DocumentType> {
         throw new Error("Method not implemented.");
     }
 
-    public toCopyWritable<DocumentType extends Document<any, any>>(): StatementOf<DocumentType> {
+    public toCopyWritable<DocumentType extends Document<any, any, any, any>>(): StatementOf<DocumentType> {
         throw new Error("Method not implemented.");
     }
 

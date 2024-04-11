@@ -7,11 +7,11 @@ import { Factory } from "../core/Factory";
 import Resource from "../core/Resource";
 import { Statement } from "../core/Statement.js";
 import ThingWithHelpersMixin from "../thing-helpers/ThingWithHelpersMixin.js";
-import { TypeIndexDocument, TypeIndexRegistrationThing, TypeIndexSelfDescribingThing } from "./TypeIndex";
+import { TypeIndexDocument, TypeIndexRegistrationThing, TypeIndexRegistrationThingReadonly, TypeIndexSelfDescribingThing, TypeIndexSelfDescribingThingReadonly } from "./TypeIndex";
 import { TypeIndexImpl } from "./TypeIndexImpl.js";
 import TypeIndexRegistrationImpl from "./TypeIndexRegistrationImpl.js";
 
-type Doc = Document<TypeIndexRegistrationThing, TypeIndexSelfDescribingThing>;
+type Doc = Document<TypeIndexRegistrationThing, TypeIndexSelfDescribingThing, TypeIndexRegistrationThingReadonly, TypeIndexSelfDescribingThingReadonly>;
 
 const ThingWithHelpers = ThingWithHelpersMixin(ThingImpl);
 
@@ -25,7 +25,7 @@ export class FactoryImpl implements Factory<TypeIndexDocument> {
     }*/
     
     public createDocument(uri?: string | undefined, context?: Context | undefined): TypeIndexDocument {
-        const doc: Doc = new DocumentImpl<TypeIndexRegistrationThing, TypeIndexSelfDescribingThing>(this as Factory<TypeIndexDocument>);
+        const doc: Doc = new DocumentImpl<TypeIndexRegistrationThing, TypeIndexSelfDescribingThing, TypeIndexRegistrationThingReadonly, TypeIndexSelfDescribingThingReadonly>(this as Factory<TypeIndexDocument>);
         return new TypeIndexImpl(doc);
     }
     
