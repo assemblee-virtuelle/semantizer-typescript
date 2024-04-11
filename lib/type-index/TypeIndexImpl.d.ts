@@ -1,11 +1,8 @@
 import { Constructor, Document, DocumentBase } from "../core/Document";
 import DocumentDecorated from "../core/DocumentDecorated";
-import { TypeIndex, WithReadOperations, WithWriteOperations } from "./TypeIndex";
-import { TypeIndexRegistration } from "./TypeIndexRegistration";
-type TypeIndexRegistrationThing = TypeIndexRegistration<TypeIndexDocument>;
-type TypeIndexDocument = TypeIndex<TypeIndexRegistrationThing, TypeIndexRegistrationThing>;
+import { TypeIndexRegistrationThing, TypeIndexSelfDescribingThing, WithReadOperations, WithWriteOperations } from "./TypeIndex";
 export declare class TypeIndexImplReadOrWrite//<
- extends DocumentDecorated<Document<TypeIndexRegistrationThing, TypeIndexRegistrationThing>>//TypeIndex<ContainedThing, SelfDescribingThing>> 
+ extends DocumentDecorated<Document<TypeIndexRegistrationThing, TypeIndexSelfDescribingThing>>//TypeIndex<ContainedThing, SelfDescribingThing>> 
  implements WithReadOperations<TypeIndexRegistrationThing> {
     forEachOfClass(forClass: string, callbackfn: (value: TypeIndexRegistrationThing, index?: number, array?: TypeIndexRegistrationThing[]) => void, thisArg?: any): void;
 }
@@ -15,5 +12,4 @@ export declare class TypeIndexImpl//<
 }
 export declare function TypeIndexMixin<TBase extends Constructor<DocumentBase<any, any>>>(Base: TBase): typeof TypeIndexImpl;
 export declare function TypeIndexMixinReadonly<TBase extends Constructor<DocumentBase<any, any>>>(Base: TBase): typeof TypeIndexImplReadOrWrite;
-export {};
 //# sourceMappingURL=TypeIndexImpl.d.ts.map

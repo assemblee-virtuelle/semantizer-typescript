@@ -1,37 +1,43 @@
 import { DocumentImpl } from "../core-default/DocumentImpl.js";
 import ThingImpl from "../core-default/ThingImpl";
 import { Context } from "../core/Context";
-import { Document, StatementOf } from "../core/Document";
+import { ContainedThingOf, Document, SelfDescribingThingOf, StatementOf } from "../core/Document";
 import { Factory } from "../core/Factory";
 import Resource from "../core/Resource";
 import ThingWithHelpersMixin from "../thing-helpers/ThingWithHelpersMixin";
-import { TypeIndex, TypeIndexDocument, TypeIndexRegistrationThing } from "./TypeIndex";
+import { TypeIndexDocument, TypeIndexRegistrationThing, TypeIndexSelfDescribingThing } from "./TypeIndex";
 import { TypeIndexImpl } from "./TypeIndexImpl";
-import { TypeIndexRegistration } from "./TypeIndexRegistration";
+import TypeIndexRegistrationImpl from "./TypeIndexRegistrationImpl.js";
 
-// type TypeIndexRegistrationThing = TypeIndexRegistration<TypeIndexDocument>;
-// type TypeIndexDocument = TypeIndex<TypeIndexRegistrationThing, TypeIndexRegistrationThing>;
-type Doc = Document<TypeIndexRegistrationThing, TypeIndexRegistrationThing>;
+type Doc = Document<TypeIndexRegistrationThing, TypeIndexSelfDescribingThing>;
 
 const ThingWithHelpers = ThingWithHelpersMixin(ThingImpl);
 
 export class FactoryImpl implements Factory<TypeIndexDocument> {
+
+    /*private _documentFactory: Factory<Doc>;
+
+    public constructor(documentFactory: Factory<Doc>) {
+        this._documentFactory = documentFactory;
+
+    }*/
     
     public createDocument(uri?: string | undefined, context?: Context | undefined): TypeIndexDocument {
-        const doc: Doc = new DocumentImpl<TypeIndexRegistrationThing, TypeIndexRegistrationThing>(this);
+        const doc: Doc = new DocumentImpl<TypeIndexRegistrationThing, TypeIndexSelfDescribingThing>(this);
         return new TypeIndexImpl(doc);
     }
     
-    public createThingToDescribeDocument(document: TypeIndexDocument): TypeIndexRegistrationThing {
-        throw new Error();
+    public createThingToDescribeDocument(document: TypeIndexDocument): SelfDescribingThingOf<TypeIndexDocument> {
+        throw new Error("Method not implemented.");
+        //return new ThingImpl<TypeIndexDocument>(document);
         // return new ThingWithHelpers(typeIndex, ThingType.ForDescribing)
         //     .addRdfTypeStatement("solid:TypeIndex")
         //     .addRdfTypeStatement("solid:ListedDocument");
     }
     
-    public createThing(document: TypeIndexDocument, uri: string): TypeIndexRegistrationThing {
-        throw new Error();
-        // return new TypeIndexRegistrationImpl<Statement<TypeIndex>>(document, uri);// as TypeIndexRegistration<Statement<TypeIndex>>;
+    public createThing(document: TypeIndexDocument, uri: string): ContainedThingOf<TypeIndexDocument> {
+        type T = StatementOf<TypeIndexDocument>;
+        return new TypeIndexRegistrationImpl(document, uri);// as TypeIndexRegistrationThing;
     }
     
     public createThingWithoutUri(document: TypeIndexDocument, nameHint?: string | undefined): TypeIndexRegistrationThing {

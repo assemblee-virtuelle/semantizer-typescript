@@ -32,6 +32,10 @@ export interface TypeIndexRegistration<
     TypeIndexRegistrationBase, 
     WithWriteOperations {}
 
+export interface TypeIndexSelfDescribing<
+    DocumentType extends Document<any, any>
+> extends ThingOfDocument<DocumentType> {}
+
 /*export interface TypeIndexRegistrationReadonly
 extends ThingReadonly<TypeIndexReadonly>, 
     TypeIndexRegistrationBase {}*/

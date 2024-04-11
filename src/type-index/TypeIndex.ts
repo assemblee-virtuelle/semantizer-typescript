@@ -1,7 +1,7 @@
-import { Document, DocumentBase, DocumentReadonly } from "../core/Document";
-import { StatementBase } from "../core/Statement";
-import { ThingBase, ThingReadonly } from "../core/Thing";
-import { TypeIndexRegistration } from "./TypeIndexRegistration";
+import { Document } from "../core/Document";
+import { Statement } from "../core/Statement";
+import { ThingBase } from "../core/Thing";
+import { TypeIndexRegistration, TypeIndexSelfDescribing } from "./TypeIndexRegistration";
 
 export interface WithReadOperations<
     ContainedThing extends ThingBase<any>
@@ -16,14 +16,15 @@ export interface WithWriteOperations<
 }
 
 export type TypeIndex<
-    ContainedThing extends ThingBase<any>,
-    SelfDescribingThing extends ThingBase<any>
+    ContainedThing extends ThingBase<Statement>,
+    SelfDescribingThing extends ThingBase<Statement>
 > = Document<ContainedThing, SelfDescribingThing> & 
     WithReadOperations<ContainedThing> & 
     WithWriteOperations<ContainedThing>;
 
 export type TypeIndexRegistrationThing = TypeIndexRegistration<TypeIndexDocument>;
-export type TypeIndexDocument = TypeIndex<TypeIndexRegistrationThing, TypeIndexRegistrationThing>;
+export type TypeIndexSelfDescribingThing = TypeIndexSelfDescribing<TypeIndexDocument>;
+export type TypeIndexDocument = TypeIndex<TypeIndexRegistrationThing, TypeIndexSelfDescribingThing>;
 
 //  & 
 //     WithFactory<Document<ContainedThing, SelfDescribingThing>> & // Should be this

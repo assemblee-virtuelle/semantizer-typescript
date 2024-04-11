@@ -24,4 +24,6 @@ export interface WithWriteOperations {
 }
 export interface TypeIndexRegistration<DocumentType extends Document<any, any>> extends ThingOfDocument<DocumentType>, TypeIndexRegistrationBase, WithWriteOperations {
 }
+export interface TypeIndexSelfDescribing<DocumentType extends Document<any, any>> extends ThingOfDocument<DocumentType> {
+}
 //# sourceMappingURL=TypeIndexRegistration.d.ts.map

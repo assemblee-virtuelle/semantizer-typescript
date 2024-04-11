@@ -23,7 +23,7 @@ export interface DocumentBase<
     toCanonical(): string; // DOMString? See https://github.com/digitalbazaar/rdf-canonize
     toStream(): string; // Stream
     [Symbol.iterator](): Iterator<ContainedThing>;
-    toCopy(): this;
+    toCopy(): ThisType<this>;
     // TODO: add meta data (acl, last time modified, headers...)
 }
 

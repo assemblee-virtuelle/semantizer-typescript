@@ -16,7 +16,7 @@ export interface DocumentBase<ContainedThing extends ThingBase<any>, SelfDescrib
     toCanonical(): string;
     toStream(): string;
     [Symbol.iterator](): Iterator<ContainedThing>;
-    toCopy(): this;
+    toCopy(): ThisType<this>;
 }
 export interface WithFactory<DocumentType extends DocumentBase<any, any>> {
     getFactory(): Factory<DocumentType>;

@@ -1,9 +1,8 @@
 import { Context } from "../core/Context.js";
 import { ContainedThingOf, Document, DocumentReadonly, StatementOf } from "../core/Document.js";
 import Resource from "../core/Resource.js";
-import { Statement, StatementBase } from "../core/Statement.js";
+import { Statement } from "../core/Statement.js";
 import { Thing, ThingBase, ThingOfDocument } from "../core/Thing.js";
-import DocumentImpl from "./DocumentImpl.js";
 
 export enum ThingType {
     ForDescribing,
