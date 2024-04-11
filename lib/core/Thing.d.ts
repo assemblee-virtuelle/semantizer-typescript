@@ -27,7 +27,7 @@ export interface WithWriteOperations<ContainedStatement extends StatementBase = 
     removeAll(about: string): ThisType<this>;
     set(about: string, value: string, oldValue?: string, datatype?: string, language?: string): ThisType<this>;
 }
-export interface WithCreateOperations<ContainedStatement extends StatementBase = StatementBase> {
+export interface WithCreateOperations {
     createStatement(about: string, value: string | Resource, datatype?: string, language?: string): this;
 }
 export interface WithCopyOperations {
@@ -36,8 +36,6 @@ export interface WithCopyOperations {
 export interface WithCopyWritableOperations {
     toCopyWritable<DocumentType extends Document<any, any, any, any>>(): ContainedThingOf<DocumentType>;
 }
-export type Thing<ContainedStatement extends Statement<any>, // = StatementBase,
-DocumentType extends Document<any, any, any, any>> = ThingBase<ContainedStatement> & WithDocument<DocumentType> & //Document<Thing<Statement>, Thing<Statement>>> & 
-WithReadOperations & WithWriteOperations<ContainedStatement> & WithCreateOperations<ContainedStatement> & WithCopyOperations & WithCopyWritableOperations;
+export type Thing<ContainedStatement extends Statement<any>, DocumentType extends Document<any, any, any, any>> = ThingBase<ContainedStatement> & WithDocument<DocumentType> & WithReadOperations & WithWriteOperations<ContainedStatement> & WithCreateOperations & WithCopyOperations & WithCopyWritableOperations;
 export type ThingReadonly<ContainedStatement extends StatementReadonly<any>, DocumentType extends DocumentReadonly<ThingReadonly<ContainedStatement, any>, ThingReadonly<ContainedStatement, any>, any, any>> = ThingBase<ContainedStatement> & WithDocument<DocumentType> & WithReadOperations & WithCopyWritableOperations;
 //# sourceMappingURL=Thing.d.ts.map

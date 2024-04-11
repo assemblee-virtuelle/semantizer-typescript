@@ -1,5 +1,5 @@
 import { Context } from "../core/Context";
-import { Document, ContainedThingOf, DocumentReadonly } from "../core/Document";
+import { ContainedThingOf, Document, DocumentReadonly } from "../core/Document";
 import Factory, { FactoryForCopying } from "../core/Factory";
 import Resource from "../core/Resource";
 import { Statement, StatementReadonly } from "../core/Statement";

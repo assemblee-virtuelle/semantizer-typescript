@@ -10,16 +10,14 @@ export enum ThingType {
     Anonymous
 }
 
-//type DocumentType<ContainedStatement extends StatementBase> = Document<ThingImpl<ContainedStatement>, ThingImpl<ContainedStatement>>;
-
 export class ThingImpl<
     ContainedStatement extends Statement<any>,
-    DocumentType extends Document<any, any, any, any> // = Document<Thing<Statement>, Thing<Statement>> //ContainedStatement extends StatementBase // DocumentType extends DocumentBase<any, any> & WithFactory<DocumentType>
-> implements Thing/*OfDocument*/<ContainedStatement, DocumentType> { //Thing<DocumentType<ContainedStatement>> { // Thing<DocumentType> {
+    DocumentType extends Document<any, any, any, any> 
+> implements Thing<ContainedStatement, DocumentType> { 
 
     private _uri: string;
-    private _document: DocumentType; //<ContainedStatement>;
-    private _statements: ContainedStatement[]; //<ContainedStatement>>[];
+    private _document: DocumentType;
+    private _statements: ContainedStatement[];
 
     // TODO: add copy constructor
     public constructor(document: DocumentType, stateType?: ThingType, uriOrNameHint?: string) {
@@ -37,7 +35,7 @@ export class ThingImpl<
     public createStatement(about: string, value: string | Resource, datatype?: string, language?: string): this {
         const statement = this.getDocument().getFactory().createStatement(this, about, value, datatype, language);
         this._getStatements().push(statement as ContainedStatement);
-        return this; // as StatementOf<DocumentType>;
+        return this;
     }
 
     public add(statement: ContainedStatement): this {
@@ -66,7 +64,7 @@ export class ThingImpl<
         throw new Error("Method not implemented.");
     }
 
-    public getDocument(): DocumentType/*<ContainedStatement>*/ {
+    public getDocument(): DocumentType {
         return this._document;
     }
 
@@ -78,11 +76,11 @@ export class ThingImpl<
         return this._getStatements().length === 0;
     }
 
-    public [Symbol.iterator](): Iterator<ContainedStatement> { //StatementOf<DocumentType>> {
+    public [Symbol.iterator](): Iterator<ContainedStatement> { 
         return this._getStatements()[Symbol.iterator]();
     }
 
-    public forEach(callbackfn: (value: ContainedStatement/*StatementOf<DocumentType>/*<ContainedStatement>>*/, index: number, array: ContainedStatement/*StatementOf<DocumentType/*<ContainedStatement>>*/[]) => void, thisArg?: any): void {
+    public forEach(callbackfn: (value: ContainedStatement, index: number, array: ContainedStatement[]) => void, thisArg?: any): void {
         this._getStatements().forEach(callbackfn, thisArg);
     }
     
@@ -94,7 +92,7 @@ export class ThingImpl<
         return this._getStatements().filter(predicate);
     }
 
-    private _getStatements(): ContainedStatement[] { //StatementOf<DocumentType/*<ContainedStatement>*/>[] {
+    private _getStatements(): ContainedStatement[] { 
         return this._statements;
     }
 

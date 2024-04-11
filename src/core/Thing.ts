@@ -1,5 +1,5 @@
 import { Context } from "./Context";
-import { ContainedThingOf, Document, DocumentBase, DocumentReadonly, StatementOf } from "./Document";
+import { ContainedThingOf, Document, DocumentBase, DocumentReadonly } from "./Document";
 import Resource from "./Resource";
 import { Statement, StatementBase, StatementReadonly } from "./Statement";
 
@@ -8,12 +8,9 @@ export interface ThingBase<
 > extends Resource, Iterable<ContainedStatement> {
     getContext(): Context | undefined;
     hasUri(): boolean;
-    //expand(uri: string): string; // TODO: remove
-    //shorten(uri: string): string; // TODO: remove
     count(): number;
     isEmpty(): boolean;
     equals(other: ThingBase<any>): boolean;
-    // addStatement(statement: Datatype): Thing;
     get(property: string): ContainedStatement | undefined;
     getAll(property: string): ContainedStatement[];
     [Symbol.iterator](): Iterator<ContainedStatement>;
@@ -43,9 +40,7 @@ export interface WithWriteOperations<
     set(about: string, value: string, oldValue?: string, datatype?: string, language?: string): ThisType<this>;
 }
 
-export interface WithCreateOperations<
-    ContainedStatement extends StatementBase = StatementBase
-> {
+export interface WithCreateOperations {
     createStatement(about: string, value: string | Resource, datatype?: string, language?: string): this
 }
 
@@ -58,25 +53,15 @@ export interface WithCopyWritableOperations {
 }
 
 export type Thing<
-    ContainedStatement extends Statement<any>, // = StatementBase,
-    DocumentType extends Document<any, any, any, any> // = Document<Thing<Statement, Statement>, Thing<Statement, Statement>>
+    ContainedStatement extends Statement<any>, 
+    DocumentType extends Document<any, any, any, any> 
 > = ThingBase<ContainedStatement> &  
-    WithDocument<DocumentType> & //Document<Thing<Statement>, Thing<Statement>>> & 
-    WithReadOperations & 
-    WithWriteOperations<ContainedStatement> & 
-    WithCreateOperations<ContainedStatement> & 
-    WithCopyOperations & 
-    WithCopyWritableOperations; // should be removed
-
-/*export type ThingOfDocument<
-    DocumentType extends Document<any, any, any, any> = Document<Thing<Statement>, Thing<Statement>>
-> = ThingBase<StatementOf<DocumentType>> &  
     WithDocument<DocumentType> & 
     WithReadOperations & 
-    WithWriteOperations<StatementOf<DocumentType>> & 
-    WithCreateOperations<StatementOf<DocumentType>> & 
+    WithWriteOperations<ContainedStatement> & 
+    WithCreateOperations & 
     WithCopyOperations & 
-    WithCopyWritableOperations;*/
+    WithCopyWritableOperations; // should be removed
 
 export type ThingReadonly<
     ContainedStatement extends StatementReadonly<any>,

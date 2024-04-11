@@ -4,8 +4,8 @@ import { Statement } from "../core/Statement";
 import { TypeIndexDocument, TypeIndexRegistrationThing } from "./TypeIndex";
 
 export class TypeIndexRegistrationImpl
-extends ThingImpl<Statement<TypeIndexRegistrationImpl>, TypeIndexDocument> //ContainedStatement> 
-implements TypeIndexRegistrationThing { //<TypeIndexDocument> {
+extends ThingImpl<Statement<TypeIndexRegistrationImpl>, TypeIndexDocument> 
+implements TypeIndexRegistrationThing { 
 
     constructor(document: TypeIndexDocument, uri?: string) {
         super(document, ThingType.Regular, uri);

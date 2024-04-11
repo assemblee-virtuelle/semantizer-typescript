@@ -17,21 +17,12 @@ const ThingWithHelpers = ThingWithHelpersMixin(ThingImpl);
 
 export class FactoryImpl implements Factory<TypeIndexDocument> {
 
-    /*private _documentFactory: Factory<Doc>;
-
-    public constructor(documentFactory: Factory<Doc>) {
-        this._documentFactory = documentFactory;
-
-    }*/
-    
     public createDocument(uri?: string | undefined, context?: Context | undefined): TypeIndexDocument {
         const doc: Doc = new DocumentImpl<TypeIndexRegistrationThing, TypeIndexSelfDescribingThing, TypeIndexRegistrationThingReadonly, TypeIndexSelfDescribingThingReadonly>(this as Factory<TypeIndexDocument>);
         return new TypeIndexImpl(doc);
     }
     
     public createThingToDescribeDocument(document: TypeIndexDocument): SelfDescribingThingOf<TypeIndexDocument> {
-        //throw new Error("Method not implemented.");
-        console.log("PASSED")
         return new ThingImpl<Statement<SelfDescribingThingOf<TypeIndexDocument>>, TypeIndexDocument>(document)
             .createStatement("rdf:type", "solid:TypeIndex")
             .createStatement("rdf:type", "solid:ListedDocument");
@@ -42,7 +33,7 @@ export class FactoryImpl implements Factory<TypeIndexDocument> {
     
     public createThing(document: TypeIndexDocument, uri: string): ContainedThingOf<TypeIndexDocument> {
         type T = StatementOf<TypeIndexDocument>;
-        return new TypeIndexRegistrationImpl(document, uri);// as TypeIndexRegistrationThing;
+        return new TypeIndexRegistrationImpl(document, uri);
     }
     
     public createThingWithoutUri(document: TypeIndexDocument, nameHint?: string | undefined): TypeIndexRegistrationThing {
@@ -55,8 +46,3 @@ export class FactoryImpl implements Factory<TypeIndexDocument> {
     }
 
 }
-
-/*const factory = new FactoryImpl();
-const typeIndex = factory.createDocument();
-const reg = typeIndex.createRegistration("ex:class");
-reg.getDocument()*/

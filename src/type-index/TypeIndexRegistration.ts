@@ -2,7 +2,6 @@ import { Document, DocumentReadonly } from "../core/Document";
 import Resource from "../core/Resource";
 import { Statement, StatementReadonly } from "../core/Statement";
 import { Thing, ThingReadonly } from "../core/Thing";
-//import { TypeIndexReadonly } from "./TypeIndex";
 
 export interface TypeIndexRegistrationBase {
     isForClass(forClass: string): boolean;
@@ -45,12 +44,3 @@ export interface TypeIndexSelfDescribing<
 export interface TypeIndexSelfDescribingReadonly<
     DocumentType extends DocumentReadonly<any, any, any, any>
 > extends ThingReadonly<StatementReadonly<TypeIndexSelfDescribingReadonly<any>>, DocumentType> {}
-
-/*export interface TypeIndexRegistrationReadonly
-extends ThingReadonly<TypeIndexReadonly>, 
-    TypeIndexRegistrationBase {}*/
-
-/*
-<
-    ContainedStatement extends StatementReadonly<any> = StatementReadonly<TypeIndexReadonly>
->*/

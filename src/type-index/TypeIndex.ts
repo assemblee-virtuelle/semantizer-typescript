@@ -12,7 +12,7 @@ export interface WithReadOperations<
 export interface WithWriteOperations<
     ContainedThing extends ThingBase<any>
 > {
-    createRegistration(forClass?: string, nameHintOrUri?: string): ContainedThing; //<ContainedStatement>;
+    createRegistration(forClass?: string, nameHintOrUri?: string): ContainedThing;
 }
 
 export type TypeIndex<
@@ -38,22 +38,3 @@ export type TypeIndexRegistrationThingReadonly = TypeIndexRegistrationReadonly<T
 export type TypeIndexSelfDescribingThingReadonly = TypeIndexSelfDescribingReadonly<TypeIndexDocumentReadonly>;
 export type TypeIndexDocument = TypeIndex<TypeIndexRegistrationThing, TypeIndexSelfDescribingThing, TypeIndexRegistrationThingReadonly, TypeIndexSelfDescribingThingReadonly>;
 export type TypeIndexDocumentReadonly = TypeIndexReadonly<TypeIndexRegistrationThingReadonly, TypeIndexSelfDescribingThingReadonly, TypeIndexRegistrationThing, TypeIndexSelfDescribingThing>;
-
-//  & 
-//     WithFactory<Document<ContainedThing, SelfDescribingThing>> & // Should be this
-//     WithReadOperations<Document<ContainedThing, SelfDescribingThing>> &
-//     WithWriteOperations<Document<ContainedThing, SelfDescribingThing>> &
-//     WithCreateOperations<Document<ContainedThing, SelfDescribingThing>> &
-//     WithCopyOperations & 
-//     WithCopyWritableOperations;
-
-/*export type TypeIndexReadonly<
-    ContainedThing extends ThingReadonly<any> = ThingReadonly<any>,
-    SelfDescribingThing extends ThingReadonly<any> = ThingReadonly<any>
-> = DocumentReadonly<ContainedThing, SelfDescribingThing> & 
-    WithReadOperations<ContainedThing>;*/
-
-/*
-= DocumentReadonly<TypeIndexRegistrationReadonly, ThingReadonly> & 
-    WithReadOperations<TypeIndexRegistrationReadonly<StatementReadonly>>;
-    */

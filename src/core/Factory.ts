@@ -1,10 +1,9 @@
 import { Context } from "./Context";
-import { ContainedThingOf, Document, DocumentBase, DocumentReadonly, SelfDescribingThingOf, StatementOf } from "./Document";
+import { ContainedThingOf, Document, DocumentBase, SelfDescribingThingOf, StatementOf } from "./Document";
 import Resource from "./Resource";
 
 export interface Factory<
-    DocumentType extends Document<any, any, any, any>// | DocumentReadonly<any, any, any, any>
-    //DocumentTypeReadonly extends DocumentReadonly<any, any>
+    DocumentType extends Document<any, any, any, any>
 > {
     createDocument(uri?: string, context?: Context): DocumentType;
 
@@ -27,9 +26,5 @@ export interface FactoryForCopying<
 
     createStatement(statement: StatementOf<InputDocument>): StatementOf<OutputDocument>;
 }
-
-/*export interface FactoryReadonly<
-    DocumentTypeReadonly extends DocumentReadonly<any, any>
-> extends Factory<DocumentTypeReadonly> {}*/
 
 export default Factory;

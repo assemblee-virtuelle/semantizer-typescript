@@ -23,7 +23,6 @@ export interface WithCopyOperations {
 export interface WithCopyWritableOperations {
     toCopyWritable<DocumentType extends Document<any, any, any, any>>(): StatementOf<DocumentType>;
 }
-export type Statement<//OfThing<
-ThingType extends ThingBase<any>> = StatementBase & WithThing<ThingType> & WithReadOperations & WithWriteOperations & WithCopyOperations & WithCopyWritableOperations;
+export type Statement<ThingType extends ThingBase<any>> = StatementBase & WithThing<ThingType> & WithReadOperations & WithWriteOperations & WithCopyOperations & WithCopyWritableOperations;
 export type StatementReadonly<ThingType extends ThingReadonly<StatementReadonly<ThingType>, any>> = StatementBase & WithThing<ThingType> & WithReadOperations & WithCopyWritableOperations;
 //# sourceMappingURL=Statement.d.ts.map
