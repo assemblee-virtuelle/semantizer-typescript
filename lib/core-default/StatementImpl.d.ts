@@ -1,8 +1,8 @@
 import { Document, DocumentReadonly, StatementOf } from "../core/Document";
 import Resource from "../core/Resource";
-import { StatementOfThing } from "../core/Statement";
+import { Statement } from "../core/Statement";
 import { ThingBase } from "../core/Thing";
-export declare class StatementImpl<ThingType extends ThingBase<any>> implements StatementOfThing<ThingType> {
+export declare class StatementImpl<ThingType extends ThingBase<any>> implements Statement<ThingType> {
     private _thing;
     private _subject;
     private _value;

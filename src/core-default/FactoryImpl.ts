@@ -11,28 +11,31 @@ import ThingImpl from "./ThingImpl.js";
 // type DocumentTypeReadonly = DocumentReadonly<ThingImpl<StatementImpl>, ThingImpl<StatementImpl>>;
 // type DocumentDefaultImplReadonly = DocumentImpl<ThingImpl<StatementImpl>, ThingImpl<StatementImpl>>;
 
-type DocumentType = Document<Thing<Statement>, Thing<Statement>>;
+//type DocumentType = Document<Thing<Statement>, Thing<Statement>>;
+type StatementType = Statement<Thing<any, any>>;
+type ThingType = Thing<StatementType, Document<any, any>>;
+type DocumentType = Document<ThingType, ThingType>;
 
 export class FactoryImpl implements Factory<DocumentType> {
 
     public createDocument(uri?: string, context?: Context): DocumentType {
-        return new DocumentImpl<Thing<Statement>, Thing<Statement>>(this);// as DocumentType;
+        return new DocumentImpl<ThingType, ThingType>(this as Factory<DocumentType>);// as DocumentType;
     }
 
-    public createThingToDescribeDocument(document: DocumentType): Thing<Statement> { //Of<typeof document> {
-        return new ThingImpl(document);
+    public createThingToDescribeDocument(document: DocumentType): ThingType { //Of<typeof document> {
+        return new ThingImpl<Statement<ThingType>, DocumentType>(document); // <Statement<ThingType>, DocumentType>
     }
 
-    public createThing(document: DocumentType, uri: string): Thing<Statement> {
-        return new ThingImpl(document);
+    public createThing(document: DocumentType, uri: string): ThingType {
+        return new ThingImpl<Statement<ThingType>, DocumentType>(document);
     }
 
-    public createThingWithoutUri(document: DocumentType, nameHint?: string): Thing<Statement> {
-        return new ThingImpl(document);
+    public createThingWithoutUri(document: DocumentType, nameHint?: string): ThingType {
+        return new ThingImpl<Statement<ThingType>, DocumentType>(document);
     }
 
-    public createStatement(thing: ContainedThingOf<DocumentType>, about: string, value: string | Resource, datatype?: string | Resource, language?: string): Statement {
-        return new StatementImpl(thing, about, value, datatype, language) as StatementOf<DocumentType>;
+    public createStatement(thing: ContainedThingOf<DocumentType>, about: string, value: string | Resource, datatype?: string | Resource, language?: string): StatementType {
+        return new StatementImpl(thing, about, value, datatype, language);// as StatementOf<DocumentType>;
     }
 
 }

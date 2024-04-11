@@ -1,11 +1,13 @@
 import { Context } from "./Context";
 import Factory from "./Factory";
 import Resource from "./Resource";
-import { ThingBase, ThingReadonly } from "./Thing";
+import { Statement } from "./Statement";
+import { Thing, ThingBase, ThingReadonly } from "./Thing";
 
-export type ContainedThingOf<T extends DocumentBase<any, any>> = T extends DocumentBase<infer TypeArg, any> ? TypeArg : never;
+export type ContainedThingOf<T extends DocumentBase<any, any> | Document<any, any>> = T extends DocumentBase<infer TypeArg, any> ? TypeArg : T extends Document<infer TypeArg, any> ? TypeArg : never;
 export type SelfDescribingThingOf<T extends DocumentBase<any, any>> = T extends DocumentBase<any, infer TypeArg> ? TypeArg : never;
-export type StatementOf<T extends DocumentBase<any, any>> = T extends DocumentBase<infer TypeArg, any> ? TypeArg extends ThingBase<infer StatementType> ? StatementType: never : never;
+export type StatementOf<T extends DocumentBase<any, any> | Document<any, any>> = T extends DocumentBase<infer TypeArg, any> ? TypeArg extends ThingBase<infer StatementType> ? StatementType: never : never;
+export type StatementOfDoc<T extends Document<any, any>> = T extends Document<infer TypeArg, any> ? TypeArg extends Thing<infer StatementType, any> ? StatementType: never : never;
 
 export type Constructor<T = {}> = new (...args: any[]) => T;
 
@@ -28,18 +30,18 @@ export interface DocumentBase<
 }
 
 export interface WithFactory<
-    DocumentType extends DocumentBase<any, any>
+    DocumentType extends Document<any, any>
 > {
     getFactory(): Factory<DocumentType>
 }
 
 export interface WithReadOperations<
-    DocumentType extends DocumentBase<any, any>
+    DocumentType extends Document<any, any> | DocumentReadonly<any, any>
 > {
     at(index: number): ContainedThingOf<DocumentType> | undefined;
     contains(other: ThisType<this>): boolean;
     count(callbackfn?: (thing: ContainedThingOf<DocumentType>, document?: ThisType<this>) => boolean): number;
-    difference(other: ThisType<this>): this;
+    difference(other: ThisType<this>): ThisType<this>;
     equals(other: ThisType<this>): boolean;
     every(predicate: (value: ContainedThingOf<DocumentType>, index?: number, array?: ContainedThingOf<DocumentType>[]) => boolean, thisArg?: any): boolean;
     filter(predicate: (value: ContainedThingOf<DocumentType>, index?: number, array?: ContainedThingOf<DocumentType>[]) => boolean): ContainedThingOf<DocumentType>[];
@@ -51,27 +53,27 @@ export interface WithReadOperations<
     keys(): IterableIterator<number>; // to check
     map(callbackfn: (value: ContainedThingOf<DocumentType>, index: number, array: ContainedThingOf<DocumentType>[]) => unknown, thisArg?: any): unknown[];
     reduce(callbackfn: (previousValue: ContainedThingOf<DocumentType>, currentValue: ContainedThingOf<DocumentType>, currentIndex: number, array: ContainedThingOf<DocumentType>[]) => ContainedThingOf<DocumentType>): ContainedThingOf<DocumentType>; 
-    slice(start?: number, end?: number): this;
+    slice(start?: number, end?: number): ThisType<this>;
     some(predicate: (value: ContainedThingOf<DocumentType>, index: number, array: ContainedThingOf<DocumentType>[]) => unknown, thisArg?: any): boolean;
 }
 
 export interface WithWriteOperations<
     DocumentType extends DocumentBase<any, any>
 > {
-    add(thing: ContainedThingOf<DocumentType>): this;
+    add(thing: ContainedThingOf<DocumentType>): ThisType<this>;
     // TODO: add meta description
-    addAll(documentOrThings: DocumentBase<any, any> | ContainedThingOf<DocumentType>[]): this;
-    delete(thingOrUri: string | ContainedThingOf<DocumentType>): this;
+    addAll(documentOrThings: DocumentBase<any, any> | ContainedThingOf<DocumentType>[]): ThisType<this>;
+    delete(thingOrUri: string | ContainedThingOf<DocumentType>): ThisType<this>;
     deleteContext(): void;
-    deleteMatches(uri?: string | Resource, property?: string, value?: string): this;
+    deleteMatches(uri?: string | Resource, property?: string, value?: string): ThisType<this>;
     pop(): ContainedThingOf<DocumentType> | undefined;
     reverse(): void;
     setContext(context: Context): void;
     shift(): ContainedThingOf<DocumentType> | undefined;
-    sort(compareFn?: (a: ContainedThingOf<DocumentType>, b: ContainedThingOf<DocumentType>) => number): this;
-    splice(start: number, deleteCount?: number, ...items: ContainedThingOf<DocumentType>[]): this;
+    sort(compareFn?: (a: ContainedThingOf<DocumentType>, b: ContainedThingOf<DocumentType>) => number): ThisType<this>;
+    splice(start: number, deleteCount?: number, ...items: ContainedThingOf<DocumentType>[]): ThisType<this>;
     // TODO: add meta description
-    union(other: DocumentBase<any, any>): this;
+    union(other: DocumentBase<any, any>): ThisType<this>;
 }
 
 export interface WithCreateOperations<
@@ -91,8 +93,8 @@ export interface WithCopyWritableOperations {
 }
 
 export type Document<
-    ContainedThing extends ThingBase<any>,
-    SelfDescribingThing extends ThingBase<any>
+    ContainedThing extends ThingBase<Statement<any>>, // Should be THing
+    SelfDescribingThing extends ThingBase<Statement<any>>
 > = DocumentBase<ContainedThing, SelfDescribingThing> & 
     WithFactory<Document<ContainedThing, SelfDescribingThing>> & // Should be this
     WithReadOperations<Document<ContainedThing, SelfDescribingThing>> &
@@ -105,6 +107,6 @@ export type DocumentReadonly<
     ContainedThing extends ThingBase<any>, // TODO: add readonly constraint
     SelfDescribingThing extends ThingBase<any>// TODO: add readonly constraint
 > = DocumentBase<ContainedThing, SelfDescribingThing> & 
-    WithFactory<DocumentReadonly<ContainedThing, SelfDescribingThing>> & 
+    WithFactory<Document<ContainedThing, SelfDescribingThing>> & // TODO: use DocumentReadonly instead
     WithReadOperations<DocumentReadonly<ContainedThing, SelfDescribingThing>> & 
     WithCopyWritableOperations;

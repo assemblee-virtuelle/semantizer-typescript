@@ -2,7 +2,7 @@ import { ContainedThingOf, Document, DocumentBase, DocumentReadonly, StatementOf
 import { Thing, ThingBase } from "./Thing";
 
 export interface StatementBase {
-    toCopy(): this;
+    toCopy(): ThisType<this>;
 }
 
 export interface WithThing<
@@ -32,14 +32,14 @@ export interface WithCopyWritableOperations {
     toCopyWritable<DocumentType extends Document<any, any>>(): StatementOf<DocumentType>;
 }
 
-export type Statement = StatementBase & 
+/*export type Statement = StatementBase & 
     WithThing<Thing<Statement>> & 
     WithReadOperations & 
     WithWriteOperations & 
     WithCopyOperations & 
-    WithCopyWritableOperations;
+    WithCopyWritableOperations;*/
 
-export type StatementOfThing<
+export type Statement<//OfThing<
     ThingType extends ThingBase<any>
 > = StatementBase & 
     WithThing<ThingType> & 

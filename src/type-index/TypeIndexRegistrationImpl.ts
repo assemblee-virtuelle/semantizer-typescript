@@ -1,9 +1,10 @@
-import ThingImpl, { ThingType } from "../core-default/ThingImpl";
+import ThingImpl, { ThingType } from "../core-default/ThingImpl.js";
 import Resource from "../core/Resource";
+import { Statement } from "../core/Statement";
 import { TypeIndexDocument, TypeIndexRegistrationThing } from "./TypeIndex";
 
 export class TypeIndexRegistrationImpl
-extends ThingImpl<TypeIndexDocument> //ContainedStatement> 
+extends ThingImpl<Statement<TypeIndexRegistrationImpl>, TypeIndexDocument> //ContainedStatement> 
 implements TypeIndexRegistrationThing { //<TypeIndexDocument> {
 
     constructor(document: TypeIndexDocument, uri?: string) {
@@ -25,16 +26,19 @@ implements TypeIndexRegistrationThing { //<TypeIndexDocument> {
 
     public addForClass(forClass: string | Resource): this {
         //this.add("solid:forClass", this.getUriFromStringOrResource(forClass));
+        this.createStatement("solid:forClass", forClass);
         return this;
     }
 
     public addInstance(instance: string | Resource): this {
         //this.add("solid:instance", this.getUriFromStringOrResource(instance));
+        this.createStatement("solid:instance", instance);
         return this;
     }
 
     public addInstanceContainer(instanceContainer: string | Resource): this {
         //this.add("solid:instanceContainer", this.getUriFromStringOrResource(instanceContainer));
+        this.createStatement("solid:instanceContainer", instanceContainer);
         return this;
     }
 

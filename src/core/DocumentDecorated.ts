@@ -222,7 +222,8 @@ implements Document<ContainedThingOf<DocumentType>, SelfDescribingThingOf<Docume
     }
 
     public createThingWithUri(nameHintOrUri?: string): ContainedThingOf<DocumentType> {
-        throw new Error(); //return this.getWrappedDocument().crea
+        // @ts-ignore
+        return this.getWrappedDocument().createThingWithUri(nameHintOrUri);
     }
 
     protected getWrappedDocument(): DocumentType { //<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>> {

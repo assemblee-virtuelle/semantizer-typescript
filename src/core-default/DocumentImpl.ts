@@ -2,12 +2,12 @@ import { Context } from "../core/Context.js";
 import { Document, DocumentBase, DocumentReadonly } from "../core/Document.js";
 import Factory from "../core/Factory.js";
 import Resource from "../core/Resource.js";
-import { Thing, ThingBase, ThingOfDocument, ThingReadonly } from "../core/Thing.js";
+import { Thing, ThingBase, ThingReadonly } from "../core/Thing.js";
 import { FactoryImpl } from "./FactoryImpl.js";
 
 export class DocumentImpl<
-    ContainedThing extends Thing<any> | ThingReadonly<any> | ThingOfDocument<any>,
-    SelfDescribingThing extends Thing<any> | ThingReadonly<any> | ThingOfDocument<any>,
+    ContainedThing extends Thing<any, any> | ThingReadonly<any>,// | ThingOfDocument<any>,
+    SelfDescribingThing extends Thing<any, any> | ThingReadonly<any>// | ThingOfDocument<any>,
     //DocumentType extends Document<any>
 >
 implements Document<ContainedThing, SelfDescribingThing> {
@@ -50,7 +50,9 @@ implements Document<ContainedThing, SelfDescribingThing> {
     }
    
     public createThingToSelfDescribe(): SelfDescribingThing {
-        return this.getFactory().createThingToDescribeDocument(this);
+        const thing = this.getFactory().createThingToDescribeDocument(this);
+        this._selfDescribingThing = thing;
+        return thing;
     }
 
     public createThingWithoutUri(nameHint?: string | undefined): ContainedThing {

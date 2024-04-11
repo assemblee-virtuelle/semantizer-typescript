@@ -4,13 +4,15 @@ import Factory from "../core/Factory";
 import Resource from "../core/Resource";
 import { Statement } from "../core/Statement";
 import { Thing } from "../core/Thing";
-type DocumentType = Document<Thing<Statement>, Thing<Statement>>;
+type StatementType = Statement<Thing<any, any>>;
+type ThingType = Thing<StatementType, Document<any, any>>;
+type DocumentType = Document<ThingType, ThingType>;
 export declare class FactoryImpl implements Factory<DocumentType> {
     createDocument(uri?: string, context?: Context): DocumentType;
-    createThingToDescribeDocument(document: DocumentType): Thing<Statement>;
-    createThing(document: DocumentType, uri: string): Thing<Statement>;
-    createThingWithoutUri(document: DocumentType, nameHint?: string): Thing<Statement>;
-    createStatement(thing: ContainedThingOf<DocumentType>, about: string, value: string | Resource, datatype?: string | Resource, language?: string): Statement;
+    createThingToDescribeDocument(document: DocumentType): ThingType;
+    createThing(document: DocumentType, uri: string): ThingType;
+    createThingWithoutUri(document: DocumentType, nameHint?: string): ThingType;
+    createStatement(thing: ContainedThingOf<DocumentType>, about: string, value: string | Resource, datatype?: string | Resource, language?: string): StatementType;
 }
 export {};
 //# sourceMappingURL=FactoryImpl.d.ts.map

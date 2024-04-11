@@ -2,8 +2,9 @@ import { Context } from "../core/Context.js";
 import { Document, DocumentBase, DocumentReadonly } from "../core/Document.js";
 import Factory from "../core/Factory.js";
 import Resource from "../core/Resource.js";
-import { Thing, ThingOfDocument, ThingReadonly } from "../core/Thing.js";
-export declare class DocumentImpl<ContainedThing extends Thing<any> | ThingReadonly<any> | ThingOfDocument<any>, SelfDescribingThing extends Thing<any> | ThingReadonly<any> | ThingOfDocument<any>> implements Document<ContainedThing, SelfDescribingThing> {
+import { Thing, ThingReadonly } from "../core/Thing.js";
+export declare class DocumentImpl<ContainedThing extends Thing<any, any> | ThingReadonly<any>, // | ThingOfDocument<any>,
+SelfDescribingThing extends Thing<any, any> | ThingReadonly<any>> implements Document<ContainedThing, SelfDescribingThing> {
     protected _uri: string;
     protected _selfDescribingThing?: SelfDescribingThing;
     protected _things: ContainedThing[];

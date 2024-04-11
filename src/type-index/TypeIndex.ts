@@ -16,8 +16,8 @@ export interface WithWriteOperations<
 }
 
 export type TypeIndex<
-    ContainedThing extends ThingBase<Statement>,
-    SelfDescribingThing extends ThingBase<Statement>
+    ContainedThing extends ThingBase<Statement<any>>,
+    SelfDescribingThing extends ThingBase<Statement<any>>
 > = Document<ContainedThing, SelfDescribingThing> & 
     WithReadOperations<ContainedThing> & 
     WithWriteOperations<ContainedThing>;

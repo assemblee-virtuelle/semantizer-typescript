@@ -1,12 +1,14 @@
 import { DocumentImpl } from "../core-default/DocumentImpl.js";
-import ThingImpl from "../core-default/ThingImpl";
+import StatementImpl from "../core-default/StatementImpl.js";
+import ThingImpl from "../core-default/ThingImpl.js";
 import { Context } from "../core/Context";
 import { ContainedThingOf, Document, SelfDescribingThingOf, StatementOf } from "../core/Document";
 import { Factory } from "../core/Factory";
 import Resource from "../core/Resource";
-import ThingWithHelpersMixin from "../thing-helpers/ThingWithHelpersMixin";
+import { Statement } from "../core/Statement.js";
+import ThingWithHelpersMixin from "../thing-helpers/ThingWithHelpersMixin.js";
 import { TypeIndexDocument, TypeIndexRegistrationThing, TypeIndexSelfDescribingThing } from "./TypeIndex";
-import { TypeIndexImpl } from "./TypeIndexImpl";
+import { TypeIndexImpl } from "./TypeIndexImpl.js";
 import TypeIndexRegistrationImpl from "./TypeIndexRegistrationImpl.js";
 
 type Doc = Document<TypeIndexRegistrationThing, TypeIndexSelfDescribingThing>;
@@ -23,13 +25,16 @@ export class FactoryImpl implements Factory<TypeIndexDocument> {
     }*/
     
     public createDocument(uri?: string | undefined, context?: Context | undefined): TypeIndexDocument {
-        const doc: Doc = new DocumentImpl<TypeIndexRegistrationThing, TypeIndexSelfDescribingThing>(this);
+        const doc: Doc = new DocumentImpl<TypeIndexRegistrationThing, TypeIndexSelfDescribingThing>(this as Factory<TypeIndexDocument>);
         return new TypeIndexImpl(doc);
     }
     
     public createThingToDescribeDocument(document: TypeIndexDocument): SelfDescribingThingOf<TypeIndexDocument> {
-        throw new Error("Method not implemented.");
-        //return new ThingImpl<TypeIndexDocument>(document);
+        //throw new Error("Method not implemented.");
+        console.log("PASSED")
+        return new ThingImpl<Statement<SelfDescribingThingOf<TypeIndexDocument>>, TypeIndexDocument>(document)
+            .createStatement("rdf:type", "solid:TypeIndex")
+            .createStatement("rdf:type", "solid:ListedDocument");
         // return new ThingWithHelpers(typeIndex, ThingType.ForDescribing)
         //     .addRdfTypeStatement("solid:TypeIndex")
         //     .addRdfTypeStatement("solid:ListedDocument");
@@ -44,12 +49,14 @@ export class FactoryImpl implements Factory<TypeIndexDocument> {
         throw new Error("Method not implemented.");
     }
     
+    // Maybe add a mathod to create statement for self describing thing
     public createStatement(thing: TypeIndexRegistrationThing, about: string, value: string | Resource, datatype?: string | Resource, language?: string): StatementOf<TypeIndexDocument> {
-        throw new Error("Method not implemented.");
+        return new StatementImpl(thing, about, value, datatype, language);
     }
 
 }
 
-const factory = new FactoryImpl();
+/*const factory = new FactoryImpl();
 const typeIndex = factory.createDocument();
-typeIndex.createRegistration("ex:class");
+const reg = typeIndex.createRegistration("ex:class");
+reg.getDocument()*/

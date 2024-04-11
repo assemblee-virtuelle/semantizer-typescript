@@ -1,6 +1,7 @@
 import { Document } from "../core/Document";
 import Resource from "../core/Resource";
-import { ThingOfDocument, ThingReadonly } from "../core/Thing";
+import { Statement } from "../core/Statement";
+import { Thing, ThingReadonly } from "../core/Thing";
 //import { TypeIndexReadonly } from "./TypeIndex";
 
 export interface TypeIndexRegistrationBase {
@@ -28,13 +29,13 @@ export interface WithWriteOperations {
 
 export interface TypeIndexRegistration<
     DocumentType extends Document<any, any>
-> extends ThingOfDocument<DocumentType>, 
+> extends Thing<Statement<TypeIndexRegistration<any>>, DocumentType>, 
     TypeIndexRegistrationBase, 
     WithWriteOperations {}
 
 export interface TypeIndexSelfDescribing<
     DocumentType extends Document<any, any>
-> extends ThingOfDocument<DocumentType> {}
+> extends Thing<Statement<TypeIndexSelfDescribing<any>>, DocumentType> {}
 
 /*export interface TypeIndexRegistrationReadonly
 extends ThingReadonly<TypeIndexReadonly>, 

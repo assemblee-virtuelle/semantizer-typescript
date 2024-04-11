@@ -1,5 +1,5 @@
 import { Constructor, Document, DocumentBase } from "../core/Document";
-import DocumentDecorated from "../core/DocumentDecorated";
+import DocumentDecorated from "../core/DocumentDecorated.js";
 import { TypeIndexRegistrationThing, TypeIndexSelfDescribingThing, WithReadOperations, WithWriteOperations } from "./TypeIndex";
 
 export class TypeIndexImplReadOrWrite//<

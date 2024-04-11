@@ -1,6 +1,7 @@
 import { Document } from "../core/Document";
 import Resource from "../core/Resource";
-import { ThingOfDocument } from "../core/Thing";
+import { Statement } from "../core/Statement";
+import { Thing } from "../core/Thing";
 export interface TypeIndexRegistrationBase {
     isForClass(forClass: string): boolean;
     getForClass(): string | null;
@@ -22,8 +23,8 @@ export interface WithWriteOperations {
     removeInstanceAll(): this;
     removeInstanceContainerAll(): this;
 }
-export interface TypeIndexRegistration<DocumentType extends Document<any, any>> extends ThingOfDocument<DocumentType>, TypeIndexRegistrationBase, WithWriteOperations {
+export interface TypeIndexRegistration<DocumentType extends Document<any, any>> extends Thing<Statement<TypeIndexRegistration<any>>, DocumentType>, TypeIndexRegistrationBase, WithWriteOperations {
 }
-export interface TypeIndexSelfDescribing<DocumentType extends Document<any, any>> extends ThingOfDocument<DocumentType> {
+export interface TypeIndexSelfDescribing<DocumentType extends Document<any, any>> extends Thing<Statement<TypeIndexSelfDescribing<any>>, DocumentType> {
 }
 //# sourceMappingURL=TypeIndexRegistration.d.ts.map

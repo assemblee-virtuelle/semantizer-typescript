@@ -1,6 +1,6 @@
 import { ContainedThingOf, Document, DocumentReadonly, StatementOf } from "../core/Document";
 import Resource from "../core/Resource";
-import { Statement, StatementOfThing } from "../core/Statement";
+import { Statement } from "../core/Statement";
 import { ThingBase } from "../core/Thing";
 import DocumentImpl from "./DocumentImpl";
 import ThingImpl from "./ThingImpl";
@@ -9,7 +9,7 @@ import ThingImpl from "./ThingImpl";
 
 export class StatementImpl<
     ThingType extends ThingBase<any>
-> implements StatementOfThing<ThingType> {
+> implements Statement<ThingType> {//OfThing<ThingType> {
 
     private _thing: ThingType;
     private _subject: string;
