@@ -7,18 +7,19 @@ import { Factory } from "../core/Factory";
 import Resource from "../core/Resource";
 import { Statement } from "../core/Statement.js";
 import ThingWithHelpersMixin from "../thing-helpers/ThingWithHelpersMixin.js";
-import { TypeIndexDocument, TypeIndexRegistrationThing, TypeIndexRegistrationThingReadonly, TypeIndexSelfDescribingThing, TypeIndexSelfDescribingThingReadonly } from "./TypeIndex";
+import { TypeIndexDocument, TypeIndexSelfDescribingThing, TypeIndexSelfDescribingThingReadonly } from "./TypeIndex";
 import { TypeIndexImpl } from "./TypeIndexImpl.js";
+import { TypeIndexRegistration, TypeIndexRegistrationReadonly } from "./TypeIndexRegistration.js";
 import TypeIndexRegistrationImpl from "./TypeIndexRegistrationImpl.js";
 
-type Doc = Document<TypeIndexRegistrationThing, TypeIndexSelfDescribingThing, TypeIndexRegistrationThingReadonly, TypeIndexSelfDescribingThingReadonly>;
+type Doc = Document<TypeIndexRegistration, TypeIndexSelfDescribingThing, TypeIndexRegistrationReadonly, TypeIndexSelfDescribingThingReadonly>;
 
 const ThingWithHelpers = ThingWithHelpersMixin(ThingImpl);
 
 export class FactoryImpl implements Factory<TypeIndexDocument> {
 
     public createDocument(uri?: string | undefined, context?: Context | undefined): TypeIndexDocument {
-        const doc: Doc = new DocumentImpl<TypeIndexRegistrationThing, TypeIndexSelfDescribingThing, TypeIndexRegistrationThingReadonly, TypeIndexSelfDescribingThingReadonly>(this as Factory<TypeIndexDocument>);
+        const doc: Doc = new DocumentImpl<TypeIndexRegistration, TypeIndexSelfDescribingThing, TypeIndexRegistrationReadonly, TypeIndexSelfDescribingThingReadonly>(this as Factory<TypeIndexDocument>);
         return new TypeIndexImpl(doc);
     }
     
@@ -36,12 +37,12 @@ export class FactoryImpl implements Factory<TypeIndexDocument> {
         return new TypeIndexRegistrationImpl(document, uri);
     }
     
-    public createThingWithoutUri(document: TypeIndexDocument, nameHint?: string | undefined): TypeIndexRegistrationThing {
+    public createThingWithoutUri(document: TypeIndexDocument, nameHint?: string | undefined): TypeIndexRegistration {
         throw new Error("Method not implemented.");
     }
     
     // Maybe add a mathod to create statement for self describing thing
-    public createStatement(thing: TypeIndexRegistrationThing, about: string, value: string | Resource, datatype?: string | Resource, language?: string): StatementOf<TypeIndexDocument> {
+    public createStatement(thing: TypeIndexRegistration, about: string, value: string | Resource, datatype?: string | Resource, language?: string): StatementOf<TypeIndexDocument> {
         return new StatementImpl(thing, about, value, datatype, language);
     }
 

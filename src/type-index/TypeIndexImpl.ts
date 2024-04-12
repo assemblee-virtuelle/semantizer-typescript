@@ -1,12 +1,13 @@
 import { Constructor, Document, DocumentBase } from "../core/Document";
 import DocumentDecorated from "../core/DocumentDecorated.js";
-import { TypeIndexRegistrationThing, TypeIndexRegistrationThingReadonly, TypeIndexSelfDescribingThing, TypeIndexSelfDescribingThingReadonly, WithReadOperations, WithWriteOperations } from "./TypeIndex";
+import { TypeIndexSelfDescribingThing, TypeIndexSelfDescribingThingReadonly, WithReadOperations, WithWriteOperations } from "./TypeIndex";
+import { TypeIndexRegistration, TypeIndexRegistrationReadonly } from "./TypeIndexRegistration";
 
 export class TypeIndexImplReadOrWrite 
-extends DocumentDecorated<Document<TypeIndexRegistrationThing, TypeIndexSelfDescribingThing, TypeIndexRegistrationThingReadonly, TypeIndexSelfDescribingThingReadonly>> 
-implements WithReadOperations<TypeIndexRegistrationThing> {
+extends DocumentDecorated<Document<TypeIndexRegistration, TypeIndexSelfDescribingThing, TypeIndexRegistrationReadonly, TypeIndexSelfDescribingThingReadonly>> 
+implements WithReadOperations<TypeIndexRegistration> {
     
-    public forEachOfClass(forClass: string, callbackfn: (value: TypeIndexRegistrationThing, index?: number, array?: TypeIndexRegistrationThing[]) => void, thisArg?: any): void {
+    public forEachOfClass(forClass: string, callbackfn: (value: TypeIndexRegistration, index?: number, array?: TypeIndexRegistration[]) => void, thisArg?: any): void {
         this.forEach((r, i, a) => r.isForClass(forClass)? callbackfn(r, i, a): null, thisArg);
     }
 
@@ -14,9 +15,9 @@ implements WithReadOperations<TypeIndexRegistrationThing> {
 
 export class TypeIndexImpl 
 extends TypeIndexImplReadOrWrite 
-implements WithWriteOperations<TypeIndexRegistrationThing> {
+implements WithWriteOperations<TypeIndexRegistration> {
     
-    public createRegistration(forClass?: string, nameHintOrUri?: string | undefined): TypeIndexRegistrationThing {
+    public createRegistration(forClass?: string, nameHintOrUri?: string | undefined): TypeIndexRegistration {
         const registration = this.createThingWithUri(nameHintOrUri);
         if (forClass)
             registration.addForClass(forClass);

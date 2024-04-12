@@ -2,6 +2,7 @@ import { Document, DocumentReadonly } from "../core/Document";
 import Resource from "../core/Resource";
 import { Statement, StatementReadonly } from "../core/Statement";
 import { Thing, ThingReadonly } from "../core/Thing";
+import { TypeIndexDocument, TypeIndexDocumentReadonly } from "./TypeIndex";
 
 export interface TypeIndexRegistrationBase {
     isForClass(forClass: string): boolean;
@@ -26,21 +27,17 @@ export interface WithWriteOperations {
     removeInstanceContainerAll(): this; 
 }
 
+// Don't know if the template argument might be useful in some cases, 
+// so I let it for now.
 export interface TypeIndexRegistration<
-    DocumentType extends Document<any, any, any, any>
+    DocumentType extends Document<any, any, any, any> = TypeIndexDocument
 > extends Thing<Statement<TypeIndexRegistration<any>>, DocumentType>, 
     TypeIndexRegistrationBase, 
     WithWriteOperations {}
 
+// Don't know if the template argument might be useful in some cases, 
+// so I let it for now.
 export interface TypeIndexRegistrationReadonly<
-    DocumentType extends DocumentReadonly<any, any, any, any>
+    DocumentType extends DocumentReadonly<any, any, any, any> = TypeIndexDocumentReadonly
 > extends ThingReadonly<StatementReadonly<TypeIndexRegistrationReadonly<any>>, DocumentType>, 
     TypeIndexRegistrationBase {}
-
-export interface TypeIndexSelfDescribing<
-    DocumentType extends Document<any, any, any, any>
-> extends Thing<Statement<TypeIndexSelfDescribing<any>>, DocumentType> {}
-
-export interface TypeIndexSelfDescribingReadonly<
-    DocumentType extends DocumentReadonly<any, any, any, any>
-> extends ThingReadonly<StatementReadonly<TypeIndexSelfDescribingReadonly<any>>, DocumentType> {}

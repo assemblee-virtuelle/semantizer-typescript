@@ -1,7 +1,7 @@
 import { Document, DocumentReadonly } from "../core/Document";
-import { Statement } from "../core/Statement";
+import { Statement, StatementReadonly } from "../core/Statement";
 import { Thing, ThingBase, ThingReadonly } from "../core/Thing";
-import { TypeIndexRegistration, TypeIndexRegistrationReadonly, TypeIndexSelfDescribing, TypeIndexSelfDescribingReadonly } from "./TypeIndexRegistration";
+import { TypeIndexRegistration, TypeIndexRegistrationReadonly } from "./TypeIndexRegistration";
 
 export interface WithReadOperations<
     ContainedThing extends ThingBase<any>
@@ -15,6 +15,8 @@ export interface WithWriteOperations<
     createRegistration(forClass?: string, nameHintOrUri?: string): ContainedThing;
 }
 
+// Don't know if the template arguments might be useful in some cases, 
+// so I let them for now.
 export type TypeIndex<
     ContainedThing extends Thing<Statement<any>, any>,
     SelfDescribingThing extends Thing<Statement<any>, any>,
@@ -24,6 +26,8 @@ export type TypeIndex<
     WithReadOperations<ContainedThing> & 
     WithWriteOperations<ContainedThing>;
 
+// Don't know if the template arguments might be useful in some cases, 
+// so I let them for now.
 export type TypeIndexReadonly<
     ContainedThing extends ThingReadonly<any, any>, 
     SelfDescribingThing extends ThingReadonly<any, any>, 
@@ -32,9 +36,7 @@ export type TypeIndexReadonly<
 > = DocumentReadonly<ContainedThing, SelfDescribingThing, ContainedThingWritable, SelfDescribingThingWritable> & 
     WithReadOperations<ContainedThing>;
 
-export type TypeIndexRegistrationThing = TypeIndexRegistration<TypeIndexDocument>;
-export type TypeIndexSelfDescribingThing = TypeIndexSelfDescribing<TypeIndexDocument>;
-export type TypeIndexRegistrationThingReadonly = TypeIndexRegistrationReadonly<TypeIndexDocumentReadonly>;
-export type TypeIndexSelfDescribingThingReadonly = TypeIndexSelfDescribingReadonly<TypeIndexDocumentReadonly>;
-export type TypeIndexDocument = TypeIndex<TypeIndexRegistrationThing, TypeIndexSelfDescribingThing, TypeIndexRegistrationThingReadonly, TypeIndexSelfDescribingThingReadonly>;
-export type TypeIndexDocumentReadonly = TypeIndexReadonly<TypeIndexRegistrationThingReadonly, TypeIndexSelfDescribingThingReadonly, TypeIndexRegistrationThing, TypeIndexSelfDescribingThing>;
+export type TypeIndexDocument = TypeIndex<TypeIndexRegistration, TypeIndexSelfDescribingThing, TypeIndexRegistrationReadonly, TypeIndexSelfDescribingThingReadonly>;
+export type TypeIndexDocumentReadonly = TypeIndexReadonly<TypeIndexRegistrationReadonly, TypeIndexSelfDescribingThingReadonly, TypeIndexRegistration, TypeIndexSelfDescribingThing>;
+export interface TypeIndexSelfDescribingThing extends Thing<Statement<TypeIndexSelfDescribingThing>, TypeIndexDocument> {}
+export interface TypeIndexSelfDescribingThingReadonly extends ThingReadonly<StatementReadonly<TypeIndexSelfDescribingThingReadonly>, TypeIndexDocumentReadonly> {}

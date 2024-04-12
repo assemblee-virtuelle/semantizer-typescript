@@ -7,9 +7,8 @@ import { Thing, ThingBase, ThingReadonly } from "../core/Thing.js";
 import { FactoryImpl } from "./FactoryImpl.js";
 
 export class DocumentImpl<
-    ContainedThing extends Thing<any, any> | ThingReadonly<any, any>,// | ThingOfDocument<any>,
-    SelfDescribingThing extends Thing<any, any> | ThingReadonly<any, any>,// | ThingOfDocument<any>,
-    //DocumentType extends Document<any>
+    ContainedThing extends Thing<any, any> | ThingReadonly<any, any>, 
+    SelfDescribingThing extends Thing<any, any> | ThingReadonly<any, any>, 
     ContainedThingReadonly extends ThingReadonly<any, any>,
     SelfDescribingThingReadonly extends ThingReadonly<any, any>
 >

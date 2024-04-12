@@ -4,9 +4,7 @@ import Factory, { FactoryForCopying } from "../core/Factory.js";
 import Resource from "../core/Resource.js";
 import { Statement, StatementReadonly } from "../core/Statement.js";
 import { Thing, ThingReadonly } from "../core/Thing.js";
-export declare class DocumentImpl<ContainedThing extends Thing<any, any> | ThingReadonly<any, any>, // | ThingOfDocument<any>,
-SelfDescribingThing extends Thing<any, any> | ThingReadonly<any, any>, // | ThingOfDocument<any>,
-ContainedThingReadonly extends ThingReadonly<any, any>, SelfDescribingThingReadonly extends ThingReadonly<any, any>> implements Document<ContainedThing, SelfDescribingThing, ContainedThingReadonly, SelfDescribingThingReadonly> {
+export declare class DocumentImpl<ContainedThing extends Thing<any, any> | ThingReadonly<any, any>, SelfDescribingThing extends Thing<any, any> | ThingReadonly<any, any>, ContainedThingReadonly extends ThingReadonly<any, any>, SelfDescribingThingReadonly extends ThingReadonly<any, any>> implements Document<ContainedThing, SelfDescribingThing, ContainedThingReadonly, SelfDescribingThingReadonly> {
     protected _uri: string;
     protected _selfDescribingThing?: SelfDescribingThing;
     protected _things: ContainedThing[];
