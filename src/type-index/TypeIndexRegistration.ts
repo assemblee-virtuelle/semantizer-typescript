@@ -2,7 +2,7 @@ import { Document, DocumentReadonly } from "../core/Document";
 import Resource from "../core/Resource";
 import { Statement, StatementReadonly } from "../core/Statement";
 import { Thing, ThingReadonly } from "../core/Thing";
-import { TypeIndexDocument, TypeIndexDocumentReadonly } from "./TypeIndex";
+import { TypeIndex, TypeIndexReadonly } from "./TypeIndex";
 
 export interface TypeIndexRegistrationBase {
     isForClass(forClass: string): boolean;
@@ -30,7 +30,7 @@ export interface WithWriteOperations {
 // Don't know if the template argument might be useful in some cases, 
 // so I let it for now.
 export interface TypeIndexRegistration<
-    DocumentType extends Document<any, any, any, any> = TypeIndexDocument
+    DocumentType extends Document<any, any> = TypeIndex
 > extends Thing<Statement<TypeIndexRegistration<any>>, DocumentType>, 
     TypeIndexRegistrationBase, 
     WithWriteOperations {}
@@ -38,6 +38,6 @@ export interface TypeIndexRegistration<
 // Don't know if the template argument might be useful in some cases, 
 // so I let it for now.
 export interface TypeIndexRegistrationReadonly<
-    DocumentType extends DocumentReadonly<any, any, any, any> = TypeIndexDocumentReadonly
+    DocumentType extends DocumentReadonly<any, any> = TypeIndexReadonly
 > extends ThingReadonly<StatementReadonly<TypeIndexRegistrationReadonly<any>>, DocumentType>, 
     TypeIndexRegistrationBase {}

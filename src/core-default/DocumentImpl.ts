@@ -1,5 +1,5 @@
 import { Context } from "../core/Context.js";
-import { Document, DocumentBase, DocumentReadonly, WithCopyWritableOperations } from "../core/Document.js";
+import { ContainedThingOf, Document, DocumentBase, DocumentReadonly, SelfDescribingThingOf, WithCopyWritableOperations } from "../core/Document.js";
 import Factory, { FactoryForCopying } from "../core/Factory.js";
 import Resource from "../core/Resource.js";
 import { Statement, StatementReadonly } from "../core/Statement.js";
@@ -7,18 +7,16 @@ import { Thing, ThingBase, ThingReadonly } from "../core/Thing.js";
 import { FactoryImpl } from "./FactoryImpl.js";
 
 export class DocumentImpl<
-    ContainedThing extends Thing<any, any> | ThingReadonly<any, any>, 
-    SelfDescribingThing extends Thing<any, any> | ThingReadonly<any, any>, 
-    ContainedThingReadonly extends ThingReadonly<any, any>,
-    SelfDescribingThingReadonly extends ThingReadonly<any, any>
+    DocumentType extends Document<any, any>, //DocumentBase<Thing<Statement<any>, any>, any>, any>,
+    DocumentTypeReadonly extends DocumentReadonly<any, any>
 >
-implements Document<ContainedThing, SelfDescribingThing, ContainedThingReadonly, SelfDescribingThingReadonly> {
+implements Document<DocumentType, DocumentTypeReadonly> {
     
     protected _uri: string;
-    protected _selfDescribingThing?: SelfDescribingThing;
-    protected _things: ContainedThing[];
+    protected _selfDescribingThing?: SelfDescribingThingOf<DocumentType>;
+    protected _things: ContainedThingOf<DocumentType>[];
     protected _context?: Context;
-    protected _factory: Factory<this>;
+    protected _factory: Factory<DocumentType>;
 
     //public constructor(uri?: string, context?: Context);
     //public constructor(document: DocumentBase<ContainedThing<Wrapped>, SelfDescribingThing<Wrapped>>);
@@ -29,45 +27,45 @@ implements Document<ContainedThing, SelfDescribingThing, ContainedThingReadonly,
         this._factory = factory; //new FactoryImpl<DocumentImpl<ContainedThing, SelfDescribingThing>>();
     }
     
-    public getFactoryForCopying(): FactoryForCopying<DocumentBase<ContainedThing, SelfDescribingThing>, DocumentReadonly<ContainedThingReadonly, SelfDescribingThingReadonly, ContainedThing, SelfDescribingThing>> {
+    public getFactoryForCopying(): FactoryForCopying<Document<DocumentType, DocumentTypeReadonly>> {
         throw new Error("Method not implemented.");
     }
 
-    public getFactory(): Factory<Document<ContainedThing, SelfDescribingThing, ContainedThingReadonly, SelfDescribingThingReadonly>> {
+    public getFactory(): Factory<DocumentType> {
         return this._factory;
     }
 
     public toCopy(): this {
         //throw new Error("Method not implemented.");
-        const copy = new DocumentImpl<ContainedThing, SelfDescribingThing, ContainedThingReadonly, SelfDescribingThingReadonly>(this._factory);
+        const copy = new DocumentImpl<DocumentType, DocumentTypeReadonly>(this._factory);
         copy._uri = this._uri;
         return copy as this;
     }
 
-    public toCopyReadonly(): DocumentReadonly<ContainedThingReadonly, SelfDescribingThingReadonly, ContainedThing, SelfDescribingThing> {
+    public toCopyReadonly(): DocumentTypeReadonly {
         return this.getFactoryForCopying().createDocument(this);
     }
    
-    public createThingToSelfDescribe(): SelfDescribingThing {
+    public createThingToSelfDescribe(): SelfDescribingThingOf<DocumentType> {
         const thing = this.getFactory().createThingToDescribeDocument(this);
         this._selfDescribingThing = thing;
         return thing;
     }
 
-    public createThingWithoutUri(nameHint?: string | undefined): ContainedThing {
+    public createThingWithoutUri(nameHint?: string | undefined): ContainedThingOf<DocumentType> {
         return this.getFactory().createThingWithoutUri(this);
     }
 
-    public add(thing: ContainedThing): this {
+    public add(thing: ContainedThingOf<DocumentType>): this {
         this._getContainedThings().push(thing);
         return this;
     }
     
-    public addAll(documentOrThings: DocumentBase<any, any> | ContainedThing[]): this {
+    public addAll(documentOrThings: DocumentBase<any, any> | ContainedThingOf<DocumentType>[]): this {
         throw new Error("Method not implemented.");
     }
     
-    public delete(thingOrUri: string | ContainedThing): this {
+    public delete(thingOrUri: string | ContainedThingOf<DocumentType>): this {
         throw new Error("Method not implemented.");
     }
     
@@ -79,7 +77,7 @@ implements Document<ContainedThing, SelfDescribingThing, ContainedThingReadonly,
         throw new Error("Method not implemented.");
     }
     
-    public pop(): ContainedThing | undefined {
+    public pop(): ContainedThingOf<DocumentType> | undefined {
         throw new Error("Method not implemented.");
     }
     
@@ -91,15 +89,15 @@ implements Document<ContainedThing, SelfDescribingThing, ContainedThingReadonly,
         this._context = context;
     }
     
-    public shift(): ContainedThing | undefined {
+    public shift(): ContainedThingOf<DocumentType> | undefined {
         throw new Error("Method not implemented.");
     }
     
-    public sort(compareFn?: ((a: ContainedThing, b: ContainedThing) => number) | undefined): this {
+    public sort(compareFn?: ((a: ContainedThingOf<DocumentType>, b: ContainedThingOf<DocumentType>) => number) | undefined): this {
         throw new Error("Method not implemented.");
     }
     
-    public splice(start: number, deleteCount?: number | undefined, ...items: ContainedThing[]): this {
+    public splice(start: number, deleteCount?: number | undefined, ...items: ContainedThingOf<DocumentType>[]): this {
         throw new Error("Method not implemented.");
     }
     
@@ -107,7 +105,7 @@ implements Document<ContainedThing, SelfDescribingThing, ContainedThingReadonly,
         throw new Error("Method not implemented.");
     }
 
-    protected addAndReturnContainedThing(thing: ContainedThing): ContainedThing {
+    protected addAndReturnContainedThing(thing: ContainedThingOf<DocumentType>): ContainedThingOf<DocumentType> {
         this.add(thing);
         return thing;
     }
@@ -128,19 +126,19 @@ implements Document<ContainedThing, SelfDescribingThing, ContainedThingReadonly,
         return this.getUri() + this.getOrCreateNameWithHash(name);
     }
 
-    protected checkUriCanBeAddedToTheDocument<ContainedThing, SelfDescribingThing>(uri: string): boolean {
+    protected checkUriCanBeAddedToTheDocument(uri: string): boolean {
         return this.isUrl(uri) && !this.hasStatementsAbout(uri);
     }
 
     protected getSafeUriFromUri(uri: string): string {
-        if (!this.checkUriCanBeAddedToTheDocument<ContainedThing, SelfDescribingThing>(uri))
+        if (!this.checkUriCanBeAddedToTheDocument(uri))
             throw new Error(`You are trying to add the thing "${uri}" but it is already part of the document.`);
         return uri;
     }
 
     protected getSafeUriFromName(name: string): string {
         const uri = this.createUriWithFragment(name);
-        if (!this.checkUriCanBeAddedToTheDocument<ContainedThing, SelfDescribingThing>(uri))
+        if (!this.checkUriCanBeAddedToTheDocument(uri))
             throw new Error(`You are trying to add the thing "${uri}" but it is already part of the document.`);
         return uri;
     }
@@ -153,7 +151,7 @@ implements Document<ContainedThing, SelfDescribingThing, ContainedThingReadonly,
         return nameHintOrUri? this.getSafeUriFromNameHintOrUri(nameHintOrUri): this.generateUriWithFragment();
     }
 
-    public createThingWithUri(nameHintOrUri?: string): ContainedThing {
+    public createThingWithUri(nameHintOrUri?: string): ContainedThingOf<DocumentType> {
         const uriOfNewRegularContainedThing = this.validateOrCreateContainedThingUri(nameHintOrUri);
         return this.addAndReturnContainedThing(this.getFactory().createThing(this, uriOfNewRegularContainedThing));
     }
@@ -168,17 +166,17 @@ implements Document<ContainedThing, SelfDescribingThing, ContainedThingReadonly,
         return this._getContainedThings().some(thing => thing.getUri() === uri);
     }
 
-    protected _getContainedThings(): ContainedThing[] {
+    protected _getContainedThings(): ContainedThingOf<DocumentType>[] {
         return this._things;
     }
 
-    public count(callbackfn?: (thing: ContainedThing, document?: this) => boolean): number {
+    public count(callbackfn?: (thing: ContainedThingOf<DocumentType>, document?: this) => boolean): number {
         return this._things.length;
     }
 
-    public get(uri: string | Resource): ContainedThing | undefined {
+    public get(uri: string | Resource): ContainedThingOf<DocumentType> | undefined {
         // TODO uri or resource.getUri
-        const things = this._things.filter((thing: ContainedThing) => thing.getUri() === uri);
+        const things = this._things.filter((thing: ContainedThingOf<DocumentType>) => thing.getUri() === uri);
         return things.length > 0? things[0]: undefined;
     }
     
@@ -186,7 +184,7 @@ implements Document<ContainedThing, SelfDescribingThing, ContainedThingReadonly,
         return this._context;
     }
 
-    public getThingThatSelfDescribes(): SelfDescribingThing | undefined {
+    public getThingThatSelfDescribes(): SelfDescribingThingOf<DocumentType> | undefined {
         return this._selfDescribingThing;
     }
     
@@ -214,39 +212,39 @@ implements Document<ContainedThing, SelfDescribingThing, ContainedThingReadonly,
         throw new Error("Method not implemented.");
     }
 
-    public [Symbol.iterator](): Iterator<ContainedThing> {
+    public [Symbol.iterator](): Iterator<ContainedThingOf<DocumentType>> {
         return this._things[Symbol.iterator]();
     }
 
-    public at(index: number): ContainedThing | undefined {
+    public at(index: number): ContainedThingOf<DocumentType> | undefined {
         return this._getContainedThings().at(index);
     }
 
     public contains(other: this): boolean {
-        return other.every((thing: ContainedThing) => this.includes(thing));
+        return other.every((thing: ContainedThingOf<DocumentType>) => this.includes(thing));
     }
 
     public difference(other: DocumentBase<any, any>): this {
         throw new Error("Method not implemented.");
     }
 
-    public every(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => boolean, thisArg?: any): boolean {
+    public every(predicate: (value: ContainedThingOf<DocumentType>, index: number, array: ContainedThingOf<DocumentType>[]) => boolean, thisArg?: any): boolean {
         return this._getContainedThings().every(predicate);
     }
 
-    public find(predicate: (value: ContainedThing, index: number, obj: ContainedThing[]) => boolean, thisArg?: any): ContainedThing | undefined {
+    public find(predicate: (value: ContainedThingOf<DocumentType>, index: number, obj: ContainedThingOf<DocumentType>[]) => boolean, thisArg?: any): ContainedThingOf<DocumentType> | undefined {
         return this._getContainedThings().find(predicate);
     }
 
-    public findIndex(predicate: (value: ContainedThing, index: number, obj: ContainedThing[]) => unknown, thisArg?: any): number {
+    public findIndex(predicate: (value: ContainedThingOf<DocumentType>, index: number, obj: ContainedThingOf<DocumentType>[]) => unknown, thisArg?: any): number {
         return this._getContainedThings().findIndex(predicate);
     }
 
-    public includes(searchElement: ContainedThing, fromIndex?: number | undefined): boolean {
+    public includes(searchElement: ContainedThingOf<DocumentType>, fromIndex?: number | undefined): boolean {
         return this._getContainedThings().includes(searchElement, fromIndex);
     }
 
-    public indexOf(searchElement: ContainedThing, fromIndex?: number | undefined): number {
+    public indexOf(searchElement: ContainedThingOf<DocumentType>, fromIndex?: number | undefined): number {
         return this._getContainedThings().indexOf(searchElement, fromIndex);
     }
 
@@ -254,7 +252,7 @@ implements Document<ContainedThing, SelfDescribingThing, ContainedThingReadonly,
         return this._getContainedThings().keys()
     }
 
-    public reduce(callbackfn: (previousValue: ContainedThing, currentValue: ContainedThing, currentIndex: number, array: ContainedThing[]) => ContainedThing): ContainedThing {
+    public reduce(callbackfn: (previousValue: ContainedThingOf<DocumentType>, currentValue: ContainedThingOf<DocumentType>, currentIndex: number, array: ContainedThingOf<DocumentType>[]) => ContainedThingOf<DocumentType>): ContainedThingOf<DocumentType> {
         return this._getContainedThings().reduce(callbackfn);
     }
 
@@ -266,15 +264,15 @@ implements Document<ContainedThing, SelfDescribingThing, ContainedThingReadonly,
         // return sliced as this;
     }
 
-    public some(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => unknown, thisArg?: any): boolean {
+    public some(predicate: (value: ContainedThingOf<DocumentType>, index: number, array: ContainedThingOf<DocumentType>[]) => unknown, thisArg?: any): boolean {
         return this._getContainedThings().some(predicate);
     }
 
-    public forEach(callbackfn: (value: ContainedThing, index: number, array: ContainedThing[]) => void, thisArg?: any): void {
+    public forEach(callbackfn: (value: ContainedThingOf<DocumentType>, index: number, array: ContainedThingOf<DocumentType>[]) => void, thisArg?: any): void {
         this._getContainedThings().forEach(callbackfn, thisArg);
     }
 
-    public map(callbackfn: (value: ContainedThing, index: number, array: ContainedThing[]) => unknown, thisArg?: any): unknown[] {
+    public map(callbackfn: (value: ContainedThingOf<DocumentType>, index: number, array: ContainedThingOf<DocumentType>[]) => unknown, thisArg?: any): unknown[] {
         return this._getContainedThings().map(callbackfn, thisArg);
     }
 
@@ -283,7 +281,7 @@ implements Document<ContainedThing, SelfDescribingThing, ContainedThingReadonly,
         throw new Error("Not implemented.")
     }
 
-    public filter(predicate: (value: ContainedThing, index: number, array: ContainedThing[]) => boolean): ContainedThing[] {
+    public filter(predicate: (value: ContainedThingOf<DocumentType>, index: number, array: ContainedThingOf<DocumentType>[]) => boolean): ContainedThingOf<DocumentType>[] {
         return this._getContainedThings().filter(predicate);
     }
     

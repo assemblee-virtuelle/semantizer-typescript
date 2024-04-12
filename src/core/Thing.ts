@@ -44,29 +44,33 @@ export interface WithCreateOperations {
     createStatement(about: string, value: string | Resource, datatype?: string, language?: string): this
 }
 
-export interface WithCopyOperations {
-    toCopyReadonly<DocumentType extends DocumentReadonly<any, any, any, any>>(): ContainedThingOf<DocumentType>;
+export interface WithCopyOperations<
+    DocumentType extends Document<any, any>
+> {
+    toCopyReadonly(): ContainedThingOf<DocumentType>;
 }
 
-export interface WithCopyWritableOperations {  
-    toCopyWritable<DocumentType extends Document<any, any, any, any>>(): ContainedThingOf<DocumentType>;
+export interface WithCopyWritableOperations<
+    DocumentType extends Document<any, any> | DocumentReadonly<any, any>
+> {  
+    toCopyWritable(): ContainedThingOf<DocumentType>;
 }
 
 export type Thing<
     ContainedStatement extends Statement<any>, 
-    DocumentType extends Document<any, any, any, any> 
+    DocumentType extends Document<any, any> 
 > = ThingBase<ContainedStatement> &  
     WithDocument<DocumentType> & 
     WithReadOperations & 
     WithWriteOperations<ContainedStatement> & 
     WithCreateOperations & 
-    WithCopyOperations & 
-    WithCopyWritableOperations; // should be removed
+    WithCopyOperations<DocumentType> & 
+    WithCopyWritableOperations<DocumentType>; // should be removed
 
 export type ThingReadonly<
     ContainedStatement extends StatementReadonly<any>,
-    DocumentType extends DocumentReadonly<ThingReadonly<ContainedStatement, any>, ThingReadonly<ContainedStatement, any>, any, any>
+    DocumentType extends DocumentReadonly<any, any> // TODO: add constraint ThingReadonly<ContainedStatement, any>, ThingReadonly<ContainedStatement, any>>
 > = ThingBase<ContainedStatement> & 
     WithDocument<DocumentType> & 
     WithReadOperations & 
-    WithCopyWritableOperations;
+    WithCopyWritableOperations<DocumentType>;

@@ -9,10 +9,12 @@ export interface SynchronizedDocument {
 }
 
 export interface LocalDocument extends SynchronizedDocument {
-    save(): void;
+    save(): void; // or update for PATCH
+    // create() for POST method
+    // overwrite() for PUT method
 }
 
-export interface DistantDocument<T extends Document<any, any>> extends SynchronizedDocument {
+export interface DistantDocument<T extends Document<any, any, any, any>> extends SynchronizedDocument {
     toLocalCopy(): LocalDocument & T;
 }
 

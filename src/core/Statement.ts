@@ -1,5 +1,6 @@
-import { Document, DocumentReadonly, StatementOf } from "./Document";
 import { ThingBase, ThingReadonly } from "./Thing";
+
+type StatementOf<T extends ThingBase<any>> = T extends ThingBase<infer TypeArg> ? TypeArg : never;
 
 export interface StatementBase {
     toCopy(): ThisType<this>;
@@ -24,26 +25,30 @@ export interface WithWriteOperations {
     setLanguage(): this;
 }
 
-export interface WithCopyOperations {
-    toCopyReadonly<DocumentType extends DocumentReadonly<any, any, any, any>>(): StatementOf<DocumentType>;
+export interface WithCopyOperations<
+    ThingType extends ThingBase<any> // SHould be Thing?
+> {
+    toCopyReadonly(): StatementOf<ThingType>;
 }
 
-export interface WithCopyWritableOperations {
-    toCopyWritable<DocumentType extends Document<any, any, any, any>>(): StatementOf<DocumentType>;
+export interface WithCopyWritableOperations<
+    ThingType extends ThingBase<any> // SHould be Thing or ThingReadonly
+> {
+    toCopyWritable(): StatementOf<ThingType>;
 }
 
 export type Statement<
-    ThingType extends ThingBase<any>
+    ThingType extends ThingBase<any> // SHould be Thing?
 > = StatementBase & 
     WithThing<ThingType> & 
     WithReadOperations & 
     WithWriteOperations & 
-    WithCopyOperations & 
-    WithCopyWritableOperations;
+    WithCopyOperations<ThingType> & 
+    WithCopyWritableOperations<ThingType>;
 
 export type StatementReadonly<
     ThingType extends ThingReadonly<StatementReadonly<ThingType>, any>
 > = StatementBase &
     WithThing<ThingType> & 
     WithReadOperations & 
-    WithCopyWritableOperations;
+    WithCopyWritableOperations<ThingType>;
