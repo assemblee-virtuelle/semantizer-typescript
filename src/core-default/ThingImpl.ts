@@ -12,7 +12,7 @@ export enum ThingType {
 
 export class ThingImpl<
     ContainedStatement extends Statement<any>,
-    DocumentType extends Document<any, any, any, any> 
+    DocumentType extends Document<any, any> 
 > implements Thing<ContainedStatement, DocumentType> { 
 
     private _uri: string;
@@ -56,11 +56,11 @@ export class ThingImpl<
         throw new Error("Method not implemented.");
     }
 
-    public toCopyReadonly<DocumentType extends DocumentReadonly<any, any, any, any>>(): ContainedThingOf<DocumentType> {
+    public toCopyReadonly(): ContainedThingOf<DocumentType> {
         throw new Error("Method not implemented.");
     }
 
-    public toCopyWritable<DocumentType extends Document<any, any, any, any>>(): ContainedThingOf<DocumentType> {
+    public toCopyWritable(): ContainedThingOf<DocumentType> {
         throw new Error("Method not implemented.");
     }
 

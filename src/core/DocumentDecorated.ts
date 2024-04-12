@@ -137,7 +137,7 @@ implements DocumentBase<ContainedThingOf<DocumentType>, SelfDescribingThingOf<Do
 // The @ts-ignore should never throw as the methods should never be called by a readonly object.
 export class DocumentDecorated<
     DocumentType extends Document<any, any>, //DocumentBase<Thing<Statement<any>, any>, any>, any>,
-    DocumentTypeReadonly extends DocumentReadonly<any, any>
+    DocumentTypeReadonly extends DocumentBase<ThingReadonly<StatementReadonly<any>, any>, ThingReadonly<StatementReadonly<any>, any>>, //DocumentReadonly<any, any>
 >
 implements Document<DocumentType, DocumentTypeReadonly> {
     
@@ -147,12 +147,12 @@ implements Document<DocumentType, DocumentTypeReadonly> {
         this._wrapped = wrapped;
     }
     
-    public getFactoryForCopying(): FactoryForCopying<DocumentType, DocumentTypeReadonly> {
+    public getFactoryForCopying(): FactoryForCopying<Document<DocumentType, DocumentTypeReadonly>> {
         return this.getWrappedDocument().getFactoryForCopying();
     }
 
-    public getFactory(): Factory<DocumentType> {
-        return this.getWrappedDocument().getFactory(); // as Factory<this>;
+    public getFactory(): Factory<Document<DocumentType, DocumentTypeReadonly>> {
+        return this.getWrappedDocument().getFactory() as Factory<this>;
     }
 
     public toCopy(): this {
@@ -312,8 +312,8 @@ implements Document<DocumentType, DocumentTypeReadonly> {
         return this.getWrappedDocument().findIndex(predicate);
     }
 
-    public forEach(callbackfn: (value: ThisType<ContainedThingOf<DocumentType>>, index?: number | undefined, array?: ThisType<ContainedThingOf<DocumentType>>[] | undefined) => void, thisArg?: any): void {
-        return this.getWrappedDocument().forEach(callbackfn);
+    public forEach(callbackfn: (value: ContainedThingOf<DocumentType>, index?: number | undefined, array?: ContainedThingOf<DocumentType>[] | undefined) => void, thisArg?: any): void {
+        return this.getWrappedDocument().forEach(callbackfn as (value: ThisType<ContainedThingOf<DocumentType>>, index?: number | undefined, array?: ThisType<ContainedThingOf<DocumentType>>[] | undefined) => void);
     }
 
     public includes(searchElement: ThisType<ContainedThingOf<DocumentType>>, fromIndex?: number | undefined): boolean {

@@ -1,6 +1,6 @@
 import { Context } from "../core/Context";
-import { ContainedThingOf, Document, DocumentReadonly } from "../core/Document";
-import Factory, { FactoryForCopying } from "../core/Factory";
+import { ContainedThingOf, Document, DocumentBase, DocumentReadonly } from "../core/Document";
+import Factory, { FactoryForCopying, InputOf } from "../core/Factory";
 import Resource from "../core/Resource";
 import { Statement, StatementReadonly } from "../core/Statement";
 import { Thing, ThingReadonly } from "../core/Thing";
@@ -10,16 +10,21 @@ import ThingImpl from "./ThingImpl.js";
 
 type StatementType = Statement<Thing<any, any>>;
 type StatementTypeReadonly = StatementReadonly<ThingReadonly<any, any>>;
-type ThingType = Thing<StatementType, Document<any, any, any, any>>;
-type ThingTypeReadonly = ThingReadonly<StatementTypeReadonly, DocumentReadonly<any, any, any, any>>;
+type ThingType = Thing<StatementType, Document<any, any>>;
+type ThingTypeReadonly = ThingReadonly<StatementTypeReadonly, DocumentReadonly<any, any>>;
 
-type DocumentType = Document<ThingType, ThingType, ThingTypeReadonly, ThingTypeReadonly>;
-type DocumentTypeReadonly = DocumentReadonly<ThingTypeReadonly, ThingTypeReadonly, ThingType, ThingType>;
+
+type DocRead = DocumentBase<ThingReadonly<StatementReadonly<any>, any>, ThingReadonly<StatementReadonly<any>, any>>;
+// DocumentBase<ThingReadonly<StatementReadonly<any>, any>, ThingReadonly<StatementReadonly<any>, any>>,
+type DocumentType = Document<DocumentBase<ThingType, ThingType>, DocRead>;
+type DocumentTypeReadonly = DocumentReadonly<DocRead, DocumentType>;
+
+type t = InputOf<DocumentType>;
 
 export class FactoryImpl implements Factory<DocumentType> {
 
     public createDocument(uri?: string, context?: Context): DocumentType {
-        return new DocumentImpl<ThingType, ThingType, ThingTypeReadonly, ThingTypeReadonly>(this as Factory<DocumentType>);
+        return new DocumentImpl<DocumentType, DocumentTypeReadonly>(this);// as Factory<DocumentType>);
     }
 
     public createDocumentReadonly(document: DocumentType): DocumentTypeReadonly {
@@ -44,10 +49,11 @@ export class FactoryImpl implements Factory<DocumentType> {
 
 }
 
-export class FactoryImplForCopying implements FactoryForCopying<DocumentType, DocumentTypeReadonly> {
+export class FactoryImplForCopying implements FactoryForCopying<DocumentType> {
 
     createDocument(document: DocumentType): DocumentTypeReadonly {
-        return Object.freeze(new DocumentImplReadonly<ThingTypeReadonly, ThingTypeReadonly, ThingType, ThingType>(document));
+        throw new Error("Method not implemented.");
+        //return Object.freeze(new DocumentImplReadonly<ThingTypeReadonly, ThingTypeReadonly, ThingType, ThingType>(document));
     }
     createThingToDescribeDocument(thing: ThingType): ThingTypeReadonly {
         throw new Error("Method not implemented.");

@@ -1,6 +1,5 @@
-import { Document, DocumentReadonly, StatementOf } from "../core/Document";
 import Resource from "../core/Resource";
-import { Statement } from "../core/Statement";
+import { Statement, StatementOf } from "../core/Statement";
 import { ThingBase } from "../core/Thing";
 
 export class StatementImpl<
@@ -37,11 +36,11 @@ export class StatementImpl<
         throw new Error("Method not implemented.");
     }
 
-    public toCopyReadonly<DocumentType extends DocumentReadonly<any, any, any, any>>(): StatementOf<DocumentType> {
+    public toCopyReadonly(): StatementOf<ThingType> {
         throw new Error("Method not implemented.");
     }
 
-    public toCopyWritable<DocumentType extends Document<any, any, any, any>>(): StatementOf<DocumentType> {
+    public toCopyWritable(): StatementOf<ThingType> {
         throw new Error("Method not implemented.");
     }
 

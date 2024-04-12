@@ -22,7 +22,7 @@ type TypeIndexBase = DocumentBase<TypeIndexRegistration, TypeIndexSelfDescribing
 type TypeIndexBaseReadonly = DocumentBase<TypeIndexRegistrationReadonly, TypeIndexSelfDescribingThingReadonly> &
     WithReadOperations<TypeIndexRegistrationReadonly>;
 
-export type TypeIndex = Document<TypeIndexBase, TypeIndexReadonly>;
+export type TypeIndex = Document<TypeIndexBase, TypeIndexReadonly> & TypeIndexBase;
 
 export type TypeIndexReadonly = DocumentReadonly<TypeIndexBaseReadonly, TypeIndexBase>
 

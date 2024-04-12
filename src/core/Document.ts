@@ -35,7 +35,7 @@ export interface DocumentBase<
 }
 
 export interface WithFactory<
-    DocumentType extends DocumentBase<any, any>,
+    DocumentType extends Document<any, any>// | DocumentReadonly<any, any> // extends DocumentBase<any, any>,
 > {
     getFactory(): Factory<DocumentType>;
 }
@@ -93,12 +93,12 @@ export interface WithCreateOperations<
     DocumentType extends DocumentBase<any, any>
 > {
     createThingToSelfDescribe(): SelfDescribingThingOf<DocumentType>;
-    createThingWithUri(nameHintOrUri?: string): ThisType<ContainedThingOf<DocumentType>>;
+    createThingWithUri(nameHintOrUri?: string): ContainedThingOf<DocumentType>; //ThisType<ContainedThingOf<DocumentType>>;
     createThingWithoutUri(nameHint?: string): ThisType<ContainedThingOf<DocumentType>>;
 }
 
 export interface WithCopyOperations<
-    DocumentResulting extends DocumentReadonly<any, any>
+    DocumentResulting extends DocumentBase<ThingReadonly<StatementReadonly<any>, any>, ThingReadonly<StatementReadonly<any>, any>>, //DocumentReadonly<any, any>
 > {
     toCopyReadonly(): DocumentResulting;
 }
@@ -135,9 +135,9 @@ export interface WithCopyWritableOperations<
 
 export type Document<
     T extends DocumentBase<any, any>, //Thing<Statement<any>, any>, Thing<Statement<any>, any>>,
-    TReadonly extends DocumentReadonly<any, any>
+    TReadonly extends DocumentBase<ThingReadonly<StatementReadonly<any>, any>, ThingReadonly<StatementReadonly<any>, any>>, //DocumentReadonly<any, any>
 > = DocumentBase<ContainedThingOf<T>, SelfDescribingThingOf<T>> & 
-    WithFactory<T> & 
+    WithFactory<Document<T, TReadonly>> & 
     WithFactoryForCopying<Document<T, TReadonly>> & 
     WithReadOperations<T> &
     WithWriteOperations<T> &
@@ -149,5 +149,5 @@ export type DocumentReadonly<
     TWritable extends DocumentBase<any, any>,
 > = DocumentBase<ContainedThingOf<T>, SelfDescribingThingOf<T>> & 
     WithFactoryForCopying<DocumentReadonly<T, TWritable>> & // TODO: use DocumentReadonly instead
-    WithReadOperations<T> & 
+    WithReadOperations<DocumentReadonly<T, TWritable>> & 
     WithCopyWritableOperations<TWritable>;

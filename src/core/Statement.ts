@@ -1,6 +1,6 @@
 import { ThingBase, ThingReadonly } from "./Thing";
 
-type StatementOf<T extends ThingBase<any>> = T extends ThingBase<infer TypeArg> ? TypeArg : never;
+export type StatementOf<T extends ThingBase<any>> = T extends ThingBase<infer TypeArg> ? TypeArg : never;
 
 export interface StatementBase {
     toCopy(): ThisType<this>;
