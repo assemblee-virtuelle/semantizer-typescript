@@ -1,28 +1,38 @@
-import { DocumentImpl } from "../core-default/DocumentImpl.js";
 import StatementImpl from "../core-default/StatementImpl.js";
 import ThingImpl from "../core-default/ThingImpl.js";
 import { Context } from "../core/Context";
-import { ContainedThingOf, SelfDescribingThingOf, StatementOf } from "../core/Document";
+import { Document, ContainedThingOf, SelfDescribingThingOf, StatementOf } from "../core/Document";
 import { Factory } from "../core/Factory";
 import Resource from "../core/Resource";
 import { Statement } from "../core/Statement.js";
 import ThingWithHelpersMixin from "../thing-helpers/ThingWithHelpersMixin.js";
-import { TypeIndex, TypeIndexReadonly } from "./TypeIndex";
+import { TypeIndex, TypeIndexBase, TypeIndexReadonly } from "./TypeIndex";
 import { TypeIndexImpl } from "./TypeIndexImpl.js";
 import { TypeIndexRegistration } from "./TypeIndexRegistration.js";
 import TypeIndexRegistrationImpl from "./TypeIndexRegistrationImpl.js";
 
-const ThingWithHelpers = ThingWithHelpersMixin(ThingImpl);
+//const ThingWithHelpers = ThingWithHelpersMixin(ThingImpl);
+
+type WrappedDocument = Document<TypeIndex, TypeIndexReadonly>;
 
 export class FactoryImpl implements Factory<TypeIndex> {
 
+    private _factory: Factory<WrappedDocument>;
+
+    constructor(factory: Factory<WrappedDocument>) {
+        this._factory = factory;
+    }
+
     public createDocument(uri?: string | undefined, context?: Context | undefined): TypeIndex {
-        const doc = new DocumentImpl<TypeIndex, TypeIndexReadonly>(this as Factory<TypeIndex>);
-        return new TypeIndexImpl(doc);
+        const documentImpl = this._factory.createDocument();
+        //const doc = new DocumentImpl<TypeIndex, TypeIndexReadonly>(this as Factory<TypeIndex>);
+        return new TypeIndexImpl(documentImpl);
     }
     
-    public createThingToDescribeDocument(document: TypeIndex): SelfDescribingThingOf<TypeIndex> {
-        return new ThingImpl<Statement<SelfDescribingThingOf<TypeIndex>>, TypeIndex>(document)
+    // TypeIndexSelfDescribingThing extends Thing<Statement<TypeIndexSelfDescribingThing>, TypeIndex>
+    public createThingToDescribeDocument(document: TypeIndexImpl): SelfDescribingThingOf<TypeIndex> {
+        //return new ThingImpl<Statement<SelfDescribingThingOf<TypeIndex>>, TypeIndex>(document)
+        return this._factory.createThingToDescribeDocument(document.getWrappedDocument())
             .createStatement("rdf:type", "solid:TypeIndex")
             .createStatement("rdf:type", "solid:ListedDocument");
         // return new ThingWithHelpers(typeIndex, ThingType.ForDescribing)

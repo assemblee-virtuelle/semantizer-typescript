@@ -1,13 +1,14 @@
 import { Context } from "./Context";
 import { ContainedThingOf, Document, DocumentReadonly, InputOf, OutputOf, SelfDescribingThingOf, StatementOf } from "./Document";
 import Resource from "./Resource";
+import { Thing } from "./Thing";
 
 export interface Factory<
     DocumentType extends Document<any, any> | DocumentReadonly<any, any>
 > {
     createDocument(uri?: string, context?: Context): DocumentType;
 
-    createThingToDescribeDocument(document: DocumentType): SelfDescribingThingOf<InputOf<DocumentType>>;
+    createThingToDescribeDocument(document: DocumentType): SelfDescribingThingOf<InputOf<DocumentType>>; //Thing<StatementOf<InputOf<DocumentType>>, InputOf<DocumentType>>;
     createThing(document: DocumentType, uri: string): ContainedThingOf<InputOf<DocumentType>>;
     createThingWithoutUri(document: DocumentType, nameHint?: string): ContainedThingOf<InputOf<DocumentType>>;
 

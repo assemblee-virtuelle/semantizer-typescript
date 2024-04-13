@@ -4,8 +4,7 @@ import Factory, { FactoryForCopying } from "./Factory";
 import Resource from "./Resource";
 import { StatementReadonly } from "./Statement";
 import { ThingReadonly } from "./Thing";
-export declare class DocumentDecorated<DocumentType extends Document<any, any>, //DocumentBase<Thing<Statement<any>, any>, any>, any>,
-DocumentTypeReadonly extends DocumentBase<ThingReadonly<StatementReadonly<any>, any>, ThingReadonly<StatementReadonly<any>, any>>> implements Document<DocumentType, DocumentTypeReadonly> {
+export declare class DocumentDecorated<DocumentType extends Document<any, any>, DocumentTypeReadonly extends DocumentBase<ThingReadonly<StatementReadonly<any>, any>, ThingReadonly<StatementReadonly<any>, any>>> implements Document<DocumentType, DocumentTypeReadonly> {
     protected _wrapped: Document<DocumentType, DocumentTypeReadonly>;
     constructor(wrapped: Document<DocumentType, DocumentTypeReadonly>);
     getFactoryForCopying(): FactoryForCopying<Document<DocumentType, DocumentTypeReadonly>>;

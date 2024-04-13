@@ -70,7 +70,7 @@ export interface WithWriteOperations<DocumentType extends DocumentBase<any, any>
 export interface WithCreateOperations<DocumentType extends DocumentBase<any, any>> {
     createThingToSelfDescribe(): SelfDescribingThingOf<DocumentType>;
     createThingWithUri(nameHintOrUri?: string): ContainedThingOf<DocumentType>;
-    createThingWithoutUri(nameHint?: string): ThisType<ContainedThingOf<DocumentType>>;
+    createThingWithoutUri(nameHint?: string): ContainedThingOf<DocumentType>;
 }
 export interface WithCopyOperations<DocumentResulting extends DocumentBase<ThingReadonly<StatementReadonly<any>, any>, ThingReadonly<StatementReadonly<any>, any>>> {
     toCopyReadonly(): DocumentResulting;

@@ -11,7 +11,7 @@ export enum ThingType {
 }
 
 export class ThingImpl<
-    ContainedStatement extends Statement<any>,
+    ContainedStatement extends StatementBase, //<any>,
     DocumentType extends Document<any, any> 
 > implements Thing<ContainedStatement, DocumentType> { 
 

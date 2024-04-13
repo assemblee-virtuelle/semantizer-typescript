@@ -1,55 +1,61 @@
 import { Context } from "../core/Context";
-import { ContainedThingOf, Document, DocumentBase, DocumentReadonly, InputOf } from "../core/Document";
-import Factory, { FactoryForCopying } from "../core/Factory";
+import { ContainedThingOf, Document, DocumentBase, InputOf, OutputOf, SelfDescribingThingOf, StatementOf } from "../core/Document";
+import Factory from "../core/Factory";
 import Resource from "../core/Resource";
-import { Statement, StatementReadonly } from "../core/Statement";
-import { Thing, ThingReadonly } from "../core/Thing";
-import { DocumentImpl, DocumentImplReadonly } from "./DocumentImpl.js";
-import StatementImpl from "./StatementImpl.js";
+import { DocumentImpl } from "./DocumentImpl.js";
 import ThingImpl from "./ThingImpl.js";
 
-type StatementType = Statement<Thing<any, any>>;
-type StatementTypeReadonly = StatementReadonly<ThingReadonly<any, any>>;
-type ThingType = Thing<StatementType, Document<any, any>>;
-type ThingTypeReadonly = ThingReadonly<StatementTypeReadonly, DocumentReadonly<any, any>>;
+// type StatementType = Statement<Thing<any, any>>;
+// type StatementTypeReadonly = StatementReadonly<ThingReadonly<any, any>>;
+// type ThingType = Thing<StatementType, Document<any, any>>;
+// type ThingTypeReadonly = ThingReadonly<StatementTypeReadonly, DocumentReadonly<any, any>>;
 
 
-type DocRead = DocumentBase<ThingReadonly<StatementReadonly<any>, any>, ThingReadonly<StatementReadonly<any>, any>>;
+// type DocRead = DocumentBase<ThingReadonly<StatementReadonly<any>, any>, ThingReadonly<StatementReadonly<any>, any>>;
 // DocumentBase<ThingReadonly<StatementReadonly<any>, any>, ThingReadonly<StatementReadonly<any>, any>>,
-type DocumentType = Document<DocumentBase<ThingType, ThingType>, DocRead>;
-type DocumentTypeReadonly = DocumentReadonly<DocRead, DocumentType>;
+// type DocumentType = Document<DocumentBase<ThingType, ThingType>, DocRead>;
+// type DocumentTypeReadonly = DocumentReadonly<DocRead, DocumentType>;
 
-type t = InputOf<DocumentType>;
+//type t = InputOf<DocumentType>;
 
-export class FactoryImpl implements Factory<DocumentType> {
+// export type TypeIndex = Document<TypeIndexBase, TypeIndexBaseReadonly> &
+//     WithReadOperations<TypeIndexRegistration> & 
+//     WithWriteOperations<TypeIndexRegistration>;
 
-    public createDocument(uri?: string, context?: Context): DocumentType {
-        return new DocumentImpl<DocumentType, DocumentTypeReadonly>(this);// as Factory<DocumentType>);
+// GET => Document<TypeIndex, TypeIndexReadonly>
+
+export class FactoryImpl<
+    DocumentType extends Document<any, any>, // TypeIndex or Document
+    DocumentTypeReadonly extends DocumentBase<any, any> // TypeIndexReadonly
+> implements Factory<Document<DocumentType, DocumentTypeReadonly>> { //<DocumentType, DocumentTypeReadonly>> {
+
+    public createDocument(uri?: string, context?: Context): Document<DocumentType, DocumentTypeReadonly> {
+        return new DocumentImpl<InputOf<DocumentType>, OutputOf<DocumentType>>(this);// as Factory<DocumentType>);
     }
 
-    public createDocumentReadonly(document: DocumentType): DocumentTypeReadonly {
+    /*public createDocumentReadonly(document: Document<DocumentType, DocumentTypeReadonly>): DocumentTypeReadonly {
         throw new Error("Method not implemented.");
+    }*/
+
+    public createThingToDescribeDocument(document: Document<DocumentType, DocumentTypeReadonly>): SelfDescribingThingOf<DocumentType> { 
+        return new ThingImpl<StatementOf<typeof document>, typeof document>(document); // as SelfDescribingThingOf<typeof document>; //<Statement<ThingType>, DocumentType>(document);
     }
 
-    public createThingToDescribeDocument(document: DocumentType): ThingType { 
-        return new ThingImpl<Statement<ThingType>, DocumentType>(document);
+    public createThing(document: Document<DocumentType, DocumentTypeReadonly>, uri: string): ContainedThingOf<DocumentType> {
+        throw new Error("Method not implemented.");//return new ThingImpl<Statement<ThingType>, DocumentType>(document);
     }
 
-    public createThing(document: DocumentType, uri: string): ThingType {
-        return new ThingImpl<Statement<ThingType>, DocumentType>(document);
+    public createThingWithoutUri(document: Document<DocumentType, DocumentTypeReadonly>, nameHint?: string): ContainedThingOf<DocumentType> {
+        throw new Error("Method not implemented.");//return new ThingImpl<Statement<ThingType>, DocumentType>(document);
     }
 
-    public createThingWithoutUri(document: DocumentType, nameHint?: string): ThingType {
-        return new ThingImpl<Statement<ThingType>, DocumentType>(document);
-    }
-
-    public createStatement(thing: ContainedThingOf<DocumentType>, about: string, value: string | Resource, datatype?: string | Resource, language?: string): StatementType {
-        return new StatementImpl(thing, about, value, datatype, language);
+    public createStatement(thing: ContainedThingOf<DocumentType>, about: string, value: string | Resource, datatype?: string | Resource, language?: string): StatementOf<DocumentType> {
+        throw new Error("Method not implemented.");//return new StatementImpl(thing, about, value, datatype, language);
     }
 
 }
 
-export class FactoryImplForCopying implements FactoryForCopying<DocumentType> {
+/*export class FactoryImplForCopying implements FactoryForCopying<DocumentType> {
 
     createDocument(document: DocumentType): DocumentTypeReadonly {
         throw new Error("Method not implemented.");
@@ -68,4 +74,4 @@ export class FactoryImplForCopying implements FactoryForCopying<DocumentType> {
         throw new Error("Method not implemented.");
     }
 
-}
+}*/

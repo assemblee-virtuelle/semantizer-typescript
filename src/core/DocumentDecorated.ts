@@ -1,9 +1,9 @@
 import { Context } from "./Context";
-import { ContainedThingOf, Document, DocumentBase, DocumentReadonly, InputOf, SelfDescribingThingOf, WithReadOperations } from "./Document";
+import { ContainedThingOf, Document, DocumentBase, SelfDescribingThingOf } from "./Document";
 import Factory, { FactoryForCopying } from "./Factory";
 import Resource from "./Resource";
-import { Statement, StatementReadonly } from "./Statement";
-import { Thing, ThingBase, ThingReadonly } from "./Thing";
+import { StatementReadonly } from "./Statement";
+import { ThingReadonly } from "./Thing";
 
 /*type DocumentBaseWithReadOperations<
     DocumentType extends DocumentBase<any, any>
@@ -134,16 +134,15 @@ implements DocumentBase<ContainedThingOf<DocumentType>, SelfDescribingThingOf<Do
 
 }*/
 
-// The @ts-ignore should never throw as the methods should never be called by a readonly object.
 export class DocumentDecorated<
-    DocumentType extends Document<any, any>, //DocumentBase<Thing<Statement<any>, any>, any>, any>,
-    DocumentTypeReadonly extends DocumentBase<ThingReadonly<StatementReadonly<any>, any>, ThingReadonly<StatementReadonly<any>, any>>, //DocumentReadonly<any, any>
+    DocumentType extends Document<any, any>,
+    DocumentTypeReadonly extends DocumentBase<ThingReadonly<StatementReadonly<any>, any>, ThingReadonly<StatementReadonly<any>, any>>
 >
 implements Document<DocumentType, DocumentTypeReadonly> {
     
     protected _wrapped: Document<DocumentType, DocumentTypeReadonly>; // Specific document implementation like DocumentImpl<TypeIndex, TypeIndexReadonly>
 
-    public constructor(wrapped: Document<DocumentType, DocumentTypeReadonly>) { //<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>>) {
+    public constructor(wrapped: Document<DocumentType, DocumentTypeReadonly>) {
         this._wrapped = wrapped;
     }
     
@@ -152,7 +151,7 @@ implements Document<DocumentType, DocumentTypeReadonly> {
     }
 
     public getFactory(): Factory<Document<DocumentType, DocumentTypeReadonly>> {
-        return this.getWrappedDocument().getFactory(); // as Factory<this>;
+        return this.getWrappedDocument().getFactory();
     }
 
     public toCopy(): this {
@@ -168,17 +167,14 @@ implements Document<DocumentType, DocumentTypeReadonly> {
     }
 
     public createThingToSelfDescribe(): SelfDescribingThingOf<DocumentType> {
-        // @ts-ignore
         return this.getWrappedDocument().createThingToSelfDescribe();
     }
    
     public createThingWithoutUri(nameHint?: string | undefined): ContainedThingOf<DocumentType> {
-        // @ts-ignore
         return this.getWrappedDocument().createThingWithoutUri(nameHint);
     }
 
     public add(thing: ContainedThingOf<DocumentType>): this {
-        // @ts-ignore
         return this.getWrappedDocument().add(thing) as this;
     }
     
@@ -207,7 +203,6 @@ implements Document<DocumentType, DocumentTypeReadonly> {
     }
     
     public setContext(context: Context): void {
-        // @ts-ignore
         this.getWrappedDocument().setContext(context);
     }
     
@@ -228,16 +223,15 @@ implements Document<DocumentType, DocumentTypeReadonly> {
     }
 
     public createThingWithUri(nameHintOrUri?: string): ContainedThingOf<DocumentType> {
-        // @ts-ignore
         return this.getWrappedDocument().createThingWithUri(nameHintOrUri);
     }
 
-    protected getWrappedDocument(): Document<DocumentType, DocumentTypeReadonly> { //<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>> {
+    public getWrappedDocument(): Document<DocumentType, DocumentTypeReadonly> { 
         return this._wrapped;
     }
 
     public get(uri: string | Resource): ThisType<ContainedThingOf<DocumentType>> | undefined {
-        return this.getWrappedDocument().get(uri); // as ContainedThingOf<DocumentType> | undefined;
+        return this.getWrappedDocument().get(uri);
     }
 
     public getContext(): Context | undefined {
@@ -245,7 +239,7 @@ implements Document<DocumentType, DocumentTypeReadonly> {
     }
 
     public getThingThatSelfDescribes(): SelfDescribingThingOf<DocumentType> | undefined {
-        return this.getWrappedDocument().getThingThatSelfDescribes();// as SelfDescribingThingOf<DocumentType> | undefined;
+        return this.getWrappedDocument().getThingThatSelfDescribes();
     }
 
     public has(thing: string | Resource): boolean {
@@ -269,7 +263,7 @@ implements Document<DocumentType, DocumentTypeReadonly> {
     }
 
     public [Symbol.iterator](): Iterator<ContainedThingOf<DocumentType>> {
-        return this.getWrappedDocument()[Symbol.iterator]() as Iterator<ContainedThingOf<DocumentType>>;
+        return this.getWrappedDocument()[Symbol.iterator]();
     }
 
     public getUri(): string {
@@ -277,7 +271,7 @@ implements Document<DocumentType, DocumentTypeReadonly> {
     }
 
     public at(index: number): ThisType<ContainedThingOf<DocumentType>> | undefined {
-        return this.getWrappedDocument().at(index); // as ContainedThingOf<DocumentType> | undefined;
+        return this.getWrappedDocument().at(index);
     }
 
     public contains(other: this): boolean {
@@ -313,7 +307,7 @@ implements Document<DocumentType, DocumentTypeReadonly> {
     }
 
     public forEach(callbackfn: (value: ContainedThingOf<DocumentType>, index?: number | undefined, array?: ContainedThingOf<DocumentType>[] | undefined) => void, thisArg?: any): void {
-        return this.getWrappedDocument().forEach(callbackfn);// as (value: ThisType<ContainedThingOf<DocumentType>>, index?: number | undefined, array?: ThisType<ContainedThingOf<DocumentType>>[] | undefined) => void);
+        return this.getWrappedDocument().forEach(callbackfn);
     }
 
     public includes(searchElement: ThisType<ContainedThingOf<DocumentType>>, fromIndex?: number | undefined): boolean {

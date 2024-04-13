@@ -6,13 +6,17 @@ import { Thing, ThingBase, ThingReadonly } from "./Thing";
 
 type ContainedThingOfDocument<T extends Document<any, any>> = T extends Document<infer TypeArg, any> ? ContainedThingOfDocumentBase<T> : never;
 type ContainedThingOfDocumentBase<T extends DocumentBase<any, any>> = T extends DocumentBase<infer TypeArg, any> ? TypeArg : never;
-
 export type ContainedThingOf<T extends DocumentBase<any, any> | Document<any, any>> = T extends DocumentBase<any, any> ? ContainedThingOfDocumentBase<T>: T extends Document<any, any>? ContainedThingOfDocument<T>: never;
-export type SelfDescribingThingOf<T extends DocumentBase<any, any>> = T extends DocumentBase<any, infer TypeArg> ? TypeArg : never;
+
+type SelfDescribingThingOfDocument<T extends Document<any, any>> = T extends Document<any, infer TypeArg> ? TypeArg : never;
+type SelfDescribingThingOfDocumentBase<T extends DocumentBase<any, any>> = T extends DocumentBase<any, infer TypeArg> ? TypeArg : never;
+export type SelfDescribingThingOf<T extends DocumentBase<any, any> | Document<any, any>> = T extends DocumentBase<any, any> ? SelfDescribingThingOfDocumentBase<T>: T extends Document<any, any>? SelfDescribingThingOfDocument<T>: never;
+
 //export type ContainedThingOfReadonly<T extends Document<any, any>> = T extends Document<any, any, infer TypeArg, any> ? TypeArg : never;
 //export type SelfDescribingThingOfReadonly<T extends Document<any, any>> = T extends Document<any, any, any, infer TypeArg> ? TypeArg : never;
-export type StatementOf<T extends DocumentBase<any, any>> = T extends DocumentBase<infer TypeArg, any> ? TypeArg extends ThingBase<infer StatementType> ? StatementType: never : never;
-export type StatementOfDoc<T extends Document<any, any>> = T extends Document<infer TypeArg, any> ? TypeArg extends Thing<infer StatementType, any> ? StatementType: never : never;
+type StatementOfDocumentBase<T extends DocumentBase<any, any>> = T extends DocumentBase<infer TypeArg, any> ? TypeArg extends ThingBase<infer StatementType> ? StatementType: never : never;
+type StatementOfDocument<T extends Document<any, any>> = T extends Document<infer TypeArg, any> ? TypeArg extends Thing<infer StatementType, any> ? StatementType: never : never;
+export type StatementOf<T extends DocumentBase<any, any> | Document<any, any>> = T extends DocumentBase<any, any> ? StatementOfDocumentBase<T>: T extends Document<any, any>? StatementOfDocument<T>: never;
 
 type InputOfDocument<T extends Document<any, any>> = T extends Document<infer TypeArg, any> ? TypeArg : never;
 type InputOfDocumentReadonly<T extends DocumentReadonly<any, any>> = T extends DocumentBase<infer TypeArg, any> ? TypeArg : never;
@@ -50,8 +54,6 @@ export interface WithFactory<
 
 export interface WithFactoryForCopying<
     DocumentType extends Document<any, any> | DocumentReadonly<any, any>
-    //InputDocument extends DocumentBase<any, any>,
-    //OutputDocument extends DocumentBase<any, any>
 > {
     getFactoryForCopying(): FactoryForCopying<DocumentType>;
 }
@@ -102,7 +104,7 @@ export interface WithCreateOperations<
 > {
     createThingToSelfDescribe(): SelfDescribingThingOf<DocumentType>;
     createThingWithUri(nameHintOrUri?: string): ContainedThingOf<DocumentType>; //ThisType<ContainedThingOf<DocumentType>>;
-    createThingWithoutUri(nameHint?: string): ThisType<ContainedThingOf<DocumentType>>;
+    createThingWithoutUri(nameHint?: string): ContainedThingOf<DocumentType>;
 }
 
 export interface WithCopyOperations<
@@ -116,30 +118,6 @@ export interface WithCopyWritableOperations<
 > {
     toCopyWritable(): DocumentResulting;
 }
-
-// export type Document<
-//     ContainedThing extends Thing<Statement<any>, any> | ThingReadonly<any, any>, 
-//     SelfDescribingThing extends Thing<Statement<any>, any> | ThingReadonly<any, any>,
-//     ContainedThingReadonly extends ThingReadonly<any, any>,
-//     SelfDescribingThingReadonly extends ThingReadonly<any, any>,
-// > = DocumentBase<ContainedThing, SelfDescribingThing> & 
-//     WithFactory<Document<ContainedThing, SelfDescribingThing, ContainedThingReadonly, SelfDescribingThingReadonly>> & // Should be this
-//     WithFactoryForCopying<DocumentBase<ContainedThing, SelfDescribingThing>, DocumentReadonly<ContainedThingReadonly, SelfDescribingThingReadonly, ContainedThing, SelfDescribingThing>> & 
-//     WithReadOperations<Document<ContainedThing, SelfDescribingThing, ContainedThingReadonly, SelfDescribingThingReadonly>> &
-//     WithWriteOperations<Document<ContainedThing, SelfDescribingThing, ContainedThingReadonly, SelfDescribingThingReadonly>> &
-//     WithCreateOperations<Document<ContainedThing, SelfDescribingThing, ContainedThingReadonly, SelfDescribingThingReadonly>> &
-//     WithCopyOperations<DocumentReadonly<ContainedThingReadonly, SelfDescribingThingReadonly, ContainedThing, SelfDescribingThing>>;// & 
-    //WithCopyWritableOperations;
-
-// export type DocumentReadonly<
-//     ContainedThing extends ThingReadonly<StatementReadonly<any>, any>,
-//     SelfDescribingThing extends ThingReadonly<StatementReadonly<any>, any>, 
-//     ContainedThingWritable extends Thing<Statement<any>, any> | ThingReadonly<any, any>,
-//     SelfDescribingThingWritable extends Thing<Statement<any>, any> | ThingReadonly<any, any>,
-// > = DocumentBase<ContainedThing, SelfDescribingThing> & 
-//     WithFactoryForCopying<DocumentBase<ContainedThing, SelfDescribingThing>, Document<ContainedThingWritable, SelfDescribingThingWritable, ContainedThing, SelfDescribingThing>> & // TODO: use DocumentReadonly instead
-//     WithReadOperations<DocumentReadonly<ContainedThing, SelfDescribingThing, ContainedThingWritable, SelfDescribingThingWritable>> & 
-//     WithCopyWritableOperations;
 
 export type Document<
     T extends DocumentBase<any, any>, //Thing<Statement<any>, any>, Thing<Statement<any>, any>>,
@@ -156,6 +134,6 @@ export type DocumentReadonly<
     T extends DocumentBase<ThingReadonly<StatementReadonly<any>, any>, ThingReadonly<StatementReadonly<any>, any>>,
     TWritable extends DocumentBase<any, any>,
 > = DocumentBase<ContainedThingOf<T>, SelfDescribingThingOf<T>> & 
-    WithFactoryForCopying<DocumentReadonly<T, TWritable>> & // TODO: use DocumentReadonly instead
+    WithFactoryForCopying<DocumentReadonly<T, TWritable>> & 
     WithReadOperations<DocumentReadonly<T, TWritable>> & 
     WithCopyWritableOperations<TWritable>;

@@ -24,7 +24,7 @@ export interface WithDocument<
 }
 
 export interface WithReadOperations<
-    ContainedStatement extends Statement<any> | StatementReadonly<any> = Statement<any>
+    ContainedStatement extends StatementBase //<any> | StatementReadonly<any> = Statement<any>
 > {
     forEach(callbackfn: (value: ContainedStatement, index: number, array: ContainedStatement[]) => void, thisArg?: any): void;
     map(callbackfn: (value: ContainedStatement, index: number, array: ContainedStatement[]) => unknown, thisArg?: any): unknown[];
@@ -57,11 +57,11 @@ export interface WithCopyWritableOperations<
 }
 
 export type Thing<
-    ContainedStatement extends Statement<any>, 
+    ContainedStatement extends StatementBase, //<any>, 
     DocumentType extends Document<any, any> 
 > = ThingBase<ContainedStatement> &  
     WithDocument<DocumentType> & 
-    WithReadOperations & 
+    WithReadOperations<ContainedStatement> & 
     WithWriteOperations<ContainedStatement> & 
     WithCreateOperations & 
     WithCopyOperations<DocumentType> & 
@@ -72,5 +72,5 @@ export type ThingReadonly<
     DocumentType extends DocumentReadonly<any, any> // TODO: add constraint ThingReadonly<ContainedStatement, any>, ThingReadonly<ContainedStatement, any>>
 > = ThingBase<ContainedStatement> & 
     WithDocument<DocumentType> & 
-    WithReadOperations & 
+    WithReadOperations<ContainedStatement> & 
     WithCopyWritableOperations<DocumentType>;

@@ -16,7 +16,7 @@ implements Document<DocumentType, DocumentTypeReadonly> {
     protected _selfDescribingThing?: SelfDescribingThingOf<DocumentType>;
     protected _things: ContainedThingOf<DocumentType>[];
     protected _context?: Context;
-    protected _factory: Factory<Document<DocumentType, DocumentTypeReadonly>>;
+    protected _factory: Factory<this>; //DocumentImpl<Document<DocumentType, DocumentTypeReadonly>>>;
 
     //public constructor(uri?: string, context?: Context);
     //public constructor(document: DocumentBase<ContainedThing<Wrapped>, SelfDescribingThing<Wrapped>>);
@@ -31,7 +31,7 @@ implements Document<DocumentType, DocumentTypeReadonly> {
         throw new Error("Method not implemented.");
     }
 
-    public getFactory(): Factory<Document<DocumentType, DocumentTypeReadonly>> {
+    public getFactory(): Factory<this> { //Document<DocumentType, DocumentTypeReadonly>> {
         return this._factory;
     }
 

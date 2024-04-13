@@ -1,8 +1,9 @@
 import { FactoryImpl as DocumentFactory } from './core-default/FactoryImpl.js';
-import { Document } from './core/Document.js';
+import { Document, SelfDescribingThingOf, StatementOf } from './core/Document.js';
 import { Statement } from './core/Statement.js';
 import { Thing } from './core/Thing.js';
 import { FactoryImpl as TypeIndexFactory } from './type-index/FactoryImpl.js';
+import { TypeIndex, TypeIndexReadonly } from './type-index/TypeIndex.js';
 
 export { default as Semantizer } from './Semantizer.js';
 
@@ -19,7 +20,10 @@ const thing = document.createThingWithUri("name")
 
 document.forEach(thing => thing.forEach(s => console.log(s.getSubject(), s.getValue())));
 
-const typeIndexFactory = new TypeIndexFactory();
+type t = StatementOf<Document<TypeIndex, TypeIndexReadonly>>;
+type t2 = SelfDescribingThingOf<TypeIndex>
+
+const typeIndexFactory = new TypeIndexFactory(new DocumentFactory<TypeIndex, TypeIndexReadonly>());
 const typeIndexDocument = typeIndexFactory.createDocument();
 typeIndexDocument.createThingToSelfDescribe();
 typeIndexDocument.createThingWithUri("test")
