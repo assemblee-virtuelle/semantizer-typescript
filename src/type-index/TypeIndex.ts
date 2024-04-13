@@ -1,4 +1,4 @@
-import { Document, DocumentBase, DocumentReadonly } from "../core/Document";
+import { Document, DocumentBase, DocumentDecorated, DocumentReadonly } from "../core/Document";
 import { Statement, StatementReadonly } from "../core/Statement";
 import { Thing, ThingBase, ThingReadonly } from "../core/Thing";
 import { TypeIndexRegistration, TypeIndexRegistrationReadonly } from "./TypeIndexRegistration";
@@ -19,7 +19,12 @@ export type TypeIndexBase = DocumentBase<TypeIndexRegistration, TypeIndexSelfDes
 
 export type TypeIndexBaseReadonly = DocumentBase<TypeIndexRegistrationReadonly, TypeIndexSelfDescribingThingReadonly>;
 
-export type TypeIndex = Document<TypeIndexBase, TypeIndexBaseReadonly> &
+
+export type TypeIndex = DocumentDecorated<TypeIndex2, TypeIndexReadonly> &
+    WithReadOperations<TypeIndexRegistration> & 
+    WithWriteOperations<TypeIndexRegistration>;
+
+export type TypeIndex2 = Document<TypeIndexBase, TypeIndexBaseReadonly> &
     WithReadOperations<TypeIndexRegistration> & 
     WithWriteOperations<TypeIndexRegistration>;
 

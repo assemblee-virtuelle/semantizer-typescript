@@ -1,14 +1,15 @@
 import { Context } from "../core/Context.js";
 import { ContainedThingOf, Document } from "../core/Document.js";
 import Resource from "../core/Resource.js";
-import { Statement } from "../core/Statement.js";
+import { StatementBase } from "../core/Statement.js";
 import { Thing, ThingBase } from "../core/Thing.js";
 export declare enum ThingType {
     ForDescribing = 0,
     Regular = 1,
     Anonymous = 2
 }
-export declare class ThingImpl<ContainedStatement extends Statement<any>, DocumentType extends Document<any, any>> implements Thing<ContainedStatement, DocumentType> {
+export declare class ThingImpl<ContainedStatement extends StatementBase, //<any>,
+DocumentType extends Document<any, any>> implements Thing<ContainedStatement, DocumentType> {
     private _uri;
     private _document;
     private _statements;

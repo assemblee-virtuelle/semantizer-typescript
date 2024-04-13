@@ -1,7 +1,7 @@
 import { Context } from "./Context";
 import { ContainedThingOf, Document, DocumentBase, DocumentReadonly } from "./Document";
 import Resource from "./Resource";
-import { Statement, StatementBase, StatementReadonly } from "./Statement";
+import { StatementBase, StatementReadonly } from "./Statement";
 export interface ThingBase<ContainedStatement extends StatementBase> extends Resource, Iterable<ContainedStatement> {
     getContext(): Context | undefined;
     hasUri(): boolean;
@@ -16,7 +16,7 @@ export interface ThingBase<ContainedStatement extends StatementBase> extends Res
 export interface WithDocument<DocumentType extends DocumentBase<any, any>> {
     getDocument(): DocumentType;
 }
-export interface WithReadOperations<ContainedStatement extends Statement<any> | StatementReadonly<any> = Statement<any>> {
+export interface WithReadOperations<ContainedStatement extends StatementBase> {
     forEach(callbackfn: (value: ContainedStatement, index: number, array: ContainedStatement[]) => void, thisArg?: any): void;
     map(callbackfn: (value: ContainedStatement, index: number, array: ContainedStatement[]) => unknown, thisArg?: any): unknown[];
     filter(predicate: (value: ContainedStatement, index: number, array: ContainedStatement[]) => boolean): ContainedStatement[];
@@ -36,6 +36,7 @@ export interface WithCopyOperations<DocumentType extends Document<any, any>> {
 export interface WithCopyWritableOperations<DocumentType extends Document<any, any> | DocumentReadonly<any, any>> {
     toCopyWritable(): ContainedThingOf<DocumentType>;
 }
-export type Thing<ContainedStatement extends Statement<any>, DocumentType extends Document<any, any>> = ThingBase<ContainedStatement> & WithDocument<DocumentType> & WithReadOperations & WithWriteOperations<ContainedStatement> & WithCreateOperations & WithCopyOperations<DocumentType> & WithCopyWritableOperations<DocumentType>;
-export type ThingReadonly<ContainedStatement extends StatementReadonly<any>, DocumentType extends DocumentReadonly<any, any>> = ThingBase<ContainedStatement> & WithDocument<DocumentType> & WithReadOperations & WithCopyWritableOperations<DocumentType>;
+export type Thing<ContainedStatement extends StatementBase, //<any>, 
+DocumentType extends Document<any, any>> = ThingBase<ContainedStatement> & WithDocument<DocumentType> & WithReadOperations<ContainedStatement> & WithWriteOperations<ContainedStatement> & WithCreateOperations & WithCopyOperations<DocumentType> & WithCopyWritableOperations<DocumentType>;
+export type ThingReadonly<ContainedStatement extends StatementReadonly<any>, DocumentType extends DocumentReadonly<any, any>> = ThingBase<ContainedStatement> & WithDocument<DocumentType> & WithReadOperations<ContainedStatement> & WithCopyWritableOperations<DocumentType>;
 //# sourceMappingURL=Thing.d.ts.map

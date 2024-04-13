@@ -1,30 +1,13 @@
 import { Context } from "../core/Context";
-import { ContainedThingOf, Document, DocumentBase, DocumentReadonly } from "../core/Document";
-import Factory, { FactoryForCopying } from "../core/Factory";
+import { ContainedThingOf, Document, DocumentBase, SelfDescribingThingOf, StatementOf } from "../core/Document";
+import Factory from "../core/Factory";
 import Resource from "../core/Resource";
-import { Statement, StatementReadonly } from "../core/Statement";
-import { Thing, ThingReadonly } from "../core/Thing";
-type StatementType = Statement<Thing<any, any>>;
-type StatementTypeReadonly = StatementReadonly<ThingReadonly<any, any>>;
-type ThingType = Thing<StatementType, Document<any, any>>;
-type ThingTypeReadonly = ThingReadonly<StatementTypeReadonly, DocumentReadonly<any, any>>;
-type DocRead = DocumentBase<ThingReadonly<StatementReadonly<any>, any>, ThingReadonly<StatementReadonly<any>, any>>;
-type DocumentType = Document<DocumentBase<ThingType, ThingType>, DocRead>;
-type DocumentTypeReadonly = DocumentReadonly<DocRead, DocumentType>;
-export declare class FactoryImpl implements Factory<DocumentType> {
-    createDocument(uri?: string, context?: Context): DocumentType;
-    createDocumentReadonly(document: DocumentType): DocumentTypeReadonly;
-    createThingToDescribeDocument(document: DocumentType): ThingType;
-    createThing(document: DocumentType, uri: string): ThingType;
-    createThingWithoutUri(document: DocumentType, nameHint?: string): ThingType;
-    createStatement(thing: ContainedThingOf<DocumentType>, about: string, value: string | Resource, datatype?: string | Resource, language?: string): StatementType;
+export declare class FactoryImpl<DocumentType extends Document<any, any>, //DocumentBase<Thing<Statement<Thing<any, any>>, DocumentType>, Thing<Statement<Thing<any, any>>, DocumentType>>, DocumentBase<Thing<Statement<Thing<any, any>>, DocumentType>, Thing<Statement<Thing<any, any>>, DocumentType>>>, // TypeIndex or Document
+DocumentTypeReadonly extends DocumentBase<any, any>> implements Factory<Document<DocumentType, DocumentTypeReadonly>> {
+    createDocument(uri?: string, context?: Context): Document<DocumentType, DocumentTypeReadonly>;
+    createThingToDescribeDocument(document: Document<DocumentType, DocumentTypeReadonly>): SelfDescribingThingOf<DocumentType>;
+    createThing(document: Document<DocumentType, DocumentTypeReadonly>, uri: string): ContainedThingOf<DocumentType>;
+    createThingWithoutUri(document: Document<DocumentType, DocumentTypeReadonly>, nameHint?: string): ContainedThingOf<DocumentType>;
+    createStatement(thing: ContainedThingOf<DocumentType>, about: string, value: string | Resource, datatype?: string | Resource, language?: string): StatementOf<DocumentType>;
 }
-export declare class FactoryImplForCopying implements FactoryForCopying<DocumentType> {
-    createDocument(document: DocumentType): DocumentTypeReadonly;
-    createThingToDescribeDocument(thing: ThingType): ThingTypeReadonly;
-    createThing(thing: ThingType): ThingTypeReadonly;
-    createThingWithoutUri(thing: ThingType): ThingTypeReadonly;
-    createStatement(statement: StatementType): StatementTypeReadonly;
-}
-export {};
 //# sourceMappingURL=FactoryImpl.d.ts.map

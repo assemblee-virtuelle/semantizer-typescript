@@ -6,7 +6,7 @@ import { Factory } from "../core/Factory";
 import Resource from "../core/Resource";
 import { Statement } from "../core/Statement.js";
 import ThingWithHelpersMixin from "../thing-helpers/ThingWithHelpersMixin.js";
-import { TypeIndex, TypeIndexBase, TypeIndexReadonly } from "./TypeIndex";
+import { TypeIndex, TypeIndexBase, TypeIndexReadonly, TypeIndexSelfDescribingThing } from "./TypeIndex";
 import { TypeIndexImpl } from "./TypeIndexImpl.js";
 import { TypeIndexRegistration } from "./TypeIndexRegistration.js";
 import TypeIndexRegistrationImpl from "./TypeIndexRegistrationImpl.js";
@@ -17,22 +17,22 @@ type WrappedDocument = Document<TypeIndex, TypeIndexReadonly>;
 
 export class FactoryImpl implements Factory<TypeIndex> {
 
-    private _factory: Factory<WrappedDocument>;
+    private _documentFactory: Factory<WrappedDocument>;
 
     constructor(factory: Factory<WrappedDocument>) {
-        this._factory = factory;
+        this._documentFactory = factory;
     }
 
     public createDocument(uri?: string | undefined, context?: Context | undefined): TypeIndex {
-        const documentImpl = this._factory.createDocument();
+        const documentImpl = this._documentFactory.createDocument();
         //const doc = new DocumentImpl<TypeIndex, TypeIndexReadonly>(this as Factory<TypeIndex>);
         return new TypeIndexImpl(documentImpl);
     }
     
     // TypeIndexSelfDescribingThing extends Thing<Statement<TypeIndexSelfDescribingThing>, TypeIndex>
-    public createThingToDescribeDocument(document: TypeIndexImpl): SelfDescribingThingOf<TypeIndex> {
+    public createThingToDescribeDocument(document: TypeIndex): SelfDescribingThingOf<TypeIndex> {
         //return new ThingImpl<Statement<SelfDescribingThingOf<TypeIndex>>, TypeIndex>(document)
-        return this._factory.createThingToDescribeDocument(document.getWrappedDocument())
+        return this._documentFactory.createThingToDescribeDocument(document.getWrappedDocument())
             .createStatement("rdf:type", "solid:TypeIndex")
             .createStatement("rdf:type", "solid:ListedDocument");
         // return new ThingWithHelpers(typeIndex, ThingType.ForDescribing)

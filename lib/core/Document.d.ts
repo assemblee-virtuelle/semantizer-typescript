@@ -6,9 +6,12 @@ import { Thing, ThingBase, ThingReadonly } from "./Thing";
 type ContainedThingOfDocument<T extends Document<any, any>> = T extends Document<infer TypeArg, any> ? ContainedThingOfDocumentBase<T> : never;
 type ContainedThingOfDocumentBase<T extends DocumentBase<any, any>> = T extends DocumentBase<infer TypeArg, any> ? TypeArg : never;
 export type ContainedThingOf<T extends DocumentBase<any, any> | Document<any, any>> = T extends DocumentBase<any, any> ? ContainedThingOfDocumentBase<T> : T extends Document<any, any> ? ContainedThingOfDocument<T> : never;
-export type SelfDescribingThingOf<T extends DocumentBase<any, any>> = T extends DocumentBase<any, infer TypeArg> ? TypeArg : never;
-export type StatementOf<T extends DocumentBase<any, any>> = T extends DocumentBase<infer TypeArg, any> ? TypeArg extends ThingBase<infer StatementType> ? StatementType : never : never;
-export type StatementOfDoc<T extends Document<any, any>> = T extends Document<infer TypeArg, any> ? TypeArg extends Thing<infer StatementType, any> ? StatementType : never : never;
+type SelfDescribingThingOfDocument<T extends Document<any, any>> = T extends Document<any, infer TypeArg> ? TypeArg : never;
+type SelfDescribingThingOfDocumentBase<T extends DocumentBase<any, any>> = T extends DocumentBase<any, infer TypeArg> ? TypeArg : never;
+export type SelfDescribingThingOf<T extends DocumentBase<any, any> | Document<any, any>> = T extends DocumentBase<any, any> ? SelfDescribingThingOfDocumentBase<T> : T extends Document<any, any> ? SelfDescribingThingOfDocument<T> : never;
+type StatementOfDocumentBase<T extends DocumentBase<any, any>> = T extends DocumentBase<infer TypeArg, any> ? TypeArg extends ThingBase<infer StatementType> ? StatementType : never : never;
+type StatementOfDocument<T extends Document<any, any>> = T extends Document<infer TypeArg, any> ? TypeArg extends Thing<infer StatementType, any> ? StatementType : never : never;
+export type StatementOf<T extends DocumentBase<any, any> | Document<any, any>> = T extends DocumentBase<any, any> ? StatementOfDocumentBase<T> : T extends Document<any, any> ? StatementOfDocument<T> : never;
 type InputOfDocument<T extends Document<any, any>> = T extends Document<infer TypeArg, any> ? TypeArg : never;
 type InputOfDocumentReadonly<T extends DocumentReadonly<any, any>> = T extends DocumentBase<infer TypeArg, any> ? TypeArg : never;
 export type InputOf<T extends Document<any, any> | DocumentReadonly<any, any>> = T extends Document<any, any> ? InputOfDocument<T> : T extends DocumentReadonly<any, any> ? InputOfDocumentReadonly<T> : never;
@@ -80,7 +83,10 @@ export interface WithCopyWritableOperations<DocumentResulting extends DocumentBa
 }
 export type Document<T extends DocumentBase<any, any>, //Thing<Statement<any>, any>, Thing<Statement<any>, any>>,
 TReadonly extends DocumentBase<ThingReadonly<StatementReadonly<any>, any>, ThingReadonly<StatementReadonly<any>, any>>> = DocumentBase<ContainedThingOf<T>, SelfDescribingThingOf<T>> & WithFactory<Document<T, TReadonly>> & WithFactoryForCopying<Document<T, TReadonly>> & WithReadOperations<T> & WithWriteOperations<T> & WithCreateOperations<T> & WithCopyOperations<TReadonly>;
-export type DocumentReadonly<T extends DocumentBase<ThingReadonly<StatementReadonly<any>, any>, ThingReadonly<StatementReadonly<any>, any>>, TWritable extends DocumentBase<any, any>> = DocumentBase<ContainedThingOf<T>, SelfDescribingThingOf<T>> & WithFactoryForCopying<DocumentReadonly<T, TWritable>> & // TODO: use DocumentReadonly instead
-WithReadOperations<DocumentReadonly<T, TWritable>> & WithCopyWritableOperations<TWritable>;
+export type DocumentReadonly<T extends DocumentBase<ThingReadonly<StatementReadonly<any>, any>, ThingReadonly<StatementReadonly<any>, any>>, TWritable extends DocumentBase<any, any>> = DocumentBase<ContainedThingOf<T>, SelfDescribingThingOf<T>> & WithFactoryForCopying<DocumentReadonly<T, TWritable>> & WithReadOperations<DocumentReadonly<T, TWritable>> & WithCopyWritableOperations<TWritable>;
+export interface DocumentDecorated<T extends DocumentBase<any, any>, //Thing<Statement<any>, any>, Thing<Statement<any>, any>>,
+TReadonly extends DocumentBase<ThingReadonly<StatementReadonly<any>, any>, ThingReadonly<StatementReadonly<any>, any>>> extends Document<T, TReadonly> {
+    getWrappedDocument(): Document<T, TReadonly>;
+}
 export {};
 //# sourceMappingURL=Document.d.ts.map

@@ -10,10 +10,10 @@ DocumentTypeReadonly extends DocumentBase<ThingReadonly<StatementReadonly<any>, 
     protected _selfDescribingThing?: SelfDescribingThingOf<DocumentType>;
     protected _things: ContainedThingOf<DocumentType>[];
     protected _context?: Context;
-    protected _factory: Factory<Document<DocumentType, DocumentTypeReadonly>>;
+    protected _factory: Factory<this>;
     constructor(factory: Factory<any>);
     getFactoryForCopying(): FactoryForCopying<Document<DocumentType, DocumentTypeReadonly>>;
-    getFactory(): Factory<Document<DocumentType, DocumentTypeReadonly>>;
+    getFactory(): Factory<this>;
     toCopy(): this;
     toCopyReadonly(): DocumentTypeReadonly;
     createThingToSelfDescribe(): SelfDescribingThingOf<DocumentType>;

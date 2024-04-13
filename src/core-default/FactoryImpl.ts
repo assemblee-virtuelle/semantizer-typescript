@@ -2,6 +2,8 @@ import { Context } from "../core/Context";
 import { ContainedThingOf, Document, DocumentBase, InputOf, OutputOf, SelfDescribingThingOf, StatementOf } from "../core/Document";
 import Factory from "../core/Factory";
 import Resource from "../core/Resource";
+import { Statement } from "../core/Statement";
+import { Thing } from "../core/Thing";
 import { DocumentImpl } from "./DocumentImpl.js";
 import ThingImpl from "./ThingImpl.js";
 
@@ -25,7 +27,7 @@ import ThingImpl from "./ThingImpl.js";
 // GET => Document<TypeIndex, TypeIndexReadonly>
 
 export class FactoryImpl<
-    DocumentType extends Document<any, any>, // TypeIndex or Document
+    DocumentType extends Document<any, any>, //DocumentBase<Thing<Statement<Thing<any, any>>, DocumentType>, Thing<Statement<Thing<any, any>>, DocumentType>>, DocumentBase<Thing<Statement<Thing<any, any>>, DocumentType>, Thing<Statement<Thing<any, any>>, DocumentType>>>, // TypeIndex or Document
     DocumentTypeReadonly extends DocumentBase<any, any> // TypeIndexReadonly
 > implements Factory<Document<DocumentType, DocumentTypeReadonly>> { //<DocumentType, DocumentTypeReadonly>> {
 
@@ -38,7 +40,7 @@ export class FactoryImpl<
     }*/
 
     public createThingToDescribeDocument(document: Document<DocumentType, DocumentTypeReadonly>): SelfDescribingThingOf<DocumentType> { 
-        return new ThingImpl<StatementOf<typeof document>, typeof document>(document); // as SelfDescribingThingOf<typeof document>; //<Statement<ThingType>, DocumentType>(document);
+        return new ThingImpl<StatementOf<typeof document>, typeof document>(document) as SelfDescribingThingOf<typeof document>; //<Statement<ThingType>, DocumentType>(document);
     }
 
     public createThing(document: Document<DocumentType, DocumentTypeReadonly>, uri: string): ContainedThingOf<DocumentType> {

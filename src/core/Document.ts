@@ -137,3 +137,11 @@ export type DocumentReadonly<
     WithFactoryForCopying<DocumentReadonly<T, TWritable>> & 
     WithReadOperations<DocumentReadonly<T, TWritable>> & 
     WithCopyWritableOperations<TWritable>;
+
+export interface DocumentDecorated<
+    T extends DocumentBase<any, any>, //Thing<Statement<any>, any>, Thing<Statement<any>, any>>,
+    TReadonly extends DocumentBase<ThingReadonly<StatementReadonly<any>, any>, ThingReadonly<StatementReadonly<any>, any>>, //DocumentReadonly<any, any>
+> extends Document<T, TReadonly>
+{
+    getWrappedDocument(): Document<T, TReadonly>;
+}
