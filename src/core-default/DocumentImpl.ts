@@ -20,11 +20,13 @@ implements Document<DocumentType, DocumentTypeReadonly> {
 
     //public constructor(uri?: string, context?: Context);
     //public constructor(document: DocumentBase<ContainedThing<Wrapped>, SelfDescribingThing<Wrapped>>);
+    //public constructor(...args: any[]) {}
+    //public constructor() {
     public constructor(factory: Factory<any> /*TODO: add constraint to this type */) {//documentOrUri?: DocumentBase<ContainedThing<Wrapped>, SelfDescribingThing<Wrapped>> | string, context?: Context) {
         this._uri = ""; //typeof documentOrUri === 'string'? documentOrUri ?? '': documentOrUri?.getUri() ?? '';
         this._context = undefined; //context;
         this._things = [];
-        this._factory = factory; //new FactoryImpl<DocumentImpl<ContainedThing, SelfDescribingThing>>();
+        this._factory = factory;
     }
     
     public getFactoryForCopying(): FactoryForCopying<Document<DocumentType, DocumentTypeReadonly>> {

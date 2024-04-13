@@ -138,8 +138,9 @@ export type DocumentReadonly<
     WithReadOperations<DocumentReadonly<T, TWritable>> & 
     WithCopyWritableOperations<TWritable>;
 
+// Is this interface really useful? Would it be used to access different objects?
 export interface DocumentDecorated<
-    T extends DocumentBase<any, any>, //Thing<Statement<any>, any>, Thing<Statement<any>, any>>,
+    T extends Document<any, any>, //Thing<Statement<any>, any>, Thing<Statement<any>, any>>,
     TReadonly extends DocumentBase<ThingReadonly<StatementReadonly<any>, any>, ThingReadonly<StatementReadonly<any>, any>>, //DocumentReadonly<any, any>
 > extends Document<T, TReadonly>
 {

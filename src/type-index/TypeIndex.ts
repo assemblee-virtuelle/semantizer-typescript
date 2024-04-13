@@ -20,11 +20,11 @@ export type TypeIndexBase = DocumentBase<TypeIndexRegistration, TypeIndexSelfDes
 export type TypeIndexBaseReadonly = DocumentBase<TypeIndexRegistrationReadonly, TypeIndexSelfDescribingThingReadonly>;
 
 
-export type TypeIndex = DocumentDecorated<TypeIndex2, TypeIndexReadonly> &
-    WithReadOperations<TypeIndexRegistration> & 
-    WithWriteOperations<TypeIndexRegistration>;
+// export type TypeIndex = DocumentDecorated<TypeIndex2, TypeIndexReadonly> &
+//     WithReadOperations<TypeIndexRegistration> & 
+//     WithWriteOperations<TypeIndexRegistration>;
 
-export type TypeIndex2 = Document<TypeIndexBase, TypeIndexBaseReadonly> &
+export type TypeIndex = Document<TypeIndexBase, TypeIndexBaseReadonly> &
     WithReadOperations<TypeIndexRegistration> & 
     WithWriteOperations<TypeIndexRegistration>;
 

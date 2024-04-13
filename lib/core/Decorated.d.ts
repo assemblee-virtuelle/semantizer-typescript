@@ -2,8 +2,8 @@ import { Context } from "./Context";
 import { ContainedThingOf, Document, DocumentBase, DocumentDecorated, SelfDescribingThingOf } from "./Document";
 import Factory, { FactoryForCopying } from "./Factory";
 import Resource from "./Resource";
-import { StatementReadonly } from "./Statement";
-import { ThingReadonly } from "./Thing";
+import { StatementBase, StatementReadonly } from "./Statement";
+import { Thing, ThingBase, ThingReadonly } from "./Thing";
 export declare class DocumentDecoratedImpl<DocumentType extends Document<any, any>, DocumentTypeReadonly extends DocumentBase<ThingReadonly<StatementReadonly<any>, any>, ThingReadonly<StatementReadonly<any>, any>>> implements DocumentDecorated<DocumentType, DocumentTypeReadonly> {
     protected _wrapped: Document<DocumentType, DocumentTypeReadonly>;
     constructor(wrapped: Document<DocumentType, DocumentTypeReadonly>);
@@ -56,5 +56,32 @@ export declare class DocumentDecoratedImpl<DocumentType extends Document<any, an
     slice(start?: number | undefined, end?: number | undefined): this;
     some(predicate: (value: ThisType<ContainedThingOf<DocumentType>>, index: number, array: ThisType<ContainedThingOf<DocumentType>>[]) => unknown, thisArg?: any): boolean;
 }
+export declare class ThingDecorated<ContainedStatement extends StatementBase, //<any>, 
+DocumentType extends Document<any, any>> implements Thing<ContainedStatement, DocumentType> {
+    private _wrapped;
+    constructor(wrapped: Thing<ContainedStatement, DocumentType>);
+    getWrappedThing(): Thing<ContainedStatement, DocumentType>;
+    getContext(): Context | undefined;
+    hasUri(): boolean;
+    count(): number;
+    isEmpty(): boolean;
+    equals(other: ThingBase<any>): boolean;
+    get(property: string): ContainedStatement | undefined;
+    getAll(property: string): ContainedStatement[];
+    toCopy(): ThisType<this>;
+    [Symbol.iterator](): Iterator<ContainedStatement>;
+    getUri(): string;
+    getDocument(): DocumentType;
+    forEach(callbackfn: (value: ContainedStatement, index: number, array: ContainedStatement[]) => void, thisArg?: any): void;
+    map(callbackfn: (value: ContainedStatement, index: number, array: ContainedStatement[]) => unknown, thisArg?: any): unknown[];
+    filter(predicate: (value: ContainedStatement, index: number, array: ContainedStatement[]) => boolean): ContainedStatement[];
+    add(statement: ContainedStatement): ThisType<this>;
+    remove(about: string, value: string | Resource, datatype?: string | undefined, language?: string | undefined): ThisType<this>;
+    removeAll(about: string): ThisType<this>;
+    set(about: string, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): ThisType<this>;
+    createStatement(about: string, value: string | Resource, datatype?: string | undefined, language?: string | undefined): this;
+    toCopyReadonly(): ContainedThingOf<DocumentType>;
+    toCopyWritable(): ContainedThingOf<DocumentType>;
+}
 export default DocumentDecoratedImpl;
-//# sourceMappingURL=DocumentDecoratedImpl.d.ts.map
+//# sourceMappingURL=Decorated.d.ts.map

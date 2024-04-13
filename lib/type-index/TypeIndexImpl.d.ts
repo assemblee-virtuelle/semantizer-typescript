@@ -1,5 +1,5 @@
+import DocumentDecoratedImpl from "../core/Decorated.js";
 import { Constructor, DocumentBase } from "../core/Document";
-import DocumentDecoratedImpl from "../core/DocumentDecoratedImpl.js";
 import { TypeIndex, TypeIndexReadonly, WithReadOperations, WithWriteOperations } from "./TypeIndex";
 import { TypeIndexRegistration } from "./TypeIndexRegistration";
 export declare class TypeIndexImplReadOrWrite extends DocumentDecoratedImpl<TypeIndex, TypeIndexReadonly> implements WithReadOperations<TypeIndexRegistration> {

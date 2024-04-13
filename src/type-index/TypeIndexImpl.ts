@@ -1,5 +1,5 @@
-import { Constructor, Document, DocumentBase } from "../core/Document";
-import DocumentDecoratedImpl from "../core/DocumentDecoratedImpl.js";
+import DocumentDecoratedImpl from "../core/Decorated.js";
+import { Constructor, DocumentBase } from "../core/Document";
 import { TypeIndex, TypeIndexReadonly, WithReadOperations, WithWriteOperations } from "./TypeIndex";
 import { TypeIndexRegistration } from "./TypeIndexRegistration";
 
@@ -19,6 +19,7 @@ implements WithWriteOperations<TypeIndexRegistration> {
     
     public createRegistration(forClass?: string, nameHintOrUri?: string | undefined): TypeIndexRegistration {
         const registration = this.createThingWithUri(nameHintOrUri);
+        //console.log(registration instanceof TypeIndexRegistrationImpl);
         if (forClass)
             registration.addForClass(forClass);
         return registration;
