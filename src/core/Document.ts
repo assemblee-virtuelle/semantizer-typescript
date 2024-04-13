@@ -14,6 +14,14 @@ export type SelfDescribingThingOf<T extends DocumentBase<any, any>> = T extends 
 export type StatementOf<T extends DocumentBase<any, any>> = T extends DocumentBase<infer TypeArg, any> ? TypeArg extends ThingBase<infer StatementType> ? StatementType: never : never;
 export type StatementOfDoc<T extends Document<any, any>> = T extends Document<infer TypeArg, any> ? TypeArg extends Thing<infer StatementType, any> ? StatementType: never : never;
 
+type InputOfDocument<T extends Document<any, any>> = T extends Document<infer TypeArg, any> ? TypeArg : never;
+type InputOfDocumentReadonly<T extends DocumentReadonly<any, any>> = T extends DocumentBase<infer TypeArg, any> ? TypeArg : never;
+export type InputOf<T extends Document<any, any> | DocumentReadonly<any, any>> = T extends Document<any, any> ? InputOfDocument<T> : T extends DocumentReadonly<any, any> ? InputOfDocumentReadonly<T> : never;
+
+type OutputOfDocument<T extends Document<any, any>> = T extends Document<any, infer TypeArg> ? TypeArg : never;
+type OutputOfDocumentReadonly<T extends DocumentReadonly<any, any>> = T extends DocumentBase<any, infer TypeArg> ? TypeArg : never;
+export type OutputOf<T extends Document<any, any> | DocumentReadonly<any, any>> = T extends Document<any, any> ? OutputOfDocument<T> : T extends DocumentReadonly<any, any> ? OutputOfDocumentReadonly<T> : never;
+
 export type Constructor<T = {}> = new (...args: any[]) => T;
 
 export interface DocumentBase<
@@ -23,7 +31,7 @@ export interface DocumentBase<
         //constructor(): DocumentBase<ContainedThing, SelfDescribingThing>;
     get(uri: string | Resource): ThisType<ContainedThing> | undefined;
     getContext(): Context | undefined;
-    getThingThatSelfDescribes(): ThisType<SelfDescribingThing> | undefined;
+    getThingThatSelfDescribes(): SelfDescribingThing | undefined;
     has(thing: string | Resource): boolean;
     hasThingThatSelfDescribes(): boolean;
     isEmpty(): boolean;
@@ -60,7 +68,7 @@ export interface WithReadOperations<
     filter(predicate: (value: ThisType<ContainedThingOf<DocumentType>>, index?: number, array?: ThisType<ContainedThingOf<DocumentType>>[]) => boolean): ThisType<ContainedThingOf<DocumentType>>[];
     find(predicate: (value: ThisType<ContainedThingOf<DocumentType>>, index?: number, obj?: ThisType<ContainedThingOf<DocumentType>>[]) => boolean, thisArg?: any): ThisType<ContainedThingOf<DocumentType>> | undefined;
     findIndex(predicate: (value: ThisType<ContainedThingOf<DocumentType>>, index?: number, obj?: ThisType<ContainedThingOf<DocumentType>>[]) => unknown, thisArg?: any): number
-    forEach(callbackfn: (value: ThisType<ContainedThingOf<DocumentType>>, index?: number, array?: ThisType<ContainedThingOf<DocumentType>>[]) => void, thisArg?: any): void;
+    forEach(callbackfn: (value: ContainedThingOf<DocumentType>, index?: number, array?: ContainedThingOf<DocumentType>[]) => void, thisArg?: any): void;
     includes(searchElement: ThisType<ContainedThingOf<DocumentType>>, fromIndex?: number | undefined): boolean;
     indexOf(searchElement: ThisType<ContainedThingOf<DocumentType>>, fromIndex?: number | undefined): number;
     keys(): IterableIterator<number>; // to check

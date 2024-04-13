@@ -7,8 +7,8 @@ import { FactoryImpl as TypeIndexFactory } from './type-index/FactoryImpl.js';
 export { default as Semantizer } from './Semantizer.js';
 
 const documentFactory = new DocumentFactory();
-const document/*: Document<Thing<Statement<Thing<any, any>>, Document<any, any>>, Thing<Statement<Thing<any, any>>, Document<any, any>>>*/ = documentFactory.createDocument();
-const thing/*: Thing<Statement<Thing<any, any>>, Document<any, any>>*/ = document.createThingWithUri("name")
+const document = documentFactory.createDocument();
+const thing = document.createThingWithUri("name")
     .createStatement("ex:predicate", "value")
     .createStatement("ex:predicate2", "value2");
 
@@ -24,7 +24,7 @@ const typeIndexDocument = typeIndexFactory.createDocument();
 typeIndexDocument.createThingToSelfDescribe();
 typeIndexDocument.createThingWithUri("test")
     .createStatement("solid:pred1", "solid:value1")
-    .createStatement("solid:pred2", "solid:value2")
+    .createStatement("solid:pred2", "solid:value2");
 
 typeIndexDocument.createRegistration("dfc-b:Catalog", "noname")
     .addInstance("http://example.org/instance");

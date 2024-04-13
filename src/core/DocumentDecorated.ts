@@ -1,5 +1,5 @@
 import { Context } from "./Context";
-import { ContainedThingOf, Document, DocumentBase, DocumentReadonly, SelfDescribingThingOf, WithReadOperations } from "./Document";
+import { ContainedThingOf, Document, DocumentBase, DocumentReadonly, InputOf, SelfDescribingThingOf, WithReadOperations } from "./Document";
 import Factory, { FactoryForCopying } from "./Factory";
 import Resource from "./Resource";
 import { Statement, StatementReadonly } from "./Statement";
@@ -141,9 +141,9 @@ export class DocumentDecorated<
 >
 implements Document<DocumentType, DocumentTypeReadonly> {
     
-    protected _wrapped: DocumentType; //<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>>;
+    protected _wrapped: Document<DocumentType, DocumentTypeReadonly>; // Specific document implementation like DocumentImpl<TypeIndex, TypeIndexReadonly>
 
-    public constructor(wrapped: DocumentType) { //<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>>) {
+    public constructor(wrapped: Document<DocumentType, DocumentTypeReadonly>) { //<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>>) {
         this._wrapped = wrapped;
     }
     
@@ -152,7 +152,7 @@ implements Document<DocumentType, DocumentTypeReadonly> {
     }
 
     public getFactory(): Factory<Document<DocumentType, DocumentTypeReadonly>> {
-        return this.getWrappedDocument().getFactory() as Factory<this>;
+        return this.getWrappedDocument().getFactory(); // as Factory<this>;
     }
 
     public toCopy(): this {
@@ -232,7 +232,7 @@ implements Document<DocumentType, DocumentTypeReadonly> {
         return this.getWrappedDocument().createThingWithUri(nameHintOrUri);
     }
 
-    protected getWrappedDocument(): DocumentType { //<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>> {
+    protected getWrappedDocument(): Document<DocumentType, DocumentTypeReadonly> { //<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>> {
         return this._wrapped;
     }
 
@@ -244,7 +244,7 @@ implements Document<DocumentType, DocumentTypeReadonly> {
         return this.getWrappedDocument().getContext();
     }
 
-    public getThingThatSelfDescribes(): ThisType<SelfDescribingThingOf<DocumentType>> | undefined {
+    public getThingThatSelfDescribes(): SelfDescribingThingOf<DocumentType> | undefined {
         return this.getWrappedDocument().getThingThatSelfDescribes();// as SelfDescribingThingOf<DocumentType> | undefined;
     }
 
@@ -313,7 +313,7 @@ implements Document<DocumentType, DocumentTypeReadonly> {
     }
 
     public forEach(callbackfn: (value: ContainedThingOf<DocumentType>, index?: number | undefined, array?: ContainedThingOf<DocumentType>[] | undefined) => void, thisArg?: any): void {
-        return this.getWrappedDocument().forEach(callbackfn as (value: ThisType<ContainedThingOf<DocumentType>>, index?: number | undefined, array?: ThisType<ContainedThingOf<DocumentType>>[] | undefined) => void);
+        return this.getWrappedDocument().forEach(callbackfn);// as (value: ThisType<ContainedThingOf<DocumentType>>, index?: number | undefined, array?: ThisType<ContainedThingOf<DocumentType>>[] | undefined) => void);
     }
 
     public includes(searchElement: ThisType<ContainedThingOf<DocumentType>>, fromIndex?: number | undefined): boolean {

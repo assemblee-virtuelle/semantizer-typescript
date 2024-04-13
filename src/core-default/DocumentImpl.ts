@@ -7,7 +7,7 @@ import { Thing, ThingBase, ThingReadonly } from "../core/Thing.js";
 import { FactoryImpl } from "./FactoryImpl.js";
 
 export class DocumentImpl<
-    DocumentType extends Document<any, any>, //DocumentBase<Thing<Statement<any>, any>, any>, any>,
+    DocumentType extends DocumentBase<any, any>, //DocumentBase<Thing<Statement<any>, any>, any>, any>,
     DocumentTypeReadonly extends DocumentBase<ThingReadonly<StatementReadonly<any>, any>, ThingReadonly<StatementReadonly<any>, any>> // DocumentReadonly<any, any>
 >
 implements Document<DocumentType, DocumentTypeReadonly> {

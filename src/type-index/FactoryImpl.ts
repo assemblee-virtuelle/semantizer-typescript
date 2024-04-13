@@ -2,22 +2,15 @@ import { DocumentImpl } from "../core-default/DocumentImpl.js";
 import StatementImpl from "../core-default/StatementImpl.js";
 import ThingImpl from "../core-default/ThingImpl.js";
 import { Context } from "../core/Context";
-import { ContainedThingOf, Document, DocumentBase, SelfDescribingThingOf, StatementOf } from "../core/Document";
+import { ContainedThingOf, SelfDescribingThingOf, StatementOf } from "../core/Document";
 import { Factory } from "../core/Factory";
 import Resource from "../core/Resource";
-import { Statement, StatementReadonly } from "../core/Statement.js";
-import { Thing, ThingReadonly } from "../core/Thing.js";
+import { Statement } from "../core/Statement.js";
 import ThingWithHelpersMixin from "../thing-helpers/ThingWithHelpersMixin.js";
-import { TypeIndex, TypeIndexReadonly, TypeIndexSelfDescribingThing, TypeIndexSelfDescribingThingReadonly } from "./TypeIndex";
+import { TypeIndex, TypeIndexReadonly } from "./TypeIndex";
 import { TypeIndexImpl } from "./TypeIndexImpl.js";
-import { TypeIndexRegistration, TypeIndexRegistrationReadonly } from "./TypeIndexRegistration.js";
+import { TypeIndexRegistration } from "./TypeIndexRegistration.js";
 import TypeIndexRegistrationImpl from "./TypeIndexRegistrationImpl.js";
-
-type StatementType = Statement<Thing<any, any>>;
-type ThingType = Thing<StatementType, Document<any, any>>;
-type DocRead = DocumentBase<ThingReadonly<StatementReadonly<any>, any>, ThingReadonly<StatementReadonly<any>, any>>;
-type Doc = Document<DocumentBase<ThingType, ThingType>, DocRead>;
-//type Doc = Document<TypeIndexRegistration, TypeIndexSelfDescribingThing, TypeIndexRegistrationReadonly, TypeIndexSelfDescribingThingReadonly>;
 
 const ThingWithHelpers = ThingWithHelpersMixin(ThingImpl);
 

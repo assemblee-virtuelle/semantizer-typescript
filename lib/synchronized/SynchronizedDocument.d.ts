@@ -8,7 +8,7 @@ export interface SynchronizedDocument {
 export interface LocalDocument extends SynchronizedDocument {
     save(): void;
 }
-export interface DistantDocument<T extends Document<any, any>> extends SynchronizedDocument {
+export interface DistantDocument<T extends Document<any, any, any, any>> extends SynchronizedDocument {
     toLocalCopy(): LocalDocument & T;
 }
 export default SynchronizedDocument;

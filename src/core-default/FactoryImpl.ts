@@ -1,6 +1,6 @@
 import { Context } from "../core/Context";
-import { ContainedThingOf, Document, DocumentBase, DocumentReadonly } from "../core/Document";
-import Factory, { FactoryForCopying, InputOf } from "../core/Factory";
+import { ContainedThingOf, Document, DocumentBase, DocumentReadonly, InputOf } from "../core/Document";
+import Factory, { FactoryForCopying } from "../core/Factory";
 import Resource from "../core/Resource";
 import { Statement, StatementReadonly } from "../core/Statement";
 import { Thing, ThingReadonly } from "../core/Thing";

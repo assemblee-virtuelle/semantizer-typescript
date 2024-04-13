@@ -1,4 +1,4 @@
-import { Document, DocumentReadonly } from "../core/Document";
+import { Document, DocumentBase, DocumentReadonly } from "../core/Document";
 import { Statement, StatementReadonly } from "../core/Statement";
 import { Thing, ThingBase, ThingReadonly } from "../core/Thing";
 import { TypeIndexRegistration, TypeIndexRegistrationReadonly } from "./TypeIndexRegistration";
@@ -8,12 +8,12 @@ export interface WithReadOperations<ContainedThing extends ThingBase<any>> {
 export interface WithWriteOperations<ContainedThing extends ThingBase<any>> {
     createRegistration(forClass?: string, nameHintOrUri?: string): ContainedThing;
 }
-export type TypeIndex<ContainedThing extends Thing<Statement<any>, any>, SelfDescribingThing extends Thing<Statement<any>, any>, ContainedThingReadonly extends ThingReadonly<any, any>, SelfDescribingThingReadonly extends ThingReadonly<any, any>> = Document<ContainedThing, SelfDescribingThing, ContainedThingReadonly, SelfDescribingThingReadonly> & WithReadOperations<ContainedThing> & WithWriteOperations<ContainedThing>;
-export type TypeIndexReadonly<ContainedThing extends ThingReadonly<any, any>, SelfDescribingThing extends ThingReadonly<any, any>, ContainedThingWritable extends Thing<Statement<any>, any>, SelfDescribingThingWritable extends Thing<Statement<any>, any>> = DocumentReadonly<ContainedThing, SelfDescribingThing, ContainedThingWritable, SelfDescribingThingWritable> & WithReadOperations<ContainedThing>;
-export type TypeIndexDocument = TypeIndex<TypeIndexRegistration, TypeIndexSelfDescribingThing, TypeIndexRegistrationReadonly, TypeIndexSelfDescribingThingReadonly>;
-export type TypeIndexDocumentReadonly = TypeIndexReadonly<TypeIndexRegistrationReadonly, TypeIndexSelfDescribingThingReadonly, TypeIndexRegistration, TypeIndexSelfDescribingThing>;
-export interface TypeIndexSelfDescribingThing extends Thing<Statement<TypeIndexSelfDescribingThing>, TypeIndexDocument> {
+export type TypeIndexBase = DocumentBase<TypeIndexRegistration, TypeIndexSelfDescribingThing>;
+export type TypeIndexBaseReadonly = DocumentBase<TypeIndexRegistrationReadonly, TypeIndexSelfDescribingThingReadonly>;
+export type TypeIndex = Document<TypeIndexBase, TypeIndexBaseReadonly> & WithReadOperations<TypeIndexRegistration> & WithWriteOperations<TypeIndexRegistration>;
+export type TypeIndexReadonly = DocumentReadonly<TypeIndexBaseReadonly, TypeIndexBase> & WithReadOperations<TypeIndexRegistrationReadonly>;
+export interface TypeIndexSelfDescribingThing extends Thing<Statement<TypeIndexSelfDescribingThing>, TypeIndex> {
 }
-export interface TypeIndexSelfDescribingThingReadonly extends ThingReadonly<StatementReadonly<TypeIndexSelfDescribingThingReadonly>, TypeIndexDocumentReadonly> {
+export interface TypeIndexSelfDescribingThingReadonly extends ThingReadonly<StatementReadonly<TypeIndexSelfDescribingThingReadonly>, TypeIndexReadonly> {
 }
 //# sourceMappingURL=TypeIndex.d.ts.map

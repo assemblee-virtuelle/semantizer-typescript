@@ -30,12 +30,12 @@ export interface WithWriteOperations<ContainedStatement extends StatementBase = 
 export interface WithCreateOperations {
     createStatement(about: string, value: string | Resource, datatype?: string, language?: string): this;
 }
-export interface WithCopyOperations {
-    toCopyReadonly<DocumentType extends DocumentReadonly<any, any, any, any>>(): ContainedThingOf<DocumentType>;
+export interface WithCopyOperations<DocumentType extends Document<any, any>> {
+    toCopyReadonly(): ContainedThingOf<DocumentType>;
 }
-export interface WithCopyWritableOperations {
-    toCopyWritable<DocumentType extends Document<any, any, any, any>>(): ContainedThingOf<DocumentType>;
+export interface WithCopyWritableOperations<DocumentType extends Document<any, any> | DocumentReadonly<any, any>> {
+    toCopyWritable(): ContainedThingOf<DocumentType>;
 }
-export type Thing<ContainedStatement extends Statement<any>, DocumentType extends Document<any, any, any, any>> = ThingBase<ContainedStatement> & WithDocument<DocumentType> & WithReadOperations & WithWriteOperations<ContainedStatement> & WithCreateOperations & WithCopyOperations & WithCopyWritableOperations;
-export type ThingReadonly<ContainedStatement extends StatementReadonly<any>, DocumentType extends DocumentReadonly<ThingReadonly<ContainedStatement, any>, ThingReadonly<ContainedStatement, any>, any, any>> = ThingBase<ContainedStatement> & WithDocument<DocumentType> & WithReadOperations & WithCopyWritableOperations;
+export type Thing<ContainedStatement extends Statement<any>, DocumentType extends Document<any, any>> = ThingBase<ContainedStatement> & WithDocument<DocumentType> & WithReadOperations & WithWriteOperations<ContainedStatement> & WithCreateOperations & WithCopyOperations<DocumentType> & WithCopyWritableOperations<DocumentType>;
+export type ThingReadonly<ContainedStatement extends StatementReadonly<any>, DocumentType extends DocumentReadonly<any, any>> = ThingBase<ContainedStatement> & WithDocument<DocumentType> & WithReadOperations & WithCopyWritableOperations<DocumentType>;
 //# sourceMappingURL=Thing.d.ts.map

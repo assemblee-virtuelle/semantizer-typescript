@@ -1,15 +1,16 @@
 import { Context } from "../core/Context";
-import { ContainedThingOf, Document, DocumentReadonly } from "../core/Document";
+import { ContainedThingOf, Document, DocumentBase, DocumentReadonly } from "../core/Document";
 import Factory, { FactoryForCopying } from "../core/Factory";
 import Resource from "../core/Resource";
 import { Statement, StatementReadonly } from "../core/Statement";
 import { Thing, ThingReadonly } from "../core/Thing";
 type StatementType = Statement<Thing<any, any>>;
 type StatementTypeReadonly = StatementReadonly<ThingReadonly<any, any>>;
-type ThingType = Thing<StatementType, Document<any, any, any, any>>;
-type ThingTypeReadonly = ThingReadonly<StatementTypeReadonly, DocumentReadonly<any, any, any, any>>;
-type DocumentType = Document<ThingType, ThingType, ThingTypeReadonly, ThingTypeReadonly>;
-type DocumentTypeReadonly = DocumentReadonly<ThingTypeReadonly, ThingTypeReadonly, ThingType, ThingType>;
+type ThingType = Thing<StatementType, Document<any, any>>;
+type ThingTypeReadonly = ThingReadonly<StatementTypeReadonly, DocumentReadonly<any, any>>;
+type DocRead = DocumentBase<ThingReadonly<StatementReadonly<any>, any>, ThingReadonly<StatementReadonly<any>, any>>;
+type DocumentType = Document<DocumentBase<ThingType, ThingType>, DocRead>;
+type DocumentTypeReadonly = DocumentReadonly<DocRead, DocumentType>;
 export declare class FactoryImpl implements Factory<DocumentType> {
     createDocument(uri?: string, context?: Context): DocumentType;
     createDocumentReadonly(document: DocumentType): DocumentTypeReadonly;
@@ -18,7 +19,7 @@ export declare class FactoryImpl implements Factory<DocumentType> {
     createThingWithoutUri(document: DocumentType, nameHint?: string): ThingType;
     createStatement(thing: ContainedThingOf<DocumentType>, about: string, value: string | Resource, datatype?: string | Resource, language?: string): StatementType;
 }
-export declare class FactoryImplForCopying implements FactoryForCopying<DocumentType, DocumentTypeReadonly> {
+export declare class FactoryImplForCopying implements FactoryForCopying<DocumentType> {
     createDocument(document: DocumentType): DocumentTypeReadonly;
     createThingToDescribeDocument(thing: ThingType): ThingTypeReadonly;
     createThing(thing: ThingType): ThingTypeReadonly;

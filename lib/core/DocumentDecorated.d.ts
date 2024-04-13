@@ -1,15 +1,18 @@
 import { Context } from "./Context";
-import { ContainedThingOf, ContainedThingOfReadonly, Document, DocumentBase, DocumentReadonly, SelfDescribingThingOf, SelfDescribingThingOfReadonly } from "./Document";
+import { ContainedThingOf, Document, DocumentBase, SelfDescribingThingOf } from "./Document";
 import Factory, { FactoryForCopying } from "./Factory";
 import Resource from "./Resource";
-export declare class DocumentDecorated<DocumentType extends Document<any, any, any, any>> implements Document<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>, ContainedThingOfReadonly<DocumentType>, SelfDescribingThingOfReadonly<DocumentType>> {
-    protected _wrapped: DocumentType;
-    constructor(wrapped: DocumentType);
-    getFactoryForCopying(): FactoryForCopying<DocumentBase<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>>, DocumentReadonly<ContainedThingOfReadonly<DocumentType>, SelfDescribingThingOfReadonly<DocumentType>, ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>>>;
-    getFactory(): Factory<Document<ContainedThingOf<DocumentType>, SelfDescribingThingOf<DocumentType>, ContainedThingOfReadonly<DocumentType>, SelfDescribingThingOfReadonly<DocumentType>>>;
+import { StatementReadonly } from "./Statement";
+import { ThingReadonly } from "./Thing";
+export declare class DocumentDecorated<DocumentType extends Document<any, any>, //DocumentBase<Thing<Statement<any>, any>, any>, any>,
+DocumentTypeReadonly extends DocumentBase<ThingReadonly<StatementReadonly<any>, any>, ThingReadonly<StatementReadonly<any>, any>>> implements Document<DocumentType, DocumentTypeReadonly> {
+    protected _wrapped: Document<DocumentType, DocumentTypeReadonly>;
+    constructor(wrapped: Document<DocumentType, DocumentTypeReadonly>);
+    getFactoryForCopying(): FactoryForCopying<Document<DocumentType, DocumentTypeReadonly>>;
+    getFactory(): Factory<Document<DocumentType, DocumentTypeReadonly>>;
     toCopy(): this;
-    toCopyReadonly<DocumentCopied extends DocumentReadonly<any, any, any, any>>(): DocumentCopied;
-    toCopyWritable<DocumentCopied extends Document<any, any, any, any>>(): DocumentCopied;
+    toCopyReadonly(): DocumentTypeReadonly;
+    toCopyWritable(): DocumentType;
     createThingToSelfDescribe(): SelfDescribingThingOf<DocumentType>;
     createThingWithoutUri(nameHint?: string | undefined): ContainedThingOf<DocumentType>;
     add(thing: ContainedThingOf<DocumentType>): this;
@@ -25,8 +28,8 @@ export declare class DocumentDecorated<DocumentType extends Document<any, any, a
     splice(start: number, deleteCount?: number | undefined, ...items: ContainedThingOf<DocumentType>[]): this;
     union(other: DocumentType): this;
     createThingWithUri(nameHintOrUri?: string): ContainedThingOf<DocumentType>;
-    protected getWrappedDocument(): DocumentType;
-    get(uri: string | Resource): ContainedThingOf<DocumentType> | undefined;
+    protected getWrappedDocument(): Document<DocumentType, DocumentTypeReadonly>;
+    get(uri: string | Resource): ThisType<ContainedThingOf<DocumentType>> | undefined;
     getContext(): Context | undefined;
     getThingThatSelfDescribes(): SelfDescribingThingOf<DocumentType> | undefined;
     has(thing: string | Resource): boolean;
@@ -36,23 +39,23 @@ export declare class DocumentDecorated<DocumentType extends Document<any, any, a
     toStream(): string;
     [Symbol.iterator](): Iterator<ContainedThingOf<DocumentType>>;
     getUri(): string;
-    at(index: number): ContainedThingOf<DocumentType> | undefined;
+    at(index: number): ThisType<ContainedThingOf<DocumentType>> | undefined;
     contains(other: this): boolean;
-    count(callbackfn?: (thing: ContainedThingOf<DocumentType>, document?: ThisType<this>) => boolean): number;
+    count(callbackfn?: (thing: ThisType<ContainedThingOf<DocumentType>>, document?: ThisType<this>) => boolean): number;
     difference(other: this): this;
     equals(other: this): boolean;
-    every(predicate: (value: ContainedThingOf<DocumentType>, index?: number | undefined, array?: ContainedThingOf<DocumentType>[] | undefined) => boolean, thisArg?: any): boolean;
-    filter(predicate: (value: ContainedThingOf<DocumentType>, index?: number | undefined, array?: ContainedThingOf<DocumentType>[] | undefined) => boolean): ContainedThingOf<DocumentType>[];
-    find(predicate: (value: ContainedThingOf<DocumentType>, index?: number | undefined, obj?: ContainedThingOf<DocumentType>[] | undefined) => boolean, thisArg?: any): ContainedThingOf<DocumentType> | undefined;
-    findIndex(predicate: (value: ContainedThingOf<DocumentType>, index?: number | undefined, obj?: ContainedThingOf<DocumentType>[] | undefined) => unknown, thisArg?: any): number;
+    every(predicate: (value: ThisType<ContainedThingOf<DocumentType>>, index?: number | undefined, array?: ThisType<ContainedThingOf<DocumentType>>[] | undefined) => boolean, thisArg?: any): boolean;
+    filter(predicate: (value: ThisType<ContainedThingOf<DocumentType>>, index?: number | undefined, array?: ThisType<ContainedThingOf<DocumentType>>[] | undefined) => boolean): ThisType<ContainedThingOf<DocumentType>>[];
+    find(predicate: (value: ThisType<ContainedThingOf<DocumentType>>, index?: number | undefined, obj?: ThisType<ContainedThingOf<DocumentType>>[] | undefined) => boolean, thisArg?: any): ThisType<ContainedThingOf<DocumentType>> | undefined;
+    findIndex(predicate: (value: ThisType<ContainedThingOf<DocumentType>>, index?: number | undefined, obj?: ThisType<ContainedThingOf<DocumentType>>[] | undefined) => unknown, thisArg?: any): number;
     forEach(callbackfn: (value: ContainedThingOf<DocumentType>, index?: number | undefined, array?: ContainedThingOf<DocumentType>[] | undefined) => void, thisArg?: any): void;
-    includes(searchElement: ContainedThingOf<DocumentType>, fromIndex?: number | undefined): boolean;
-    indexOf(searchElement: ContainedThingOf<DocumentType>, fromIndex?: number | undefined): number;
+    includes(searchElement: ThisType<ContainedThingOf<DocumentType>>, fromIndex?: number | undefined): boolean;
+    indexOf(searchElement: ThisType<ContainedThingOf<DocumentType>>, fromIndex?: number | undefined): number;
     keys(): IterableIterator<number>;
-    map(callbackfn: (value: ContainedThingOf<DocumentType>, index: number, array: ContainedThingOf<DocumentType>[]) => unknown, thisArg?: any): unknown[];
-    reduce(callbackfn: (previousValue: ContainedThingOf<DocumentType>, currentValue: ContainedThingOf<DocumentType>, currentIndex: number, array: ContainedThingOf<DocumentType>[]) => ContainedThingOf<DocumentType>): ContainedThingOf<DocumentType>;
+    map(callbackfn: (value: ThisType<ContainedThingOf<DocumentType>>, index: number, array: ThisType<ContainedThingOf<DocumentType>>[]) => unknown, thisArg?: any): unknown[];
+    reduce(callbackfn: (previousValue: ThisType<ContainedThingOf<DocumentType>>, currentValue: ThisType<ContainedThingOf<DocumentType>>, currentIndex: number, array: ThisType<ContainedThingOf<DocumentType>>[]) => ThisType<ContainedThingOf<DocumentType>>): ThisType<ContainedThingOf<DocumentType>>;
     slice(start?: number | undefined, end?: number | undefined): this;
-    some(predicate: (value: ContainedThingOf<DocumentType>, index: number, array: ContainedThingOf<DocumentType>[]) => unknown, thisArg?: any): boolean;
+    some(predicate: (value: ThisType<ContainedThingOf<DocumentType>>, index: number, array: ThisType<ContainedThingOf<DocumentType>>[]) => unknown, thisArg?: any): boolean;
 }
 export default DocumentDecorated;
 //# sourceMappingURL=DocumentDecorated.d.ts.map

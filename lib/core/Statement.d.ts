@@ -1,5 +1,5 @@
-import { Document, DocumentReadonly, StatementOf } from "./Document";
 import { ThingBase, ThingReadonly } from "./Thing";
+export type StatementOf<T extends ThingBase<any>> = T extends ThingBase<infer TypeArg> ? TypeArg : never;
 export interface StatementBase {
     toCopy(): ThisType<this>;
 }
@@ -17,12 +17,12 @@ export interface WithWriteOperations {
     setDatatype(): this;
     setLanguage(): this;
 }
-export interface WithCopyOperations {
-    toCopyReadonly<DocumentType extends DocumentReadonly<any, any, any, any>>(): StatementOf<DocumentType>;
+export interface WithCopyOperations<ThingType extends ThingBase<any>> {
+    toCopyReadonly(): StatementOf<ThingType>;
 }
-export interface WithCopyWritableOperations {
-    toCopyWritable<DocumentType extends Document<any, any, any, any>>(): StatementOf<DocumentType>;
+export interface WithCopyWritableOperations<ThingType extends ThingBase<any>> {
+    toCopyWritable(): StatementOf<ThingType>;
 }
-export type Statement<ThingType extends ThingBase<any>> = StatementBase & WithThing<ThingType> & WithReadOperations & WithWriteOperations & WithCopyOperations & WithCopyWritableOperations;
-export type StatementReadonly<ThingType extends ThingReadonly<StatementReadonly<ThingType>, any>> = StatementBase & WithThing<ThingType> & WithReadOperations & WithCopyWritableOperations;
+export type Statement<ThingType extends ThingBase<any>> = StatementBase & WithThing<ThingType> & WithReadOperations & WithWriteOperations & WithCopyOperations<ThingType> & WithCopyWritableOperations<ThingType>;
+export type StatementReadonly<ThingType extends ThingReadonly<StatementReadonly<ThingType>, any>> = StatementBase & WithThing<ThingType> & WithReadOperations & WithCopyWritableOperations<ThingType>;
 //# sourceMappingURL=Statement.d.ts.map

@@ -1,6 +1,5 @@
-import { Document, DocumentReadonly, StatementOf } from "../core/Document";
 import Resource from "../core/Resource";
-import { Statement } from "../core/Statement";
+import { Statement, StatementOf } from "../core/Statement";
 import { ThingBase } from "../core/Thing";
 export declare class StatementImpl<ThingType extends ThingBase<any>> implements Statement<ThingType> {
     private _thing;
@@ -13,8 +12,8 @@ export declare class StatementImpl<ThingType extends ThingBase<any>> implements 
     setValue(): this;
     setDatatype(): this;
     setLanguage(): this;
-    toCopyReadonly<DocumentType extends DocumentReadonly<any, any, any, any>>(): StatementOf<DocumentType>;
-    toCopyWritable<DocumentType extends Document<any, any, any, any>>(): StatementOf<DocumentType>;
+    toCopyReadonly(): StatementOf<ThingType>;
+    toCopyWritable(): StatementOf<ThingType>;
     getThing(): ThingType;
     getSubject(): string;
     getValue(): string;

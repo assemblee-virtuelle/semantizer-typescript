@@ -15,18 +15,16 @@ export interface WithWriteOperations<
     createRegistration(forClass?: string, nameHintOrUri?: string): ContainedThing;
 }
 
-type TypeIndexBase = DocumentBase<TypeIndexRegistration, TypeIndexSelfDescribingThing> &
+export type TypeIndexBase = DocumentBase<TypeIndexRegistration, TypeIndexSelfDescribingThing>;
+
+export type TypeIndexBaseReadonly = DocumentBase<TypeIndexRegistrationReadonly, TypeIndexSelfDescribingThingReadonly>;
+
+export type TypeIndex = Document<TypeIndexBase, TypeIndexBaseReadonly> &
     WithReadOperations<TypeIndexRegistration> & 
     WithWriteOperations<TypeIndexRegistration>;
 
-type TypeIndexBaseReadonly = DocumentBase<TypeIndexRegistrationReadonly, TypeIndexSelfDescribingThingReadonly> &
+export type TypeIndexReadonly = DocumentReadonly<TypeIndexBaseReadonly, TypeIndexBase> & 
     WithReadOperations<TypeIndexRegistrationReadonly>;
 
-export type TypeIndex = Document<TypeIndexBase, TypeIndexReadonly> & TypeIndexBase;
-
-export type TypeIndexReadonly = DocumentReadonly<TypeIndexBaseReadonly, TypeIndexBase>
-
-//export type TypeIndexDocument = TypeIndex<TypeIndexRegistration, TypeIndexSelfDescribingThing, TypeIndexRegistrationReadonly, TypeIndexSelfDescribingThingReadonly>;
-//export type TypeIndexDocumentReadonly = TypeIndexReadonly<TypeIndexRegistrationReadonly, TypeIndexSelfDescribingThingReadonly, TypeIndexRegistration, TypeIndexSelfDescribingThing>;
 export interface TypeIndexSelfDescribingThing extends Thing<Statement<TypeIndexSelfDescribingThing>, TypeIndex> {}
 export interface TypeIndexSelfDescribingThingReadonly extends ThingReadonly<StatementReadonly<TypeIndexSelfDescribingThingReadonly>, TypeIndexReadonly> {}
