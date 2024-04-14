@@ -1,10 +1,10 @@
 import Resource from "../core/Resource";
-import Thing from "../core/Thing";
+import { Thing } from "../core/Thing";
 import ThingWithHelpers from "./ThingWithHelpers";
 
 type Constructor<T = {}> = new (...args: any[]) => T;
 
-export function ThingWithHelpersMixin<TBase extends Constructor<Thing>>(Base: TBase) {
+export function ThingWithHelpersMixin<TBase extends Constructor<Thing<any, any>>>(Base: TBase) {
     return class Helpers extends Base implements ThingWithHelpers {
 
         ////////////// Adder //////////////
@@ -12,7 +12,7 @@ export function ThingWithHelpersMixin<TBase extends Constructor<Thing>>(Base: TB
             return this.addStatement(about, value, datatype, language);
         }
 
-        public addStatementFrom(source: Thing): Helpers {
+        public addStatementFrom(source: Thing<any, any>): Helpers {
             throw new Error("Method not implemented.");
         }
 

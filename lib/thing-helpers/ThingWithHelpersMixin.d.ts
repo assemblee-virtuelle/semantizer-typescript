@@ -1,10 +1,10 @@
 import Resource from "../core/Resource";
-import Thing from "../core/Thing";
+import { Thing } from "../core/Thing";
 type Constructor<T = {}> = new (...args: any[]) => T;
-export declare function ThingWithHelpersMixin<TBase extends Constructor<Thing>>(Base: TBase): {
+export declare function ThingWithHelpersMixin<TBase extends Constructor<Thing<any, any>>>(Base: TBase): {
     new (...args: any[]): {
         addStatement(about: string, value: string | Resource, datatype?: string, language?: string): any;
-        addStatementFrom(source: Thing): any;
+        addStatementFrom(source: Thing<any, any>): any;
         addRdfTypeStatement(value: string): any;
         addBooleanStatement(about: string, value: boolean): any;
         addStringStatement(about: string, value: string, locale?: string): any;
@@ -47,6 +47,27 @@ export declare function ThingWithHelpersMixin<TBase extends Constructor<Thing>>(
         removeDateStatement(about: string, value: Date): any;
         removeDatetimeStatement(about: string, value: Date): any;
         removeTimeStatement(about: string, value: Date): any;
+        getContext(): import("../core/Context").Context | undefined;
+        hasUri(): boolean;
+        count(): number;
+        isEmpty(): boolean;
+        equals(other: import("../core/Thing").ThingBase<any>): boolean;
+        get(property: string): any;
+        getAll(property: string): any[];
+        toCopy(): ThisType<any>;
+        [Symbol.iterator](): Iterator<any, any, undefined>;
+        getUri(): string;
+        getDocument(): any;
+        forEach(callbackfn: (value: any, index: number, array: any[]) => void, thisArg?: any): void;
+        map(callbackfn: (value: any, index: number, array: any[]) => unknown, thisArg?: any): unknown[];
+        filter(predicate: (value: any, index: number, array: any[]) => boolean): any[];
+        add(statement: any): ThisType<any>;
+        remove(about: string, value: string | Resource, datatype?: string | undefined, language?: string | undefined): ThisType<any>;
+        removeAll(about: string): ThisType<any>;
+        set(about: string, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): ThisType<any>;
+        createStatement(about: string, value: string | Resource, datatype?: string | undefined, language?: string | undefined): any;
+        toCopyReadonly(): import("../core/Thing").ThingBase<any>;
+        toCopyWritable(): import("../core/Thing").ThingBase<any>;
     };
 } & TBase;
 export default ThingWithHelpersMixin;

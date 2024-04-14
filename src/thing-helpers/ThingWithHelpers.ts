@@ -1,7 +1,7 @@
-import Thing from "../core/Thing";
+import { Thing } from "../core/Thing";
 
 export interface ThingWithHelpers {
-    addStatementFrom(source: Thing): ThingWithHelpers;
+    addStatementFrom(source: Thing<any, any>): ThingWithHelpers;
     addRdfTypeStatement(value: string): ThingWithHelpers;
     addBooleanStatement(about: string, value: boolean): ThingWithHelpers;
     addStringStatement(about: string, value: string, locale?: string): ThingWithHelpers;

@@ -1,4 +1,4 @@
-import Context from "./core/Context";
+import { Context } from "./core/Context";
 import { DocumentBase } from "./core/Document";
 
 export enum ImportFormat {
@@ -8,7 +8,7 @@ export enum ImportFormat {
 export interface ResourceCreationParameters {
     semanticId?: string;
     semanticType?: string | string[];
-    semanticContainedResource?: DocumentBase | DocumentBase[];
+    semanticContainedResource?: DocumentBase<any, any> | DocumentBase<any, any>[];
 }
 
 export interface Semantizer {
@@ -18,7 +18,7 @@ export interface Semantizer {
     expand(uri: string): string;
     shorten(uri: string): string;
 
-    createDocument(uri?: string, context?: Context): DocumentBase; // TODO: drop fragment in name
+    createDocument(uri?: string, context?: Context): DocumentBase<any, any>; // TODO: drop fragment in name
     // getDocument(uri: string): Promise<Document>;
 
     /**
@@ -27,8 +27,8 @@ export interface Semantizer {
      * @param format Default is ImportFormat.JSON_LD.
      * @param callback A callback function called each time a resource is imported.
      */
-    importDocument(input: string, format?: ImportFormat, callback?: Function): Promise<DocumentBase>;
-    exportDocument(...input: DocumentBase[]): Promise<string>;
+    importDocument(input: string, format?: ImportFormat, callback?: Function): Promise<DocumentBase<any, any>>;
+    exportDocument(...input: DocumentBase<any, any>[]): Promise<string>;
     //saveResource(semanticId: string): SemanticResource;
 
 }
