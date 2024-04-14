@@ -28,7 +28,8 @@ export interface WithWriteOperations {
 }
 
 // Don't know if the template argument might be useful in some cases, 
-// so I let it for now.
+// so I let it for now. For instance, it might be used to add a 
+// TypeIndesx registration to any other document than a TypeIndex.
 export interface TypeIndexRegistration<
     DocumentType extends Document<any, any> = TypeIndex
 > extends Thing<Statement<TypeIndexRegistration<any>>, DocumentType>, 

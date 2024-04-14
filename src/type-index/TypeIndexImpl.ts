@@ -19,7 +19,6 @@ implements WithWriteOperations<TypeIndexRegistration> {
     
     public createRegistration(forClass?: string, nameHintOrUri?: string | undefined): TypeIndexRegistration {
         const registration = this.createThingWithUri(nameHintOrUri);
-        //console.log(registration instanceof TypeIndexRegistrationImpl);
         if (forClass)
             registration.addForClass(forClass);
         return registration;

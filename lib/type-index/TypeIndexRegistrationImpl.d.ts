@@ -1,10 +1,9 @@
-import ThingImpl from "../core-default/ThingImpl.js";
+import { ThingDecorated } from "../core/Decorated.js";
 import Resource from "../core/Resource";
 import { Statement } from "../core/Statement";
 import { TypeIndex } from "./TypeIndex";
 import { TypeIndexRegistration } from "./TypeIndexRegistration.js";
-export declare class TypeIndexRegistrationImpl extends ThingImpl<Statement<TypeIndexRegistrationImpl>, TypeIndex> implements TypeIndexRegistration {
-    constructor(document: TypeIndex, uri?: string);
+export declare class TypeIndexRegistrationImpl extends ThingDecorated<Statement<TypeIndexRegistration>, TypeIndex> implements TypeIndexRegistration<TypeIndex> {
     isForClass(forClass: string): boolean;
     protected getUriFromStringOrResource(stringOrResource: string | Resource): string;
     protected getFirstElementOrNull(collection: string[]): string | null;

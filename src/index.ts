@@ -1,11 +1,13 @@
 import DocumentImpl from './core-default/DocumentImpl.js';
 import { FactoryImpl as DocumentFactory } from './core-default/FactoryImpl.js';
+import StatementImpl from './core-default/StatementImpl.js';
 import ThingImpl from './core-default/ThingImpl.js';
 import { Document, DocumentBase, DocumentDecorated, DocumentReadonly, SelfDescribingThingOf, StatementOf } from './core/Document.js';
 import { Statement, StatementReadonly } from './core/Statement.js';
 import { Thing, ThingReadonly } from './core/Thing.js';
 import { FactoryImpl as TypeIndexFactory } from './type-index/FactoryImpl.js';
 import { TypeIndex, TypeIndexReadonly, TypeIndexSelfDescribingThing } from './type-index/TypeIndex.js';
+import { TypeIndexRegistration } from './type-index/TypeIndexRegistration.js';
 
 export { default as Semantizer } from './Semantizer.js';
 
@@ -26,7 +28,7 @@ document.forEach(thing => thing.forEach(s => console.log(s.getSubject(), s.getVa
 type t = StatementOf<Document<TypeIndex, TypeIndexReadonly>>;
 type t2 = SelfDescribingThingOf<TypeIndex>
 
-const typeIndexFactory = new TypeIndexFactory(DocumentImpl, ThingImpl<Statement<TypeIndexSelfDescribingThing>, TypeIndex>) ;//DocumentImpl<TypeIndex, TypeIndexReadonly>);
+const typeIndexFactory = new TypeIndexFactory(DocumentImpl, ThingImpl<Statement<TypeIndexRegistration>, TypeIndex>, ThingImpl<Statement<TypeIndexSelfDescribingThing>, TypeIndex>, StatementImpl) ;//DocumentImpl<TypeIndex, TypeIndexReadonly>);
 
 
 const typeIndexDocument = typeIndexFactory.createDocument();
