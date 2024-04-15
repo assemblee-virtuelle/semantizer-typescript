@@ -30,7 +30,6 @@ type t2 = SelfDescribingThingOf<TypeIndex>
 
 const typeIndexFactory = new TypeIndexFactory(DocumentImpl, ThingImpl<Statement<TypeIndexRegistration>, TypeIndex>, ThingImpl<Statement<TypeIndexSelfDescribingThing>, TypeIndex>, StatementImpl) ;//DocumentImpl<TypeIndex, TypeIndexReadonly>);
 
-
 const typeIndexDocument = typeIndexFactory.createDocument();
 typeIndexDocument.createThingToSelfDescribe();
 typeIndexDocument.createThingWithUri("test")

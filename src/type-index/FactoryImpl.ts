@@ -8,6 +8,7 @@ import { TypeIndex, TypeIndexReadonly, TypeIndexSelfDescribingThing } from "./Ty
 import { TypeIndexImpl } from "./TypeIndexImpl.js";
 import { TypeIndexRegistration } from "./TypeIndexRegistration.js";
 import TypeIndexRegistrationImpl from "./TypeIndexRegistrationImpl.js";
+import { TYPE_INDEX } from "./Vocabulary";
 
 //const ThingWithHelpers = ThingWithHelpersMixin(ThingImpl);
 
@@ -53,8 +54,8 @@ export class FactoryImpl<
     
     public createThingToDescribeDocument(document: TypeIndex): SelfDescribingThingOf<TypeIndex> {
         return new this._WrappedSelfDescribingThingImpl(document)
-            .createStatement("rdf:type", "solid:TypeIndex")
-            .createStatement("rdf:type", "solid:ListedDocument");
+            .createStatement("rdf:type", TYPE_INDEX.TypeIndex)
+            .createStatement("rdf:type", TYPE_INDEX.ListedDocument);
         // return new ThingWithHelpers(typeIndex, ThingType.ForDescribing)
         //     .addRdfTypeStatement("solid:TypeIndex")
         //     .addRdfTypeStatement("solid:ListedDocument");

@@ -3,6 +3,7 @@ import Resource from "../core/Resource";
 import { Statement } from "../core/Statement";
 import { TypeIndex } from "./TypeIndex";
 import { TypeIndexRegistration } from "./TypeIndexRegistration.js";
+import { TYPE_INDEX } from "./Vocabulary.js";
 
 export class TypeIndexRegistrationImpl
 extends ThingDecorated<Statement<TypeIndexRegistration>, TypeIndex> 
@@ -27,19 +28,19 @@ implements TypeIndexRegistration<TypeIndex> {
 
     public addForClass(forClass: string | Resource): this {
         //this.add("solid:forClass", this.getUriFromStringOrResource(forClass));
-        this.createStatement("solid:forClass", forClass);
+        this.createStatement(TYPE_INDEX.forClass, forClass);
         return this;
     }
 
     public addInstance(instance: string | Resource): this {
         //this.add("solid:instance", this.getUriFromStringOrResource(instance));
-        this.createStatement("solid:instance", instance);
+        this.createStatement(TYPE_INDEX.instance, instance);
         return this;
     }
 
     public addInstanceContainer(instanceContainer: string | Resource): this {
         //this.add("solid:instanceContainer", this.getUriFromStringOrResource(instanceContainer));
-        this.createStatement("solid:instanceContainer", instanceContainer);
+        this.createStatement(TYPE_INDEX.instanceContainer, instanceContainer);
         return this;
     }
 
@@ -72,22 +73,22 @@ implements TypeIndexRegistration<TypeIndex> {
     }
  
     public removeForClass(forClass: string): this {
-        this.remove("solid:forClass", forClass);
+        this.remove(TYPE_INDEX.forClass, forClass);
         return this;
     }
 
     public removeInstance(instance: string): this {
-        this.remove("solid:forClass", instance);
+        this.remove(TYPE_INDEX.forClass, instance);
         return this;
     }
 
     public removeInstanceContainer(instanceContainer: string): this {
-        this.remove("solid:forClass", instanceContainer);
+        this.remove(TYPE_INDEX.forClass, instanceContainer);
         return this;
     }
 
     public removeForClassAll(): this {
-        this.removeAll("solid:forClass");
+        this.removeAll(TYPE_INDEX.forClass);
         return this;
     }
 
