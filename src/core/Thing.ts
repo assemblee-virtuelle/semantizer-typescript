@@ -14,6 +14,9 @@ export interface ThingBase<
     get(property: string): ContainedStatement | undefined;
     getAll(property: string): ContainedStatement[];
     [Symbol.iterator](): Iterator<ContainedStatement>;
+    registerCallbackForStatementAdded(callbackfn: (value: string) => void): ThisType<this>;
+    registerCallbackForStatementRemoved(callbackfn: (datatype: string) => void): ThisType<this>;
+    registerCallbackForStatementChanged(callbackfn: (language: string) => void): ThisType<this>;
     toCopy(): ThisType<this>;
 }
 

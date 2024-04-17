@@ -3,6 +3,9 @@ import { ThingBase, ThingReadonly } from "./Thing";
 export type StatementOf<T extends ThingBase<any>> = T extends ThingBase<infer TypeArg> ? TypeArg : never;
 
 export interface StatementBase {
+    registerCallbackForValueChanged(callbackfn: (value: string) => void): ThisType<this>;
+    registerCallbackForDatatypeChanged(callbackfn: (datatype: string) => void): ThisType<this>;
+    registerCallbackForLanguageChanged(callbackfn: (language: string) => void): ThisType<this>;
     toCopy(): ThisType<this>;
 }
 
@@ -26,19 +29,19 @@ export interface WithWriteOperations {
 }
 
 export interface WithCopyOperations<
-    ThingType extends ThingBase<any> // SHould be Thing?
+    ThingType extends ThingBase<any> // Should be Thing?
 > {
     toCopyReadonly(): StatementOf<ThingType>;
 }
 
 export interface WithCopyWritableOperations<
-    ThingType extends ThingBase<any> // SHould be Thing or ThingReadonly
+    ThingType extends ThingBase<any> // Should be Thing or ThingReadonly
 > {
     toCopyWritable(): StatementOf<ThingType>;
 }
 
 export type Statement<
-    ThingType extends ThingBase<any> // SHould be Thing?
+    ThingType extends ThingBase<any> // Should be Thing?
 > = StatementBase & 
     WithThing<ThingType> & 
     WithReadOperations & 
