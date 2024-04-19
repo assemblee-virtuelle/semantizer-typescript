@@ -1,10 +1,8 @@
-import { Context } from "./Context";
-import { ContainedThingOf, Document, DocumentReadonly, InputOf, OutputOf, SelfDescribingThingOf, StatementOf } from "./Document";
-import Resource from "./Resource";
-import { Thing } from "./Thing";
+import { Context, Resource } from "./Common";
+import { ContainedThingOf, Document, DocumentBase, InputOf, OutputOf, SelfDescribingThingOf, StatementOf } from "./Document";
 
 export interface Factory<
-    DocumentType extends Document<any, any> | DocumentReadonly<any, any>
+    DocumentType extends Document<any, any>// | DocumentWritable<any, any>
 > {
     createDocument(uri?: string, context?: Context): DocumentType;
 
@@ -15,16 +13,16 @@ export interface Factory<
     createStatement(thing: ContainedThingOf<DocumentType>, about: string, value: string | Resource, datatype?: string | Resource, language?: string): StatementOf<DocumentType>;
 }
 
-export interface FactoryForCopying<
-    DocumentType extends Document<any, any> | DocumentReadonly<any, any>
-> {
-    createDocument(document: DocumentType): OutputOf<DocumentType>;
+// export interface FactoryForCopying<
+//     DocumentType extends Document<any, any> | DocumentWritable<any, any>
+// > {
+//     createDocument(document: DocumentType): OutputOf<DocumentType>;
 
-    /*createThingToDescribeDocument(thing: SelfDescribingThingOf<InputDocument>): SelfDescribingThingOf<OutputDocument>;
-    createThing(thing: ContainedThingOf<InputDocument>): ContainedThingOf<OutputDocument>;
-    createThingWithoutUri(thing: ContainedThingOf<InputDocument>): ContainedThingOf<OutputDocument>;
+//     /*createThingToDescribeDocument(thing: SelfDescribingThingOf<InputDocument>): SelfDescribingThingOf<OutputDocument>;
+//     createThing(thing: ContainedThingOf<InputDocument>): ContainedThingOf<OutputDocument>;
+//     createThingWithoutUri(thing: ContainedThingOf<InputDocument>): ContainedThingOf<OutputDocument>;
 
-    createStatement(statement: StatementOf<InputDocument>): StatementOf<OutputDocument>;*/
-}
+//     createStatement(statement: StatementOf<InputDocument>): StatementOf<OutputDocument>;*/
+// }
 
 export default Factory;

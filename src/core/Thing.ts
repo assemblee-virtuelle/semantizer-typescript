@@ -1,79 +1,42 @@
-import { Context } from "./Context";
-import { ContainedThingOf, Document, DocumentBase, DocumentReadonly } from "./Document";
-import Resource from "./Resource";
-import { Statement, StatementBase, StatementReadonly } from "./Statement";
+import { ResourceCollection, ResourceCollectionWritable, Copyable, CopyableToReadonly, CopyableToWritable, Resource, WithContext, WithContextWritable, WithOwner } from "./Common";
+import { Document, DocumentBase, OutputOf } from "./Document";
+import { Statement, StatementBase } from "./Statement";
 
-export interface ThingBase<
-    ContainedStatement extends StatementBase
-> extends Resource, Iterable<ContainedStatement> {
-    getContext(): Context | undefined;
-    hasUri(): boolean;
-    count(): number;
-    isEmpty(): boolean;
-    equals(other: ThingBase<any>): boolean;
-    get(property: string): ContainedStatement | undefined;
-    getAll(property: string): ContainedStatement[];
-    [Symbol.iterator](): Iterator<ContainedStatement>;
+export interface ThingBase<ContainedStatement extends StatementBase> extends Resource {}
+
+export interface WithNotifications {
     registerCallbackForStatementAdded(callbackfn: (value: string) => void): ThisType<this>;
     registerCallbackForStatementRemoved(callbackfn: (datatype: string) => void): ThisType<this>;
     registerCallbackForStatementChanged(callbackfn: (language: string) => void): ThisType<this>;
-    toCopy(): ThisType<this>;
 }
 
-export interface WithDocument<
-    DocumentType extends DocumentBase<any, any>
-> {
-    getDocument(): DocumentType;
-}
-
-export interface WithReadOperations<
-    ContainedStatement extends StatementBase //<any> | StatementReadonly<any> = Statement<any>
-> {
-    forEach(callbackfn: (value: ContainedStatement, index: number, array: ContainedStatement[]) => void, thisArg?: any): void;
-    map(callbackfn: (value: ContainedStatement, index: number, array: ContainedStatement[]) => unknown, thisArg?: any): unknown[];
-    filter(predicate: (value: ContainedStatement, index: number, array: ContainedStatement[]) => boolean): ContainedStatement[];
-}
-
-export interface WithWriteOperations<
-    ContainedStatement extends StatementBase = StatementBase
-> {
-    add(statement: ContainedStatement): ThisType<this>;
-    remove(about: string, value: string | Resource, datatype?: string, language?: string): ThisType<this>;
-    removeAll(about: string): ThisType<this>;
-    set(about: string, value: string, oldValue?: string, datatype?: string, language?: string): ThisType<this>;
-}
-
-export interface WithCreateOperations {
+export interface WithWriteOperations {
     createStatement(about: string, value: string | Resource, datatype?: string, language?: string): this
-}
-
-export interface WithCopyOperations<
-    DocumentType extends Document<any, any>
-> {
-    toCopyReadonly(): ContainedThingOf<DocumentType>;
-}
-
-export interface WithCopyWritableOperations<
-    DocumentType extends Document<any, any> | DocumentReadonly<any, any>
-> {  
-    toCopyWritable(): ContainedThingOf<DocumentType>;
+    removeStatement(about: string, value: string | Resource, datatype?: string, language?: string): ThisType<this>;
+    removeStatementAll(about: string): ThisType<this>;
+    // save(): Thing; // save to document
+    setStatement(about: string, value: string, oldValue?: string, datatype?: string, language?: string): ThisType<this>;
 }
 
 export type Thing<
-    ContainedStatement extends StatementBase, //<any>, 
+    ContainedStatement extends Statement<any>, //, any>, 
     DocumentType extends Document<any, any> 
-> = ThingBase<ContainedStatement> &  
-    WithDocument<DocumentType> & 
-    WithReadOperations<ContainedStatement> & 
-    WithWriteOperations<ContainedStatement> & 
-    WithCreateOperations & 
-    WithCopyOperations<DocumentType> & 
-    WithCopyWritableOperations<DocumentType>; // should be removed
+> = Resource & 
+    ResourceCollection<ContainedStatement> & 
+    WithContext & 
+    WithOwner<DocumentType> & 
+    // CopyableToWritable<OutputOf<DocumentType>> & 
+    Copyable;
 
-export type ThingReadonly<
-    ContainedStatement extends StatementReadonly<any>,
-    DocumentType extends DocumentReadonly<any, any> // TODO: add constraint ThingReadonly<ContainedStatement, any>, ThingReadonly<ContainedStatement, any>>
-> = ThingBase<ContainedStatement> & 
-    WithDocument<DocumentType> & 
-    WithReadOperations<ContainedStatement> & 
-    WithCopyWritableOperations<DocumentType>;
+// export type ThingWritable<
+//     ContainedStatement extends StatementWritable<any, any>, 
+//     DocumentType extends DocumentWritable<any, any> 
+// > = ThingBase<ContainedStatement> &  
+//     //ResourceCollection<ContainedStatement> & 
+//     ResourceCollectionWritable<ContainedStatement> & 
+//     WithContext & 
+//     WithContextWritable & 
+//     WithOwner<DocumentType> & 
+//     Copyable & 
+//     CopyableToReadonly<OutputOf<DocumentType>> & 
+//     WithWriteOperations;

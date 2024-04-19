@@ -35,9 +35,13 @@ typeIndexDocument.createThingToSelfDescribe();
 typeIndexDocument.createThingWithUri("test")
 .createStatement("solid:pred1", "solid:value1")
 .createStatement("solid:pred2", "solid:value2");
+//.save();
 
 typeIndexDocument.createRegistration("dfc-b:Catalog", "noname")
     .addInstance("http://example.org/instance");
+
+// const reg = typeIndexDocument.createRegistration("dfc-b:Catalog", "noname"); // return a readonly interface or just a Resource?
+// typeIndexDocument.addInstance(reg, "http://example.org/instance");
 
 typeIndexDocument.getThingThatSelfDescribes()?.forEach(s => console.log(s.getSubject(), s.getValue()));
 

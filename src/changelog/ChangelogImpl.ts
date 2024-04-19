@@ -1,14 +1,12 @@
 import DocumentDecoratedImpl from "../core/Decorated";
-import { ContainedThingOf, Document, DocumentBase } from "../core/Document";
-import { StatementReadonly } from "../core/Statement";
-import { ThingReadonly } from "../core/Thing";
+import { ContainedThingOf, DocumentWritable } from "../core/Document";
 
 // TODO: encapsulates collections in Document, expose only readonly.
 export class ChangelogImpl<
-    DocumentType extends Document<any, any>,
-    DocumentTypeReadonly extends DocumentBase<ThingReadonly<StatementReadonly<any>, any>, ThingReadonly<StatementReadonly<any>, any>>,
+    DocumentType extends DocumentWritable<any, any>,
+    //DocumentTypeReadonly extends DocumentBase<ThingReadonly<StatementReadonly<any>, any>, ThingReadonly<StatementReadonly<any>, any>>,
     // ChangelogImpl
-> extends DocumentDecoratedImpl<DocumentType, DocumentTypeReadonly> {
+> extends DocumentDecoratedImpl<DocumentType> {
 
     // private changelog: ChangelogImpl;
 

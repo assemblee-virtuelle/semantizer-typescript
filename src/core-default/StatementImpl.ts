@@ -1,9 +1,9 @@
-import Resource from "../core/Resource";
+import { Resource } from "../core/Common";
 import { Statement, StatementOf } from "../core/Statement";
-import { ThingBase } from "../core/Thing";
+import { Thing, ThingBase } from "../core/Thing";
 
 export class StatementImpl<
-    ThingType extends ThingBase<any>
+    ThingType extends Thing<any, any>
 > implements Statement<ThingType> { 
 
     private _thing: ThingType;
@@ -18,6 +18,16 @@ export class StatementImpl<
         this._value = typeof value === 'string'? value: value.getUri();
         this._datatype = typeof datatype === 'string'? datatype: datatype?.getUri();
         this._language = language;
+    }
+    
+    getOwner(): ThingType {
+        throw new Error("Method not implemented.");
+    }
+    equals(other: Statement<ThingType>): boolean {
+        throw new Error("Method not implemented.");
+    }
+    difference(other: Statement<ThingType>): Statement<ThingType> {
+        throw new Error("Method not implemented.");
     }
 
     public toCopy(): this {

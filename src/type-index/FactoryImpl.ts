@@ -1,4 +1,4 @@
-import { Context } from "../core/Context";
+import { Context } from "../core/ContextImpl";
 import { ContainedThingOf, Document, SelfDescribingThingOf, StatementOf } from "../core/Document";
 import { Factory } from "../core/Factory";
 import Resource from "../core/Resource";
