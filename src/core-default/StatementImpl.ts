@@ -1,6 +1,6 @@
 import { Resource } from "../core/Common";
-import { Statement, StatementOf } from "../core/Statement";
-import { Thing, ThingBase } from "../core/Thing";
+import { Statement } from "../core/Statement";
+import { StatementOf, Thing, ThingBase } from "./Thing";
 
 export class StatementImpl<
     ThingType extends Thing<any, any>
@@ -19,7 +19,7 @@ export class StatementImpl<
         this._datatype = typeof datatype === 'string'? datatype: datatype?.getUri();
         this._language = language;
     }
-    
+
     getOwner(): ThingType {
         throw new Error("Method not implemented.");
     }

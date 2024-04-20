@@ -3,7 +3,7 @@ import { ContainedThingOf, DocumentWritable } from "../core/Document";
 
 // TODO: encapsulates collections in Document, expose only readonly.
 export class ChangelogImpl<
-    DocumentType extends DocumentWritable<any, any>,
+    DocumentType extends DocumentWritable<any>,
     //DocumentTypeReadonly extends DocumentBase<ThingReadonly<StatementReadonly<any>, any>, ThingReadonly<StatementReadonly<any>, any>>,
     // ChangelogImpl
 > extends DocumentDecoratedImpl<DocumentType> {

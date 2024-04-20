@@ -1,23 +1,55 @@
 import DocumentDecoratedImpl from "../core/Decorated.js";
-import { Constructor, DocumentBase } from "../core/Document";
-import { TypeIndex, TypeIndexReadonly, WithReadOperations, WithWriteOperations } from "./TypeIndex";
-import { TypeIndexRegistration } from "./TypeIndexRegistration";
-
-export class TypeIndexImplReadOrWrite 
-extends DocumentDecoratedImpl<TypeIndex, TypeIndexReadonly> 
-implements WithReadOperations<TypeIndexRegistration> {
-
-    public forEachOfClass(forClass: string, callbackfn: (value: TypeIndexRegistration, index?: number, array?: TypeIndexRegistration[]) => void, thisArg?: any): void {
-        this.forEach((r, i, a) => r.isForClass(forClass)? callbackfn(r, i, a): null, thisArg);
-    }
-
-}
+import { Statement } from "../core/Document";
+import { TypeIndexStatement, WithReadOperations, WithWriteOperations } from "./TypeIndex";
 
 export class TypeIndexImpl 
-extends TypeIndexImplReadOrWrite 
-implements WithWriteOperations<TypeIndexRegistration> {
+extends DocumentDecoratedImpl<TypeIndexStatement>  
+implements WithReadOperations, WithWriteOperations {
+    getStatementForClass(forClass: string): TypeIndexStatement[] {
+        throw new Error("Method not implemented.");
+    }
+    getStatementForInstance(instance: string): TypeIndexStatement[] {
+        throw new Error("Method not implemented.");
+    }
+    getStatementForInstanceContainer(instanceContainer: string): TypeIndexStatement[] {
+        throw new Error("Method not implemented.");
+    }
+    addForClass(forClass: string): this {
+        throw new Error("Method not implemented.");
+    }
+    addInstance(instance: string): this {
+        throw new Error("Method not implemented.");
+    }
+    addInstanceContainer(instanceContainer: string): this {
+        throw new Error("Method not implemented.");
+    }
+    setForClass(forClass: string): this {
+        throw new Error("Method not implemented.");
+    }
+    removeForClass(forClass: string): this {
+        throw new Error("Method not implemented.");
+    }
+    removeInstance(instance: string): this {
+        throw new Error("Method not implemented.");
+    }
+    removeInstanceContainer(instanceContainer: string): this {
+        throw new Error("Method not implemented.");
+    }
+    removeForClassAll(): this {
+        throw new Error("Method not implemented.");
+    }
+    removeInstanceAll(): this {
+        throw new Error("Method not implemented.");
+    }
+    removeInstanceContainerAll(): this {
+        throw new Error("Method not implemented.");
+    }
     
-    public createRegistration(forClass?: string, nameHintOrUri?: string | undefined): TypeIndexRegistration {
+    public forEachOfClass(forClass: string, callbackfn: (value: Statement, index?: number, array?: Statement[]) => void, thisArg?: any): void {
+        this.forEach((s, i, a) => s.isForClass(forClass)? callbackfn(s, i, a): null, thisArg);
+    }
+
+    public createRegistration(forClass?: string, nameHintOrUri?: string | undefined): this {
         const registration = this.createThingWithUri(nameHintOrUri);
         if (forClass)
             registration.addForClass(forClass);
@@ -26,10 +58,10 @@ implements WithWriteOperations<TypeIndexRegistration> {
 
 }
 
-export function TypeIndexMixin<TBase extends Constructor<DocumentBase<any, any>>>(Base: TBase) {
-    return TypeIndexImpl;
-}
+// export function TypeIndexMixin<TBase extends Constructor<DocumentBase<any, any>>>(Base: TBase) {
+//     return TypeIndexImpl;
+// }
 
-export function TypeIndexMixinReadonly<TBase extends Constructor<DocumentBase<any, any>>>(Base: TBase) {
-    return TypeIndexImplReadOrWrite;
-}
+// export function TypeIndexMixinReadonly<TBase extends Constructor<DocumentBase<any, any>>>(Base: TBase) {
+//     return TypeIndexImplReadOrWrite;
+// }

@@ -1,7 +1,7 @@
 import { Context, Resource } from "../core/Common.js";
 import { ContainedThingOf, Document } from "../core/Document.js";
 import { Statement } from "../core/Statement.js";
-import { Thing, ThingBase } from "../core/Thing.js";
+import { Thing, ThingBase, ThingWritable } from "./Thing.js";
 
 export enum ThingType {
     ForDescribing,
@@ -12,7 +12,7 @@ export enum ThingType {
 export class ThingImpl<
     ContainedStatement extends Statement<any>,
     DocumentType extends Document<any, any> 
-> implements Thing<ContainedStatement, DocumentType> { 
+> implements ThingWritable<ContainedStatement, DocumentType> { 
 
     private _uri: string;
     private _document: DocumentType;
@@ -25,6 +25,16 @@ export class ThingImpl<
         this._statements = [];
 
         // TODO use factory
+    }
+
+    removeStatement(about: string, value: string | Resource, datatype?: string | undefined, language?: string | undefined): ThisType<this> {
+        throw new Error("Method not implemented.");
+    }
+    removeStatementAll(about: string): ThisType<this> {
+        throw new Error("Method not implemented.");
+    }
+    setStatement(about: string, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): ThisType<this> {
+        throw new Error("Method not implemented.");
     }
     has(resourceOrUri: string | Resource): boolean {
         throw new Error("Method not implemented.");

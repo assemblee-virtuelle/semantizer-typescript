@@ -1,36 +1,28 @@
 import DocumentImpl from './core-default/DocumentImpl.js';
-import { FactoryImpl as DocumentFactory } from './core-default/FactoryImpl.js';
-import StatementImpl from './core-default/StatementImpl.js';
-import ThingImpl from './core-default/ThingImpl.js';
-import { Document, DocumentBase, DocumentDecorated, DocumentReadonly, SelfDescribingThingOf, StatementOf } from './core/Document.js';
-import { Statement, StatementReadonly } from './core/Statement.js';
-import { Thing, ThingReadonly } from './core/Thing.js';
-import { FactoryImpl as TypeIndexFactory } from './type-index/FactoryImpl.js';
-import { TypeIndex, TypeIndexReadonly, TypeIndexSelfDescribingThing } from './type-index/TypeIndex.js';
-import { TypeIndexRegistration } from './type-index/TypeIndexRegistration.js';
+import DocumentDecoratedImpl from './core/Decorated.js';
+import { Document } from './core/Document.js';
+import { TypeIndex, TypeIndexStatement } from './type-index/TypeIndex.js';
+import { TypeIndexImpl } from './type-index/TypeIndexImpl.js';
 
 export { default as Semantizer } from './Semantizer.js';
 
-const documentFactory = new DocumentFactory();
-const document = documentFactory.createDocument();
+const document = new DocumentDecoratedImpl(DocumentImpl);
+const getted = document.getStatement("", "");
 
-const thing = document.createThingWithUri("name")
-    .createStatement("ex:predicate", "value")
-    .createStatement("ex:predicate2", "value2");
+const documentReadonly = document as Document;
+documentReadonly.getStatementAboutSelf("");
 
-// const factoryReadonly = new FactoryImplReadonly();
-// const documentReadonly = factoryReadonly.createDocument();
+document.forEach(s => console.log(s.getSubject(), s.getValue()));
 
-// console.log(document);
+// const typeIndexFactory = new TypeIndexFactory(DocumentImpl, ThingImpl<Statement<TypeIndexRegistration>, TypeIndex>, ThingImpl<Statement<TypeIndexSelfDescribingThing>, TypeIndex>, StatementImpl) ;//DocumentImpl<TypeIndex, TypeIndexReadonly>);
 
-document.forEach(thing => thing.forEach(s => console.log(s.getSubject(), s.getValue())));
+const typeIndexDocument = new TypeIndexImpl(DocumentImpl<TypeIndexStatement>);
+typeIndexDocument.getStatementAboutSelf("").getSubject();
+typeIndexDocument.getStatement("", "").isForClass("");
+typeIndexDocument.deleteContext();
 
-type t = StatementOf<Document<TypeIndex, TypeIndexReadonly>>;
-type t2 = SelfDescribingThingOf<TypeIndex>
+const typeIndexReadonly = typeIndexDocument as TypeIndex;
 
-const typeIndexFactory = new TypeIndexFactory(DocumentImpl, ThingImpl<Statement<TypeIndexRegistration>, TypeIndex>, ThingImpl<Statement<TypeIndexSelfDescribingThing>, TypeIndex>, StatementImpl) ;//DocumentImpl<TypeIndex, TypeIndexReadonly>);
-
-const typeIndexDocument = typeIndexFactory.createDocument();
 typeIndexDocument.createThingToSelfDescribe();
 typeIndexDocument.createThingWithUri("test")
 .createStatement("solid:pred1", "solid:value1")
@@ -51,9 +43,3 @@ typeIndexDocument.forEach(thing => {
     console.log("Thing ", thing.getUri());
     thing.forEach(s => console.log(s.getSubject(), s.getValue()));
 });
-
-// const typeIndexReadonly = typeIndexDocument.getFactoryForCopying().createDocument(typeIndexDocument);
-// const registrationReadonly = typeIndexReadonly.get("");
-
-// const documentReadonly = document.toCopyReadonly();
-// const thingReadonly = documentReadonly.get("");

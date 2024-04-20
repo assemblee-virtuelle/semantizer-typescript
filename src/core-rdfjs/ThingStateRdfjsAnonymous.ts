@@ -1,5 +1,5 @@
 import Resource from "../core/Resource.js";
-import ThingBase from "../core/Thing.js";
+import ThingBase from "../core-default/Thing.js";
 import rdf from 'rdf-ext'
 import ThingStateRdfjsRegular from "./ThingStateRdfjsRegular.js";
 import BlankNodeExt from "rdf-ext/lib/BlankNode";

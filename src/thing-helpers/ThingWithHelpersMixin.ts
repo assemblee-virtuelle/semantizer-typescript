@@ -1,5 +1,5 @@
 import Resource from "../core/Resource";
-import { Thing } from "../core/Thing";
+import { Thing } from "../core-default/Thing";
 import ThingWithHelpers from "./ThingWithHelpers";
 
 type Constructor<T = {}> = new (...args: any[]) => T;

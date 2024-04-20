@@ -1,6 +1,9 @@
-import { ResourceCollection, ResourceCollectionWritable, Copyable, CopyableToReadonly, CopyableToWritable, Resource, WithContext, WithContextWritable, WithOwner } from "./Common";
-import { Document, DocumentBase, OutputOf } from "./Document";
+import { ResourceCollection, ResourceCollectionWritable, Copyable, CopyableToReadonly, CopyableToWritable, Resource, WithContext, WithContextWritable, WithOwner } from "../core/Common";
+import { Document, DocumentBase, OutputOf } from "../core/Document";
 import { Statement, StatementBase } from "./Statement";
+
+type ContainedDocumentOf<T extends Thing<any, any>> = T extends Thing<any, infer TypeArg> ? TypeArg: never;
+export type StatementOf<T extends Thing<any, any>> = T extends Thing<infer TypeArg, any> ? TypeArg : never;
 
 export interface ThingBase<ContainedStatement extends StatementBase> extends Resource {}
 
@@ -27,6 +30,13 @@ export type Thing<
     WithOwner<DocumentType> & 
     // CopyableToWritable<OutputOf<DocumentType>> & 
     Copyable;
+
+export type ThingWritable<
+    ContainedStatement extends Statement<any>, //, any>, 
+    DocumentType extends Document<any, any> 
+    //ThingType extends Thing<any, any>
+> = Thing<ContainedStatement, DocumentType> & //Thing<StatementOf<ThingType>, ContainedDocumentOf<ThingType>>  & 
+    WithWriteOperations;
 
 // export type ThingWritable<
 //     ContainedStatement extends StatementWritable<any, any>, 

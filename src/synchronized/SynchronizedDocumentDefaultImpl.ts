@@ -1,6 +1,6 @@
 import DecoratedDocument, { DecoratedReadonlyDocument } from "../core/DecoratedDocument.js";
 import { Document, DocumentReadonly } from "../core/Document.js";
-import { ThingBase, ThingReadonly, Thing } from "../core/Thing.js";
+import { ThingBase, ThingReadonly, Thing } from "../core-default/Thing.js";
 import { DistantDocument, LocalDocument } from "./SynchronizedDocument.js";
 
 export class LocalDocumentDefaultImpl<
