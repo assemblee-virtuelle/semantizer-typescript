@@ -1,11 +1,54 @@
-import DocumentDecoratedImpl from "../core/Decorated.js";
-import { DocumentWritable, DocumentWritableConstructor, Statement } from "../core/Document";
-import { Changelog, WithChangelog } from "./Changelog";
-export declare class DocumentWithChangelogImpl<ContainedStatement extends Statement = Statement, SelfDescribingStatement extends Statement = Statement> extends DocumentDecoratedImpl<ContainedStatement, SelfDescribingStatement> implements WithChangelog {
-    private _changelog;
-    constructor(wrapped: DocumentWritable<ContainedStatement, SelfDescribingStatement>);
-    createStatement(about: string, value: string): ThisType<this>;
-    getChangelog(): Changelog;
-}
-export declare function DocumentWithChangelogMixin<TBase extends DocumentWritableConstructor<any, any>>(Base: TBase): typeof DocumentWithChangelogImpl;
+import { DocumentWritableConstructor } from "../core/Document";
+import { Changelog } from "./Changelog";
+import { ChangelogImpl } from "./ChangelogImpl.js";
+export declare function DocumentWithChangelogMixin<TBase extends DocumentWritableConstructor<any, any>>(Base: TBase): {
+    new (...args: any[]): {
+        _changelog: ChangelogImpl;
+        createStatement(about: string, value: string): ThisType<any>;
+        getChangelog(): Changelog;
+        addStatement(other: any): ThisType<any>;
+        addStatementAll(others: Iterable<any>): ThisType<any>;
+        createStatementAboutSelf(value: string): ThisType<any>;
+        addStatementAboutSelf(other: any): ThisType<any>;
+        addStatementAboutSelfAll(others: Iterable<any>): ThisType<any>;
+        delete(element: any): ThisType<any>;
+        deleteMatches(uri?: string | import("../core/Common").Resource | undefined, property?: string | undefined, value?: string | undefined): ThisType<any>;
+        pop(): any;
+        reverse(): void;
+        shift(): any;
+        sort(compareFn?: ((a: any, b: any) => number) | undefined): ThisType<any>;
+        splice(start: number, deleteCount?: number | undefined, ...items: any[]): ThisType<any>;
+        getStatement(about: string, property: string): any;
+        getStatementAll(about: string, property: string): any[];
+        getStatementAboutSelf(property: string): any;
+        getStatementAboutSelfAll(property: string): any[];
+        hasStatement(about: string, property: string): boolean;
+        hasStatementAboutSelf(): boolean;
+        at(index: number): any;
+        contains(other: import("../core/Document").Document<any, import("../core/Document").Statement>): boolean;
+        count(): number;
+        every(predicate: (value: any, index?: number | undefined, array?: any[] | undefined) => boolean, thisArg?: any): boolean;
+        filter(predicate: (value: any, index?: number | undefined, array?: any[] | undefined) => boolean): any[];
+        find(predicate: (value: any, index?: number | undefined, obj?: any[] | undefined) => boolean, thisArg?: any): any;
+        findIndex(predicate: (value: any, index?: number | undefined, obj?: any[] | undefined) => unknown, thisArg?: any): number;
+        forEach(callbackfn: (value: any, index?: number | undefined, array?: any[] | undefined) => void, thisArg?: any): void;
+        includes(searchElement: any, fromIndex?: number | undefined): boolean;
+        indexOf(searchElement: any, fromIndex?: number | undefined): number;
+        keys(): IterableIterator<number>;
+        map(callbackfn: (value: any, index?: number | undefined, array?: any[] | undefined) => unknown, thisArg?: any): unknown[];
+        reduce(callbackfn: (previousValue: any, currentValue: any, currentIndex: number, array: any[]) => import("../core/Document").Statement): any;
+        slice(start?: number | undefined, end?: number | undefined): import("../core/Document").Document<import("../core/Document").Statement, import("../core/Document").Statement>;
+        some(predicate: (value: any, index?: number | undefined, array?: any[] | undefined) => unknown, thisArg?: any): boolean;
+        [Symbol.iterator](): Iterator<any, any, undefined>;
+        getUri(): string;
+        hasUri(): boolean;
+        isEmpty(): boolean;
+        getContext(): import("../core/Common").Context | undefined;
+        equals(other: ThisType<any>): boolean;
+        difference(other: ThisType<any>): ThisType<any>;
+        toCopy(): ThisType<any>;
+        deleteContext(): void;
+        setContext(context: import("../core/Common").Context): void;
+    };
+} & TBase;
 //# sourceMappingURL=DocumentWithChangelogImpl.d.ts.map

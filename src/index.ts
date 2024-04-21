@@ -1,10 +1,11 @@
-import { DocumentWithChangelogImpl } from './changelog/DocumentWithChangelogImpl.js';
+import { DocumentWithChangelogMixin } from './changelog/DocumentWithChangelogImpl.js';
 import DocumentImpl from './core-default/DocumentImpl.js';
 import DocumentDecoratedImpl from './core/Decorated.js';
 import { Document, Statement } from './core/Document.js';
-import { DocumentLocalImpl } from './synchronized/DocumentSynchronizedImpl.js';
-import { TypeIndex, TypeIndexStatement } from './type-index/TypeIndex.js';
-import { TypeIndexImpl, TypeIndexLocalImpl } from './type-index/TypeIndexImpl.js';
+import { LocalDocument } from './synchronized/DocumentSynchronized.js';
+import { DocumentLocalMixin } from './synchronized/DocumentSynchronizedImpl.js';
+import { TypeIndex, TypeIndexStatement, TypeIndexWritable } from './type-index/TypeIndex.js';
+import { TypeIndexMixin } from './type-index/TypeIndexImpl.js';
 
 export { default as Semantizer } from './Semantizer.js';
 
@@ -18,7 +19,8 @@ const document = new DocumentDecoratedImpl(new DocumentImpl);
 
 // const typeIndexFactory = new TypeIndexFactory(DocumentImpl, ThingImpl<Statement<TypeIndexRegistration>, TypeIndex>, ThingImpl<Statement<TypeIndexSelfDescribingThing>, TypeIndex>, StatementImpl) ;//DocumentImpl<TypeIndex, TypeIndexReadonly>);
 
-const typeIndexDocument = new TypeIndexImpl(new DocumentImpl<TypeIndexStatement>);
+const TypeIndexImpl = TypeIndexMixin(DocumentImpl);
+const typeIndexDocument = new TypeIndexImpl(); //(new DocumentImpl<TypeIndexStatement>);
 // typeIndexDocument.getStatementAboutSelf("").getSubject();
 // typeIndexDocument.getStatement("", "").isForClass("");
 // typeIndexDocument.deleteContext();
@@ -31,6 +33,10 @@ const typeIndexReadonly = typeIndexDocument as TypeIndex;
 // .createStatement("solid:pred2", "solid:value2");
 //.save();
 
+const TypeIndexWithChangelog = DocumentWithChangelogMixin(TypeIndexImpl);
+const typeIndexWithChangelog = new TypeIndexWithChangelog(); //new TypeIndexImpl(new DocumentImpl<TypeIndexStatement>()));
+typeIndexWithChangelog.getChangelog();
+
 
 console.log("-------");
 
@@ -40,9 +46,10 @@ console.log("-------");
 // const documentWithChangelog = new DocumentWithChangelogImpl(new DocumentImpl);
 // const typeIndexChangelog = new DocumentLocalImpl(new DocumentWithChangelogImpl<TypeIndexStatement>(new DocumentImpl<TypeIndexStatement>));
 
-const typeIndexLocal = new TypeIndexLocalImpl(new DocumentLocalImpl(new DocumentWithChangelogImpl<TypeIndexStatement>(new DocumentImpl<TypeIndexStatement>)));
+const til = DocumentLocalMixin(DocumentWithChangelogMixin(TypeIndexMixin(DocumentImpl)));
 
-typeIndexLocal.saveUpdate();
+const tili = new til(); //new DocumentImpl<TypeIndexStatement>);
+tili.saveUpdate()
 
 // Décoration ou composition ? Ou les deux ?
 // Comment implémenter le type index avec changelog ?
