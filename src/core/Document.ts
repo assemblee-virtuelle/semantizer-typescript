@@ -1,4 +1,5 @@
 import { Comparable, Copyable, Resource, ResourceCollection, WithContext, WithContextWritable } from "./Common";
+import DocumentDecoratedImpl from "./Decorated";
 
 // type ContainedThingOfDocument<T extends Document<any, any>> = T extends Document<infer TypeArg, any> ? TypeArg : never;
 // type ContainedThingOfDocumentWritable<T extends DocumentWritable<any>> = T extends DocumentWritable<infer TypeArg> ? ContainedThingOfDocument<TypeArg> : never;
@@ -43,7 +44,12 @@ export type DocumentConstructor<
 export type DocumentWritableConstructor<
     ContainedStatement extends Statement = Statement,
     SelfDescribingStatement extends Statement = Statement
-> = new () => DocumentWritable<ContainedStatement, SelfDescribingStatement>;
+> = new (...args: any[]) => DocumentWritable<ContainedStatement, SelfDescribingStatement>;
+
+export type DocumentWritableDecoratedConstructor<
+    ContainedStatement extends Statement = Statement,
+    SelfDescribingStatement extends Statement = Statement
+> = new (c: DocumentWritableConstructor<ContainedStatement, SelfDescribingStatement>) => DocumentWritable<ContainedStatement, SelfDescribingStatement>;
 
 export interface Document<
     ContainedStatement extends Statement = Statement,

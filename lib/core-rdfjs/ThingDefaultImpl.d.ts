@@ -1,7 +1,7 @@
 import { ThingDefaultImpl as ThingDefaultImplCore, ThingType } from "../core-default/ThingImpl";
 import DocumentBase from "../core/Document";
 import ThingState from "./ThingState";
-import ThingBase from "../core/Thing";
+import ThingBase from "../core-default/Thing";
 import { RdfjsDatasetSerializable } from "./RdfjsDatasetSerializable";
 import DatasetCore from "@rdfjs/dataset/DatasetCore";
 export declare class ThingDefaultImpl extends ThingDefaultImplCore implements ThingBase, RdfjsDatasetSerializable {

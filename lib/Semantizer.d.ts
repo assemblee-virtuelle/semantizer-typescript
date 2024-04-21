@@ -1,4 +1,4 @@
-import { Context } from "./core/Context";
+import { Context } from "./core/ContextImpl";
 import { DocumentBase } from "./core/Document";
 export declare enum ImportFormat {
     JSON_LD = "jsonld"

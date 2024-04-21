@@ -1,5 +1,5 @@
 import { Resource, Context } from "./Common";
-import { Document, DocumentWritable, DocumentWritableConstructor, Statement } from "./Document";
+import { Document, DocumentWritable, DocumentWritableConstructor, DocumentWritableDecoratedConstructor, Statement } from "./Document";
 
 // type DocumentInternal<DocumentPublic extends Document<Thing<any, DocumentPublic>, Thing<any, DocumentPublic>>> = DocumentWritable<Document<ThingWritable<StatementTypeOf<ContainedThingOf<DocumentPublic>>, DocumentPublic>, ThingWritable<StatementTypeOf<SelfDescribingThingOf<DocumentPublic>>, DocumentPublic>>>;
 
@@ -23,8 +23,8 @@ export class DocumentDecoratedImpl<
     
     protected _wrapped: DocumentWritable<ContainedStatement, SelfDescribingStatement>;
 
-    public constructor(DocumentConstructor: DocumentWritableConstructor<ContainedStatement, SelfDescribingStatement>) { 
-        this._wrapped = new DocumentConstructor();
+    public constructor(wrapped: DocumentWritable<ContainedStatement, SelfDescribingStatement>) { //DocumentConstructor: DocumentWritableConstructor<ContainedStatement, SelfDescribingStatement>) { //} | DocumentWritableDecoratedConstructor<ContainedStatement, SelfDescribingStatement>) { 
+        this._wrapped = wrapped; //new DocumentConstructor();
     }
 
     createStatement(about: string, value: string): ThisType<this> {

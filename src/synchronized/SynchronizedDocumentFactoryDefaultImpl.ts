@@ -4,8 +4,8 @@ import Thing, { ThingReadonly } from "../core-default/Thing";
 import TypeIndex, { TypeIndexReadonly } from "../type-index/TypeIndex";
 import TypeIndexMixin, { ReadonlyTypeIndexMixin } from "../type-index/TypeIndexImpl";
 import TypeIndexRegistration, { TypeIndexRegistrationReadonly } from "../type-index/TypeIndexRegistration";
-import { LocalDocumentDefaultImpl, DistantDocumentDefaultImpl } from "./SynchronizedDocumentDefaultImpl";
-import { DistantDocument, LocalDocument } from "./SynchronizedDocument";
+import { LocalDocumentDefaultImpl, DistantDocumentDefaultImpl } from "./DocumentSynchronizedImpl";
+import { DistantDocument, LocalDocument } from "./DocumentSynchronized";
 
 type Constructor<T = {}> = new (...args: any[]) => T;
 type MixinFunction<Type extends DocumentBase<any, any>> = <TSuper extends Document<any, any>>(base: Constructor<TSuper>) => Constructor<TSuper & Type>;

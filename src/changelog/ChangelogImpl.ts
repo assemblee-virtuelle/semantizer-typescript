@@ -1,19 +1,43 @@
-import DocumentDecoratedImpl from "../core/Decorated";
-import { ContainedThingOf, DocumentWritable } from "../core/Document";
+import { Statement } from "../core/Document";
+import { Changelog, ChangelogWritable } from "./Changelog";
 
-// TODO: encapsulates collections in Document, expose only readonly.
-export class ChangelogImpl<
-    DocumentType extends DocumentWritable<any>,
-    //DocumentTypeReadonly extends DocumentBase<ThingReadonly<StatementReadonly<any>, any>, ThingReadonly<StatementReadonly<any>, any>>,
-    // ChangelogImpl
-> extends DocumentDecoratedImpl<DocumentType> {
+export class ChangelogImpl implements ChangelogWritable {
 
-    // private changelog: ChangelogImpl;
+    private _added: Statement[];
+    private _updated: Statement[];
+    private _deleted: Statement[];
 
-    public add(thing: ContainedThingOf<DocumentType>): this {
-        const added = super.add(thing);
-        // this.changelog.add(thing);
-        return added as this;
+    constructor() {
+        this._added = [];
+        this._updated = [];
+        this._deleted = [];
+    }
+
+    getAdded(): Statement[] {
+        return this._added;
+    }
+
+    getUpdated(): Statement[] {
+        return this._updated;
+    }
+
+    getDeleted(): Statement[] {
+        return this._deleted;
+    }
+
+    registerAdded(statement: Statement): Changelog<Statement> {
+        this._added.push(statement);
+        return this;
+    }
+
+    registerUpdated(statement: Statement): Changelog<Statement> {
+        this._updated.push(statement);
+        return this;
+    }
+
+    registerDeleted(statement: Statement): Changelog<Statement> {
+        this._deleted.push(statement);
+        return this;
     }
 
 }

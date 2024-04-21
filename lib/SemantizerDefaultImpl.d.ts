@@ -1,4 +1,4 @@
-import { Context } from "./core/Context.js";
+import { Context } from "./core/ContextImpl.js";
 import { Semantizer, ImportFormat } from "./Semantizer.js";
 import { DocumentBase } from "./core/Document.js";
 import SemantizerFactory from "./SemantizerFactory.js";

@@ -1,43 +1,38 @@
-import { DocumentBase, StatementOf, WithWriteOperations as DocumentWriteOperations, DocumentReadonly } from "../core/Document";
-
-type DocumentWithWriteOperations<
-    DocumentType extends DocumentBase<any, any>
-> = DocumentBase<any, any> & DocumentWriteOperations<DocumentType>;
+import { Document, Statement } from "../core/Document";
 
 export interface WithChangelog<
-    DocumentType extends DocumentBase<any, any>
+    StatementType extends Statement = Statement,
 > {
-    getChangelog(): ChangelogReadonly<DocumentType>;
+    getChangelog(): Changelog<StatementType>;
 }
 
 export interface WithReadOperations<
-    DocumentType extends DocumentBase<any, any>
+    StatementType extends Statement = Statement,
 > {
-    getAdded(): StatementOf<DocumentType>[];
-    getUpdated(): StatementOf<DocumentType>[];
-    getDeleted(): StatementOf<DocumentType>[];
+    getAdded(): StatementType[];
+    getUpdated(): StatementType[];
+    getDeleted(): StatementType[];
 }
 
 export interface WithWriteOperations<
-    DocumentType extends DocumentWithWriteOperations<DocumentType>
+    StatementType extends Statement = Statement,
 > {
-    registerAdded(statement: StatementOf<DocumentType>): Changelog<DocumentType>;
-    registerUpdated(statement: StatementOf<DocumentType>): Changelog<DocumentType>;
-    registerDeleted(statement: StatementOf<DocumentType>): Changelog<DocumentType>;
+    registerAdded(statement: StatementType): Changelog<StatementType>;
+    registerUpdated(statement: StatementType): Changelog<StatementType>;
+    registerDeleted(statement: StatementType): Changelog<StatementType>;
 }
 
 export interface WithCreateOperations<
-    DocumentType extends DocumentWithWriteOperations<DocumentType>
+    DocumentType extends Document<any, any>
 > {
     applyTo(document: DocumentType): DocumentType;
 }
 
 export type Changelog<
-    DocumentType extends DocumentWithWriteOperations<DocumentType>
-> = WithReadOperations<DocumentType> & 
-    WithWriteOperations<DocumentType> & 
-    WithCreateOperations<DocumentType>;
+    StatementType extends Statement = Statement,
+> = WithReadOperations<StatementType>;
 
-export type ChangelogReadonly<
-    DocumentType extends DocumentBase<any, any>
-> = WithReadOperations<DocumentType>;
+export type ChangelogWritable<
+    StatementType extends Statement = Statement,
+> = WithReadOperations<StatementType> & 
+    WithWriteOperations<StatementType>;

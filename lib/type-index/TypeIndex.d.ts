@@ -1,19 +1,26 @@
-import { Document, DocumentBase, DocumentReadonly } from "../core/Document";
-import { Statement, StatementReadonly } from "../core/Statement";
-import { Thing, ThingBase, ThingReadonly } from "../core/Thing";
-import { TypeIndexRegistration, TypeIndexRegistrationReadonly } from "./TypeIndexRegistration";
-export interface WithReadOperations<ContainedThing extends ThingBase<any>> {
-    forEachOfClass(forClass: string, callbackfn: (value: ContainedThing, index?: number, array?: ContainedThing[]) => void, thisArg?: any): void;
+import { Document, DocumentWritable, Statement } from "../core/Document";
+export interface TypeIndexStatement extends Statement {
+    isForClass(forClass: string): boolean;
 }
-export interface WithWriteOperations<ContainedThing extends ThingBase<any>> {
-    createRegistration(forClass?: string, nameHintOrUri?: string): ContainedThing;
+export interface WithReadOperations {
+    getStatementForClass(forClass: string): TypeIndexStatement[];
+    getStatementForInstance(instance: string): TypeIndexStatement[];
+    getStatementForInstanceContainer(instanceContainer: string): TypeIndexStatement[];
+    forEachOfClass(forClass: string, callbackfn: (value: Statement, index?: number, array?: Statement[]) => void, thisArg?: any): void;
 }
-export type TypeIndexBase = DocumentBase<TypeIndexRegistration, TypeIndexSelfDescribingThing>;
-export type TypeIndexBaseReadonly = DocumentBase<TypeIndexRegistrationReadonly, TypeIndexSelfDescribingThingReadonly>;
-export type TypeIndex = Document<TypeIndexBase, TypeIndexBaseReadonly> & WithReadOperations<TypeIndexRegistration> & WithWriteOperations<TypeIndexRegistration>;
-export type TypeIndexReadonly = DocumentReadonly<TypeIndexBaseReadonly, TypeIndexBase> & WithReadOperations<TypeIndexRegistrationReadonly>;
-export interface TypeIndexSelfDescribingThing extends Thing<Statement<TypeIndexSelfDescribingThing>, TypeIndex> {
+export interface WithWriteOperations {
+    createRegistration(forClass?: string, nameHintOrUri?: string): ThisType<this>;
+    addForClass(forClass: string): this;
+    addInstance(instance: string): this;
+    addInstanceContainer(instanceContainer: string): this;
+    setForClass(forClass: string): this;
+    removeForClass(forClass: string): this;
+    removeInstance(instance: string): this;
+    removeInstanceContainer(instanceContainer: string): this;
+    removeForClassAll(): this;
+    removeInstanceAll(): this;
+    removeInstanceContainerAll(): this;
 }
-export interface TypeIndexSelfDescribingThingReadonly extends ThingReadonly<StatementReadonly<TypeIndexSelfDescribingThingReadonly>, TypeIndexReadonly> {
-}
+export type TypeIndex = Document<TypeIndexStatement> & WithReadOperations;
+export type TypeIndexWritable = DocumentWritable<TypeIndexStatement> & WithReadOperations & WithWriteOperations;
 //# sourceMappingURL=TypeIndex.d.ts.map

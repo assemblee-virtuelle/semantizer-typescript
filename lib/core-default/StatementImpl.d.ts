@@ -1,13 +1,16 @@
-import Resource from "../core/Resource";
-import { Statement, StatementOf } from "../core/Statement";
-import { ThingBase } from "../core/Thing";
-export declare class StatementImpl<ThingType extends ThingBase<any>> implements Statement<ThingType> {
+import { Resource } from "../core/Common";
+import { Statement } from "../core/Statement";
+import { StatementOf, Thing } from "./Thing";
+export declare class StatementImpl<ThingType extends Thing<any, any>> implements Statement<ThingType> {
     private _thing;
     private _subject;
     private _value;
     private _datatype?;
     private _language?;
     constructor(thing: ThingType, subject: string, value: string | Resource, datatype?: string | Resource, language?: string);
+    getOwner(): ThingType;
+    equals(other: Statement<ThingType>): boolean;
+    difference(other: Statement<ThingType>): Statement<ThingType>;
     toCopy(): this;
     setValue(): this;
     setDatatype(): this;

@@ -4,7 +4,7 @@ import LiteralExt from "rdf-ext/lib/Literal";
 import NamedNodeExt from "rdf-ext/lib/NamedNode";
 import QuadExt from "rdf-ext/lib/Quad";
 import Resource from "../core/Resource.js";
-import ThingBase from "../core/Thing.js";
+import ThingBase from "../core-default/Thing.js";
 import { ThingStateDefaultBase } from "./ThingStateDefaultBase.js";
 export declare class ThingStateRdfjsRegular extends ThingStateDefaultBase {
     private _rdfjsDataset;

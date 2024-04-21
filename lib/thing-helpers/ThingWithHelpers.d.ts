@@ -1,4 +1,4 @@
-import { Thing } from "../core/Thing";
+import { Thing } from "../core-default/Thing";
 export interface ThingWithHelpers {
     addStatementFrom(source: Thing<any, any>): ThingWithHelpers;
     addRdfTypeStatement(value: string): ThingWithHelpers;
