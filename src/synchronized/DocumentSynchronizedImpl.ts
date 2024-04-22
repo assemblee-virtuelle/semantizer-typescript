@@ -1,11 +1,12 @@
 import { WithChangelog } from "../changelog/Changelog.js";
-import { DocumentWritable, Statement } from "../core/Document.js";
+import { DocumentWritable } from "../core/Document.js";
+import { Thing } from "../core/Thing.js";
 import { DistantDocument, LocalDocument } from "./DocumentSynchronized.js";
 
 export type DocumentLocalConstructor<
-    ContainedStatement extends Statement = Statement,
-    SelfDescribingStatement extends Statement = Statement
-> = new (...args: any[]) => DocumentWritable<ContainedStatement, SelfDescribingStatement> & WithChangelog;
+    ContainedThing extends Thing = Thing, 
+    SelfDescribingThing extends Thing = Thing,
+> = new (...args: any[]) => DocumentWritable<ContainedThing, SelfDescribingThing> & WithChangelog;
 
 export function DocumentLocalMixin<
     TBase extends DocumentLocalConstructor<any, any>

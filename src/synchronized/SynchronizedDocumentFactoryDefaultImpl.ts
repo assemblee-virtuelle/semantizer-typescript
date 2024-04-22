@@ -1,6 +1,6 @@
 import DocumentImpl, { DocumentReadonlyDefaultImpl } from "../core-default/DocumentImpl";
 import Document, { DocumentBase, DocumentReadonly } from "../core/Document";
-import Thing, { ThingReadonly } from "../core-default/Thing";
+import Thing, { ThingReadonly } from "../core/Thing";
 import TypeIndex, { TypeIndexReadonly } from "../type-index/TypeIndex";
 import TypeIndexMixin, { ReadonlyTypeIndexMixin } from "../type-index/TypeIndexImpl";
 import TypeIndexRegistration, { TypeIndexRegistrationReadonly } from "../type-index/TypeIndexRegistration";

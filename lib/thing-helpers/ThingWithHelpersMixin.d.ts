@@ -1,10 +1,10 @@
 import Resource from "../core/Resource";
-import { Thing } from "../core-default/Thing";
+import { Thing } from "../core/Thing";
 type Constructor<T = {}> = new (...args: any[]) => T;
 export declare function ThingWithHelpersMixin<TBase extends Constructor<Thing<any, any>>>(Base: TBase): {
     new (...args: any[]): {
         addStatement(about: string, value: string | Resource, datatype?: string, language?: string): any;
-        addStatementFrom(source: Thing<any, any>): any;
+        addStatementFrom(source: any): any;
         addRdfTypeStatement(value: string): any;
         addBooleanStatement(about: string, value: boolean): any;
         addStringStatement(about: string, value: string, locale?: string): any;
@@ -47,28 +47,6 @@ export declare function ThingWithHelpersMixin<TBase extends Constructor<Thing<an
         removeDateStatement(about: string, value: Date): any;
         removeDatetimeStatement(about: string, value: Date): any;
         removeTimeStatement(about: string, value: Date): any;
-        getUri(): string;
-        hasUri(): boolean;
-        at(index: number): any;
-        contains(other: Iterable<any>): boolean;
-        count(): number;
-        every(predicate: (value: any, index?: number | undefined, array?: any[] | undefined) => boolean, thisArg?: any): boolean;
-        filter(predicate: (value: any, index?: number | undefined, array?: any[] | undefined) => boolean): any[];
-        find(predicate: (value: any, index?: number | undefined, obj?: any[] | undefined) => boolean, thisArg?: any): any;
-        findIndex(predicate: (value: any, index?: number | undefined, obj?: any[] | undefined) => unknown, thisArg?: any): number;
-        forEach(callbackfn: (value: any, index?: number | undefined, array?: any[] | undefined) => void, thisArg?: any): void;
-        includes(searchElement: any, fromIndex?: number | undefined): boolean;
-        indexOf(searchElement: any, fromIndex?: number | undefined): number;
-        keys(): IterableIterator<number>;
-        map(callbackfn: (value: any, index?: number | undefined, array?: any[] | undefined) => unknown, thisArg?: any): unknown[];
-        reduce(callbackfn: (previousValue: any, currentValue: any, currentIndex: number, array: any[]) => any): any;
-        slice(start?: number | undefined, end?: number | undefined): ThisType<any>;
-        some(predicate: (value: any, index?: number | undefined, array?: any[] | undefined) => unknown, thisArg?: any): boolean;
-        [Symbol.iterator](): Iterator<any, any, undefined>;
-        isEmpty(): boolean;
-        getContext(): import("../core/Common").Context | undefined;
-        getOwner(): any;
-        toCopy(): ThisType<any>;
     };
 } & TBase;
 export default ThingWithHelpersMixin;

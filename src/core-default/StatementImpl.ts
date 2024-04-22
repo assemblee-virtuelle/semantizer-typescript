@@ -1,8 +1,14 @@
-import { Resource } from "../core/Common";
-import { Statement, StatementWritable } from "../core/Document";
-import { StatementOf, Thing } from "./Thing";
+import { Statement, StatementWritable } from "../core/Statement";
 
-export class StatementImpl implements Statement, StatementWritable { 
+type ConstructorParams = {
+    subject: string;
+    property: string;
+    value: string;
+    datatype?: string;
+    language?: string;
+}
+
+export class StatementImpl implements StatementWritable { 
 
     // private _thing: ThingType;
     private _subject: string;
@@ -11,16 +17,17 @@ export class StatementImpl implements Statement, StatementWritable {
     private _datatype?: string;
     private _language?: string;
 
-    public constructor(/*thing: ThingType, */subject: string, property: string, value: string, datatype?: string, language?: string) {
-        //this._thing = thing;
-        this._subject = subject;
-        this._property = property;
-        this._value = value; //typeof value === 'string'? value: value.getUri();
-        this._datatype = datatype; //typeof datatype === 'string'? datatype: datatype?.getUri();
-        this._language = language;
+    public constructor(other: Statement);
+    public constructor(params: ConstructorParams);
+    public constructor(params: Statement | ConstructorParams) {
+        this._subject = 'subject' in params? params.subject: params.getSubject();
+        this._property = 'subject' in params? params.property: params.getProperty();
+        this._value = 'subject' in params? params.value: params.getValue();
+        this._datatype = 'subject' in params? params.datatype: params.getDatatype();
+        this._language = 'subject' in params? params.language: params.getLanguage();
     }
 
-    setProperty(property: string): this {
+    setProperty(property: string): ThisType<this> {
         this._property = property;
         return this;
     }

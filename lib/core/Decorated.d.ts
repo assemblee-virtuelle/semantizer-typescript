@@ -3,10 +3,10 @@ import { Document, DocumentWritable, Statement } from "./Document";
 export declare class DocumentDecoratedImpl<ContainedStatement extends Statement = Statement, SelfDescribingStatement extends Statement = Statement> implements DocumentWritable<ContainedStatement, SelfDescribingStatement> {
     protected _wrapped: DocumentWritable<ContainedStatement, SelfDescribingStatement>;
     constructor(wrapped: DocumentWritable<ContainedStatement, SelfDescribingStatement>);
-    createStatement(about: string, value: string): ContainedStatement;
-    addStatement(other: ContainedStatement): ThisType<this>;
-    addStatementAll(others: Iterable<ContainedStatement>): ThisType<this>;
-    createStatementAboutSelf(value: string): ThisType<this>;
+    createThing(about: string, value: string): ContainedStatement;
+    addThing(other: ContainedStatement): ThisType<this>;
+    addThingAll(others: Iterable<ContainedStatement>): ThisType<this>;
+    createThingAboutSelf(value: string): ThisType<this>;
     addStatementAboutSelf(other: ContainedStatement): ThisType<this>;
     addStatementAboutSelfAll(others: Iterable<ContainedStatement>): ThisType<this>;
     getStatement(about: string, property: string): ContainedStatement;

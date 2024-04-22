@@ -1,8 +1,9 @@
-import { DocumentWritableConstructor, Statement } from "../core/Document";
-import { TypeIndexStatement, WithReadOperations, WithWriteOperations } from "./TypeIndex";
+import { DocumentWritableConstructor } from "../core/Document";
+import { Thing } from "../core/Thing";
+import { TypeIndexRegistration, TypeIndexStatement, WithReadOperations, WithWriteOperations } from "./TypeIndex";
 import { TYPE_INDEX } from "./Vocabulary.js";
 
-export function TypeIndexMixin<TBase extends DocumentWritableConstructor<any, any>>(Base: TBase) {
+export function TypeIndexMixin<TBase extends DocumentWritableConstructor<TypeIndexRegistration, Thing>>(Base: TBase) {
     return class TypeIndexImpl extends Base implements WithReadOperations, WithWriteOperations {
 
         getStatementForClass(forClass: string): TypeIndexStatement[] {
@@ -14,58 +15,60 @@ export function TypeIndexMixin<TBase extends DocumentWritableConstructor<any, an
         getStatementForInstanceContainer(instanceContainer: string): TypeIndexStatement[] {
             throw new Error("Method not implemented.");
         }
-        addForClass(forClass: string): this {
+        createRegistration(): TypeIndexRegistration {
             throw new Error("Method not implemented.");
         }
-        addInstance(instance: string): this {
+        addForClass(registration: string | TypeIndexRegistration, forClass: string): TypeIndexRegistration {
             throw new Error("Method not implemented.");
         }
-        addInstanceContainer(instanceContainer: string): this {
+        addInstance(registration: string | TypeIndexRegistration, instance: string): TypeIndexRegistration {
             throw new Error("Method not implemented.");
         }
-        setForClass(forClass: string): this {
+        addInstanceContainer(registration: string | TypeIndexRegistration, instanceContainer: string): TypeIndexRegistration {
             throw new Error("Method not implemented.");
         }
-        removeForClass(forClass: string): this {
+        setForClass(registration: string | TypeIndexRegistration, forClass: string): TypeIndexRegistration {
             throw new Error("Method not implemented.");
         }
-        removeInstance(instance: string): this {
+        removeForClass(registration: string | TypeIndexRegistration, forClass: string): TypeIndexRegistration {
             throw new Error("Method not implemented.");
         }
-        removeInstanceContainer(instanceContainer: string): this {
+        removeInstance(registration: string | TypeIndexRegistration, instance: string): TypeIndexRegistration {
             throw new Error("Method not implemented.");
         }
-        removeForClassAll(): this {
+        removeInstanceContainer(registration: string | TypeIndexRegistration, instanceContainer: string): TypeIndexRegistration {
             throw new Error("Method not implemented.");
         }
-        removeInstanceAll(): this {
+        removeForClassAll(registration: string | TypeIndexRegistration): TypeIndexRegistration {
             throw new Error("Method not implemented.");
         }
-        removeInstanceContainerAll(): this {
+        removeInstanceAll(registration: string | TypeIndexRegistration): TypeIndexRegistration {
             throw new Error("Method not implemented.");
         }
-        
-        public forEachOfClass(forClass: string, callbackfn: (value: Statement, index?: number, array?: Statement[]) => void, thisArg?: any): void {
+        removeInstanceContainerAll(registration: string | TypeIndexRegistration): TypeIndexRegistration {
+            throw new Error("Method not implemented.");
+        }
+
+        public forEachOfClass(forClass: string, callbackfn: (value: TypeIndexRegistration, index?: number, array?: TypeIndexRegistration[]) => void, thisArg?: any): void {
             this.forEach((s, i, a) => s.isForClass(forClass)? callbackfn(s, i, a): null, thisArg);
         }
 
-        public createRegistrationForInstance(forClass: string, instance: string, nameHintOrUri?: string): ThisType<this> {
-            // const thing = this.createThing();
-            // this.createStatement(thing, "rdf:type", TYPE_INDEX.TypeRegistration);
-
+        public createRegistrationForInstance(forClass: string, instance: string, nameHintOrUri?: string): TypeIndexRegistration {
             // this.addThing(new TypeIndexRegistrationImpl(forClass, instance, instanceContainer));
-            
-            this.createStatement("#reg", "rdf:type", TYPE_INDEX.TypeRegistration);
-            this.createStatement("#reg", TYPE_INDEX.forClass, forClass);
-            this.createStatement("#reg", TYPE_INDEX.instance, instance);
-            return this;
+            const thing = this.createThing(); // "#reg"
+            this.createStatement(thing, "rdf:type", TYPE_INDEX.TypeRegistration);
+            this.createStatement(thing, TYPE_INDEX.forClass, forClass);
+            this.createStatement(thing, TYPE_INDEX.instance, instance);
+
+            return thing;
         }
 
-        public createRegistrationForInstanceContainer(forClass: string, instanceContainer: string, nameHintOrUri?: string): ThisType<this> {
-            this.createStatement("#reg2", "rdf:type", TYPE_INDEX.TypeRegistration);
-            this.createStatement("#reg2", TYPE_INDEX.forClass, forClass);
-            this.createStatement("#reg2", TYPE_INDEX.instanceContainer, instanceContainer);
-            return this;
+        public createRegistrationForInstanceContainer(forClass: string, instanceContainer: string, nameHintOrUri?: string): TypeIndexRegistration {
+            const thing = this.createThing(); // "#reg2"
+            this.createStatement(thing, "rdf:type", TYPE_INDEX.TypeRegistration);
+            this.createStatement(thing, TYPE_INDEX.forClass, forClass);
+            this.createStatement(thing, TYPE_INDEX.instanceContainer, instanceContainer);
+            return thing;
         }
     }
 }

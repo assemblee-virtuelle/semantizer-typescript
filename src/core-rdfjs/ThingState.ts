@@ -1,6 +1,6 @@
 import DatasetExt from "rdf-ext/lib/Dataset";
 import Resource from "../core/Resource";
-import ThingBase from "../core-default/Thing";
+import ThingBase from "../core/Thing";
 
 export default interface ThingState {
     getUri(): string;

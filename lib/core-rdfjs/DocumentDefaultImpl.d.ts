@@ -1,7 +1,7 @@
 import { Context } from "../index";
 import DocumentBase from "../core/Document";
 import Resource from "../core/Resource";
-import ThingBase from "../core-default/Thing";
+import ThingBase from "../core/Thing";
 import DatasetCore from "@rdfjs/dataset/DatasetCore";
 import RdfjsDatasetSerializable from './RdfjsDatasetSerializable';
 export declare class DocumentDefaultImpl<SelfDescribingThing extends ThingBase = ThingBase> implements DocumentBase<ThingBase, SelfDescribingThing>, RdfjsDatasetSerializable {

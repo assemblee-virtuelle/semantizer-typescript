@@ -3,7 +3,7 @@ import { ContainedThingOf, Document, SelfDescribingThingOf, StatementOf } from "
 import { Factory } from "../core/Factory";
 import Resource from "../core/Resource";
 import { Statement } from "../core/Statement.js";
-import { Thing } from "../core-default/Thing";
+import { Thing } from "../core/Thing";
 import { TypeIndex, TypeIndexReadonly, TypeIndexSelfDescribingThing } from "./TypeIndex";
 import { TypeIndexRegistration } from "./TypeIndexRegistration.js";
 type DocumentConstructor = new (factory: Factory<TypeIndex>) => Document<TypeIndex, TypeIndexReadonly>;

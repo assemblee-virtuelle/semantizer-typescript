@@ -1,12 +1,20 @@
-import { Statement, StatementWritable } from "../core/Document";
-export declare class StatementImpl implements Statement, StatementWritable {
+import { Statement, StatementWritable } from "../core/Statement";
+type ConstructorParams = {
+    subject: string;
+    property: string;
+    value: string;
+    datatype?: string;
+    language?: string;
+};
+export declare class StatementImpl implements StatementWritable {
     private _subject;
     private _property;
     private _value;
     private _datatype?;
     private _language?;
-    constructor(/*thing: ThingType, */ subject: string, property: string, value: string, datatype?: string, language?: string);
-    setProperty(property: string): this;
+    constructor(other: Statement);
+    constructor(params: ConstructorParams);
+    setProperty(property: string): ThisType<this>;
     getProperty(): string;
     setValue(): this;
     setDatatype(): this;

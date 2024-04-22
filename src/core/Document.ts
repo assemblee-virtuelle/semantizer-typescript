@@ -1,5 +1,6 @@
-import { Comparable, Copyable, Resource, ResourceCollection, WithContext, WithContextWritable } from "./Common";
-import DocumentDecoratedImpl from "./Decorated";
+import { Comparable, Copyable, Resource, WithContext, WithContextWritable } from "./Common";
+import { Statement } from "./Statement";
+import { Thing } from "./Thing";
 
 // type ContainedThingOfDocument<T extends Document<any, any>> = T extends Document<infer TypeArg, any> ? TypeArg : never;
 // type ContainedThingOfDocumentWritable<T extends DocumentWritable<any>> = T extends DocumentWritable<infer TypeArg> ? ContainedThingOfDocument<TypeArg> : never;
@@ -23,88 +24,91 @@ import DocumentDecoratedImpl from "./Decorated";
 // type OutputOfDocumentReadonly<T extends Document<any, any>> = T extends DocumentBase<any, infer TypeArg> ? TypeArg : never;
 // export type OutputOf<T extends Document<any, any>/* | DocumentWritable<any, any>*/> = /*T extends DocumentWritable<any, any> ? OutputOfDocumentWritable<T> : */T extends Document<any, any> ? OutputOfDocumentReadonly<T> : never;
 
-export interface Statement {
-    getSubject(): string;
-    getProperty(): string;
-    getValue(): string;
-    getDatatype(): string | undefined;
-    getLanguage(): string | undefined;
-}
-
-export interface StatementWritable { //} extends Statement {
-    setProperty(property: string): ThisType<this>;
-    setValue(value: string): ThisType<this>;
-    setDatatype(datatype: string): ThisType<this>;
-    setLanguage(language: string): ThisType<this>;
-}
+// export type StatementOf<T extends Thing<any>> = T extends Thing<infer StatementType>? StatementType: never;
 
 export type DocumentConstructor<
-    ContainedStatement extends Statement = Statement,
-    SelfDescribingStatement extends Statement = Statement
-> = new () => Document<ContainedStatement, SelfDescribingStatement>;
+    ContainedThing extends Thing = Thing,
+    SelfDescribingThing extends Thing = Thing
+> = new () => Document<ContainedThing, SelfDescribingThing>;
 
 export type DocumentWritableConstructor<
-    ContainedStatement extends Statement = Statement,
-    SelfDescribingStatement extends Statement = Statement
-> = new (...args: any[]) => DocumentWritable<ContainedStatement, SelfDescribingStatement>;
+    ContainedThing extends Thing = Thing,
+    SelfDescribingThing extends Thing = Thing
+> = new (...args: any[]) => DocumentWritable<ContainedThing, SelfDescribingThing>;
 
 export type DocumentWritableDecoratedConstructor<
-    ContainedStatement extends Statement = Statement,
-    SelfDescribingStatement extends Statement = Statement
-> = new (c: DocumentWritableConstructor<ContainedStatement, SelfDescribingStatement>) => DocumentWritable<ContainedStatement, SelfDescribingStatement>;
+    ContainedThing extends Thing = Thing,
+    SelfDescribingThing extends Thing = Thing
+> = new (c: DocumentWritableConstructor<ContainedThing, SelfDescribingThing>) => DocumentWritable<ContainedThing, SelfDescribingThing>;
 
 export interface Document<
-    ContainedStatement extends Statement = Statement,
-    SelfDescribingStatement extends Statement = Statement
+    ContainedThing extends Thing = Thing,
+    SelfDescribingThing extends Thing = Thing
 > extends Resource, 
-    ResourceCollection<ContainedStatement>, WithContext, Comparable, Copyable 
+    /*ResourceCollection<ContainedThing>,*/ WithContext, Comparable, Copyable 
 {
-    getStatement(about: string, property: string, language?: string): ContainedStatement | undefined;
-    getStatementAll(about: string, property?: string, language?: string): ContainedStatement[];
+    getThing(about: string): ContainedThing | undefined;
+    getThingAboutSelf(): SelfDescribingThing | undefined;
 
-    getStatementAboutSelf(property: string, language?: string): SelfDescribingStatement | undefined;
-    getStatementAboutSelfAll(property?: string, language?: string): SelfDescribingStatement[];
+    hasThing(about: string): boolean;
+    hasThingAboutSelf(): boolean;
 
-    hasStatement(about: string, property?: string, language?: string): boolean;
+    getStatement(about: string | Thing, property: string, language?: string): Statement | undefined;
+    getStatementAll(about: string | Thing, property?: string, language?: string): Statement[];
+
+    getStatementAboutSelf(property: string, language?: string): Statement | undefined;
+    getStatementAboutSelfAll(property?: string, language?: string): Statement[];
+
+    hasStatement(about: string | Thing, property?: string, language?: string): boolean;
     hasStatementAboutSelf(property?: string, language?: string): boolean;
 
-    [Symbol.iterator](): Iterator<ContainedStatement>;
+    [Symbol.iterator](): Iterator<ContainedThing>;
 
-    at(index: number): ContainedStatement | undefined;
+    at(index: number): ContainedThing | undefined;
     contains(other: Document<any>): boolean;
-    count(): number; //callbackfn?: (element: StatementType, owner?: ResourceCollection<Statement>) => boolean): number;
-    every(predicate: (value: ContainedStatement, index?: number, array?: ContainedStatement[]) => boolean, thisArg?: any): boolean;
-    filter(predicate: (value: ContainedStatement, index?: number, array?: ContainedStatement[]) => boolean): ContainedStatement[];
-    find(predicate: (value: ContainedStatement, index?: number, obj?: ContainedStatement[]) => boolean, thisArg?: any): ContainedStatement | undefined;
-    findIndex(predicate: (value: ContainedStatement, index?: number, obj?: ContainedStatement[]) => unknown, thisArg?: any): number
-    forEach(callbackfn: (value: ContainedStatement, index?: number, array?: ContainedStatement[]) => void, thisArg?: any): void;
-    includes(searchElement: ContainedStatement, fromIndex?: number): boolean;
-    indexOf(searchElement: ContainedStatement, fromIndex?: number): number;
+    count(): number;
+    every(predicate: (value: ContainedThing, index?: number, array?: ContainedThing[]) => boolean, thisArg?: any): boolean;
+    filter(predicate: (value: ContainedThing, index?: number, array?: ContainedThing[]) => boolean): ContainedThing[];
+    filterContainedStatement(predicate: (value: Statement, index?: number, array?: Statement[]) => boolean): Statement[];
+    find(predicate: (value: ContainedThing, index?: number, obj?: ContainedThing[]) => boolean, thisArg?: any): ContainedThing | undefined;
+    findIndex(predicate: (value: ContainedThing, index?: number, obj?: ContainedThing[]) => unknown, thisArg?: any): number
+    forEach(callbackfn: (value: ContainedThing, index?: number, array?: ContainedThing[]) => void, thisArg?: any): void;
+    forEachStatement(callbackfn: (value: Statement, index?: number, array?: Statement[]) => void, thisArg?: any): void;
+    includes(searchElement: ContainedThing, fromIndex?: number): boolean;
+    indexOf(searchElement: ContainedThing, fromIndex?: number): number;
     keys(): IterableIterator<number>;
-    map(callbackfn: (value: ContainedStatement, index?: number, array?: ContainedStatement[]) => unknown, thisArg?: any): unknown[];
-    reduce(callbackfn: (previousValue: ContainedStatement, currentValue: ContainedStatement, currentIndex: number, array: ContainedStatement[]) => Statement): ContainedStatement; 
-    slice(start?: number, end?: number): Document;
-    some(predicate: (value: ContainedStatement, index?: number, array?: ContainedStatement[]) => unknown, thisArg?: any): boolean;
+    map(callbackfn: (value: ContainedThing, index?: number, array?: ContainedThing[]) => unknown, thisArg?: any): unknown[];
+    reduce(callbackfn: (previousValue: ContainedThing, currentValue: ContainedThing, currentIndex: number, array: ContainedThing[]) => Thing): ContainedThing; 
+    slice(start?: number, end?: number): ThisType<this>;
+    some(predicate: (value: ContainedThing, index?: number, array?: ContainedThing[]) => unknown, thisArg?: any): boolean;
 }
 
 export interface DocumentWritable<
-    ContainedStatement extends Statement = Statement,
-    SelfDescribingStatement extends Statement = Statement
-> extends Document<ContainedStatement, SelfDescribingStatement>, WithContextWritable {
-    createStatement(about: string, property: string, value: string, datatype?: string, language?: string): ContainedStatement; //ThisType<this>;
-    addStatement(other: Statement): ThisType<this>;
-    addStatementAll(others: Iterable<Statement>): ThisType<this>;
+    ContainedThing extends Thing = Thing,
+    SelfDescribingThing extends Thing = Thing
+> extends Document<ContainedThing, SelfDescribingThing>, WithContextWritable {
+    createThing(): ContainedThing;
+    createThingAboutSelf(): SelfDescribingThing;
+    addThing(other: Thing): ContainedThing;
+    addThingAll(others: Iterable<Thing>): ContainedThing[];
+    addThingAboutSelf(other: Thing): SelfDescribingThing;
+    addThingAboutSelfAll(others: Iterable<Thing>): SelfDescribingThing[];
 
-    createStatementAboutSelf(value: string, property: string, datatype?: string, language?: string): ThisType<this>;
-    addStatementAboutSelf(other: Statement): ThisType<this>;
-    addStatementAboutSelfAll(others: Iterable<Statement>): ThisType<this>;
+    createStatement(about: string | ContainedThing, property: string, value: string, datatype?: string, language?: string): Statement | undefined;
+    createStatementAboutSelf(property: string, value: string, datatype?: string, language?: string): Statement;
+    addStatement(other: Statement): Statement;
+    addStatementAll(others: Iterable<Statement>): Statement[];
+    addStatementAboutSelf(other: Statement): Statement;
+    addStatementAboutSelfAll(others: Iterable<Statement>): Statement[];
 
-    deleteStatement(statement: Statement): ThisType<this>;
-    // deleteMatches(uri?: string | Resource, property?: string, value?: string): ThisType<this>; // Equivalent to splice
-    pop(): ContainedStatement | undefined;
+    setStatement(about: string | ContainedThing, value: string, oldValue?: string, datatype?: string, language?: string): Statement | undefined;
+    setStatementAboutSelf(value: string, oldValue?: string, datatype?: string, language?: string): Statement | undefined;
+
+    deleteThing(thingOrUri: string | Thing): boolean;
+    deleteStatement(statement: Statement): boolean;
+    pop(): ContainedThing | undefined;
     reverse(): void;
-    shift(): ContainedStatement | undefined;
-    sort(compareFn?: (a: ContainedStatement, b: ContainedStatement) => number): ThisType<this>;
-    splice(start: number, deleteCount?: number, ...items: ContainedStatement[]): ThisType<this>;
-    //union(other: ThisType<this>): ThisType<this>;
+    shift(): ContainedThing | undefined;
+    sort(compareFn?: (a: ContainedThing, b: ContainedThing) => number): ThisType<this>;
+    splice(start: number, deleteCount?: number, ...items: ContainedThing[]): ThisType<this>;
 }

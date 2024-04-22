@@ -19,16 +19,16 @@ export class DocumentDecoratedImpl<
         this._wrapped = wrapped; //new DocumentConstructor();
     }
 
-    createStatement(about: string, value: string): ContainedStatement {
+    createThing(about: string, value: string): ContainedStatement {
         throw new Error("Method not implemented.");
     }
-    addStatement(other: ContainedStatement): ThisType<this> {
+    addThing(other: ContainedStatement): ThisType<this> {
         throw new Error("Method not implemented.");
     }
-    addStatementAll(others: Iterable<ContainedStatement>): ThisType<this> {
+    addThingAll(others: Iterable<ContainedStatement>): ThisType<this> {
         throw new Error("Method not implemented.");
     }
-    createStatementAboutSelf(value: string): ThisType<this> {
+    createThingAboutSelf(value: string): ThisType<this> {
         throw new Error("Method not implemented.");
     }
     addStatementAboutSelf(other: ContainedStatement): ThisType<this> {

@@ -1,5 +1,5 @@
 import Document, { DocumentBase, DocumentReadonly } from "../core/Document";
-import Thing, { ThingReadonly } from "../core-default/Thing";
+import Thing, { ThingReadonly } from "../core/Thing";
 import { DistantDocument, LocalDocument } from "./DocumentSynchronized";
 type Constructor<T = {}> = new (...args: any[]) => T;
 type MixinFunction<Type extends DocumentBase<any, any>> = <TSuper extends Document<any, any>>(base: Constructor<TSuper>) => Constructor<TSuper & Type>;

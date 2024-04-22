@@ -1,4 +1,4 @@
-import { Statement } from "../core/Document";
+import { Statement } from "../core/Statement";
 import { Changelog, ChangelogWritable } from "./Changelog";
 export declare class ChangelogImpl implements ChangelogWritable {
     private _added;
