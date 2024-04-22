@@ -19,7 +19,7 @@ export class DocumentDecoratedImpl<
         this._wrapped = wrapped; //new DocumentConstructor();
     }
 
-    createStatement(about: string, value: string): ThisType<this> {
+    createStatement(about: string, value: string): ContainedStatement {
         throw new Error("Method not implemented.");
     }
     addStatement(other: ContainedStatement): ThisType<this> {
@@ -77,7 +77,7 @@ export class DocumentDecoratedImpl<
     addStatementTypeAboutSelfAll(others: Iterable<ContainedStatement>): ThisType<this> {
         throw new Error("Method not implemented.");
     }
-    delete(element: ContainedStatement): ThisType<this> {
+    deleteStatement(element: ContainedStatement): ThisType<this> {
         throw new Error("Method not implemented.");
     }
     deleteMatches(uri?: string | Resource | undefined, property?: string | undefined, value?: string | undefined): ThisType<this> {

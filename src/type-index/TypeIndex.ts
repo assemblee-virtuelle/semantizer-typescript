@@ -14,7 +14,8 @@ export interface WithReadOperations {
 }
 
 export interface WithWriteOperations {
-    createRegistration(forClass?: string, nameHintOrUri?: string): ThisType<this>;
+    createRegistrationForInstance(forClass: string, instance: string, nameHintOrUri?: string): ThisType<this>;
+    createRegistrationForInstanceContainer(forClass: string, instanceContainer: string, nameHintOrUri?: string): ThisType<this>;
 
     addForClass(forClass: string): this;
     addInstance(instance: string): this;

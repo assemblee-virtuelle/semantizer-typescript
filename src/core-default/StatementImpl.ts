@@ -1,38 +1,47 @@
 import { Resource } from "../core/Common";
-import { Statement } from "../core/Statement";
-import { StatementOf, Thing, ThingBase } from "./Thing";
+import { Statement, StatementWritable } from "../core/Document";
+import { StatementOf, Thing } from "./Thing";
 
-export class StatementImpl<
-    ThingType extends Thing<any, any>
-> implements Statement<ThingType> { 
+export class StatementImpl implements Statement, StatementWritable { 
 
-    private _thing: ThingType;
+    // private _thing: ThingType;
     private _subject: string;
+    private _property: string;
     private _value: string;
     private _datatype?: string;
     private _language?: string;
 
-    public constructor(thing: ThingType, subject: string, value: string | Resource, datatype?: string | Resource, language?: string) {
-        this._thing = thing;
+    public constructor(/*thing: ThingType, */subject: string, property: string, value: string, datatype?: string, language?: string) {
+        //this._thing = thing;
         this._subject = subject;
-        this._value = typeof value === 'string'? value: value.getUri();
-        this._datatype = typeof datatype === 'string'? datatype: datatype?.getUri();
+        this._property = property;
+        this._value = value; //typeof value === 'string'? value: value.getUri();
+        this._datatype = datatype; //typeof datatype === 'string'? datatype: datatype?.getUri();
         this._language = language;
     }
 
-    getOwner(): ThingType {
-        throw new Error("Method not implemented.");
-    }
-    equals(other: Statement<ThingType>): boolean {
-        throw new Error("Method not implemented.");
-    }
-    difference(other: Statement<ThingType>): Statement<ThingType> {
-        throw new Error("Method not implemented.");
+    setProperty(property: string): this {
+        this._property = property;
+        return this;
     }
 
-    public toCopy(): this {
-        throw new Error("Method not implemented.");
+    getProperty(): string {
+        return this._property;
     }
+
+    // getOwner(): ThingType {
+    //     throw new Error("Method not implemented.");
+    // }
+    // equals(other: Statement<ThingType>): boolean {
+    //     throw new Error("Method not implemented.");
+    // }
+    // difference(other: Statement<ThingType>): Statement<ThingType> {
+    //     throw new Error("Method not implemented.");
+    // }
+
+    // public toCopy(): this {
+    //     throw new Error("Method not implemented.");
+    // }
 
     public setValue(): this {
         throw new Error("Method not implemented.");
@@ -46,17 +55,17 @@ export class StatementImpl<
         throw new Error("Method not implemented.");
     }
 
-    public toCopyReadonly(): StatementOf<ThingType> {
-        throw new Error("Method not implemented.");
-    }
+    // public toCopyReadonly(): StatementOf<ThingType> {
+    //     throw new Error("Method not implemented.");
+    // }
 
-    public toCopyWritable(): StatementOf<ThingType> {
-        throw new Error("Method not implemented.");
-    }
+    // public toCopyWritable(): StatementOf<ThingType> {
+    //     throw new Error("Method not implemented.");
+    // }
 
-    public getThing(): ThingType {
-        return this._thing;
-    }
+    // public getThing(): ThingType {
+    //     return this._thing;
+    // }
 
     public getSubject(): string {
         return this._subject;

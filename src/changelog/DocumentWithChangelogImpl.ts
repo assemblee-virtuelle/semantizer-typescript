@@ -14,10 +14,10 @@ export function DocumentWithChangelogMixin<
             this._changelog = new ChangelogImpl();
         }
 
-        public createStatement(about: string, value: string): ThisType<this> {
-            super.createStatement(about, value);
-            //this._changelog.registerAdded()
-            return this;
+        public createStatement(about: string, property: string, value: string, datatype?: string, language?: string): ThisType<this> {
+            const statement = super.createStatement(about, property, value, datatype, language);
+            this._changelog.registerAdded(statement);
+            return statement;
         }
 
         public getChangelog(): Changelog {

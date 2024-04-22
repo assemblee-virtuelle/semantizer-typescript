@@ -9,7 +9,8 @@ export interface WithReadOperations {
     forEachOfClass(forClass: string, callbackfn: (value: Statement, index?: number, array?: Statement[]) => void, thisArg?: any): void;
 }
 export interface WithWriteOperations {
-    createRegistration(forClass?: string, nameHintOrUri?: string): ThisType<this>;
+    createRegistrationForInstance(forClass: string, instance: string, nameHintOrUri?: string): ThisType<this>;
+    createRegistrationForInstanceContainer(forClass: string, instanceContainer: string, nameHintOrUri?: string): ThisType<this>;
     addForClass(forClass: string): this;
     addInstance(instance: string): this;
     addInstanceContainer(instanceContainer: string): this;

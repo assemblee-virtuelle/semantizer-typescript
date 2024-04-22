@@ -1,5 +1,6 @@
 import { DocumentWritableConstructor, Statement } from "../core/Document";
 import { TypeIndexStatement, WithReadOperations, WithWriteOperations } from "./TypeIndex";
+import { TYPE_INDEX } from "./Vocabulary.js";
 
 export function TypeIndexMixin<TBase extends DocumentWritableConstructor<any, any>>(Base: TBase) {
     return class TypeIndexImpl extends Base implements WithReadOperations, WithWriteOperations {
@@ -47,12 +48,23 @@ export function TypeIndexMixin<TBase extends DocumentWritableConstructor<any, an
         public forEachOfClass(forClass: string, callbackfn: (value: Statement, index?: number, array?: Statement[]) => void, thisArg?: any): void {
             this.forEach((s, i, a) => s.isForClass(forClass)? callbackfn(s, i, a): null, thisArg);
         }
-    
-        public createRegistration(forClass?: string, nameHintOrUri?: string | undefined): this {
-            // const registration = this.createThingWithUri(nameHintOrUri);
-            // if (forClass)
-            //     registration.addForClass(forClass);
-            // return registration;
+
+        public createRegistrationForInstance(forClass: string, instance: string, nameHintOrUri?: string): ThisType<this> {
+            // const thing = this.createThing();
+            // this.createStatement(thing, "rdf:type", TYPE_INDEX.TypeRegistration);
+
+            // this.addThing(new TypeIndexRegistrationImpl(forClass, instance, instanceContainer));
+            
+            this.createStatement("#reg", "rdf:type", TYPE_INDEX.TypeRegistration);
+            this.createStatement("#reg", TYPE_INDEX.forClass, forClass);
+            this.createStatement("#reg", TYPE_INDEX.instance, instance);
+            return this;
+        }
+
+        public createRegistrationForInstanceContainer(forClass: string, instanceContainer: string, nameHintOrUri?: string): ThisType<this> {
+            this.createStatement("#reg2", "rdf:type", TYPE_INDEX.TypeRegistration);
+            this.createStatement("#reg2", TYPE_INDEX.forClass, forClass);
+            this.createStatement("#reg2", TYPE_INDEX.instanceContainer, instanceContainer);
             return this;
         }
     }

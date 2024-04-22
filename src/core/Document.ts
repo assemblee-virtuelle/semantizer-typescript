@@ -25,15 +25,17 @@ import DocumentDecoratedImpl from "./Decorated";
 
 export interface Statement {
     getSubject(): string;
+    getProperty(): string;
     getValue(): string;
     getDatatype(): string | undefined;
     getLanguage(): string | undefined;
 }
 
-export interface StatementWritable extends Statement {
-    setValue(value: string): this;
-    setDatatype(datatype: string): this;
-    setLanguage(language: string): this;
+export interface StatementWritable { //} extends Statement {
+    setProperty(property: string): ThisType<this>;
+    setValue(value: string): ThisType<this>;
+    setDatatype(datatype: string): ThisType<this>;
+    setLanguage(language: string): ThisType<this>;
 }
 
 export type DocumentConstructor<
@@ -57,14 +59,14 @@ export interface Document<
 > extends Resource, 
     ResourceCollection<ContainedStatement>, WithContext, Comparable, Copyable 
 {
-    getStatement(about: string, property: string): ContainedStatement;
-    getStatementAll(about: string, property: string): ContainedStatement[];
+    getStatement(about: string, property: string, language?: string): ContainedStatement | undefined;
+    getStatementAll(about: string, property?: string, language?: string): ContainedStatement[];
 
-    getStatementAboutSelf(property: string): SelfDescribingStatement;
-    getStatementAboutSelfAll(property: string): SelfDescribingStatement[];
+    getStatementAboutSelf(property: string, language?: string): SelfDescribingStatement | undefined;
+    getStatementAboutSelfAll(property?: string, language?: string): SelfDescribingStatement[];
 
-    hasStatement(about: string, property: string): boolean;
-    hasStatementAboutSelf(): boolean;
+    hasStatement(about: string, property?: string, language?: string): boolean;
+    hasStatementAboutSelf(property?: string, language?: string): boolean;
 
     [Symbol.iterator](): Iterator<ContainedStatement>;
 
@@ -89,16 +91,16 @@ export interface DocumentWritable<
     ContainedStatement extends Statement = Statement,
     SelfDescribingStatement extends Statement = Statement
 > extends Document<ContainedStatement, SelfDescribingStatement>, WithContextWritable {
-    createStatement(about: string, value: string): ThisType<this>;
-    addStatement(other: ContainedStatement): ThisType<this>;
-    addStatementAll(others: Iterable<ContainedStatement>): ThisType<this>;
+    createStatement(about: string, property: string, value: string, datatype?: string, language?: string): ContainedStatement; //ThisType<this>;
+    addStatement(other: Statement): ThisType<this>;
+    addStatementAll(others: Iterable<Statement>): ThisType<this>;
 
-    createStatementAboutSelf(value: string): ThisType<this>;
-    addStatementAboutSelf(other: ContainedStatement): ThisType<this>;
-    addStatementAboutSelfAll(others: Iterable<ContainedStatement>): ThisType<this>;
+    createStatementAboutSelf(value: string, property: string, datatype?: string, language?: string): ThisType<this>;
+    addStatementAboutSelf(other: Statement): ThisType<this>;
+    addStatementAboutSelfAll(others: Iterable<Statement>): ThisType<this>;
 
-    delete(element: ContainedStatement): ThisType<this>;
-    deleteMatches(uri?: string | Resource, property?: string, value?: string): ThisType<this>;
+    deleteStatement(statement: Statement): ThisType<this>;
+    // deleteMatches(uri?: string | Resource, property?: string, value?: string): ThisType<this>; // Equivalent to splice
     pop(): ContainedStatement | undefined;
     reverse(): void;
     shift(): ContainedStatement | undefined;

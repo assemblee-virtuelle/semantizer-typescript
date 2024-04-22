@@ -1,13 +1,16 @@
 import { Context, Resource } from "../core/Common.js";
-import { Document, DocumentWritable, Statement } from "../core/Document.js";
+import { Document, DocumentWritable, Statement, StatementWritable } from "../core/Document.js";
+import StatementImpl from "./StatementImpl.js";
 
-// This is an internal implementation of Document.
-// For a generic purpose document implementation, we should use 
-// a DocumentedDecorated for generic purpose.
+export type StatementConstructor<
+    StatementType extends Statement = Statement,
+> = new (about: string, property: string, value: string, datatype?: string, language?: string) => StatementType;
 
 export class DocumentImpl<
-    ContainedStatement extends Statement = Statement,
-    SelfDescribingStatement extends Statement = Statement
+    ContainedStatement extends Statement, 
+    SelfDescribingStatement extends Statement,
+    ContainedStatementImpl extends ContainedStatement & StatementWritable,
+    SelfDescribingStatementImpl extends SelfDescribingStatement & StatementWritable
 > implements DocumentWritable<ContainedStatement, SelfDescribingStatement> {
     
     // protected _uri: string;
@@ -16,33 +19,89 @@ export class DocumentImpl<
     // protected _context?: Context;
     // protected _factory: Factory<DocumentType>; //DocumentImpl<Document<DocumentType, DocumentTypeReadonly>>>;
 
-    createStatement(about: string, value: string): ThisType<this> {
-        throw new Error("Method not implemented.");
+    private _containedStatements: ContainedStatementImpl[];
+    private _selfDescribingStatements: SelfDescribingStatementImpl[];
+    private _containedStatementImpl: StatementConstructor<ContainedStatementImpl>;
+    private _selfDescribingStatementImpl: StatementConstructor<SelfDescribingStatementImpl>;
+
+    public constructor(containedStatementImpl: StatementConstructor<ContainedStatementImpl>, selfDescribingStatementImpl: StatementConstructor<SelfDescribingStatementImpl>) {
+        this._containedStatements = [];
+        this._selfDescribingStatements = [];
+        this._containedStatementImpl = containedStatementImpl;
+        this._selfDescribingStatementImpl = selfDescribingStatementImpl;
     }
-    addStatement(other: ContainedStatement): ThisType<this> {
-        throw new Error("Method not implemented.");
+
+    protected getContainedStatementsInternal(): ContainedStatementImpl[] {
+        return this._containedStatements;
     }
-    addStatementAll(others: Iterable<Statement>): ThisType<this> {
-        throw new Error("Method not implemented.");
+
+    protected getSelfDescribingStatementsInternal(): SelfDescribingStatementImpl[] {
+        return this._selfDescribingStatements;
     }
-    createStatementAboutSelf(value: string): ThisType<this> {
-        throw new Error("Method not implemented.");
+
+    public createStatement(about: string, property: string, value: string, datatype?: string, language?: string): ContainedStatement {
+        const statement = new this._containedStatementImpl(about, property, value, datatype, language);
+        this.getContainedStatementsInternal().push(statement);
+        return statement;
     }
-    addStatementAboutSelf(other: ContainedStatement): ThisType<this> {
-        throw new Error("Method not implemented.");
+
+    private createContainedStatementFrom(other: Statement): ContainedStatementImpl {
+        return new this._containedStatementImpl(other.getSubject(), other.getProperty(), other.getValue(), other.getDatatype(), other.getLanguage());
     }
-    addStatementAboutSelfAll(others: Iterable<Statement>): ThisType<this> {
-        throw new Error("Method not implemented.");
+
+    private createSelfDescribingStatementFrom(other: Statement): SelfDescribingStatementImpl {
+        return new this._selfDescribingStatementImpl(other.getSubject(), other.getProperty(), other.getValue(), other.getDatatype(), other.getLanguage());
     }
-    delete(element: ContainedStatement): ThisType<this> {
-        throw new Error("Method not implemented.");
+
+    public addStatement(other: Statement): ThisType<this> {
+        const statement = this.createContainedStatementFrom(other);
+        this.getContainedStatementsInternal().push(statement);
+        return this;
     }
-    deleteMatches(uri?: string | Resource | undefined, property?: string | undefined, value?: string | undefined): ThisType<this> {
-        throw new Error("Method not implemented.");
+
+    public addStatementAll(others: Iterable<Statement>): ThisType<this> {
+        for (const other of others) {
+            const statement = this.createContainedStatementFrom(other);
+            this.addStatement(statement);
+        }
+        return this;
     }
-    pop(): ContainedStatement | undefined {
-        throw new Error("Method not implemented.");
+    
+    public createStatementAboutSelf(property: string, value: string, datatype?: string, language?: string): ThisType<this> {
+        const statement = new this._selfDescribingStatementImpl(this.getUri(), property, value, datatype, language);
+        this.getSelfDescribingStatementsInternal().push(statement);
+        return this;
     }
+    
+    public addStatementAboutSelf(other: Statement): ThisType<this> {
+        const statement = this.createSelfDescribingStatementFrom(other);
+        this.getSelfDescribingStatementsInternal().push(statement);
+        return this;
+    }
+    
+    public addStatementAboutSelfAll(others: Iterable<Statement>): ThisType<this> {
+        for (const other of others) {
+            const statement = this.createSelfDescribingStatementFrom(other);
+            this.addStatementAboutSelf(statement);
+        }
+        return this;
+    }
+
+    public deleteStatement(statement: Statement): ThisType<this> {
+        this._containedStatements = this._containedStatements.filter(s => s !== statement);
+        this._selfDescribingStatements = this._selfDescribingStatements.filter(s => s !== statement);
+        return this;
+    }
+    
+    // Equivalent to splice
+    // deleteMatches(uri?: string | Resource | undefined, property?: string | undefined, value?: string | undefined): ThisType<this> {
+    //     throw new Error("Method not implemented.");
+    // }
+
+    public pop(): ContainedStatement | undefined {
+        return this.getContainedStatementsInternal().pop();
+    }
+
     reverse(): void {
         throw new Error("Method not implemented.");
     }
@@ -55,22 +114,50 @@ export class DocumentImpl<
     splice(start: number, deleteCount?: number | undefined, ...items: ContainedStatement[]): ThisType<this> {
         throw new Error("Method not implemented.");
     }
-    getStatement(about: string, property: string): ContainedStatement {
+
+    private getStatementInternal(about: string, property: string, language?: string): ContainedStatementImpl | undefined {
+        return this.getContainedStatementsInternal().find(s => {
+            if (s.getSubject() === about && s.getProperty() === property) {
+                return language? s.getLanguage() === language: true;
+            }
+        });
+    }
+
+    public getStatement(about: string, property: string, language?: string): ContainedStatement | undefined {
+        return this.getStatementInternal(about, property, language);
+    }
+
+    public getStatementAll(about: string, property?: string, language?: string): ContainedStatement[] {
+        let statementsAbout = this.getContainedStatementsInternal().filter(s => s.getSubject() === about);
+        if (property) {
+            statementsAbout = statementsAbout.filter(s => s.getProperty() === property);
+            if (language) {
+                statementsAbout = statementsAbout.filter(s => s.getLanguage() === language);
+            }
+        }
+        return statementsAbout;
+    }
+
+    public getStatementAboutSelf(property: string, language?: string): SelfDescribingStatement | undefined {
+        return this.getSelfDescribingStatementsInternal().find(s => {
+            if (s.getProperty() === property) {
+                return language? s.getLanguage() === language: true;
+            }
+        });
+    }
+
+    public getStatementAboutSelfAll(property?: string, language?: string): SelfDescribingStatement[] {
+        let statementsAbout = this.getSelfDescribingStatementsInternal().filter(s => s.getProperty() === property);
+        if (language) {
+            statementsAbout = statementsAbout.filter(s => s.getLanguage() === language);
+        }
+        return statementsAbout;
+    }
+
+    hasStatement(about: string, property?: string, language?: string): boolean {
         throw new Error("Method not implemented.");
     }
-    getStatementAll(about: string, property: string): ContainedStatement[] {
-        throw new Error("Method not implemented.");
-    }
-    getStatementAboutSelf(property: string): SelfDescribingStatement {
-        throw new Error("Method not implemented.");
-    }
-    getStatementAboutSelfAll(property: string): SelfDescribingStatement[] {
-        throw new Error("Method not implemented.");
-    }
-    hasStatement(about: string, property: string): boolean {
-        throw new Error("Method not implemented.");
-    }
-    hasStatementAboutSelf(): boolean {
+    hasStatementAboutSelf(property?: string, language?: string): boolean {
         throw new Error("Method not implemented.");
     }
     at(index: number): ContainedStatement | undefined {
@@ -94,9 +181,11 @@ export class DocumentImpl<
     findIndex(predicate: (value: ContainedStatement, index?: number | undefined, obj?: ContainedStatement[] | undefined) => unknown, thisArg?: any): number {
         throw new Error("Method not implemented.");
     }
-    forEach(callbackfn: (value: ContainedStatement, index?: number | undefined, array?: ContainedStatement[] | undefined) => void, thisArg?: any): void {
-        throw new Error("Method not implemented.");
+    
+    public forEach(callbackfn: (value: ContainedStatement, index?: number | undefined, array?: ContainedStatement[] | undefined) => void, thisArg?: any): void {
+        this.getContainedStatementsInternal().forEach(callbackfn, thisArg);
     }
+
     includes(searchElement: ContainedStatement, fromIndex?: number | undefined): boolean {
         throw new Error("Method not implemented.");
     }
@@ -112,6 +201,14 @@ export class DocumentImpl<
     reduce(callbackfn: (previousValue: ContainedStatement, currentValue: ContainedStatement, currentIndex: number, array: ContainedStatement[]) => ContainedStatement): ContainedStatement {
         throw new Error("Method not implemented.");
     }
+
+    public setStatementAbout(about: string, property: string, value: string, dataset?: string, language?: string): void {
+        const statement = this.getStatementInternal(about, property, language);
+        if (statement) {
+            statement.setValue(value);
+        }
+    }
+
     slice(start?: number | undefined, end?: number | undefined): Document {
         throw new Error("Method not implemented.");
     }
@@ -148,6 +245,16 @@ export class DocumentImpl<
     setContext(context: Context): void {
         throw new Error("Method not implemented.");
     }
+
+}
+
+export class DocumentImplDefault extends DocumentImpl<Statement, Statement, StatementImpl, StatementImpl> {
+
+    public constructor() {
+        super(StatementImpl, StatementImpl);
+    }
+
+}
 
     // public constructor(/*factory: Factory<DocumentType> /*TODO: add constraint to this type */) {//documentOrUri?: DocumentBase<ContainedThing<Wrapped>, SelfDescribingThing<Wrapped>> | string, context?: Context) {
     //     this._uri = ""; //typeof documentOrUri === 'string'? documentOrUri ?? '': documentOrUri?.getUri() ?? '';
@@ -416,8 +523,6 @@ export class DocumentImpl<
     // public filter(predicate: (value: ContainedThingOf<DocumentType>, index?: number, array?: ContainedThingOf<DocumentType>[]) => boolean): ContainedThingOf<DocumentType>[] {
     //     return this._getContainedThingsWritable().filter(predicate);
     // }
-    
-}
 
 // export class DocumentImplReadonly<
 //     DocumentType extends DocumentBase<Thing<Statement<any, any>, any>, Thing<Statement<any, any>, any>>, 

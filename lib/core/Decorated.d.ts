@@ -3,7 +3,7 @@ import { Document, DocumentWritable, Statement } from "./Document";
 export declare class DocumentDecoratedImpl<ContainedStatement extends Statement = Statement, SelfDescribingStatement extends Statement = Statement> implements DocumentWritable<ContainedStatement, SelfDescribingStatement> {
     protected _wrapped: DocumentWritable<ContainedStatement, SelfDescribingStatement>;
     constructor(wrapped: DocumentWritable<ContainedStatement, SelfDescribingStatement>);
-    createStatement(about: string, value: string): ThisType<this>;
+    createStatement(about: string, value: string): ContainedStatement;
     addStatement(other: ContainedStatement): ThisType<this>;
     addStatementAll(others: Iterable<ContainedStatement>): ThisType<this>;
     createStatementAboutSelf(value: string): ThisType<this>;
@@ -22,7 +22,7 @@ export declare class DocumentDecoratedImpl<ContainedStatement extends Statement 
     createStatementTypeAboutSelf(value: string): ThisType<this>;
     addStatementTypeAboutSelf(other: ContainedStatement): ThisType<this>;
     addStatementTypeAboutSelfAll(others: Iterable<ContainedStatement>): ThisType<this>;
-    delete(element: ContainedStatement): ThisType<this>;
+    deleteStatement(element: ContainedStatement): ThisType<this>;
     deleteMatches(uri?: string | Resource | undefined, property?: string | undefined, value?: string | undefined): ThisType<this>;
     pop(): ContainedStatement | undefined;
     reverse(): void;

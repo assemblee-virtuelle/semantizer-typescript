@@ -1,25 +1,36 @@
-import { Context, Resource } from "../core/Common.js";
-import { Document, DocumentWritable, Statement } from "../core/Document.js";
-export declare class DocumentImpl<ContainedStatement extends Statement = Statement, SelfDescribingStatement extends Statement = Statement> implements DocumentWritable<ContainedStatement, SelfDescribingStatement> {
-    createStatement(about: string, value: string): ThisType<this>;
-    addStatement(other: ContainedStatement): ThisType<this>;
+import { Context } from "../core/Common.js";
+import { Document, DocumentWritable, Statement, StatementWritable } from "../core/Document.js";
+import StatementImpl from "./StatementImpl.js";
+export type StatementConstructor<StatementType extends Statement = Statement> = new (about: string, property: string, value: string, datatype?: string, language?: string) => StatementType;
+export declare class DocumentImpl<ContainedStatement extends Statement, SelfDescribingStatement extends Statement, ContainedStatementImpl extends ContainedStatement & StatementWritable, SelfDescribingStatementImpl extends SelfDescribingStatement & StatementWritable> implements DocumentWritable<ContainedStatement, SelfDescribingStatement> {
+    private _containedStatements;
+    private _selfDescribingStatements;
+    private _containedStatementImpl;
+    private _selfDescribingStatementImpl;
+    constructor(containedStatementImpl: StatementConstructor<ContainedStatementImpl>, selfDescribingStatementImpl: StatementConstructor<SelfDescribingStatementImpl>);
+    protected getContainedStatementsInternal(): ContainedStatementImpl[];
+    protected getSelfDescribingStatementsInternal(): SelfDescribingStatementImpl[];
+    createStatement(about: string, property: string, value: string, datatype?: string, language?: string): ContainedStatement;
+    private createContainedStatementFrom;
+    private createSelfDescribingStatementFrom;
+    addStatement(other: Statement): ThisType<this>;
     addStatementAll(others: Iterable<Statement>): ThisType<this>;
-    createStatementAboutSelf(value: string): ThisType<this>;
-    addStatementAboutSelf(other: ContainedStatement): ThisType<this>;
+    createStatementAboutSelf(property: string, value: string, datatype?: string, language?: string): ThisType<this>;
+    addStatementAboutSelf(other: Statement): ThisType<this>;
     addStatementAboutSelfAll(others: Iterable<Statement>): ThisType<this>;
-    delete(element: ContainedStatement): ThisType<this>;
-    deleteMatches(uri?: string | Resource | undefined, property?: string | undefined, value?: string | undefined): ThisType<this>;
+    deleteStatement(statement: Statement): ThisType<this>;
     pop(): ContainedStatement | undefined;
     reverse(): void;
     shift(): ContainedStatement | undefined;
     sort(compareFn?: ((a: ContainedStatement, b: ContainedStatement) => number) | undefined): ThisType<this>;
     splice(start: number, deleteCount?: number | undefined, ...items: ContainedStatement[]): ThisType<this>;
-    getStatement(about: string, property: string): ContainedStatement;
-    getStatementAll(about: string, property: string): ContainedStatement[];
-    getStatementAboutSelf(property: string): SelfDescribingStatement;
-    getStatementAboutSelfAll(property: string): SelfDescribingStatement[];
-    hasStatement(about: string, property: string): boolean;
-    hasStatementAboutSelf(): boolean;
+    private getStatementInternal;
+    getStatement(about: string, property: string, language?: string): ContainedStatement | undefined;
+    getStatementAll(about: string, property?: string, language?: string): ContainedStatement[];
+    getStatementAboutSelf(property: string, language?: string): SelfDescribingStatement | undefined;
+    getStatementAboutSelfAll(property?: string, language?: string): SelfDescribingStatement[];
+    hasStatement(about: string, property?: string, language?: string): boolean;
+    hasStatementAboutSelf(property?: string, language?: string): boolean;
     at(index: number): ContainedStatement | undefined;
     contains(other: Document): boolean;
     count(): number;
@@ -33,6 +44,7 @@ export declare class DocumentImpl<ContainedStatement extends Statement = Stateme
     keys(): IterableIterator<number>;
     map(callbackfn: (value: ContainedStatement, index?: number | undefined, array?: ContainedStatement[] | undefined) => unknown, thisArg?: any): unknown[];
     reduce(callbackfn: (previousValue: ContainedStatement, currentValue: ContainedStatement, currentIndex: number, array: ContainedStatement[]) => ContainedStatement): ContainedStatement;
+    setStatementAbout(about: string, property: string, value: string, dataset?: string, language?: string): void;
     slice(start?: number | undefined, end?: number | undefined): Document;
     some(predicate: (value: ContainedStatement, index?: number | undefined, array?: ContainedStatement[] | undefined) => unknown, thisArg?: any): boolean;
     [Symbol.iterator](): Iterator<ContainedStatement, any, undefined>;
@@ -45,6 +57,9 @@ export declare class DocumentImpl<ContainedStatement extends Statement = Stateme
     toCopy(): ThisType<this>;
     deleteContext(): void;
     setContext(context: Context): void;
+}
+export declare class DocumentImplDefault extends DocumentImpl<Statement, Statement, StatementImpl, StatementImpl> {
+    constructor();
 }
 export default DocumentImpl;
 //# sourceMappingURL=DocumentImpl.d.ts.map
