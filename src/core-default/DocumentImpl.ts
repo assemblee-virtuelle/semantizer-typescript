@@ -1,14 +1,12 @@
 import { Context } from "../core/Common.js";
 import { Document, DocumentWritable } from "../core/Document.js";
 import { Statement } from "../core/Statement.js";
-import { Thing, ThingConstructor, ThingWithWriteOperations } from "../core/Thing.js";
+import { Thing, ThingConstructor, ThingWithWriteOperations, ThingWritable } from "../core/Thing.js";
 import ThingImpl from "./ThingImpl.js";
 
 export class DocumentImpl<
-    ContainedThing extends Thing, 
-    SelfDescribingThing extends Thing,
-    ContainedThingImpl extends ContainedThing & ThingWithWriteOperations,
-    SelfDescribingThingImpl extends SelfDescribingThing & ThingWithWriteOperations
+    ContainedThing extends ThingWritable<any>, 
+    SelfDescribingThing extends ThingWritable<any>
 > implements DocumentWritable<ContainedThing, SelfDescribingThing> {
     
     // protected _uri: string;
@@ -17,23 +15,23 @@ export class DocumentImpl<
     // protected _context?: Context;
     // protected _factory: Factory<DocumentType>; //DocumentImpl<Document<DocumentType, DocumentTypeReadonly>>>;
 
-    private _containedThings: ContainedThingImpl[];
-    private _selfDescribingThing: SelfDescribingThingImpl[];
-    private _containedThingImpl: ThingConstructor<ContainedThingImpl>;
-    private _selfDescribingThingImpl: ThingConstructor<SelfDescribingThingImpl>;
+    private _containedThings: ContainedThing[];
+    private _selfDescribingThing: SelfDescribingThing[];
+    private _containedThingImpl: ThingConstructor<ContainedThing>;
+    private _selfDescribingThingImpl: ThingConstructor<SelfDescribingThing>;
 
-    public constructor(containedThingImpl: ThingConstructor<ContainedThingImpl>, selfDescribingThingImpl: ThingConstructor<SelfDescribingThingImpl>) {
+    public constructor(containedThingImpl: ThingConstructor<ContainedThing>, selfDescribingThingImpl: ThingConstructor<SelfDescribingThing>) {
         this._containedThings = [];
         this._selfDescribingThing = [];
         this._containedThingImpl = containedThingImpl;
         this._selfDescribingThingImpl = selfDescribingThingImpl;
     }
 
-    protected getContainedThingsInternal(): ContainedThingImpl[] {
+    protected getContainedThingsInternal(): ContainedThing[] {
         return this._containedThings;
     }
 
-    protected getSelfDescribingThingInternal(): SelfDescribingThingImpl[] {
+    protected getSelfDescribingThingInternal(): SelfDescribingThing[] {
         return this._selfDescribingThing;
     }
 
@@ -109,7 +107,7 @@ export class DocumentImpl<
         throw new Error("Method not implemented.");
     }
 
-    private _getThing(about: string | ContainedThing): ContainedThingImpl | undefined {
+    private _getThing(about: string | ContainedThing): ContainedThing | undefined {
         const uri = typeof about === 'string'? about: about.getUri();
         return this.getContainedThingsInternal().find(t => t.getUri() === uri);
     }
@@ -225,7 +223,7 @@ export class DocumentImpl<
 
 }
 
-export class DocumentImplDefault extends DocumentImpl<Thing, Thing, ThingImpl, ThingImpl> {
+export class DocumentImplDefault extends DocumentImpl<ThingWritable<Statement>, ThingWritable<Statement>> {
 
     public constructor() {
         super(ThingImpl, ThingImpl);

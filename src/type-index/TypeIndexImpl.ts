@@ -1,11 +1,18 @@
 import { DocumentWritableConstructor } from "../core/Document";
-import { Thing } from "../core/Thing";
-import { TypeIndexStatement, WithReadOperations, WithWriteOperations } from "./TypeIndex";
+import { Thing, ThingWritable } from "../core/Thing";
+import { TypeIndexStatement, TypeIndexWritable, WithReadOperations, WithWriteOperations } from "./TypeIndex";
 import { TypeIndexRegistration } from "./TypeIndexRegistration";
 import { TYPE_INDEX } from "./Vocabulary.js";
 
-export function TypeIndexMixin<TBase extends DocumentWritableConstructor<TypeIndexRegistration, Thing>>(Base: TBase) {
-    return class TypeIndexImpl extends Base implements WithReadOperations, WithWriteOperations {
+// DocumentWritableConstructor<TypeIndexRegistration, Thing> ThingWritable<TypeIndexStatement>
+export function TypeIndexMixin<
+    TBase extends DocumentWritableConstructor<TypeIndexRegistration, ThingWritable<TypeIndexStatement>>
+>(Base: TBase) {
+    return class TypeIndexImpl extends Base implements /*WithReadOperations, WithWriteOperations*/TypeIndexWritable {
+
+        // public constructor(...args: any[]) {
+        //     super(...args);
+        // }
 
         getStatementForClass(forClass: string): TypeIndexStatement[] {
             throw new Error("Method not implemented.");

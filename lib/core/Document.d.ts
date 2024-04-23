@@ -1,9 +1,8 @@
 import { Comparable, Copyable, Resource, WithContext, WithContextWritable } from "./Common";
 import { Statement } from "./Statement";
 import { Thing } from "./Thing";
-export type DocumentConstructor<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> = new () => Document<ContainedThing, SelfDescribingThing>;
-export type DocumentWritableConstructor<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> = new (...args: any[]) => DocumentWritable<ContainedThing, SelfDescribingThing>;
-export type DocumentWritableDecoratedConstructor<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> = new (c: DocumentWritableConstructor<ContainedThing, SelfDescribingThing>) => DocumentWritable<ContainedThing, SelfDescribingThing>;
+export type DocumentConstructor<ContainedThing extends Thing<any> = Thing, SelfDescribingThing extends Thing<any> = Thing> = new () => Document<ContainedThing, SelfDescribingThing>;
+export type DocumentWritableConstructor<ContainedThing extends Thing<any> = Thing, SelfDescribingThing extends Thing<any> = Thing> = new (...args: any[]) => DocumentWritable<ContainedThing, SelfDescribingThing>;
 export interface Document<ContainedThing extends Thing<any> = Thing, SelfDescribingThing extends Thing<any> = Thing> extends Resource, WithContext, Comparable, Copyable {
     getThing(about: string): ContainedThing | undefined;
     getThingAboutSelf(): SelfDescribingThing | undefined;

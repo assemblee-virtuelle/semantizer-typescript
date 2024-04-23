@@ -1,6 +1,6 @@
 import { Comparable, Copyable, Resource, WithContext, WithContextWritable } from "./Common";
 import { Statement } from "./Statement";
-import { Thing } from "./Thing";
+import { Thing, ThingWritable } from "./Thing";
 
 // type ContainedThingOfDocument<T extends Document<any, any>> = T extends Document<infer TypeArg, any> ? TypeArg : never;
 // type ContainedThingOfDocumentWritable<T extends DocumentWritable<any>> = T extends DocumentWritable<infer TypeArg> ? ContainedThingOfDocument<TypeArg> : never;
@@ -27,19 +27,14 @@ import { Thing } from "./Thing";
 // export type StatementOf<T extends Thing<any>> = T extends Thing<infer StatementType>? StatementType: never;
 
 export type DocumentConstructor<
-    ContainedThing extends Thing = Thing,
-    SelfDescribingThing extends Thing = Thing
+    ContainedThing extends Thing<any> = Thing,
+    SelfDescribingThing extends Thing<any> = Thing
 > = new () => Document<ContainedThing, SelfDescribingThing>;
 
 export type DocumentWritableConstructor<
-    ContainedThing extends Thing = Thing,
-    SelfDescribingThing extends Thing = Thing
+    ContainedThing extends Thing<any> = Thing,
+    SelfDescribingThing extends Thing<any> = Thing
 > = new (...args: any[]) => DocumentWritable<ContainedThing, SelfDescribingThing>;
-
-export type DocumentWritableDecoratedConstructor<
-    ContainedThing extends Thing = Thing,
-    SelfDescribingThing extends Thing = Thing
-> = new (c: DocumentWritableConstructor<ContainedThing, SelfDescribingThing>) => DocumentWritable<ContainedThing, SelfDescribingThing>;
 
 export interface Document<
     ContainedThing extends Thing<any> = Thing,

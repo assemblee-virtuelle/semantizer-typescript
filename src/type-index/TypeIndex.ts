@@ -1,6 +1,6 @@
 import { Document, DocumentWritable } from "../core/Document";
 import { Statement } from "../core/Statement";
-import { Thing } from "../core/Thing";
+import { Thing, ThingWritable } from "../core/Thing";
 import { TypeIndexRegistration } from "./TypeIndexRegistration";
 
 
@@ -38,4 +38,4 @@ export interface WithWriteOperations {
 }
 
 export type TypeIndex = Document<TypeIndexRegistration> & WithReadOperations;
-export type TypeIndexWritable = DocumentWritable<TypeIndexRegistration> & WithReadOperations & WithWriteOperations;
+export type TypeIndexWritable = DocumentWritable<TypeIndexRegistration, ThingWritable<TypeIndexStatement>> & WithReadOperations & WithWriteOperations;

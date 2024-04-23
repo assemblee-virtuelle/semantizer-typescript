@@ -1,15 +1,12 @@
-import { Context } from "./core/ContextImpl.js";
-import { DocumentBase } from "./core/Document.js";
-import { Factory } from "./core/Factory.js";
 import Semantizer from "./Semantizer.js";
 import SemantizerFactory from "./SemantizerFactory.js";
+import { Context } from "./core/Common.js";
+import { Document } from "./core/Document.js";
 export default class SemantizerFactoryDefault implements SemantizerFactory {
     private _semantizer;
-    private _documentFactory;
     constructor(semantizer: Semantizer);
-    getDocumentFactory(): Factory<any>;
-    loadDocument(uri: string): DocumentBase<any, any>;
-    createDocument(uri?: string, context?: Context): DocumentBase<any, any>;
+    loadDocument(uri: string): Document<any, any>;
+    createDocument(uri?: string, context?: Context): Document<any, any>;
     getSemantizer(): Semantizer;
     createContext(): Context;
 }

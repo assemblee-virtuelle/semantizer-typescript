@@ -1,5 +1,6 @@
 import { Document, DocumentWritable } from "../core/Document";
 import { Statement } from "../core/Statement";
+import { ThingWritable } from "../core/Thing";
 import { TypeIndexRegistration } from "./TypeIndexRegistration";
 export interface TypeIndexStatement extends Statement {
     isForClass(forClass: string): boolean;
@@ -28,5 +29,5 @@ export interface WithWriteOperations {
     removeInstanceContainerAll(registration: string | TypeIndexRegistration): TypeIndexRegistration;
 }
 export type TypeIndex = Document<TypeIndexRegistration> & WithReadOperations;
-export type TypeIndexWritable = DocumentWritable<TypeIndexRegistration> & WithReadOperations & WithWriteOperations;
+export type TypeIndexWritable = DocumentWritable<TypeIndexRegistration, ThingWritable<TypeIndexStatement>> & WithReadOperations & WithWriteOperations;
 //# sourceMappingURL=TypeIndex.d.ts.map

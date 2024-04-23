@@ -1,30 +1,22 @@
-import { Context } from "./core/ContextImpl.js";
-import { DocumentBase } from "./core/Document.js";
-import { Factory } from "./core/Factory.js";
-import { FactoryImpl } from "./core-default/FactoryImpl.js";
 import Semantizer from "./Semantizer.js";
 import SemantizerFactory from "./SemantizerFactory.js";
+import { Context } from "./core/Common.js";
+import { Document } from "./core/Document.js";
 
 export default class SemantizerFactoryDefault implements SemantizerFactory {
 
     private _semantizer: Semantizer;
-    private _documentFactory: Factory<any>;
 
     public constructor(semantizer: Semantizer) {
         this._semantizer = semantizer;
-        this._documentFactory = new FactoryImpl();
     }
 
-    public getDocumentFactory(): Factory<any> {
-        return this._documentFactory;
+    public loadDocument(uri: string): Document<any, any> {
+        throw new Error("Method not implemented.");
     }
 
-    public loadDocument(uri: string): DocumentBase<any, any> {
-        throw new Error(""); //return this.getDocumentFactory().loadDocument(uri);
-    }
-
-    public createDocument(uri?: string, context?: Context): DocumentBase<any, any> {
-        return this.getDocumentFactory().createDocument(uri, context);
+    public createDocument(uri?: string, context?: Context): Document<any, any> {
+        throw new Error("Method not implemented.");
     }
 
     public getSemantizer(): Semantizer {
@@ -32,7 +24,7 @@ export default class SemantizerFactoryDefault implements SemantizerFactory {
     }
 
     public createContext(): Context {
-        throw new Error();
+        throw new Error("Method not implemented.");
     }
     
 }

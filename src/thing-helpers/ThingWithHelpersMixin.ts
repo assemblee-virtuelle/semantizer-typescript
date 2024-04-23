@@ -1,10 +1,10 @@
-import Resource from "../core/Resource";
+import { Resource } from "../core/Common";
 import { Thing } from "../core/Thing";
 import ThingWithHelpers from "./ThingWithHelpers";
 
 type Constructor<T = {}> = new (...args: any[]) => T;
 
-export function ThingWithHelpersMixin<TBase extends Constructor<Thing<any, any>>>(Base: TBase) {
+export function ThingWithHelpersMixin<TBase extends Constructor<Thing<any>>>(Base: TBase) {
     return class Helpers extends Base implements ThingWithHelpers {
 
         ////////////// Adder //////////////
@@ -12,7 +12,7 @@ export function ThingWithHelpersMixin<TBase extends Constructor<Thing<any, any>>
             return this.addStatement(about, value, datatype, language);
         }
 
-        public addStatementFrom(source: Thing<any, any>): Helpers {
+        public addStatementFrom(source: Thing<any>): Helpers {
             throw new Error("Method not implemented.");
         }
 
@@ -55,7 +55,7 @@ export function ThingWithHelpersMixin<TBase extends Constructor<Thing<any, any>>
         }
 
         public getAllRdfTypeValues(): string[] {
-            return this.getAll("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
+            return this.getStatementAll("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
         }
 
         public getBooleanStatementValue(about: string): boolean {
@@ -72,7 +72,7 @@ export function ThingWithHelpersMixin<TBase extends Constructor<Thing<any, any>>
         }
 
         public getAllStringStatementValues(about: string): string[] {
-            return this.getAll(about);
+            return this.getStatementAll(about);
         }
 
         public getDecimalStatementValue(about: string): number {

@@ -1,8 +1,8 @@
 import { DocumentWritableConstructor } from "../core/Document";
-import { Thing } from "../core/Thing";
+import { Thing, ThingWritable } from "../core/Thing";
 import { TypeIndexStatement } from "./TypeIndex";
 import { TypeIndexRegistration } from "./TypeIndexRegistration";
-export declare function TypeIndexMixin<TBase extends DocumentWritableConstructor<TypeIndexRegistration, Thing>>(Base: TBase): {
+export declare function TypeIndexMixin<TBase extends DocumentWritableConstructor<TypeIndexRegistration, ThingWritable<TypeIndexStatement>>>(Base: TBase): {
     new (...args: any[]): {
         getStatementForClass(forClass: string): TypeIndexStatement[];
         getStatementForInstance(instance: string): TypeIndexStatement[];
@@ -22,11 +22,11 @@ export declare function TypeIndexMixin<TBase extends DocumentWritableConstructor
         createThing(): TypeIndexRegistration;
         createRegistrationForInstance(forClass: string, instance: string, nameHintOrUri?: string): TypeIndexRegistration;
         createRegistrationForInstanceContainer(forClass: string, instanceContainer: string, nameHintOrUri?: string): TypeIndexRegistration;
-        createThingAboutSelf(): Thing<import("../core/Statement").Statement>;
+        createThingAboutSelf(): ThingWritable<TypeIndexStatement>;
         addThing(other: Thing<import("../core/Statement").Statement>): TypeIndexRegistration;
         addThingAll(others: Iterable<Thing<import("../core/Statement").Statement>>): TypeIndexRegistration[];
-        addThingAboutSelf(other: Thing<import("../core/Statement").Statement>): Thing<import("../core/Statement").Statement>;
-        addThingAboutSelfAll(others: Iterable<Thing<import("../core/Statement").Statement>>): Thing<import("../core/Statement").Statement>[];
+        addThingAboutSelf(other: Thing<import("../core/Statement").Statement>): ThingWritable<TypeIndexStatement>;
+        addThingAboutSelfAll(others: Iterable<Thing<import("../core/Statement").Statement>>): ThingWritable<TypeIndexStatement>[];
         createStatement(about: string | TypeIndexRegistration, property: string, value: string, datatype?: string | undefined, language?: string | undefined): import("../core/Statement").Statement | undefined;
         createStatementAboutSelf(property: string, value: string, datatype?: string | undefined, language?: string | undefined): import("../core/Statement").Statement;
         addStatement(other: import("../core/Statement").Statement): import("../core/Statement").Statement;
@@ -43,7 +43,7 @@ export declare function TypeIndexMixin<TBase extends DocumentWritableConstructor
         sort(compareFn?: ((a: TypeIndexRegistration, b: TypeIndexRegistration) => number) | undefined): ThisType<any>;
         splice(start: number, deleteCount?: number | undefined, ...items: TypeIndexRegistration[]): ThisType<any>;
         getThing(about: string): TypeIndexRegistration | undefined;
-        getThingAboutSelf(): Thing<import("../core/Statement").Statement> | undefined;
+        getThingAboutSelf(): ThingWritable<TypeIndexStatement> | undefined;
         hasThing(about: string): boolean;
         hasThingAboutSelf(): boolean;
         getStatement(about: string | Thing<import("../core/Statement").Statement>, property: string, language?: string | undefined): import("../core/Statement").Statement | undefined;

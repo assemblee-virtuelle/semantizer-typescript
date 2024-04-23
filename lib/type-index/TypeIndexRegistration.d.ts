@@ -1,6 +1,6 @@
-import { Thing } from "../core/Thing";
+import { Thing, ThingWritable } from "../core/Thing";
 import { TypeIndexStatement } from "./TypeIndex";
-export interface TypeIndexRegistrationReadonly extends Thing<TypeIndexStatement> {
+export interface WithReadOperations {
     isForClass(forClass: string): boolean;
 }
 export interface WithWriteOperations {
@@ -15,5 +15,6 @@ export interface WithWriteOperations {
     removeInstanceAll(): this;
     removeInstanceContainerAll(): this;
 }
-export type TypeIndexRegistration = TypeIndexRegistrationReadonly & WithWriteOperations;
+export type TypeIndexRegistrationReadonly = Thing<TypeIndexStatement> & WithReadOperations;
+export type TypeIndexRegistration = ThingWritable<TypeIndexStatement> & WithReadOperations & WithWriteOperations;
 //# sourceMappingURL=TypeIndexRegistration.d.ts.map

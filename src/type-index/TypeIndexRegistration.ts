@@ -1,7 +1,11 @@
-import { Thing } from "../core/Thing";
+import { Thing, ThingWritable } from "../core/Thing";
 import { TypeIndexStatement } from "./TypeIndex";
 
-export interface TypeIndexRegistrationReadonly extends Thing<TypeIndexStatement> {
+// export interface TypeIndexRegistrationReadonly extends Thing<TypeIndexStatement> {
+//     isForClass(forClass: string): boolean;
+// }
+
+export interface WithReadOperations {
     isForClass(forClass: string): boolean;
 }
 
@@ -18,4 +22,5 @@ export interface WithWriteOperations {
     removeInstanceContainerAll(): this; 
 }
 
-export type TypeIndexRegistration = TypeIndexRegistrationReadonly & WithWriteOperations;
+export type TypeIndexRegistrationReadonly = Thing<TypeIndexStatement> & WithReadOperations;
+export type TypeIndexRegistration = ThingWritable<TypeIndexStatement> & WithReadOperations & WithWriteOperations;

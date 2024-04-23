@@ -2,10 +2,11 @@ import { DocumentWithChangelogMixin } from './changelog/DocumentWithChangelogImp
 import DocumentImpl, { DocumentImplDefault } from './core-default/DocumentImpl.js';
 import StatementImpl from './core-default/StatementImpl.js';
 import ThingImpl, { ThingImplDefault } from './core-default/ThingImpl.js';
-import { Thing } from './core/Thing.js';
+import { Thing, ThingWritable } from './core/Thing.js';
 import { DocumentLocalMixin } from './synchronized/DocumentSynchronizedImpl.js';
 import { TypeIndex, TypeIndexStatement, TypeIndexWritable } from './type-index/TypeIndex.js';
 import { TypeIndexMixin } from './type-index/TypeIndexImpl.js';
+import { TypeIndexRegistration } from './type-index/TypeIndexRegistration.js';
 import TypeIndexRegistrationMixin from './type-index/TypeIndexRegistrationImpl.js';
 import { TypeIndexRegistrationStatementMixin } from './type-index/TypeIndexRegistrationStatement.js';
 
@@ -22,18 +23,10 @@ const statement = document.createStatement("https://example.org/about", "https:/
 
 // const typeIndexFactory = new TypeIndexFactory(DocumentImpl, ThingImpl<Statement<TypeIndexRegistration>, TypeIndex>, ThingImpl<Statement<TypeIndexSelfDescribingThing>, TypeIndex>, StatementImpl) ;//DocumentImpl<TypeIndex, TypeIndexReadonly>);
 
-const TypeIndexImpl = TypeIndexMixin(DocumentImpl); // <TypeIndexRegistration, Thing, TypeIndexRegistrationImpl, ThingImpl>
-// export class TypeIndexRegistrationThingImpl extends ThingImpl<TypeIndexStatement> {
-
-//     public constructor() {
-//         super(TypeIndexRegistrationStatementMixin(StatementImpl));
-//     }
-
-// }
-
-// const TypeIndexRegistrationImpl = TypeIndexRegistrationMixin(TypeIndexRegistrationThingImpl);
+const TypeIndexImpl = TypeIndexMixin(DocumentImpl);
 const TypeIndexRegistrationImpl = TypeIndexRegistrationMixin(ThingImpl, StatementImpl); // Todo: couple together?
 const typeIndexDocument = new TypeIndexImpl(TypeIndexRegistrationImpl, ThingImplDefault); //(new DocumentImpl<TypeIndexStatement>);
+
 // typeIndexDocument.createRegistrationForInstance("dfc-b:Catalog", "https://instance");
 // typeIndexDocument.forEach(t => console.log(t));
 
