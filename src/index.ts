@@ -23,15 +23,16 @@ const statement = document.createStatement("https://example.org/about", "https:/
 // const typeIndexFactory = new TypeIndexFactory(DocumentImpl, ThingImpl<Statement<TypeIndexRegistration>, TypeIndex>, ThingImpl<Statement<TypeIndexSelfDescribingThing>, TypeIndex>, StatementImpl) ;//DocumentImpl<TypeIndex, TypeIndexReadonly>);
 
 const TypeIndexImpl = TypeIndexMixin(DocumentImpl); // <TypeIndexRegistration, Thing, TypeIndexRegistrationImpl, ThingImpl>
-export class TypeIndexRegistrationThingImpl extends ThingImpl<TypeIndexStatement> {
+// export class TypeIndexRegistrationThingImpl extends ThingImpl<TypeIndexStatement> {
 
-    public constructor() {
-        super(TypeIndexRegistrationStatementMixin(StatementImpl));
-    }
+//     public constructor() {
+//         super(TypeIndexRegistrationStatementMixin(StatementImpl));
+//     }
 
-}
+// }
 
-const TypeIndexRegistrationImpl = TypeIndexRegistrationMixin(TypeIndexRegistrationThingImpl);
+// const TypeIndexRegistrationImpl = TypeIndexRegistrationMixin(TypeIndexRegistrationThingImpl);
+const TypeIndexRegistrationImpl = TypeIndexRegistrationMixin(ThingImpl, StatementImpl); // Todo: couple together?
 const typeIndexDocument = new TypeIndexImpl(TypeIndexRegistrationImpl, ThingImplDefault); //(new DocumentImpl<TypeIndexStatement>);
 // typeIndexDocument.createRegistrationForInstance("dfc-b:Catalog", "https://instance");
 // typeIndexDocument.forEach(t => console.log(t));
@@ -53,7 +54,7 @@ const typeIndexWithChangelog = new TypeIndexWithChangelog(TypeIndexRegistrationI
 typeIndexWithChangelog.createRegistrationForInstance("dfc-b:Catalog", "https://instance");
 typeIndexWithChangelog.forEach(t => console.log(t));
 console.log(typeIndexWithChangelog.getChangelog());
-// typeIndexWithChangelog.getThing("")?.getStatement("")?.isForClass("");
+typeIndexWithChangelog.getThing("")?.getStatement("")?.isForClass("");
 
 // console.log("-------");
 
@@ -63,9 +64,9 @@ console.log(typeIndexWithChangelog.getChangelog());
 // // const documentWithChangelog = new DocumentWithChangelogImpl(new DocumentImpl);
 // // const typeIndexChangelog = new DocumentLocalImpl(new DocumentWithChangelogImpl<TypeIndexStatement>(new DocumentImpl<TypeIndexStatement>));
 
-// const TypeIndexLocal = DocumentLocalMixin(DocumentWithChangelogMixin(TypeIndexMixin(DocumentImpl)));
+const TypeIndexLocal = DocumentLocalMixin(DocumentWithChangelogMixin(TypeIndexMixin(DocumentImpl)));
 
-// const typeIndexLocal = new TypeIndexLocal(TypeIndexRegistrationImpl, ThingImpl); //new DocumentImpl<TypeIndexStatement>);
+const typeIndexLocal = new TypeIndexLocal(TypeIndexRegistrationImpl, ThingImpl); //new DocumentImpl<TypeIndexStatement>);
 // typeIndexLocal.createRegistrationForInstance("dfc-b:Catalog", "https://example.org/instance");
 // typeIndexLocal.createRegistrationForInstanceContainer("dfc-b:Catalog", "httsp://example.org/catalogs");
 
@@ -77,7 +78,7 @@ console.log(typeIndexWithChangelog.getChangelog());
 // thing.createStatement("prop", "value");
 // document.setThing("https://...", thing);
 
-// typeIndexLocal.saveUpdate();
+typeIndexLocal.saveUpdate();
 
 // Décoration ou composition ? Ou les deux ?
 // Comment implémenter le type index avec changelog ?

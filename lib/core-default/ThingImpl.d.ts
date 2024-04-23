@@ -54,5 +54,8 @@ export declare class ThingImpl<StatementType extends Statement = Statement> impl
 export declare class ThingImplDefault extends ThingImpl<Statement> {
     constructor();
 }
+export declare class ThingImplCustom<StatementType extends Statement> extends ThingImpl<StatementType> {
+    constructor(statementImpl: StatementConstructor<StatementType>);
+}
 export default ThingImpl;
 //# sourceMappingURL=ThingImpl.d.ts.map

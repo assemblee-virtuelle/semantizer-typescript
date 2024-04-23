@@ -1,21 +1,23 @@
+import { Statement, StatementConstructor } from "../core/Statement";
 import { ThingConstructor, ThingWritable } from "../core/Thing";
 import { TypeIndexStatement } from "./TypeIndex";
 import { TypeIndexRegistration } from "./TypeIndexRegistration";
+import { TypeIndexRegistrationStatementMixin } from "./TypeIndexRegistrationStatement.js";
 import { TYPE_INDEX } from "./Vocabulary.js";
 
 export function TypeIndexRegistrationMixin<
+    TStatementImpl extends StatementConstructor<Statement>,
     TBase extends ThingConstructor<ThingWritable<TypeIndexStatement>>
->(Base: TBase) {
+>(Base: TBase, StatementImpl: TStatementImpl) {
     return class TypeIndexRegistrationImpl extends Base implements TypeIndexRegistration {
 
-        //constructor(document: TypeIndex, uri?: string) {
-            //super(document); //, ThingType.Regular, uri);
-    // }
-
-        // public constructor(...args: any[]) {
-        //     super(TypeIndexRegistrationImpl); // TODO: pass a statement mixin 
-        //     // const TypeIndexRegistrationStatementImpl = TypeIndexRegistrationStatementMixin(StatementImpl);
+        // constructor(document: TypeIndex, uri?: string) {
+            // super(document); //, ThingType.Regular, uri);
         // }
+
+        public constructor(...args: any[]) {
+            super(TypeIndexRegistrationStatementMixin(StatementImpl)); 
+        }
 
         public isForClass(forClass: string): boolean {
             return this.getForClassAll().includes(forClass);

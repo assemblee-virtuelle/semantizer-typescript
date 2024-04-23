@@ -1,6 +1,7 @@
 import { Comparable, Copyable, Resource, WithContext, WithContextWritable } from "./Common";
 import { Statement } from "./Statement";
 import { Thing } from "./Thing";
+export type StatementOf<T extends Thing<any>> = T extends Thing<infer StatementType> ? StatementType : never;
 export type DocumentConstructor<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> = new () => Document<ContainedThing, SelfDescribingThing>;
 export type DocumentWritableConstructor<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> = new (...args: any[]) => DocumentWritable<ContainedThing, SelfDescribingThing>;
 export type DocumentWritableDecoratedConstructor<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> = new (c: DocumentWritableConstructor<ContainedThing, SelfDescribingThing>) => DocumentWritable<ContainedThing, SelfDescribingThing>;
