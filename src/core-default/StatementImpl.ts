@@ -35,8 +35,9 @@ export class StatementImpl implements Statement {
         return this._property;
     }
 
-    public setValue(): this {
-        throw new Error("Method not implemented.");
+    public setValue(value: string): this {
+        this._value = value;
+        return this;
     }
 
     public setDatatype(): this {

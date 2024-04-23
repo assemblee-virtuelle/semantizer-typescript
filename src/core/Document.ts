@@ -89,15 +89,18 @@ export interface DocumentWritable<
     addThingAboutSelf(other: Thing): SelfDescribingThing;
     addThingAboutSelfAll(others: Iterable<Thing>): SelfDescribingThing[];
 
-    createStatement(about: string | ContainedThing, property: string, value: string, datatype?: string, language?: string): Statement | undefined;
-    createStatementAboutSelf(property: string, value: string, datatype?: string, language?: string): Statement;
+    createStatement(about: string | ContainedThing, property: string, value: string, datatype?: string, language?: string): ContainedThing;
+    createStatementAboutSelf(property: string, value: string, datatype?: string, language?: string): SelfDescribingThing;
     addStatement(other: Statement): Statement;
     addStatementAll(others: Iterable<Statement>): Statement[];
     addStatementAboutSelf(other: Statement): Statement;
     addStatementAboutSelfAll(others: Iterable<Statement>): Statement[];
 
-    setStatement(about: string | ContainedThing, value: string, oldValue?: string, datatype?: string, language?: string): Statement | undefined;
-    setStatementAboutSelf(value: string, oldValue?: string, datatype?: string, language?: string): Statement | undefined;
+    setThing(thing: ContainedThing, uri?: string): ContainedThing;
+    setThingAt(index: number, thing: ContainedThing): ContainedThing;
+
+    setStatement(about: string | ContainedThing, property: string, value: string, oldValue?: string, datatype?: string, language?: string): Statement | undefined;
+    setStatementAboutSelf(property: string, value: string, oldValue?: string, datatype?: string, language?: string): Statement | undefined;
 
     deleteThing(thingOrUri: string | Thing): boolean;
     deleteStatement(statement: Statement): boolean;
@@ -105,5 +108,7 @@ export interface DocumentWritable<
     reverse(): void;
     shift(): ContainedThing | undefined;
     sort(compareFn?: (a: ContainedThing, b: ContainedThing) => number): ThisType<this>;
-    splice(start: number, deleteCount?: number, ...items: ContainedThing[]): ThisType<this>;
+    
+    splice(start: number, deleteCount?: number): ContainedThing[];
+    splice(start: number, deleteCount: number, ...items: ContainedThing[]): ContainedThing[];
 }

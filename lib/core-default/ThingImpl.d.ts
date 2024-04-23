@@ -43,7 +43,7 @@ export declare class ThingImpl<StatementType extends Statement = Statement> impl
     reduce(callbackfn: (previousValue: StatementType, currentValue: StatementType, currentIndex: number, array: StatementType[]) => StatementType): StatementType;
     slice(start?: number | undefined, end?: number | undefined): Thing;
     some(predicate: (value: StatementType, index?: number | undefined, array?: StatementType[] | undefined) => unknown, thisArg?: any): boolean;
-    [Symbol.iterator](): Iterator<StatementType, any, undefined>;
+    [Symbol.iterator](): Iterator<StatementType>;
     getUri(): string;
     hasUri(): boolean;
     getContext(): Context | undefined;

@@ -38,7 +38,7 @@ export class DocumentImpl<
     public createThing(uriOrNameHint?: string): ContainedThing {
         const thing = new this._containedThingImpl(uriOrNameHint);
         this.getContainedThingsInternal().push(thing);
-        return thing;
+        return thing.toCopy() as ContainedThing;
     }
 
     createThingAboutSelf(): SelfDescribingThing {
@@ -57,12 +57,14 @@ export class DocumentImpl<
         throw new Error("Method not implemented.");
     }
     
-    public createStatement(about: string | ContainedThing, property: string, value: string, datatype?: string | undefined, language?: string | undefined): Statement | undefined {
-        const thing = this._getThing(about);
-        return thing? thing.createStatement(property, value, datatype, language): undefined;
+    public createStatement(about: string | ContainedThing, property: string, value: string, datatype?: string | undefined, language?: string | undefined): ContainedThing {
+        const thing = this._getThing(about); // TODO: or create a thing
+        if (thing) thing.createStatement(property, value, datatype, language);
+        return thing!;
+        // return thing? thing.createStatement(property, value, datatype, language): undefined; // weard
     }
 
-    createStatementAboutSelf(property: string, value: string, datatype?: string | undefined, language?: string | undefined): Statement {
+    createStatementAboutSelf(property: string, value: string, datatype?: string | undefined, language?: string | undefined): SelfDescribingThing {
         throw new Error("Method not implemented.");
     }
     addStatement(other: Statement): Statement {
@@ -77,12 +79,23 @@ export class DocumentImpl<
     addStatementAboutSelfAll(others: Iterable<Statement>): Statement[] {
         throw new Error("Method not implemented.");
     }
-    setStatement(about: string | ContainedThing, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): Statement | undefined {
+    setStatement(about: string | ContainedThing, property: string, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): Statement | undefined {
         throw new Error("Method not implemented.");
     }
-    setStatementAboutSelf(value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): Statement | undefined {
+    setStatementAboutSelf(property: string, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): Statement | undefined {
         throw new Error("Method not implemented.");
     }
+
+    public setThing(thing: ContainedThing, uri?: string): ContainedThing {
+        const internalThingUri = uri? uri: thing.getUri();
+        const index = this.findIndex(t => t.getUri() === internalThingUri);
+        return this.setThingAt(index, thing);
+    }
+
+    public setThingAt(index: number, thing: ContainedThing): ContainedThing {
+        return this.splice(index, 1, thing)[0]; // Warning here!
+    }
+
     deleteThing(thingOrUri: string | Thing): boolean {
         throw new Error("Method not implemented.");
     }
@@ -101,8 +114,17 @@ export class DocumentImpl<
     sort(compareFn?: ((a: ContainedThing, b: ContainedThing) => number) | undefined): ThisType<this> {
         throw new Error("Method not implemented.");
     }
-    splice(start: number, deleteCount?: number | undefined, ...items: ContainedThing[]): ThisType<this> {
-        throw new Error("Method not implemented.");
+
+    public splice(start: number, deleteCount?: number): ContainedThing[];
+    public splice(start: number, deleteCount: number, ...items: ContainedThing[]): ContainedThing[];
+    public splice(start: number, deleteCount?: number, ...items: ContainedThing[]): ContainedThing[] {
+        const internalItems: ContainedThing[] = [];
+        if (deleteCount && items) {
+            items.forEach(item => internalItems.push(item.toCopy() as ContainedThing))
+            this.getContainedThingsInternal().splice(start, deleteCount, ...internalItems);
+        }
+        else this.getContainedThingsInternal().splice(start, deleteCount);
+        return internalItems;
     }
 
     private _getThing(about: string | ContainedThing): ContainedThing | undefined {
@@ -163,12 +185,15 @@ export class DocumentImpl<
     find(predicate: (value: ContainedThing, index?: number | undefined, obj?: ContainedThing[] | undefined) => boolean, thisArg?: any): ContainedThing | undefined {
         throw new Error("Method not implemented.");
     }
-    findIndex(predicate: (value: ContainedThing, index?: number | undefined, obj?: ContainedThing[] | undefined) => unknown, thisArg?: any): number {
-        throw new Error("Method not implemented.");
+    
+    public findIndex(predicate: (value: ContainedThing, index?: number | undefined, obj?: ContainedThing[] | undefined) => unknown, thisArg?: any): number {
+        return this.getContainedThingsInternal().findIndex(predicate);
     }
+
     public forEach(callbackfn: (value: ContainedThing, index?: number | undefined, array?: ContainedThing[] | undefined) => void, thisArg?: any): void {
         this.getContainedThingsInternal().forEach(callbackfn);
     }
+
     forEachStatement(callbackfn: (value: Statement, index?: number | undefined, array?: Statement[] | undefined) => void, thisArg?: any): void {
         throw new Error("Method not implemented.");
     }
@@ -193,9 +218,11 @@ export class DocumentImpl<
     some(predicate: (value: ContainedThing, index?: number | undefined, array?: ContainedThing[] | undefined) => unknown, thisArg?: any): boolean {
         throw new Error("Method not implemented.");
     }
-    [Symbol.iterator](): Iterator<ContainedThing, any, undefined> {
-        throw new Error("Method not implemented.");
+    
+    public [Symbol.iterator](): Iterator<ContainedThing> {
+        return this.getContainedThingsInternal()[Symbol.iterator](); // Should be a copy?
     }
+
     getUri(): string {
         throw new Error("Method not implemented.");
     }

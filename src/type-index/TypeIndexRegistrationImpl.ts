@@ -75,7 +75,8 @@ export function TypeIndexRegistrationMixin<
         }
 
         public setForClass(forClass: string): this {
-            throw new Error();
+            this.setStatement(TYPE_INDEX.forClass, forClass);
+            return this;
         }
     
         public removeForClass(forClass: string): this {
@@ -112,6 +113,12 @@ export function TypeIndexRegistrationMixin<
             throw new Error("Method not implemented.");
             // this.removeAll("solid:instanceContainer");
             // return this;
+        }
+
+        public toCopy(): ThisType<this> {
+            const copy = new TypeIndexRegistrationImpl(this.getUri());
+            copy.addStatementAll(this);
+            return copy;
         }
     }
 

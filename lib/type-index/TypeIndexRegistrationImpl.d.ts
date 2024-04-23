@@ -21,6 +21,7 @@ export declare function TypeIndexRegistrationMixin<TStatementImpl extends Statem
         removeForClassAll(): this;
         removeInstanceAll(): this;
         removeInstanceContainerAll(): this;
+        toCopy(): ThisType<any>;
         getStatement(property: string, language?: string | undefined): TypeIndexStatement | undefined;
         getStatementAll(property?: string | undefined, language?: string | undefined): TypeIndexStatement[];
         hasStatement(property?: string | undefined, language?: string | undefined): boolean;
@@ -45,7 +46,6 @@ export declare function TypeIndexRegistrationMixin<TStatementImpl extends Statem
         getContext(): import("../core/Common").Context | undefined;
         equals(other: ThisType<any>): boolean;
         difference(other: ThisType<any>): ThisType<any>;
-        toCopy(): ThisType<any>;
         createStatement(property: string, value: string, datatype?: string | undefined, language?: string | undefined): TypeIndexStatement;
         addStatement(other: Statement): TypeIndexStatement;
         addStatementAll(others: Iterable<Statement>): TypeIndexStatement[];

@@ -97,7 +97,7 @@ export class ThingImpl<
     }
 
     _getStatementInternal(property: string, language?: string | undefined): StatementType | undefined {
-        throw new Error("Method not implemented.");
+        return this._getStatementsInternal().find(s => s.getProperty() === property);
     }
 
     getStatementAll(property?: string | undefined, language?: string | undefined): StatementType[] {
@@ -151,9 +151,11 @@ export class ThingImpl<
     some(predicate: (value: StatementType, index?: number | undefined, array?: StatementType[] | undefined) => unknown, thisArg?: any): boolean {
         throw new Error("Method not implemented.");
     }
-    [Symbol.iterator](): Iterator<StatementType, any, undefined> {
-        throw new Error("Method not implemented.");
+    
+    public [Symbol.iterator](): Iterator<StatementType> {
+        return this._statements[Symbol.iterator](); // should make a copy before?
     }
+
     getUri(): string {
         return this._uri;
     }
@@ -171,7 +173,7 @@ export class ThingImpl<
     }
 
     public toCopy(): ThisType<this> {
-        const copy = new ThingImpl<StatementType>(this._statementImpl, this._uri);
+        const copy = new ThingImpl<StatementType>(this._statementImpl, this._uri); // can't call the polymorphic constructor, this method should be redefined by sub classes.
         copy.addStatementAll(this._statements);
         return copy;
     }

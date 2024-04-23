@@ -59,23 +59,19 @@ export function TypeIndexMixin<
 
         public createThing(uriOrNameHint?: string): TypeIndexRegistration {
             const registration = super.createThing(uriOrNameHint);
-            this.createStatement(registration, "rdf:type", TYPE_INDEX.TypeRegistration);
-            return registration;
+            return this.createStatement(registration, "rdf:type", TYPE_INDEX.TypeRegistration);
         }
 
         public createRegistrationForInstance(forClass: string, instance: string, nameHintOrUri?: string): TypeIndexRegistration {
-            // this.addThing(new TypeIndexRegistrationImpl(forClass, instance, instanceContainer));
             const thing = this.createThing(nameHintOrUri);
             this.createStatement(thing, TYPE_INDEX.forClass, forClass);
-            this.createStatement(thing, TYPE_INDEX.instance, instance);
-            return thing;
+            return this.createStatement(thing, TYPE_INDEX.instance, instance);
         }
 
         public createRegistrationForInstanceContainer(forClass: string, instanceContainer: string, nameHintOrUri?: string): TypeIndexRegistration {
             const thing = this.createThing(nameHintOrUri);
             this.createStatement(thing, TYPE_INDEX.forClass, forClass);
-            this.createStatement(thing, TYPE_INDEX.instanceContainer, instanceContainer);
-            return thing;
+            return this.createStatement(thing, TYPE_INDEX.instanceContainer, instanceContainer);
         }
     }
 }

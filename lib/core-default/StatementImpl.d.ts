@@ -16,7 +16,7 @@ export declare class StatementImpl implements Statement {
     constructor(params: ConstructorParams);
     setProperty(property: string): ThisType<this>;
     getProperty(): string;
-    setValue(): this;
+    setValue(value: string): this;
     setDatatype(): this;
     setLanguage(): this;
     getSubject(): string;
