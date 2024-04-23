@@ -1,4 +1,5 @@
-import { Document, Statement } from "../core/Document";
+import { Document } from "../core/Document";
+import { Statement } from "../core/Statement";
 
 export interface WithChangelog<
     StatementType extends Statement = Statement,

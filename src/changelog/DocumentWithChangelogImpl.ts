@@ -9,7 +9,7 @@ export function DocumentWithChangelogMixin<
 >(Base: TBase) {
     return class DocumentWithChangelogImpl extends Base implements WithChangelog {
 
-        _changelog: ChangelogImpl;
+        _changelog: ChangelogImpl; // TODO: add statement type?
 
         public constructor(...args: any[]) { 
             super(...args);

@@ -4,8 +4,8 @@ import { Thing } from "../core/Thing.js";
 import { DistantDocument, LocalDocument } from "./DocumentSynchronized.js";
 
 export type DocumentLocalConstructor<
-    ContainedThing extends Thing = Thing, 
-    SelfDescribingThing extends Thing = Thing,
+    ContainedThing extends Thing<any> = Thing, 
+    SelfDescribingThing extends Thing<any> = Thing,
 > = new (...args: any[]) => DocumentWritable<ContainedThing, SelfDescribingThing> & WithChangelog;
 
 export function DocumentLocalMixin<

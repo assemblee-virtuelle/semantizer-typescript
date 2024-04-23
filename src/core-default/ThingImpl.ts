@@ -1,5 +1,5 @@
 import { Context } from "../core/Common.js";
-import { Statement, StatementWritable } from "../core/Statement.js";
+import { Statement, StatementConstructor } from "../core/Statement.js";
 import { Thing, ThingWritable } from "../core/Thing.js";
 import StatementImpl from "./StatementImpl.js";
 
@@ -13,37 +13,49 @@ export enum ThingType {
 //     StatementType extends Statement = Statement,
 // > = new (about: string, property: string, value: string, datatype?: string, language?: string) => StatementType;
 
-export class ThingImpl implements ThingWritable { 
+export class ThingImpl<
+    StatementType extends Statement = Statement
+> implements ThingWritable { 
 
     private _uri: string;
     // private _document: DocumentType;
-    private _statements: StatementWritable[];
+    private _statementImpl: StatementConstructor<StatementType>;
+    private _statements: StatementType[];
 
     // TODO: add copy constructor
-    public constructor() { //document: DocumentType, stateType?: ThingType, uriOrNameHint?: string) {
+    public constructor(statementImpl: StatementConstructor<StatementType>) { //document: DocumentType, stateType?: ThingType, uriOrNameHint?: string) {
         this._uri = "thingUri"; //uriOrNameHint ?? '';
         // this._document = document;
+        this._statementImpl = statementImpl;
         this._statements = [];
     }
 
-    protected getStatementsInternal(): StatementWritable[] {
+    protected _getStatementsInternal(): StatementType[] {
         return this._statements;
     }
 
-    public createStatement(property: string, value: string, datatype?: string | undefined, language?: string | undefined): Statement {
-        const statement = new StatementImpl({subject: this.getUri(), property, value, datatype, language});
-        this.getStatementsInternal().push(statement);
+    private _createStatementInternalFrom(other: Statement): StatementType {
+        return new this._statementImpl(other);
+    }
+
+    private _createStatementInternal(subject: string, property: string, value: string, datatype?: string | undefined, language?: string | undefined): StatementType {
+        return new this._statementImpl({subject, property, value, datatype, language});
+    }
+
+    public createStatement(property: string, value: string, datatype?: string | undefined, language?: string | undefined): StatementType {
+        const statement = this._createStatementInternal(this.getUri(), property, value, datatype, language);
+        this._getStatementsInternal().push(statement);
         return statement;
     }
 
-    public addStatement(other: Statement): Statement {
-        const statement = new StatementImpl(other);
-        this.getStatementsInternal().push(statement);
+    public addStatement(other: Statement): StatementType {
+        const statement = this._createStatementInternalFrom(other);
+        this._getStatementsInternal().push(statement);
         return statement;
     }
     
-    public addStatementAll(others: Iterable<Statement>): Statement[] {
-        const results: Statement[] = [];
+    public addStatementAll(others: Iterable<Statement>): StatementType[] {
+        const results: StatementType[] = [];
         for (const other of others) {
             const statement = this.addStatement(other);
             results.push(statement);
@@ -51,49 +63,49 @@ export class ThingImpl implements ThingWritable {
         return results;
     }
     
-    public deleteStatement(statement: Statement): boolean {
+    public deleteStatement(statement: StatementType): boolean {
         throw new Error("Method not implemented."); //this._statements = this._statements.filter(s => s !== statement);
     }
 
-    public setStatement(property: string, value: string, oldValue?: string, datatype?: string, language?: string): Statement | undefined {
-        const statement = this._getStatement(property, language);
+    public setStatement(property: string, value: string, oldValue?: string, datatype?: string, language?: string): StatementType | undefined {
+        const statement = this._getStatementInternal(property, language);
         if (statement) {
             statement.setValue(value);
-            return new StatementImpl(statement);
+            return this._createStatementInternalFrom(statement);
         }
         return undefined;
     }
 
-    pop(): Statement | undefined {
+    pop(): StatementType | undefined {
         throw new Error("Method not implemented.");
     }
     reverse(): void {
         throw new Error("Method not implemented.");
     }
-    shift(): Statement | undefined {
+    shift(): StatementType | undefined {
         throw new Error("Method not implemented.");
     }
-    sort(compareFn?: ((a: Statement, b: Statement) => number) | undefined): ThisType<this> {
+    sort(compareFn?: ((a: StatementType, b: StatementType) => number) | undefined): ThisType<this> {
         throw new Error("Method not implemented.");
     }
-    splice(start: number, deleteCount?: number | undefined, ...items: Statement[]): ThisType<this> {
+    splice(start: number, deleteCount?: number | undefined, ...items: StatementType[]): ThisType<this> {
         throw new Error("Method not implemented.");
     }
-    getStatement(property: string, language?: string | undefined): Statement | undefined {
-        throw new Error("Method not implemented.");
-    }
-
-    _getStatement(property: string, language?: string | undefined): StatementWritable | undefined {
+    getStatement(property: string, language?: string | undefined): StatementType | undefined {
         throw new Error("Method not implemented.");
     }
 
-    getStatementAll(property?: string | undefined, language?: string | undefined): Statement[] {
+    _getStatementInternal(property: string, language?: string | undefined): StatementType | undefined {
+        throw new Error("Method not implemented.");
+    }
+
+    getStatementAll(property?: string | undefined, language?: string | undefined): StatementType[] {
         throw new Error("Method not implemented.");
     }
     hasStatement(property?: string | undefined, language?: string | undefined): boolean {
         throw new Error("Method not implemented.");
     }
-    at(index: number): Statement | undefined {
+    at(index: number): StatementType | undefined {
         throw new Error("Method not implemented.");
     }
     contains(other: Thing): boolean {
@@ -102,43 +114,43 @@ export class ThingImpl implements ThingWritable {
     count(): number {
         throw new Error("Method not implemented.");
     }
-    every(predicate: (value: Statement, index?: number | undefined, array?: Statement[] | undefined) => boolean, thisArg?: any): boolean {
+    every(predicate: (value: StatementType, index?: number | undefined, array?: StatementType[] | undefined) => boolean, thisArg?: any): boolean {
         throw new Error("Method not implemented.");
     }
-    filter(predicate: (value: Statement, index?: number | undefined, array?: Statement[] | undefined) => boolean): Statement[] {
+    filter(predicate: (value: StatementType, index?: number | undefined, array?: StatementType[] | undefined) => boolean): StatementType[] {
         throw new Error("Method not implemented.");
     }
-    find(predicate: (value: Statement, index?: number | undefined, obj?: Statement[] | undefined) => boolean, thisArg?: any): Statement | undefined {
+    find(predicate: (value: StatementType, index?: number | undefined, obj?: StatementType[] | undefined) => boolean, thisArg?: any): StatementType | undefined {
         throw new Error("Method not implemented.");
     }
-    findIndex(predicate: (value: Statement, index?: number | undefined, obj?: Statement[] | undefined) => unknown, thisArg?: any): number {
+    findIndex(predicate: (value: StatementType, index?: number | undefined, obj?: StatementType[] | undefined) => unknown, thisArg?: any): number {
         throw new Error("Method not implemented.");
     }
-    forEach(callbackfn: (value: Statement, index?: number | undefined, array?: Statement[] | undefined) => void, thisArg?: any): void {
+    forEach(callbackfn: (value: StatementType, index?: number | undefined, array?: StatementType[] | undefined) => void, thisArg?: any): void {
         throw new Error("Method not implemented.");
     }
-    includes(searchElement: Statement, fromIndex?: number | undefined): boolean {
+    includes(searchElement: StatementType, fromIndex?: number | undefined): boolean {
         throw new Error("Method not implemented.");
     }
-    indexOf(searchElement: Statement, fromIndex?: number | undefined): number {
+    indexOf(searchElement: StatementType, fromIndex?: number | undefined): number {
         throw new Error("Method not implemented.");
     }
     keys(): IterableIterator<number> {
         throw new Error("Method not implemented.");
     }
-    map(callbackfn: (value: Statement, index?: number | undefined, array?: Statement[] | undefined) => unknown, thisArg?: any): unknown[] {
+    map(callbackfn: (value: StatementType, index?: number | undefined, array?: StatementType[] | undefined) => unknown, thisArg?: any): unknown[] {
         throw new Error("Method not implemented.");
     }
-    reduce(callbackfn: (previousValue: Statement, currentValue: Statement, currentIndex: number, array: Statement[]) => Statement): Statement {
+    reduce(callbackfn: (previousValue: StatementType, currentValue: StatementType, currentIndex: number, array: StatementType[]) => StatementType): StatementType {
         throw new Error("Method not implemented.");
     }
     slice(start?: number | undefined, end?: number | undefined): Thing {
         throw new Error("Method not implemented.");
     }
-    some(predicate: (value: Statement, index?: number | undefined, array?: Statement[] | undefined) => unknown, thisArg?: any): boolean {
+    some(predicate: (value: StatementType, index?: number | undefined, array?: StatementType[] | undefined) => unknown, thisArg?: any): boolean {
         throw new Error("Method not implemented.");
     }
-    [Symbol.iterator](): Iterator<Statement, any, undefined> {
+    [Symbol.iterator](): Iterator<StatementType, any, undefined> {
         throw new Error("Method not implemented.");
     }
     getUri(): string {
@@ -160,6 +172,13 @@ export class ThingImpl implements ThingWritable {
         throw new Error("Method not implemented.");
     }
 
+}
+
+export class ThingImplDefault extends ThingImpl<Statement> {
+
+    public constructor() {
+        super(StatementImpl);
+    }
 
 }
 

@@ -1,6 +1,7 @@
 import { DocumentWritableConstructor } from "../core/Document";
 import { Thing } from "../core/Thing";
-import { TypeIndexRegistration, TypeIndexStatement, WithReadOperations, WithWriteOperations } from "./TypeIndex";
+import { TypeIndexStatement, WithReadOperations, WithWriteOperations } from "./TypeIndex";
+import { TypeIndexRegistration } from "./TypeIndexRegistration";
 import { TYPE_INDEX } from "./Vocabulary.js";
 
 export function TypeIndexMixin<TBase extends DocumentWritableConstructor<TypeIndexRegistration, Thing>>(Base: TBase) {
@@ -53,10 +54,16 @@ export function TypeIndexMixin<TBase extends DocumentWritableConstructor<TypeInd
             this.forEach((s, i, a) => s.isForClass(forClass)? callbackfn(s, i, a): null, thisArg);
         }
 
+        public createThing(): TypeIndexRegistration {
+            const registration = super.createThing();
+            this.createStatement(registration, "rdf:type", TYPE_INDEX.TypeRegistration);
+            return registration;
+        }
+
         public createRegistrationForInstance(forClass: string, instance: string, nameHintOrUri?: string): TypeIndexRegistration {
             // this.addThing(new TypeIndexRegistrationImpl(forClass, instance, instanceContainer));
             const thing = this.createThing(); // "#reg"
-            this.createStatement(thing, "rdf:type", TYPE_INDEX.TypeRegistration);
+            //this.createStatement(thing, "rdf:type", TYPE_INDEX.TypeRegistration);
             this.createStatement(thing, TYPE_INDEX.forClass, forClass);
             this.createStatement(thing, TYPE_INDEX.instance, instance);
 
@@ -65,7 +72,7 @@ export function TypeIndexMixin<TBase extends DocumentWritableConstructor<TypeInd
 
         public createRegistrationForInstanceContainer(forClass: string, instanceContainer: string, nameHintOrUri?: string): TypeIndexRegistration {
             const thing = this.createThing(); // "#reg2"
-            this.createStatement(thing, "rdf:type", TYPE_INDEX.TypeRegistration);
+            //this.createStatement(thing, "rdf:type", TYPE_INDEX.TypeRegistration);
             this.createStatement(thing, TYPE_INDEX.forClass, forClass);
             this.createStatement(thing, TYPE_INDEX.instanceContainer, instanceContainer);
             return thing;

@@ -1,4 +1,4 @@
-import { Statement, StatementWritable } from "../core/Statement";
+import { Statement } from "../core/Statement";
 
 type ConstructorParams = {
     subject: string;
@@ -8,9 +8,8 @@ type ConstructorParams = {
     language?: string;
 }
 
-export class StatementImpl implements StatementWritable { 
+export class StatementImpl implements Statement { 
 
-    // private _thing: ThingType;
     private _subject: string;
     private _property: string;
     private _value: string;
@@ -27,28 +26,14 @@ export class StatementImpl implements StatementWritable {
         this._language = 'subject' in params? params.language: params.getLanguage();
     }
 
-    setProperty(property: string): ThisType<this> {
+    public setProperty(property: string): ThisType<this> {
         this._property = property;
         return this;
     }
 
-    getProperty(): string {
+    public getProperty(): string {
         return this._property;
     }
-
-    // getOwner(): ThingType {
-    //     throw new Error("Method not implemented.");
-    // }
-    // equals(other: Statement<ThingType>): boolean {
-    //     throw new Error("Method not implemented.");
-    // }
-    // difference(other: Statement<ThingType>): Statement<ThingType> {
-    //     throw new Error("Method not implemented.");
-    // }
-
-    // public toCopy(): this {
-    //     throw new Error("Method not implemented.");
-    // }
 
     public setValue(): this {
         throw new Error("Method not implemented.");
@@ -61,18 +46,6 @@ export class StatementImpl implements StatementWritable {
     public setLanguage(): this {
         throw new Error("Method not implemented.");
     }
-
-    // public toCopyReadonly(): StatementOf<ThingType> {
-    //     throw new Error("Method not implemented.");
-    // }
-
-    // public toCopyWritable(): StatementOf<ThingType> {
-    //     throw new Error("Method not implemented.");
-    // }
-
-    // public getThing(): ThingType {
-    //     return this._thing;
-    // }
 
     public getSubject(): string {
         return this._subject;

@@ -1,11 +1,13 @@
 import { Statement } from "../core/Statement";
 import { Changelog, ChangelogWritable } from "./Changelog";
 
-export class ChangelogImpl implements ChangelogWritable {
+export class ChangelogImpl<
+    StatementType extends Statement = Statement,
+> implements ChangelogWritable<StatementType> {
 
-    private _added: Statement[];
-    private _updated: Statement[];
-    private _deleted: Statement[];
+    private _added: StatementType[];
+    private _updated: StatementType[];
+    private _deleted: StatementType[];
 
     constructor() {
         this._added = [];
@@ -13,29 +15,29 @@ export class ChangelogImpl implements ChangelogWritable {
         this._deleted = [];
     }
 
-    getAdded(): Statement[] {
+    getAdded(): StatementType[] {
         return this._added;
     }
 
-    getUpdated(): Statement[] {
+    getUpdated(): StatementType[] {
         return this._updated;
     }
 
-    getDeleted(): Statement[] {
+    getDeleted(): StatementType[] {
         return this._deleted;
     }
 
-    registerAdded(statement: Statement): Changelog<Statement> {
+    registerAdded(statement: StatementType): Changelog<StatementType> {
         this._added.push(statement);
         return this;
     }
 
-    registerUpdated(statement: Statement): Changelog<Statement> {
+    registerUpdated(statement: StatementType): Changelog<StatementType> {
         this._updated.push(statement);
         return this;
     }
 
-    registerDeleted(statement: Statement): Changelog<Statement> {
+    registerDeleted(statement: StatementType): Changelog<StatementType> {
         this._deleted.push(statement);
         return this;
     }

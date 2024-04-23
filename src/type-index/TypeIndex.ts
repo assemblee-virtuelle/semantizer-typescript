@@ -1,23 +1,14 @@
 import { Document, DocumentWritable } from "../core/Document";
 import { Statement } from "../core/Statement";
 import { Thing } from "../core/Thing";
+import { TypeIndexRegistration } from "./TypeIndexRegistration";
 
-export interface TypeIndexRegistration extends Thing {
-    isForClass(forClass: string): boolean;
-    addForClass(forClass: string): this;
-    addInstance(instance: string): this;
-    addInstanceContainer(instanceContainer: string): this;
-    setForClass(forClass: string): this;
-    removeForClass(forClass: string): this;
-    removeInstance(instance: string): this;
-    removeInstanceContainer(instanceContainer: string): this;
-    removeForClassAll(): this;
-    removeInstanceAll(): this;
-    removeInstanceContainerAll(): this; 
-}
+
 
 export interface TypeIndexStatement extends Statement {
     isForClass(forClass: string): boolean;
+    isForInstance(instance: string): boolean;
+    isForInstanceContainer(instanceContainer: string): boolean;
 }
 
 export interface WithReadOperations {

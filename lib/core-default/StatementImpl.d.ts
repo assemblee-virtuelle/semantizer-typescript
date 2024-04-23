@@ -1,4 +1,4 @@
-import { Statement, StatementWritable } from "../core/Statement";
+import { Statement } from "../core/Statement";
 type ConstructorParams = {
     subject: string;
     property: string;
@@ -6,7 +6,7 @@ type ConstructorParams = {
     datatype?: string;
     language?: string;
 };
-export declare class StatementImpl implements StatementWritable {
+export declare class StatementImpl implements Statement {
     private _subject;
     private _property;
     private _value;

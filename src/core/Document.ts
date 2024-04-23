@@ -42,8 +42,8 @@ export type DocumentWritableDecoratedConstructor<
 > = new (c: DocumentWritableConstructor<ContainedThing, SelfDescribingThing>) => DocumentWritable<ContainedThing, SelfDescribingThing>;
 
 export interface Document<
-    ContainedThing extends Thing = Thing,
-    SelfDescribingThing extends Thing = Thing
+    ContainedThing extends Thing<any> = Thing,
+    SelfDescribingThing extends Thing<any> = Thing
 > extends Resource, 
     /*ResourceCollection<ContainedThing>,*/ WithContext, Comparable, Copyable 
 {
@@ -84,8 +84,8 @@ export interface Document<
 }
 
 export interface DocumentWritable<
-    ContainedThing extends Thing = Thing,
-    SelfDescribingThing extends Thing = Thing
+    ContainedThing extends Thing<any> = Thing,
+    SelfDescribingThing extends Thing<any> = Thing
 > extends Document<ContainedThing, SelfDescribingThing>, WithContextWritable {
     createThing(): ContainedThing;
     createThingAboutSelf(): SelfDescribingThing;

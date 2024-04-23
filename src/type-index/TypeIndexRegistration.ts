@@ -1,8 +1,10 @@
 import { Thing } from "../core/Thing";
 import { TypeIndexStatement } from "./TypeIndex";
+
 export interface TypeIndexRegistrationReadonly extends Thing<TypeIndexStatement> {
     isForClass(forClass: string): boolean;
 }
+
 export interface WithWriteOperations {
     addForClass(forClass: string): this;
     addInstance(instance: string): this;
@@ -13,7 +15,7 @@ export interface WithWriteOperations {
     removeInstanceContainer(instanceContainer: string): this;
     removeForClassAll(): this;
     removeInstanceAll(): this;
-    removeInstanceContainerAll(): this;
+    removeInstanceContainerAll(): this; 
 }
+
 export type TypeIndexRegistration = TypeIndexRegistrationReadonly & WithWriteOperations;
-//# sourceMappingURL=TypeIndexRegistration.d.ts.map

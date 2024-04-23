@@ -2,7 +2,7 @@ import { WithChangelog } from "../changelog/Changelog.js";
 import { DocumentWritable } from "../core/Document.js";
 import { Thing } from "../core/Thing.js";
 import { LocalDocument } from "./DocumentSynchronized.js";
-export type DocumentLocalConstructor<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> = new (...args: any[]) => DocumentWritable<ContainedThing, SelfDescribingThing> & WithChangelog;
+export type DocumentLocalConstructor<ContainedThing extends Thing<any> = Thing, SelfDescribingThing extends Thing<any> = Thing> = new (...args: any[]) => DocumentWritable<ContainedThing, SelfDescribingThing> & WithChangelog;
 export declare function DocumentLocalMixin<TBase extends DocumentLocalConstructor<any, any>>(Base: TBase): {
     new (...args: any[]): {
         saveUpdate(): Promise<void>;
@@ -14,10 +14,10 @@ export declare function DocumentLocalMixin<TBase extends DocumentLocalConstructo
         getDistantUriAll(): string[];
         createThing(): any;
         createThingAboutSelf(): any;
-        addThing(other: Thing): any;
-        addThingAll(others: Iterable<Thing>): any[];
-        addThingAboutSelf(other: Thing): any;
-        addThingAboutSelfAll(others: Iterable<Thing>): any[];
+        addThing(other: Thing<import("../core/Statement.js").Statement>): any;
+        addThingAll(others: Iterable<Thing<import("../core/Statement.js").Statement>>): any[];
+        addThingAboutSelf(other: Thing<import("../core/Statement.js").Statement>): any;
+        addThingAboutSelfAll(others: Iterable<Thing<import("../core/Statement.js").Statement>>): any[];
         createStatement(about: any, property: string, value: string, datatype?: string | undefined, language?: string | undefined): import("../core/Statement.js").Statement | undefined;
         createStatementAboutSelf(property: string, value: string, datatype?: string | undefined, language?: string | undefined): import("../core/Statement.js").Statement;
         addStatement(other: import("../core/Statement.js").Statement): import("../core/Statement.js").Statement;
@@ -26,7 +26,7 @@ export declare function DocumentLocalMixin<TBase extends DocumentLocalConstructo
         addStatementAboutSelfAll(others: Iterable<import("../core/Statement.js").Statement>): import("../core/Statement.js").Statement[];
         setStatement(about: any, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): import("../core/Statement.js").Statement | undefined;
         setStatementAboutSelf(value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): import("../core/Statement.js").Statement | undefined;
-        deleteThing(thingOrUri: string | Thing): boolean;
+        deleteThing(thingOrUri: string | Thing<import("../core/Statement.js").Statement>): boolean;
         deleteStatement(statement: import("../core/Statement.js").Statement): boolean;
         pop(): any;
         reverse(): void;
@@ -37,14 +37,14 @@ export declare function DocumentLocalMixin<TBase extends DocumentLocalConstructo
         getThingAboutSelf(): any;
         hasThing(about: string): boolean;
         hasThingAboutSelf(): boolean;
-        getStatement(about: string | Thing, property: string, language?: string | undefined): import("../core/Statement.js").Statement | undefined;
-        getStatementAll(about: string | Thing, property?: string | undefined, language?: string | undefined): import("../core/Statement.js").Statement[];
+        getStatement(about: string | Thing<import("../core/Statement.js").Statement>, property: string, language?: string | undefined): import("../core/Statement.js").Statement | undefined;
+        getStatementAll(about: string | Thing<import("../core/Statement.js").Statement>, property?: string | undefined, language?: string | undefined): import("../core/Statement.js").Statement[];
         getStatementAboutSelf(property: string, language?: string | undefined): import("../core/Statement.js").Statement | undefined;
         getStatementAboutSelfAll(property?: string | undefined, language?: string | undefined): import("../core/Statement.js").Statement[];
-        hasStatement(about: string | Thing, property?: string | undefined, language?: string | undefined): boolean;
+        hasStatement(about: string | Thing<import("../core/Statement.js").Statement>, property?: string | undefined, language?: string | undefined): boolean;
         hasStatementAboutSelf(property?: string | undefined, language?: string | undefined): boolean;
         at(index: number): any;
-        contains(other: import("../core/Document.js").Document<any, Thing>): boolean;
+        contains(other: import("../core/Document.js").Document<any, Thing<import("../core/Statement.js").Statement>>): boolean;
         count(): number;
         every(predicate: (value: any, index?: number | undefined, array?: any[] | undefined) => boolean, thisArg?: any): boolean;
         filter(predicate: (value: any, index?: number | undefined, array?: any[] | undefined) => boolean): any[];
@@ -57,7 +57,7 @@ export declare function DocumentLocalMixin<TBase extends DocumentLocalConstructo
         indexOf(searchElement: any, fromIndex?: number | undefined): number;
         keys(): IterableIterator<number>;
         map(callbackfn: (value: any, index?: number | undefined, array?: any[] | undefined) => unknown, thisArg?: any): unknown[];
-        reduce(callbackfn: (previousValue: any, currentValue: any, currentIndex: number, array: any[]) => Thing): any;
+        reduce(callbackfn: (previousValue: any, currentValue: any, currentIndex: number, array: any[]) => Thing<import("../core/Statement.js").Statement>): any;
         slice(start?: number | undefined, end?: number | undefined): ThisType<any>;
         some(predicate: (value: any, index?: number | undefined, array?: any[] | undefined) => unknown, thisArg?: any): boolean;
         [Symbol.iterator](): Iterator<any, any, undefined>;
@@ -69,7 +69,7 @@ export declare function DocumentLocalMixin<TBase extends DocumentLocalConstructo
         toCopy(): ThisType<any>;
         deleteContext(): void;
         setContext(context: import("../core/Common.js").Context): void;
-        getChangelog(): import("../changelog/Changelog.js").Changelog<Statement>;
+        getChangelog(): import("../changelog/Changelog.js").Changelog<import("../core/Statement.js").Statement>;
     };
 } & TBase;
 export declare function DocumentDistantMixin<TBase extends DocumentLocalConstructor<any, any>>(Base: TBase): {
@@ -81,10 +81,10 @@ export declare function DocumentDistantMixin<TBase extends DocumentLocalConstruc
         getDistantUriAll(): string[];
         createThing(): any;
         createThingAboutSelf(): any;
-        addThing(other: Thing): any;
-        addThingAll(others: Iterable<Thing>): any[];
-        addThingAboutSelf(other: Thing): any;
-        addThingAboutSelfAll(others: Iterable<Thing>): any[];
+        addThing(other: Thing<import("../core/Statement.js").Statement>): any;
+        addThingAll(others: Iterable<Thing<import("../core/Statement.js").Statement>>): any[];
+        addThingAboutSelf(other: Thing<import("../core/Statement.js").Statement>): any;
+        addThingAboutSelfAll(others: Iterable<Thing<import("../core/Statement.js").Statement>>): any[];
         createStatement(about: any, property: string, value: string, datatype?: string | undefined, language?: string | undefined): import("../core/Statement.js").Statement | undefined;
         createStatementAboutSelf(property: string, value: string, datatype?: string | undefined, language?: string | undefined): import("../core/Statement.js").Statement;
         addStatement(other: import("../core/Statement.js").Statement): import("../core/Statement.js").Statement;
@@ -93,7 +93,7 @@ export declare function DocumentDistantMixin<TBase extends DocumentLocalConstruc
         addStatementAboutSelfAll(others: Iterable<import("../core/Statement.js").Statement>): import("../core/Statement.js").Statement[];
         setStatement(about: any, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): import("../core/Statement.js").Statement | undefined;
         setStatementAboutSelf(value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): import("../core/Statement.js").Statement | undefined;
-        deleteThing(thingOrUri: string | Thing): boolean;
+        deleteThing(thingOrUri: string | Thing<import("../core/Statement.js").Statement>): boolean;
         deleteStatement(statement: import("../core/Statement.js").Statement): boolean;
         pop(): any;
         reverse(): void;
@@ -104,14 +104,14 @@ export declare function DocumentDistantMixin<TBase extends DocumentLocalConstruc
         getThingAboutSelf(): any;
         hasThing(about: string): boolean;
         hasThingAboutSelf(): boolean;
-        getStatement(about: string | Thing, property: string, language?: string | undefined): import("../core/Statement.js").Statement | undefined;
-        getStatementAll(about: string | Thing, property?: string | undefined, language?: string | undefined): import("../core/Statement.js").Statement[];
+        getStatement(about: string | Thing<import("../core/Statement.js").Statement>, property: string, language?: string | undefined): import("../core/Statement.js").Statement | undefined;
+        getStatementAll(about: string | Thing<import("../core/Statement.js").Statement>, property?: string | undefined, language?: string | undefined): import("../core/Statement.js").Statement[];
         getStatementAboutSelf(property: string, language?: string | undefined): import("../core/Statement.js").Statement | undefined;
         getStatementAboutSelfAll(property?: string | undefined, language?: string | undefined): import("../core/Statement.js").Statement[];
-        hasStatement(about: string | Thing, property?: string | undefined, language?: string | undefined): boolean;
+        hasStatement(about: string | Thing<import("../core/Statement.js").Statement>, property?: string | undefined, language?: string | undefined): boolean;
         hasStatementAboutSelf(property?: string | undefined, language?: string | undefined): boolean;
         at(index: number): any;
-        contains(other: import("../core/Document.js").Document<any, Thing>): boolean;
+        contains(other: import("../core/Document.js").Document<any, Thing<import("../core/Statement.js").Statement>>): boolean;
         count(): number;
         every(predicate: (value: any, index?: number | undefined, array?: any[] | undefined) => boolean, thisArg?: any): boolean;
         filter(predicate: (value: any, index?: number | undefined, array?: any[] | undefined) => boolean): any[];
@@ -124,7 +124,7 @@ export declare function DocumentDistantMixin<TBase extends DocumentLocalConstruc
         indexOf(searchElement: any, fromIndex?: number | undefined): number;
         keys(): IterableIterator<number>;
         map(callbackfn: (value: any, index?: number | undefined, array?: any[] | undefined) => unknown, thisArg?: any): unknown[];
-        reduce(callbackfn: (previousValue: any, currentValue: any, currentIndex: number, array: any[]) => Thing): any;
+        reduce(callbackfn: (previousValue: any, currentValue: any, currentIndex: number, array: any[]) => Thing<import("../core/Statement.js").Statement>): any;
         slice(start?: number | undefined, end?: number | undefined): ThisType<any>;
         some(predicate: (value: any, index?: number | undefined, array?: any[] | undefined) => unknown, thisArg?: any): boolean;
         [Symbol.iterator](): Iterator<any, any, undefined>;
@@ -136,7 +136,7 @@ export declare function DocumentDistantMixin<TBase extends DocumentLocalConstruc
         toCopy(): ThisType<any>;
         deleteContext(): void;
         setContext(context: import("../core/Common.js").Context): void;
-        getChangelog(): import("../changelog/Changelog.js").Changelog<Statement>;
+        getChangelog(): import("../changelog/Changelog.js").Changelog<import("../core/Statement.js").Statement>;
     };
 } & TBase;
 //# sourceMappingURL=DocumentSynchronizedImpl.d.ts.map

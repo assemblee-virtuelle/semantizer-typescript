@@ -1,11 +1,13 @@
 import { DocumentWithChangelogMixin } from './changelog/DocumentWithChangelogImpl.js';
 import DocumentImpl, { DocumentImplDefault } from './core-default/DocumentImpl.js';
-import ThingImpl from './core-default/ThingImpl.js';
+import StatementImpl from './core-default/StatementImpl.js';
+import ThingImpl, { ThingImplDefault } from './core-default/ThingImpl.js';
 import { Thing } from './core/Thing.js';
 import { DocumentLocalMixin } from './synchronized/DocumentSynchronizedImpl.js';
-import { TypeIndex, TypeIndexRegistration, TypeIndexWritable } from './type-index/TypeIndex.js';
+import { TypeIndex, TypeIndexStatement, TypeIndexWritable } from './type-index/TypeIndex.js';
 import { TypeIndexMixin } from './type-index/TypeIndexImpl.js';
 import TypeIndexRegistrationMixin from './type-index/TypeIndexRegistrationImpl.js';
+import { TypeIndexRegistrationStatementMixin } from './type-index/TypeIndexRegistrationStatement.js';
 
 export { default as Semantizer } from './Semantizer.js';
 
@@ -21,8 +23,16 @@ const statement = document.createStatement("https://example.org/about", "https:/
 // const typeIndexFactory = new TypeIndexFactory(DocumentImpl, ThingImpl<Statement<TypeIndexRegistration>, TypeIndex>, ThingImpl<Statement<TypeIndexSelfDescribingThing>, TypeIndex>, StatementImpl) ;//DocumentImpl<TypeIndex, TypeIndexReadonly>);
 
 const TypeIndexImpl = TypeIndexMixin(DocumentImpl); // <TypeIndexRegistration, Thing, TypeIndexRegistrationImpl, ThingImpl>
-const TypeIndexRegistrationImpl = TypeIndexRegistrationMixin(ThingImpl);
-const typeIndexDocument = new TypeIndexImpl(TypeIndexRegistrationImpl, ThingImpl); //(new DocumentImpl<TypeIndexStatement>);
+export class TypeIndexRegistrationThingImpl extends ThingImpl<TypeIndexStatement> {
+
+    public constructor() {
+        super(TypeIndexRegistrationStatementMixin(StatementImpl));
+    }
+
+}
+
+const TypeIndexRegistrationImpl = TypeIndexRegistrationMixin(TypeIndexRegistrationThingImpl);
+const typeIndexDocument = new TypeIndexImpl(TypeIndexRegistrationImpl, ThingImplDefault); //(new DocumentImpl<TypeIndexStatement>);
 // typeIndexDocument.createRegistrationForInstance("dfc-b:Catalog", "https://instance");
 // typeIndexDocument.forEach(t => console.log(t));
 
@@ -39,10 +49,11 @@ const typeIndexDocument = new TypeIndexImpl(TypeIndexRegistrationImpl, ThingImpl
 // //.save();
 
 const TypeIndexWithChangelog = TypeIndexMixin(DocumentWithChangelogMixin(DocumentImpl)); //DocumentWithChangelogMixin(TypeIndexMixin(DocumentImpl)); //DocumentWithChangelogMixin(TypeIndexImpl);
-const typeIndexWithChangelog = new TypeIndexWithChangelog(TypeIndexRegistrationImpl, ThingImpl); //new TypeIndexImpl(new DocumentImpl<TypeIndexStatement>()));
+const typeIndexWithChangelog = new TypeIndexWithChangelog(TypeIndexRegistrationImpl, ThingImplDefault); //new TypeIndexImpl(new DocumentImpl<TypeIndexStatement>()));
 typeIndexWithChangelog.createRegistrationForInstance("dfc-b:Catalog", "https://instance");
 typeIndexWithChangelog.forEach(t => console.log(t));
 console.log(typeIndexWithChangelog.getChangelog());
+// typeIndexWithChangelog.getThing("")?.getStatement("")?.isForClass("");
 
 // console.log("-------");
 
@@ -66,7 +77,7 @@ console.log(typeIndexWithChangelog.getChangelog());
 // thing.createStatement("prop", "value");
 // document.setThing("https://...", thing);
 
-//typeIndexLocal.saveUpdate();
+// typeIndexLocal.saveUpdate();
 
 // Décoration ou composition ? Ou les deux ?
 // Comment implémenter le type index avec changelog ?

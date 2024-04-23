@@ -4,7 +4,7 @@ import { Thing } from "./Thing";
 export type DocumentConstructor<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> = new () => Document<ContainedThing, SelfDescribingThing>;
 export type DocumentWritableConstructor<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> = new (...args: any[]) => DocumentWritable<ContainedThing, SelfDescribingThing>;
 export type DocumentWritableDecoratedConstructor<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> = new (c: DocumentWritableConstructor<ContainedThing, SelfDescribingThing>) => DocumentWritable<ContainedThing, SelfDescribingThing>;
-export interface Document<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> extends Resource, WithContext, Comparable, Copyable {
+export interface Document<ContainedThing extends Thing<any> = Thing, SelfDescribingThing extends Thing<any> = Thing> extends Resource, WithContext, Comparable, Copyable {
     getThing(about: string): ContainedThing | undefined;
     getThingAboutSelf(): SelfDescribingThing | undefined;
     hasThing(about: string): boolean;
@@ -34,7 +34,7 @@ export interface Document<ContainedThing extends Thing = Thing, SelfDescribingTh
     slice(start?: number, end?: number): ThisType<this>;
     some(predicate: (value: ContainedThing, index?: number, array?: ContainedThing[]) => unknown, thisArg?: any): boolean;
 }
-export interface DocumentWritable<ContainedThing extends Thing = Thing, SelfDescribingThing extends Thing = Thing> extends Document<ContainedThing, SelfDescribingThing>, WithContextWritable {
+export interface DocumentWritable<ContainedThing extends Thing<any> = Thing, SelfDescribingThing extends Thing<any> = Thing> extends Document<ContainedThing, SelfDescribingThing>, WithContextWritable {
     createThing(): ContainedThing;
     createThingAboutSelf(): SelfDescribingThing;
     addThing(other: Thing): ContainedThing;
