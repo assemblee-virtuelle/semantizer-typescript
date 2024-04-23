@@ -12,7 +12,7 @@ export declare function DocumentLocalMixin<TBase extends DocumentLocalConstructo
         isDistant(): boolean;
         getDistantUri(): string | undefined;
         getDistantUriAll(): string[];
-        createThing(): any;
+        createThing(uriOrNameHint?: string | undefined): any;
         createThingAboutSelf(): any;
         addThing(other: Thing<import("../core/Statement.js").Statement>): any;
         addThingAll(others: Iterable<Thing<import("../core/Statement.js").Statement>>): any[];
@@ -79,7 +79,7 @@ export declare function DocumentDistantMixin<TBase extends DocumentLocalConstruc
         toLocalCopy(): LocalDocument;
         getDistantUri(): string | undefined;
         getDistantUriAll(): string[];
-        createThing(): any;
+        createThing(uriOrNameHint?: string | undefined): any;
         createThingAboutSelf(): any;
         addThing(other: Thing<import("../core/Statement.js").Statement>): any;
         addThingAll(others: Iterable<Thing<import("../core/Statement.js").Statement>>): any[];

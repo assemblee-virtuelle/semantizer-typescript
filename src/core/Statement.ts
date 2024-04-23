@@ -1,8 +1,10 @@
+import { Copyable } from "./Common";
+
 export type StatementConstructor<
     StatementType extends StatementReadonly = Statement
 > = new (...args: any[]) => StatementType;
 
-export interface StatementReadonly {
+export interface StatementReadonly extends Copyable {
     getSubject(): string;
     getProperty(): string;
     getValue(): string;

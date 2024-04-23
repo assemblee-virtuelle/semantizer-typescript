@@ -8,7 +8,7 @@ export declare function DocumentWithChangelogMixin<TBase extends DocumentWritabl
         _changelog: ChangelogImpl;
         createStatement(about: string | Thing, property: string, value: string, datatype?: string, language?: string): Statement | undefined;
         getChangelog(): Changelog;
-        createThing(): any;
+        createThing(uriOrNameHint?: string | undefined): any;
         createThingAboutSelf(): any;
         addThing(other: Thing<Statement>): any;
         addThingAll(others: Iterable<Thing<Statement>>): any[];

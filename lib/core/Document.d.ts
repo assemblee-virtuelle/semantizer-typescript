@@ -34,7 +34,7 @@ export interface Document<ContainedThing extends Thing<any> = Thing, SelfDescrib
     some(predicate: (value: ContainedThing, index?: number, array?: ContainedThing[]) => unknown, thisArg?: any): boolean;
 }
 export interface DocumentWritable<ContainedThing extends Thing<any> = Thing, SelfDescribingThing extends Thing<any> = Thing> extends Document<ContainedThing, SelfDescribingThing>, WithContextWritable {
-    createThing(): ContainedThing;
+    createThing(uriOrNameHint?: string): ContainedThing;
     createThingAboutSelf(): SelfDescribingThing;
     addThing(other: Thing): ContainedThing;
     addThingAll(others: Iterable<Thing>): ContainedThing[];

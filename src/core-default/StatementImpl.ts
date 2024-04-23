@@ -63,6 +63,10 @@ export class StatementImpl implements Statement {
         return this._language;
     }
 
+    public toCopy(): ThisType<this> {
+        return new StatementImpl(this);
+    }
+
 }
 
 export default StatementImpl;

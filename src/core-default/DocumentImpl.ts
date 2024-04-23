@@ -35,8 +35,8 @@ export class DocumentImpl<
         return this._selfDescribingThing;
     }
 
-    public createThing(): ContainedThing {
-        const thing = new this._containedThingImpl();
+    public createThing(uriOrNameHint?: string): ContainedThing {
+        const thing = new this._containedThingImpl(uriOrNameHint);
         this.getContainedThingsInternal().push(thing);
         return thing;
     }
@@ -59,11 +59,9 @@ export class DocumentImpl<
     
     public createStatement(about: string | ContainedThing, property: string, value: string, datatype?: string | undefined, language?: string | undefined): Statement | undefined {
         const thing = this._getThing(about);
-        if (thing) {
-            return thing.createStatement(property, value, datatype, language);
-        }
-        return undefined;
+        return thing? thing.createStatement(property, value, datatype, language): undefined;
     }
+
     createStatementAboutSelf(property: string, value: string, datatype?: string | undefined, language?: string | undefined): Statement {
         throw new Error("Method not implemented.");
     }
@@ -112,9 +110,11 @@ export class DocumentImpl<
         return this.getContainedThingsInternal().find(t => t.getUri() === uri);
     }
 
-    getThing(about: string): ContainedThing | undefined {
-        throw new Error("Method not implemented.");
+    public getThing(about: string): ContainedThing | undefined {
+        let thing = this._getThing(about);
+        return thing? thing.toCopy() as ContainedThing: undefined;
     }
+
     getThingAboutSelf(): SelfDescribingThing | undefined {
         throw new Error("Method not implemented.");
     }

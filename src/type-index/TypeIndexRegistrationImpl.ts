@@ -16,7 +16,7 @@ export function TypeIndexRegistrationMixin<
         // }
 
         public constructor(...args: any[]) {
-            super(TypeIndexRegistrationStatementMixin(StatementImpl)); 
+            super(TypeIndexRegistrationStatementMixin(StatementImpl), ...args); 
         }
 
         public isForClass(forClass: string): boolean {

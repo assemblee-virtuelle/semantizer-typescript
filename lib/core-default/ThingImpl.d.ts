@@ -10,7 +10,7 @@ export declare class ThingImpl<StatementType extends Statement = Statement> impl
     private _uri;
     private _statementImpl;
     private _statements;
-    constructor(statementImpl: StatementConstructor<StatementType>);
+    constructor(statementImpl: StatementConstructor<StatementType>, uri?: string);
     protected _getStatementsInternal(): StatementType[];
     private _createStatementInternalFrom;
     private _createStatementInternal;
@@ -52,7 +52,7 @@ export declare class ThingImpl<StatementType extends Statement = Statement> impl
     toCopy(): ThisType<this>;
 }
 export declare class ThingImplDefault extends ThingImpl<Statement> {
-    constructor();
+    constructor(uri?: string);
 }
 export default ThingImpl;
 //# sourceMappingURL=ThingImpl.d.ts.map

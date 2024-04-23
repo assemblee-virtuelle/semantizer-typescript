@@ -9,25 +9,26 @@ export enum ThingType {
     Anonymous
 }
 
-// export type StatementConstructor<
-//     StatementType extends Statement = Statement,
-// > = new (about: string, property: string, value: string, datatype?: string, language?: string) => StatementType;
+// type ConstructorParams = {
+//     uri: string
+// }
+
+// type CopyConstructorParams = {
+//     other: ThingWritable;
+// }
 
 export class ThingImpl<
     StatementType extends Statement = Statement
 > implements ThingWritable { 
 
     private _uri: string;
-    // private _document: DocumentType;
     private _statementImpl: StatementConstructor<StatementType>;
     private _statements: StatementType[];
 
-    // TODO: add copy constructor
-    public constructor(statementImpl: StatementConstructor<StatementType>) { //document: DocumentType, stateType?: ThingType, uriOrNameHint?: string) {
-        this._uri = "thingUri"; //uriOrNameHint ?? '';
-        // this._document = document;
-        this._statementImpl = statementImpl;
+    public constructor(statementImpl: StatementConstructor<StatementType>, uri?: string) {
         this._statements = [];
+        this._statementImpl = statementImpl;
+        this._uri = uri ?? "";
     }
 
     protected _getStatementsInternal(): StatementType[] {
@@ -168,16 +169,19 @@ export class ThingImpl<
     difference(other: ThisType<this>): ThisType<this> {
         throw new Error("Method not implemented.");
     }
-    toCopy(): ThisType<this> {
-        throw new Error("Method not implemented.");
+
+    public toCopy(): ThisType<this> {
+        const copy = new ThingImpl<StatementType>(this._statementImpl, this._uri);
+        copy.addStatementAll(this._statements);
+        return copy;
     }
 
 }
 
 export class ThingImplDefault extends ThingImpl<Statement> {
 
-    public constructor() {
-        super(StatementImpl);
+    public constructor(uri?: string) {
+        super(StatementImpl, uri);
     }
 
 }

@@ -13,7 +13,7 @@ import { TypeIndexRegistrationStatementMixin } from './type-index/TypeIndexRegis
 export { default as Semantizer } from './Semantizer.js';
 
 const document = new DocumentImplDefault;
-const statement = document.createStatement("https://example.org/about", "https://example.org/property", "value");
+// const statement = document.createStatement("https://example.org/about", "https://example.org/property", "value");
 // const getted = document.getStatement("https://example.org/about", "https://example.org/property");
 
 // const documentReadonly = document as Document;
@@ -44,10 +44,9 @@ const typeIndexDocument = new TypeIndexImpl(TypeIndexRegistrationImpl, ThingImpl
 
 const TypeIndexWithChangelog = TypeIndexMixin(DocumentWithChangelogMixin(DocumentImpl)); //DocumentWithChangelogMixin(TypeIndexMixin(DocumentImpl)); //DocumentWithChangelogMixin(TypeIndexImpl);
 const typeIndexWithChangelog = new TypeIndexWithChangelog(TypeIndexRegistrationImpl, ThingImplDefault); //new TypeIndexImpl(new DocumentImpl<TypeIndexStatement>()));
-typeIndexWithChangelog.createRegistrationForInstance("dfc-b:Catalog", "https://instance");
+typeIndexWithChangelog.createRegistrationForInstanceContainer("dfc-b:Catalog", "https://example.org/catalogs", "reg1");
+typeIndexWithChangelog.createRegistrationForInstanceContainer("dfc-b:CatalogItems", "https://example.org/catalogItems", "reg2");
 typeIndexWithChangelog.forEach(t => console.log(t));
-console.log(typeIndexWithChangelog.getChangelog());
-typeIndexWithChangelog.getThing("")?.getStatement("")?.isForClass("");
 
 // console.log("-------");
 

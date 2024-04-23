@@ -10,7 +10,7 @@ export declare class DocumentImpl<ContainedThing extends ThingWritable<any>, Sel
     constructor(containedThingImpl: ThingConstructor<ContainedThing>, selfDescribingThingImpl: ThingConstructor<SelfDescribingThing>);
     protected getContainedThingsInternal(): ContainedThing[];
     protected getSelfDescribingThingInternal(): SelfDescribingThing[];
-    createThing(): ContainedThing;
+    createThing(uriOrNameHint?: string): ContainedThing;
     createThingAboutSelf(): SelfDescribingThing;
     addThing(other: Thing): ContainedThing;
     addThingAll(others: Iterable<Thing>): ContainedThing[];

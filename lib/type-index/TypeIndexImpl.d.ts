@@ -1,5 +1,5 @@
 import { DocumentWritableConstructor } from "../core/Document";
-import { Thing, ThingWritable } from "../core/Thing";
+import { ThingWritable } from "../core/Thing";
 import { TypeIndexStatement } from "./TypeIndex";
 import { TypeIndexRegistration } from "./TypeIndexRegistration";
 export declare function TypeIndexMixin<TBase extends DocumentWritableConstructor<TypeIndexRegistration, ThingWritable<TypeIndexStatement>>>(Base: TBase): {
@@ -19,14 +19,14 @@ export declare function TypeIndexMixin<TBase extends DocumentWritableConstructor
         removeInstanceAll(registration: string | TypeIndexRegistration): TypeIndexRegistration;
         removeInstanceContainerAll(registration: string | TypeIndexRegistration): TypeIndexRegistration;
         forEachOfClass(forClass: string, callbackfn: (value: TypeIndexRegistration, index?: number, array?: TypeIndexRegistration[]) => void, thisArg?: any): void;
-        createThing(): TypeIndexRegistration;
+        createThing(uriOrNameHint?: string): TypeIndexRegistration;
         createRegistrationForInstance(forClass: string, instance: string, nameHintOrUri?: string): TypeIndexRegistration;
         createRegistrationForInstanceContainer(forClass: string, instanceContainer: string, nameHintOrUri?: string): TypeIndexRegistration;
         createThingAboutSelf(): ThingWritable<TypeIndexStatement>;
-        addThing(other: Thing<import("../core/Statement").Statement>): TypeIndexRegistration;
-        addThingAll(others: Iterable<Thing<import("../core/Statement").Statement>>): TypeIndexRegistration[];
-        addThingAboutSelf(other: Thing<import("../core/Statement").Statement>): ThingWritable<TypeIndexStatement>;
-        addThingAboutSelfAll(others: Iterable<Thing<import("../core/Statement").Statement>>): ThingWritable<TypeIndexStatement>[];
+        addThing(other: import("../core/Thing").Thing<import("../core/Statement").Statement>): TypeIndexRegistration;
+        addThingAll(others: Iterable<import("../core/Thing").Thing<import("../core/Statement").Statement>>): TypeIndexRegistration[];
+        addThingAboutSelf(other: import("../core/Thing").Thing<import("../core/Statement").Statement>): ThingWritable<TypeIndexStatement>;
+        addThingAboutSelfAll(others: Iterable<import("../core/Thing").Thing<import("../core/Statement").Statement>>): ThingWritable<TypeIndexStatement>[];
         createStatement(about: string | TypeIndexRegistration, property: string, value: string, datatype?: string | undefined, language?: string | undefined): import("../core/Statement").Statement | undefined;
         createStatementAboutSelf(property: string, value: string, datatype?: string | undefined, language?: string | undefined): import("../core/Statement").Statement;
         addStatement(other: import("../core/Statement").Statement): import("../core/Statement").Statement;
@@ -35,7 +35,7 @@ export declare function TypeIndexMixin<TBase extends DocumentWritableConstructor
         addStatementAboutSelfAll(others: Iterable<import("../core/Statement").Statement>): import("../core/Statement").Statement[];
         setStatement(about: string | TypeIndexRegistration, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): import("../core/Statement").Statement | undefined;
         setStatementAboutSelf(value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): import("../core/Statement").Statement | undefined;
-        deleteThing(thingOrUri: string | Thing<import("../core/Statement").Statement>): boolean;
+        deleteThing(thingOrUri: string | import("../core/Thing").Thing<import("../core/Statement").Statement>): boolean;
         deleteStatement(statement: import("../core/Statement").Statement): boolean;
         pop(): TypeIndexRegistration | undefined;
         reverse(): void;
@@ -46,14 +46,14 @@ export declare function TypeIndexMixin<TBase extends DocumentWritableConstructor
         getThingAboutSelf(): ThingWritable<TypeIndexStatement> | undefined;
         hasThing(about: string): boolean;
         hasThingAboutSelf(): boolean;
-        getStatement(about: string | Thing<import("../core/Statement").Statement>, property: string, language?: string | undefined): import("../core/Statement").Statement | undefined;
-        getStatementAll(about: string | Thing<import("../core/Statement").Statement>, property?: string | undefined, language?: string | undefined): import("../core/Statement").Statement[];
+        getStatement(about: string | import("../core/Thing").Thing<import("../core/Statement").Statement>, property: string, language?: string | undefined): import("../core/Statement").Statement | undefined;
+        getStatementAll(about: string | import("../core/Thing").Thing<import("../core/Statement").Statement>, property?: string | undefined, language?: string | undefined): import("../core/Statement").Statement[];
         getStatementAboutSelf(property: string, language?: string | undefined): import("../core/Statement").Statement | undefined;
         getStatementAboutSelfAll(property?: string | undefined, language?: string | undefined): import("../core/Statement").Statement[];
-        hasStatement(about: string | Thing<import("../core/Statement").Statement>, property?: string | undefined, language?: string | undefined): boolean;
+        hasStatement(about: string | import("../core/Thing").Thing<import("../core/Statement").Statement>, property?: string | undefined, language?: string | undefined): boolean;
         hasStatementAboutSelf(property?: string | undefined, language?: string | undefined): boolean;
         at(index: number): TypeIndexRegistration | undefined;
-        contains(other: import("../core/Document").Document<any, Thing<import("../core/Statement").Statement>>): boolean;
+        contains(other: import("../core/Document").Document<any, import("../core/Thing").Thing<import("../core/Statement").Statement>>): boolean;
         count(): number;
         every(predicate: (value: TypeIndexRegistration, index?: number | undefined, array?: TypeIndexRegistration[] | undefined) => boolean, thisArg?: any): boolean;
         filter(predicate: (value: TypeIndexRegistration, index?: number | undefined, array?: TypeIndexRegistration[] | undefined) => boolean): TypeIndexRegistration[];
@@ -66,7 +66,7 @@ export declare function TypeIndexMixin<TBase extends DocumentWritableConstructor
         indexOf(searchElement: TypeIndexRegistration, fromIndex?: number | undefined): number;
         keys(): IterableIterator<number>;
         map(callbackfn: (value: TypeIndexRegistration, index?: number | undefined, array?: TypeIndexRegistration[] | undefined) => unknown, thisArg?: any): unknown[];
-        reduce(callbackfn: (previousValue: TypeIndexRegistration, currentValue: TypeIndexRegistration, currentIndex: number, array: TypeIndexRegistration[]) => Thing<import("../core/Statement").Statement>): TypeIndexRegistration;
+        reduce(callbackfn: (previousValue: TypeIndexRegistration, currentValue: TypeIndexRegistration, currentIndex: number, array: TypeIndexRegistration[]) => import("../core/Thing").Thing<import("../core/Statement").Statement>): TypeIndexRegistration;
         slice(start?: number | undefined, end?: number | undefined): ThisType<any>;
         some(predicate: (value: TypeIndexRegistration, index?: number | undefined, array?: TypeIndexRegistration[] | undefined) => unknown, thisArg?: any): boolean;
         [Symbol.iterator](): Iterator<TypeIndexRegistration, any, undefined>;

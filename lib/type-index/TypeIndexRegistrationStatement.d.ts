@@ -13,6 +13,7 @@ export declare function TypeIndexRegistrationStatementMixin<TBase extends Statem
         getValue(): string;
         getDatatype(): string | undefined;
         getLanguage(): string | undefined;
+        toCopy(): ThisType<any>;
     };
 } & TBase;
 //# sourceMappingURL=TypeIndexRegistrationStatement.d.ts.map

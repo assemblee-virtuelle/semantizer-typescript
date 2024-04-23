@@ -1,6 +1,6 @@
 import { DocumentWritableConstructor } from "../core/Document";
-import { Thing, ThingWritable } from "../core/Thing";
-import { TypeIndexStatement, TypeIndexWritable, WithReadOperations, WithWriteOperations } from "./TypeIndex";
+import { ThingWritable } from "../core/Thing";
+import { TypeIndexStatement, TypeIndexWritable } from "./TypeIndex";
 import { TypeIndexRegistration } from "./TypeIndexRegistration";
 import { TYPE_INDEX } from "./Vocabulary.js";
 
@@ -8,11 +8,7 @@ import { TYPE_INDEX } from "./Vocabulary.js";
 export function TypeIndexMixin<
     TBase extends DocumentWritableConstructor<TypeIndexRegistration, ThingWritable<TypeIndexStatement>>
 >(Base: TBase) {
-    return class TypeIndexImpl extends Base implements /*WithReadOperations, WithWriteOperations*/TypeIndexWritable {
-
-        // public constructor(...args: any[]) {
-        //     super(...args);
-        // }
+    return class TypeIndexImpl extends Base implements TypeIndexWritable {
 
         getStatementForClass(forClass: string): TypeIndexStatement[] {
             throw new Error("Method not implemented.");
@@ -61,25 +57,22 @@ export function TypeIndexMixin<
             this.forEach((s, i, a) => s.isForClass(forClass)? callbackfn(s, i, a): null, thisArg);
         }
 
-        public createThing(): TypeIndexRegistration {
-            const registration = super.createThing();
+        public createThing(uriOrNameHint?: string): TypeIndexRegistration {
+            const registration = super.createThing(uriOrNameHint);
             this.createStatement(registration, "rdf:type", TYPE_INDEX.TypeRegistration);
             return registration;
         }
 
         public createRegistrationForInstance(forClass: string, instance: string, nameHintOrUri?: string): TypeIndexRegistration {
             // this.addThing(new TypeIndexRegistrationImpl(forClass, instance, instanceContainer));
-            const thing = this.createThing(); // "#reg"
-            //this.createStatement(thing, "rdf:type", TYPE_INDEX.TypeRegistration);
+            const thing = this.createThing(nameHintOrUri);
             this.createStatement(thing, TYPE_INDEX.forClass, forClass);
             this.createStatement(thing, TYPE_INDEX.instance, instance);
-
             return thing;
         }
 
         public createRegistrationForInstanceContainer(forClass: string, instanceContainer: string, nameHintOrUri?: string): TypeIndexRegistration {
-            const thing = this.createThing(); // "#reg2"
-            //this.createStatement(thing, "rdf:type", TYPE_INDEX.TypeRegistration);
+            const thing = this.createThing(nameHintOrUri);
             this.createStatement(thing, TYPE_INDEX.forClass, forClass);
             this.createStatement(thing, TYPE_INDEX.instanceContainer, instanceContainer);
             return thing;

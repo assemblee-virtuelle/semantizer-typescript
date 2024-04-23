@@ -23,6 +23,7 @@ export declare class StatementImpl implements Statement {
     getValue(): string;
     getDatatype(): string | undefined;
     getLanguage(): string | undefined;
+    toCopy(): ThisType<this>;
 }
 export default StatementImpl;
 //# sourceMappingURL=StatementImpl.d.ts.map
