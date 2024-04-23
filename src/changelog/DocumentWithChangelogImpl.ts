@@ -12,14 +12,17 @@ export function DocumentWithChangelogMixin<
         _changelog: ChangelogImpl;
 
         public constructor(...args: any[]) { 
-            super();
+            super(...args);
             this._changelog = new ChangelogImpl();
         }
 
-        public createStatement(about: string | Thing, property: string, value: string, datatype?: string, language?: string): Statement {
+        public createStatement(about: string | Thing, property: string, value: string, datatype?: string, language?: string): Statement | undefined {
             const statement = super.createStatement(about, property, value, datatype, language);
-            this._changelog.registerAdded(statement);
-            return statement;
+            if (statement) {
+                this._changelog.registerAdded(statement);
+                return statement;
+            }
+            return undefined;
         }
 
         public getChangelog(): Changelog {

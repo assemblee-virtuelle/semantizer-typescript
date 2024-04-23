@@ -1,14 +1,14 @@
 import { Context } from "../core/Common.js";
 import { Document, DocumentWritable } from "../core/Document.js";
 import { Statement } from "../core/Statement.js";
-import { Thing, ThingConstructor, ThingWithWriteOperations } from "../core/Thing.js";
+import { Thing, ThingWithWriteOperations } from "../core/Thing.js";
 import ThingImpl from "./ThingImpl.js";
 export declare class DocumentImpl<ContainedThing extends Thing, SelfDescribingThing extends Thing, ContainedThingImpl extends ContainedThing & ThingWithWriteOperations, SelfDescribingThingImpl extends SelfDescribingThing & ThingWithWriteOperations> implements DocumentWritable<ContainedThing, SelfDescribingThing> {
     private _containedThings;
     private _selfDescribingThing;
     private _containedThingImpl;
     private _selfDescribingThingImpl;
-    constructor(containedThingImpl: ThingConstructor<ContainedThingImpl>, selfDescribingThingImpl: ThingConstructor<SelfDescribingThingImpl>);
+    constructor(...args: any[]);
     protected getContainedThingsInternal(): ContainedThingImpl[];
     protected getSelfDescribingThingInternal(): SelfDescribingThingImpl[];
     createThing(): ContainedThing;

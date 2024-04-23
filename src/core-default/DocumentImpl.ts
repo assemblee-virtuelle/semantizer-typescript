@@ -22,7 +22,8 @@ export class DocumentImpl<
     private _containedThingImpl: ThingConstructor<ContainedThingImpl>;
     private _selfDescribingThingImpl: ThingConstructor<SelfDescribingThingImpl>;
 
-    public constructor(containedThingImpl: ThingConstructor<ContainedThingImpl>, selfDescribingThingImpl: ThingConstructor<SelfDescribingThingImpl>) {
+    public constructor(...args: any[]) { //containedThingImpl: ThingConstructor<ContainedThingImpl>, selfDescribingThingImpl: ThingConstructor<SelfDescribingThingImpl>) {
+        const [containedThingImpl, selfDescribingThingImpl] = args;
         this._containedThings = [];
         this._selfDescribingThing = [];
         this._containedThingImpl = containedThingImpl;

@@ -6,7 +6,7 @@ import { ChangelogImpl } from "./ChangelogImpl.js";
 export declare function DocumentWithChangelogMixin<TBase extends DocumentWritableConstructor<any, any>>(Base: TBase): {
     new (...args: any[]): {
         _changelog: ChangelogImpl;
-        createStatement(about: string | Thing, property: string, value: string, datatype?: string, language?: string): Statement;
+        createStatement(about: string | Thing, property: string, value: string, datatype?: string, language?: string): Statement | undefined;
         getChangelog(): Changelog;
         createThing(): any;
         createThingAboutSelf(): any;
