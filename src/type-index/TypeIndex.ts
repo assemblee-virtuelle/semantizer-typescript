@@ -12,9 +12,13 @@ export interface TypeIndexStatement extends Statement {
 }
 
 export interface WithReadOperations {
-    getStatementForClass(forClass: string): TypeIndexStatement[];
-    getStatementForInstance(instance: string): TypeIndexStatement[];
-    getStatementForInstanceContainer(instanceContainer: string): TypeIndexStatement[];
+    getStatementForClass(registration: string | TypeIndexRegistration, forClass: string): TypeIndexStatement | undefined;
+    getStatementForInstance(registration: string | TypeIndexRegistration, instance: string): TypeIndexStatement | undefined;
+    getStatementForInstanceContainer(registration: string | TypeIndexRegistration, instanceContainer: string): TypeIndexStatement | undefined;
+
+    getStatementAllForClass(registration: string | TypeIndexRegistration, forClass: string): TypeIndexStatement[];
+    getStatementAllForInstance(registration: string | TypeIndexRegistration, instance: string): TypeIndexStatement[];
+    getStatementAllForInstanceContainer(registration: string | TypeIndexRegistration, instanceContainer: string): TypeIndexStatement[];
 
     // Add other forEach like: forEachOfInstance, forEachOfInstanceContainer?
     forEachOfClass(forClass: string, callbackfn: (value: TypeIndexRegistration, index?: number, array?: TypeIndexRegistration[]) => void, thisArg?: any): void;
@@ -28,10 +32,15 @@ export interface WithWriteOperations {
     addForClass(registration: string | TypeIndexRegistration, forClass: string): TypeIndexRegistration;
     addInstance(registration: string | TypeIndexRegistration, instance: string): TypeIndexRegistration;
     addInstanceContainer(registration: string | TypeIndexRegistration, instanceContainer: string):  TypeIndexRegistration;
-    setForClass(registration: string | TypeIndexRegistration, forClass: string): TypeIndexRegistration;
-    removeForClass(registration: string | TypeIndexRegistration, forClass: string): TypeIndexRegistration;
-    removeInstance(registration: string | TypeIndexRegistration, instance: string): TypeIndexRegistration;
-    removeInstanceContainer(registration: string | TypeIndexRegistration, instanceContainer: string): TypeIndexRegistration;
+    
+    setForClass(registration: string | TypeIndexRegistration, forClass: string, oldValue?: string): TypeIndexRegistration;
+    setInstance(registration: string | TypeIndexRegistration, instance: string, oldValue?: string): TypeIndexRegistration;
+    setInstanceContainer(registration: string | TypeIndexRegistration, instanceContainer: string, oldValue?: string): TypeIndexRegistration;
+    
+    removeForClass(registration: string | TypeIndexRegistration, ...forClass: string[]): TypeIndexRegistration;
+    removeInstance(registration: string | TypeIndexRegistration, ...instance: string[]): TypeIndexRegistration;
+    removeInstanceContainer(registration: string | TypeIndexRegistration, ...instanceContainer: string[]): TypeIndexRegistration;
+    
     removeForClassAll(registration: string | TypeIndexRegistration): TypeIndexRegistration;
     removeInstanceAll(registration: string | TypeIndexRegistration): TypeIndexRegistration;
     removeInstanceContainerAll(registration: string | TypeIndexRegistration): TypeIndexRegistration; 

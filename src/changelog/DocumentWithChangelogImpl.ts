@@ -1,4 +1,4 @@
-import { DocumentWritableConstructor } from "../core/Document";
+import { Constructed, ContainedThingOf, DocumentWritable, DocumentWritableConstructor, StatementOf } from "../core/Document";
 import { Statement } from "../core/Statement";
 import { Thing } from "../core/Thing";
 import { Changelog, WithChangelog } from "./Changelog";
@@ -16,13 +16,10 @@ export function DocumentWithChangelogMixin<
             this._changelog = new ChangelogImpl();
         }
 
-        public createStatement(about: string | Thing, property: string, value: string, datatype?: string, language?: string): Statement | undefined {
+        public createStatement(about: string | ContainedThingOf<Constructed<TBase>>, property: string, value: string, datatype?: string, language?: string): StatementOf<ContainedThingOf<Constructed<TBase>>> {
             const statement = super.createStatement(about, property, value, datatype, language);
-            if (statement) {
-                this._changelog.registerAdded(statement);
-                return statement;
-            }
-            return undefined;
+            this._changelog.registerAdded(statement);
+            return statement as StatementOf<ContainedThingOf<Constructed<TBase>>>;
         }
 
         public getChangelog(): Changelog {

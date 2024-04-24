@@ -1,17 +1,22 @@
 import { Comparable, Copyable, Resource, WithContext, WithContextWritable } from "./Common";
 import { Statement } from "./Statement";
 import { Thing } from "./Thing";
+type ContainedThingOfDocument<T extends Document<any, any>> = T extends Document<infer TypeArg, any> ? TypeArg : never;
+type ContainedThingOfDocumentWritable<T extends DocumentWritable<any, any>> = T extends DocumentWritable<infer TypeArg, any> ? TypeArg : never;
+export type ContainedThingOf<T extends Document<any, any> | DocumentWritable<any, any>> = T extends Document<any, any> ? ContainedThingOfDocument<T> : T extends DocumentWritable<any> ? ContainedThingOfDocumentWritable<T> : never;
+export type StatementOf<T extends Thing<any>> = T extends Thing<infer StatementType> ? StatementType : never;
 export type DocumentConstructor<ContainedThing extends Thing<any> = Thing, SelfDescribingThing extends Thing<any> = Thing> = new () => Document<ContainedThing, SelfDescribingThing>;
 export type DocumentWritableConstructor<ContainedThing extends Thing<any> = Thing, SelfDescribingThing extends Thing<any> = Thing> = new (...args: any[]) => DocumentWritable<ContainedThing, SelfDescribingThing>;
+export type Constructed<Constructor extends new (...args: any[]) => any> = Constructor extends new (...args: any[]) => infer R ? R : never;
 export interface Document<ContainedThing extends Thing<any> = Thing, SelfDescribingThing extends Thing<any> = Thing> extends Resource, WithContext, Comparable, Copyable {
     getThing(about: string): ContainedThing | undefined;
     getThingAboutSelf(): SelfDescribingThing | undefined;
     hasThing(about: string): boolean;
     hasThingAboutSelf(): boolean;
-    getStatement(about: string | Thing, property: string, language?: string): Statement | undefined;
-    getStatementAll(about: string | Thing, property?: string, language?: string): Statement[];
-    getStatementAboutSelf(property: string, language?: string): Statement | undefined;
-    getStatementAboutSelfAll(property?: string, language?: string): Statement[];
+    getStatement(about: string | Thing, property: string, language?: string): StatementOf<ContainedThing> | undefined;
+    getStatementAll(about: string | Thing, property?: string, language?: string): StatementOf<ContainedThing>[];
+    getStatementAboutSelf(property: string, language?: string): StatementOf<SelfDescribingThing> | undefined;
+    getStatementAboutSelfAll(property?: string, language?: string): StatementOf<SelfDescribingThing>[];
     hasStatement(about: string | Thing, property?: string, language?: string): boolean;
     hasStatementAboutSelf(property?: string, language?: string): boolean;
     [Symbol.iterator](): Iterator<ContainedThing>;
@@ -20,11 +25,11 @@ export interface Document<ContainedThing extends Thing<any> = Thing, SelfDescrib
     count(): number;
     every(predicate: (value: ContainedThing, index?: number, array?: ContainedThing[]) => boolean, thisArg?: any): boolean;
     filter(predicate: (value: ContainedThing, index?: number, array?: ContainedThing[]) => boolean): ContainedThing[];
-    filterContainedStatement(predicate: (value: Statement, index?: number, array?: Statement[]) => boolean): Statement[];
+    filterContainedStatement(predicate: (value: StatementOf<ContainedThing>, index?: number, array?: StatementOf<ContainedThing>[]) => boolean): StatementOf<ContainedThing>[];
     find(predicate: (value: ContainedThing, index?: number, obj?: ContainedThing[]) => boolean, thisArg?: any): ContainedThing | undefined;
     findIndex(predicate: (value: ContainedThing, index?: number, obj?: ContainedThing[]) => unknown, thisArg?: any): number;
     forEach(callbackfn: (value: ContainedThing, index?: number, array?: ContainedThing[]) => void, thisArg?: any): void;
-    forEachStatement(callbackfn: (value: Statement, index?: number, array?: Statement[]) => void, thisArg?: any): void;
+    forEachStatement(callbackfn: (value: StatementOf<ContainedThing>, index?: number, array?: StatementOf<ContainedThing>[]) => void, thisArg?: any): void;
     includes(searchElement: ContainedThing, fromIndex?: number): boolean;
     indexOf(searchElement: ContainedThing, fromIndex?: number): number;
     keys(): IterableIterator<number>;
@@ -40,16 +45,16 @@ export interface DocumentWritable<ContainedThing extends Thing<any> = Thing, Sel
     addThingAll(others: Iterable<Thing>): ContainedThing[];
     addThingAboutSelf(other: Thing): SelfDescribingThing;
     addThingAboutSelfAll(others: Iterable<Thing>): SelfDescribingThing[];
-    createStatement(about: string | ContainedThing, property: string, value: string, datatype?: string, language?: string): ContainedThing;
-    createStatementAboutSelf(property: string, value: string, datatype?: string, language?: string): SelfDescribingThing;
-    addStatement(other: Statement): Statement;
-    addStatementAll(others: Iterable<Statement>): Statement[];
-    addStatementAboutSelf(other: Statement): Statement;
-    addStatementAboutSelfAll(others: Iterable<Statement>): Statement[];
+    createStatement(about: string | ContainedThing, property: string, value: string, datatype?: string, language?: string): StatementOf<ContainedThing>;
+    createStatementAboutSelf(property: string, value: string, datatype?: string, language?: string): StatementOf<SelfDescribingThing>;
+    addStatement(other: Statement): StatementOf<ContainedThing>;
+    addStatementAll(others: Iterable<Statement>): StatementOf<ContainedThing>[];
+    addStatementAboutSelf(other: Statement): StatementOf<SelfDescribingThing>;
+    addStatementAboutSelfAll(others: Iterable<Statement>): StatementOf<SelfDescribingThing>[];
     setThing(thing: ContainedThing, uri?: string): ContainedThing;
     setThingAt(index: number, thing: ContainedThing): ContainedThing;
-    setStatement(about: string | ContainedThing, property: string, value: string, oldValue?: string, datatype?: string, language?: string): Statement | undefined;
-    setStatementAboutSelf(property: string, value: string, oldValue?: string, datatype?: string, language?: string): Statement | undefined;
+    setStatement(about: string | ContainedThing, property: string, value: string, oldValue?: string, datatype?: string, language?: string): StatementOf<ContainedThing>;
+    setStatementAboutSelf(property: string, value: string, oldValue?: string, datatype?: string, language?: string): StatementOf<SelfDescribingThing>;
     deleteThing(thingOrUri: string | Thing): boolean;
     deleteStatement(statement: Statement): boolean;
     pop(): ContainedThing | undefined;
@@ -59,4 +64,5 @@ export interface DocumentWritable<ContainedThing extends Thing<any> = Thing, Sel
     splice(start: number, deleteCount?: number): ContainedThing[];
     splice(start: number, deleteCount: number, ...items: ContainedThing[]): ContainedThing[];
 }
+export {};
 //# sourceMappingURL=Document.d.ts.map

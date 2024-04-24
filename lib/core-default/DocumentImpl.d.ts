@@ -1,5 +1,5 @@
 import { Context } from "../core/Common.js";
-import { Document, DocumentWritable } from "../core/Document.js";
+import { Document, DocumentWritable, StatementOf } from "../core/Document.js";
 import { Statement } from "../core/Statement.js";
 import { Thing, ThingConstructor, ThingWritable } from "../core/Thing.js";
 export declare class DocumentImpl<ContainedThing extends ThingWritable<any>, SelfDescribingThing extends ThingWritable<any>> implements DocumentWritable<ContainedThing, SelfDescribingThing> {
@@ -16,14 +16,14 @@ export declare class DocumentImpl<ContainedThing extends ThingWritable<any>, Sel
     addThingAll(others: Iterable<Thing>): ContainedThing[];
     addThingAboutSelf(other: Thing): SelfDescribingThing;
     addThingAboutSelfAll(others: Iterable<Thing>): SelfDescribingThing[];
-    createStatement(about: string | ContainedThing, property: string, value: string, datatype?: string | undefined, language?: string | undefined): ContainedThing;
-    createStatementAboutSelf(property: string, value: string, datatype?: string | undefined, language?: string | undefined): SelfDescribingThing;
-    addStatement(other: Statement): Statement;
-    addStatementAll(others: Iterable<Statement>): Statement[];
-    addStatementAboutSelf(other: Statement): Statement;
-    addStatementAboutSelfAll(others: Iterable<Statement>): Statement[];
-    setStatement(about: string | ContainedThing, property: string, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): Statement | undefined;
-    setStatementAboutSelf(property: string, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): Statement | undefined;
+    createStatement(about: string | ContainedThing, property: string, value: string, datatype?: string | undefined, language?: string | undefined): StatementOf<ContainedThing>;
+    createStatementAboutSelf(property: string, value: string, datatype?: string | undefined, language?: string | undefined): StatementOf<SelfDescribingThing>;
+    addStatement(other: Statement): StatementOf<ContainedThing>;
+    addStatementAll(others: Iterable<Statement>): StatementOf<ContainedThing>[];
+    addStatementAboutSelf(other: Statement): StatementOf<SelfDescribingThing>;
+    addStatementAboutSelfAll(others: Iterable<Statement>): StatementOf<SelfDescribingThing>[];
+    setStatement(about: string | ContainedThing, property: string, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): StatementOf<ContainedThing>;
+    setStatementAboutSelf(property: string, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): StatementOf<SelfDescribingThing>;
     setThing(thing: ContainedThing, uri?: string): ContainedThing;
     setThingAt(index: number, thing: ContainedThing): ContainedThing;
     deleteThing(thingOrUri: string | Thing): boolean;
@@ -39,10 +39,10 @@ export declare class DocumentImpl<ContainedThing extends ThingWritable<any>, Sel
     getThingAboutSelf(): SelfDescribingThing | undefined;
     hasThing(about: string): boolean;
     hasThingAboutSelf(): boolean;
-    getStatement(about: string | Thing, property: string, language?: string | undefined): Statement | undefined;
-    getStatementAll(about: string | Thing, property?: string | undefined, language?: string | undefined): Statement[];
-    getStatementAboutSelf(property: string, language?: string | undefined): Statement | undefined;
-    getStatementAboutSelfAll(property?: string | undefined, language?: string | undefined): Statement[];
+    getStatement(about: string | Thing, property: string, language?: string | undefined): StatementOf<ContainedThing> | undefined;
+    getStatementAll(about: string | Thing, property?: string | undefined, language?: string | undefined): StatementOf<ContainedThing>[];
+    getStatementAboutSelf(property: string, language?: string | undefined): StatementOf<SelfDescribingThing> | undefined;
+    getStatementAboutSelfAll(property?: string | undefined, language?: string | undefined): StatementOf<SelfDescribingThing>[];
     hasStatement(about: string | Thing, property?: string | undefined, language?: string | undefined): boolean;
     hasStatementAboutSelf(property?: string | undefined, language?: string | undefined): boolean;
     at(index: number): ContainedThing | undefined;
@@ -50,11 +50,11 @@ export declare class DocumentImpl<ContainedThing extends ThingWritable<any>, Sel
     count(): number;
     every(predicate: (value: ContainedThing, index?: number | undefined, array?: ContainedThing[] | undefined) => boolean, thisArg?: any): boolean;
     filter(predicate: (value: ContainedThing, index?: number | undefined, array?: ContainedThing[] | undefined) => boolean): ContainedThing[];
-    filterContainedStatement(predicate: (value: Statement, index?: number | undefined, array?: Statement[] | undefined) => boolean): Statement[];
+    filterContainedStatement(predicate: (value: StatementOf<ContainedThing>, index?: number | undefined, array?: StatementOf<ContainedThing>[] | undefined) => boolean): StatementOf<ContainedThing>[];
     find(predicate: (value: ContainedThing, index?: number | undefined, obj?: ContainedThing[] | undefined) => boolean, thisArg?: any): ContainedThing | undefined;
     findIndex(predicate: (value: ContainedThing, index?: number | undefined, obj?: ContainedThing[] | undefined) => unknown, thisArg?: any): number;
     forEach(callbackfn: (value: ContainedThing, index?: number | undefined, array?: ContainedThing[] | undefined) => void, thisArg?: any): void;
-    forEachStatement(callbackfn: (value: Statement, index?: number | undefined, array?: Statement[] | undefined) => void, thisArg?: any): void;
+    forEachStatement(callbackfn: (value: StatementOf<ContainedThing>, index?: number | undefined, array?: StatementOf<ContainedThing>[] | undefined) => void, thisArg?: any): void;
     includes(searchElement: ContainedThing, fromIndex?: number | undefined): boolean;
     indexOf(searchElement: ContainedThing, fromIndex?: number | undefined): number;
     keys(): IterableIterator<number>;

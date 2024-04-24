@@ -1,4 +1,4 @@
-import { DocumentWritableConstructor } from "../core/Document";
+import { Constructed, ContainedThingOf, DocumentWritableConstructor, StatementOf } from "../core/Document";
 import { Statement } from "../core/Statement";
 import { Thing } from "../core/Thing";
 import { Changelog } from "./Changelog";
@@ -6,7 +6,7 @@ import { ChangelogImpl } from "./ChangelogImpl.js";
 export declare function DocumentWithChangelogMixin<TBase extends DocumentWritableConstructor<any, any>>(Base: TBase): {
     new (...args: any[]): {
         _changelog: ChangelogImpl;
-        createStatement(about: string | Thing, property: string, value: string, datatype?: string, language?: string): Statement | undefined;
+        createStatement(about: string | ContainedThingOf<Constructed<TBase>>, property: string, value: string, datatype?: string, language?: string): StatementOf<ContainedThingOf<Constructed<TBase>>>;
         getChangelog(): Changelog;
         createThing(uriOrNameHint?: string | undefined): any;
         createThingAboutSelf(): any;
@@ -14,15 +14,15 @@ export declare function DocumentWithChangelogMixin<TBase extends DocumentWritabl
         addThingAll(others: Iterable<Thing<Statement>>): any[];
         addThingAboutSelf(other: Thing<Statement>): any;
         addThingAboutSelfAll(others: Iterable<Thing<Statement>>): any[];
-        createStatementAboutSelf(property: string, value: string, datatype?: string | undefined, language?: string | undefined): any;
+        createStatementAboutSelf(property: string, value: string, datatype?: string | undefined, language?: string | undefined): Statement;
         addStatement(other: Statement): Statement;
         addStatementAll(others: Iterable<Statement>): Statement[];
         addStatementAboutSelf(other: Statement): Statement;
         addStatementAboutSelfAll(others: Iterable<Statement>): Statement[];
         setThing(thing: any, uri?: string | undefined): any;
         setThingAt(index: number, thing: any): any;
-        setStatement(about: any, property: string, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): Statement | undefined;
-        setStatementAboutSelf(property: string, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): Statement | undefined;
+        setStatement(about: any, property: string, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): Statement;
+        setStatementAboutSelf(property: string, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): Statement;
         deleteThing(thingOrUri: string | Thing<Statement>): boolean;
         deleteStatement(statement: Statement): boolean;
         pop(): any;

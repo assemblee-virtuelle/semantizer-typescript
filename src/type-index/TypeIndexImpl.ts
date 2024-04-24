@@ -10,13 +10,25 @@ export function TypeIndexMixin<
 >(Base: TBase) {
     return class TypeIndexImpl extends Base implements TypeIndexWritable {
 
-        getStatementForClass(forClass: string): TypeIndexStatement[] {
+        public getStatementForClass(registration: string | TypeIndexRegistration, forClass: string): TypeIndexStatement | undefined {
+            return this.getStatement(registration, TYPE_INDEX.forClass);
+        }
+
+        public getStatementForInstance(registration: string | TypeIndexRegistration, instance: string): TypeIndexStatement | undefined {
+            return this.getStatement(registration, TYPE_INDEX.forClass);
+        }
+
+        public getStatementForInstanceContainer(registration: string | TypeIndexRegistration, instanceContainer: string): TypeIndexStatement | undefined {
+            return this.getStatement(registration, TYPE_INDEX.forClass);
+        }
+
+        getStatementAllForClass(registration: string | TypeIndexRegistration, forClass: string): TypeIndexStatement[] {
+            throw new Error("Method not implemented.");//this.getStatementAll(registration, 
+        }
+        getStatementAllForInstance(registration: string | TypeIndexRegistration, instance: string): TypeIndexStatement[] {
             throw new Error("Method not implemented.");
         }
-        getStatementForInstance(instance: string): TypeIndexStatement[] {
-            throw new Error("Method not implemented.");
-        }
-        getStatementForInstanceContainer(instanceContainer: string): TypeIndexStatement[] {
+        getStatementAllForInstanceContainer(registration: string | TypeIndexRegistration, instanceContainer: string): TypeIndexStatement[] {
             throw new Error("Method not implemented.");
         }
         createRegistration(): TypeIndexRegistration {
@@ -31,16 +43,30 @@ export function TypeIndexMixin<
         addInstanceContainer(registration: string | TypeIndexRegistration, instanceContainer: string): TypeIndexRegistration {
             throw new Error("Method not implemented.");
         }
-        setForClass(registration: string | TypeIndexRegistration, forClass: string): TypeIndexRegistration {
+        
+        // TODO: add type Resource to getThing
+        public setForClass(registration: string | TypeIndexRegistration, forClass: string, oldValue?: string): TypeIndexRegistration {
+            this.setStatement(registration, TYPE_INDEX.forClass, forClass, oldValue);
+            return this.getThing(typeof registration === 'string'? registration: registration.getUri())!;
+        }
+
+        public setInstance(registration: string | TypeIndexRegistration, instance: string, oldValue?: string): TypeIndexRegistration {
+            this.setStatement(registration, TYPE_INDEX.instance, instance, oldValue);
+            return this.getThing(typeof registration === 'string'? registration: registration.getUri())!;
+        }
+
+        public setInstanceContainer(registration: string | TypeIndexRegistration, instanceContainer: string, oldValue?: string): TypeIndexRegistration {
+            this.setStatement(registration, TYPE_INDEX.instanceContainer, instanceContainer, oldValue);
+            return this.getThing(typeof registration === 'string'? registration: registration.getUri())!;
+        }
+
+        removeForClass(registration: string | TypeIndexRegistration, ...forClass: string[]): TypeIndexRegistration {
             throw new Error("Method not implemented.");
         }
-        removeForClass(registration: string | TypeIndexRegistration, forClass: string): TypeIndexRegistration {
+        removeInstance(registration: string | TypeIndexRegistration, ...instance: string[]): TypeIndexRegistration {
             throw new Error("Method not implemented.");
         }
-        removeInstance(registration: string | TypeIndexRegistration, instance: string): TypeIndexRegistration {
-            throw new Error("Method not implemented.");
-        }
-        removeInstanceContainer(registration: string | TypeIndexRegistration, instanceContainer: string): TypeIndexRegistration {
+        removeInstanceContainer(registration: string | TypeIndexRegistration, ...instanceContainer: string[]): TypeIndexRegistration {
             throw new Error("Method not implemented.");
         }
         removeForClassAll(registration: string | TypeIndexRegistration): TypeIndexRegistration {
@@ -59,19 +85,22 @@ export function TypeIndexMixin<
 
         public createThing(uriOrNameHint?: string): TypeIndexRegistration {
             const registration = super.createThing(uriOrNameHint);
-            return this.createStatement(registration, "rdf:type", TYPE_INDEX.TypeRegistration);
+            this.createStatement(registration, "rdf:type", TYPE_INDEX.TypeRegistration);
+            return this.getThing(registration.getUri())!;
         }
 
         public createRegistrationForInstance(forClass: string, instance: string, nameHintOrUri?: string): TypeIndexRegistration {
             const thing = this.createThing(nameHintOrUri);
             this.createStatement(thing, TYPE_INDEX.forClass, forClass);
-            return this.createStatement(thing, TYPE_INDEX.instance, instance);
+            this.createStatement(thing, TYPE_INDEX.instance, instance);
+            return this.getThing(thing.getUri())!;
         }
 
         public createRegistrationForInstanceContainer(forClass: string, instanceContainer: string, nameHintOrUri?: string): TypeIndexRegistration {
             const thing = this.createThing(nameHintOrUri);
             this.createStatement(thing, TYPE_INDEX.forClass, forClass);
-            return this.createStatement(thing, TYPE_INDEX.instanceContainer, instanceContainer);
+            this.createStatement(thing, TYPE_INDEX.instanceContainer, instanceContainer);
+            return this.getThing(thing.getUri())!;
         }
     }
 }
