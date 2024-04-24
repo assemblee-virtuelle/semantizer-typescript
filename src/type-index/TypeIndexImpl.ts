@@ -44,20 +44,19 @@ export function TypeIndexMixin<
             throw new Error("Method not implemented.");
         }
         
-        // TODO: add type Resource to getThing
         public setForClass(registration: string | TypeIndexRegistration, forClass: string, oldValue?: string): TypeIndexRegistration {
             this.setStatement(registration, TYPE_INDEX.forClass, forClass, oldValue);
-            return this.getThing(typeof registration === 'string'? registration: registration.getUri())!;
+            return this.getThing(registration)!;
         }
 
         public setInstance(registration: string | TypeIndexRegistration, instance: string, oldValue?: string): TypeIndexRegistration {
             this.setStatement(registration, TYPE_INDEX.instance, instance, oldValue);
-            return this.getThing(typeof registration === 'string'? registration: registration.getUri())!;
+            return this.getThing(registration)!;
         }
 
         public setInstanceContainer(registration: string | TypeIndexRegistration, instanceContainer: string, oldValue?: string): TypeIndexRegistration {
             this.setStatement(registration, TYPE_INDEX.instanceContainer, instanceContainer, oldValue);
-            return this.getThing(typeof registration === 'string'? registration: registration.getUri())!;
+            return this.getThing(registration)!;
         }
 
         removeForClass(registration: string | TypeIndexRegistration, ...forClass: string[]): TypeIndexRegistration {
@@ -86,21 +85,21 @@ export function TypeIndexMixin<
         public createThing(uriOrNameHint?: string): TypeIndexRegistration {
             const registration = super.createThing(uriOrNameHint);
             this.createStatement(registration, "rdf:type", TYPE_INDEX.TypeRegistration);
-            return this.getThing(registration.getUri())!;
+            return this.getThing(registration)!;
         }
 
         public createRegistrationForInstance(forClass: string, instance: string, nameHintOrUri?: string): TypeIndexRegistration {
             const thing = this.createThing(nameHintOrUri);
             this.createStatement(thing, TYPE_INDEX.forClass, forClass);
             this.createStatement(thing, TYPE_INDEX.instance, instance);
-            return this.getThing(thing.getUri())!;
+            return this.getThing(thing)!;
         }
 
         public createRegistrationForInstanceContainer(forClass: string, instanceContainer: string, nameHintOrUri?: string): TypeIndexRegistration {
             const thing = this.createThing(nameHintOrUri);
             this.createStatement(thing, TYPE_INDEX.forClass, forClass);
             this.createStatement(thing, TYPE_INDEX.instanceContainer, instanceContainer);
-            return this.getThing(thing.getUri())!;
+            return this.getThing(thing)!;
         }
     }
 }

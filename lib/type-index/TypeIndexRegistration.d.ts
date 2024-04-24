@@ -2,6 +2,7 @@ import { Thing, ThingWritable } from "../core/Thing";
 import { TypeIndexStatement } from "./TypeIndex";
 export interface WithReadOperations {
     isForClass(forClass: string): boolean;
+    toString(): string;
 }
 export interface WithWriteOperations {
     addForClass(forClass: string): this;

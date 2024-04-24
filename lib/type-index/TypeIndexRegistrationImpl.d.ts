@@ -3,6 +3,7 @@ import { ThingConstructor, ThingWritable } from "../core/Thing";
 import { TypeIndexStatement } from "./TypeIndex";
 export declare function TypeIndexRegistrationMixin<TStatementImpl extends StatementConstructor<Statement>, TBase extends ThingConstructor<ThingWritable<TypeIndexStatement>>>(Base: TBase, StatementImpl: TStatementImpl): {
     new (...args: any[]): {
+        toString(): string;
         isForClass(forClass: string): boolean;
         getFirstElementOrNull(collection: string[]): string | null;
         addForClass(forClass: string): this;

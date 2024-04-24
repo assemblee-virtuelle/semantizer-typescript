@@ -1,3 +1,4 @@
+import { Resource } from "../core/Common";
 import { Statement } from "../core/Statement";
 type ConstructorParams = {
     subject: string;
@@ -17,6 +18,7 @@ export declare class StatementImpl implements Statement {
     setProperty(property: string): ThisType<this>;
     getProperty(): string;
     setValue(value: string): this;
+    setSubject(subject: string | Resource): this;
     setDatatype(): this;
     setLanguage(): this;
     getSubject(): string;

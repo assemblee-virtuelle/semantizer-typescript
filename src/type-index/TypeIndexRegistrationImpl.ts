@@ -15,6 +15,14 @@ export function TypeIndexRegistrationMixin<
             // super(document); //, ThingType.Regular, uri);
         // }
 
+        // public toString(): string {
+        //     return "";
+        // }
+
+        public toString() : string {
+            return "Hello";
+        }
+
         public constructor(...args: any[]) {
             super(TypeIndexRegistrationStatementMixin(StatementImpl), ...args); 
         }

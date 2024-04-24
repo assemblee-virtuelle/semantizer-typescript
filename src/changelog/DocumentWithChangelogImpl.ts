@@ -1,3 +1,4 @@
+import { Resource } from "../core/Common";
 import { Constructed, ContainedThingOf, DocumentWritable, DocumentWritableConstructor, StatementOf } from "../core/Document";
 import { Statement } from "../core/Statement";
 import { Thing } from "../core/Thing";
@@ -16,7 +17,7 @@ export function DocumentWithChangelogMixin<
             this._changelog = new ChangelogImpl();
         }
 
-        public createStatement(about: string | ContainedThingOf<Constructed<TBase>>, property: string, value: string, datatype?: string, language?: string): StatementOf<ContainedThingOf<Constructed<TBase>>> {
+        public createStatement(about: string | Resource, property: string, value: string, datatype?: string, language?: string): StatementOf<ContainedThingOf<Constructed<TBase>>> {
             const statement = super.createStatement(about, property, value, datatype, language);
             this._changelog.registerAdded(statement);
             return statement as StatementOf<ContainedThingOf<Constructed<TBase>>>;

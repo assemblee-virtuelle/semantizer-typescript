@@ -1,3 +1,4 @@
+import { Resource } from "../core/Common";
 import { Constructed, ContainedThingOf, DocumentWritableConstructor, StatementOf } from "../core/Document";
 import { Statement } from "../core/Statement";
 import { Thing } from "../core/Thing";
@@ -6,9 +7,9 @@ import { ChangelogImpl } from "./ChangelogImpl.js";
 export declare function DocumentWithChangelogMixin<TBase extends DocumentWritableConstructor<any, any>>(Base: TBase): {
     new (...args: any[]): {
         _changelog: ChangelogImpl;
-        createStatement(about: string | ContainedThingOf<Constructed<TBase>>, property: string, value: string, datatype?: string, language?: string): StatementOf<ContainedThingOf<Constructed<TBase>>>;
+        createStatement(about: string | Resource, property: string, value: string, datatype?: string, language?: string): StatementOf<ContainedThingOf<Constructed<TBase>>>;
         getChangelog(): Changelog;
-        createThing(uriOrNameHint?: string | undefined): any;
+        createThing(uriOrNameHint?: string | Resource | undefined): any;
         createThingAboutSelf(): any;
         addThing(other: Thing<Statement>): any;
         addThingAll(others: Iterable<Thing<Statement>>): any[];
@@ -21,9 +22,9 @@ export declare function DocumentWithChangelogMixin<TBase extends DocumentWritabl
         addStatementAboutSelfAll(others: Iterable<Statement>): Statement[];
         setThing(thing: any, uri?: string | undefined): any;
         setThingAt(index: number, thing: any): any;
-        setStatement(about: any, property: string, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): Statement;
+        setStatement(about: string | Resource, property: string, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): Statement;
         setStatementAboutSelf(property: string, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): Statement;
-        deleteThing(thingOrUri: string | Thing<Statement>): boolean;
+        deleteThing(thingOrUri: string | Resource): boolean;
         deleteStatement(statement: Statement): boolean;
         pop(): any;
         reverse(): void;
@@ -31,15 +32,15 @@ export declare function DocumentWithChangelogMixin<TBase extends DocumentWritabl
         sort(compareFn?: ((a: any, b: any) => number) | undefined): ThisType<any>;
         splice(start: number, deleteCount?: number | undefined): any[];
         splice(start: number, deleteCount: number, ...items: any[]): any[];
-        getThing(about: string): any;
+        getThing(about: string | Resource): any;
         getThingAboutSelf(): any;
-        hasThing(about: string): boolean;
+        hasThing(about: string | Resource): boolean;
         hasThingAboutSelf(): boolean;
-        getStatement(about: string | Thing<Statement>, property: string, language?: string | undefined): Statement | undefined;
-        getStatementAll(about: string | Thing<Statement>, property?: string | undefined, language?: string | undefined): Statement[];
+        getStatement(about: string | Resource, property: string, language?: string | undefined): Statement | undefined;
+        getStatementAll(about: string | Resource, property?: string | undefined, language?: string | undefined): Statement[];
         getStatementAboutSelf(property: string, language?: string | undefined): Statement | undefined;
         getStatementAboutSelfAll(property?: string | undefined, language?: string | undefined): Statement[];
-        hasStatement(about: string | Thing<Statement>, property?: string | undefined, language?: string | undefined): boolean;
+        hasStatement(about: string | Resource, property?: string | undefined, language?: string | undefined): boolean;
         hasStatementAboutSelf(property?: string | undefined, language?: string | undefined): boolean;
         at(index: number): any;
         contains(other: import("../core/Document").Document<any, Thing<Statement>>): boolean;

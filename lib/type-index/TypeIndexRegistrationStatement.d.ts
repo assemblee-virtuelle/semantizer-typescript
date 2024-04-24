@@ -4,6 +4,7 @@ export declare function TypeIndexRegistrationStatementMixin<TBase extends Statem
         isForClass(forClass: string): boolean;
         isForInstance(instance: string): boolean;
         isForInstanceContainer(instanceContainer: string): boolean;
+        setSubject(subject: string | import("../core/Common").Resource): ThisType<any>;
         setProperty(property: string): ThisType<any>;
         setValue(value: string): ThisType<any>;
         setDatatype(datatype: string): ThisType<any>;

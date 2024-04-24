@@ -1,3 +1,4 @@
+import { Resource } from "../core/Common";
 import { Statement } from "../core/Statement";
 
 type ConstructorParams = {
@@ -38,6 +39,10 @@ export class StatementImpl implements Statement {
     public setValue(value: string): this {
         this._value = value;
         return this;
+    }
+
+    public setSubject(subject: string | Resource): this {
+        throw new Error("Method not implemented.");
     }
 
     public setDatatype(): this {
