@@ -46,13 +46,13 @@ export interface Document<
 > extends Resource, 
     /*ResourceCollection<ContainedThing>,*/ WithContext, Comparable, Copyable 
 {
-    getThing(about: string | Resource): ContainedThing | undefined;
-    getThingAboutSelf(): SelfDescribingThing | undefined;
+    getThing(about: string | Resource): ContainedThing;
+    getThingAboutSelf(): SelfDescribingThing;
 
     hasThing(about: string | Resource): boolean;
     hasThingAboutSelf(): boolean;
 
-    getStatement(about: string | Resource, property: string, language?: string): StatementOf<ContainedThing> | undefined;
+    getStatement(about: string | Resource, property: string, language?: string): StatementOf<ContainedThing>;
     getStatementAll(about: string | Resource, property?: string, language?: string): StatementOf<ContainedThing>[];
 
     getStatementAboutSelf(property: string, language?: string): StatementOf<SelfDescribingThing> | undefined;
@@ -106,8 +106,8 @@ export interface DocumentWritable<
     setStatement(about: string | Resource, property: string, value: string, oldValue?: string, datatype?: string, language?: string): StatementOf<ContainedThing>;
     setStatementAboutSelf(property: string, value: string, oldValue?: string, datatype?: string, language?: string): StatementOf<SelfDescribingThing>;
 
-    deleteThing(thingOrUri: string | Resource): boolean;
-    deleteStatement(statement: Statement): boolean;
+    removeThing(thingOrUri: string | Resource): boolean;
+    removeStatement(statement: Statement): boolean;
     pop(): ContainedThing | undefined;
     reverse(): void;
     shift(): ContainedThing | undefined;

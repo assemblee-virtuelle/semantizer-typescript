@@ -3,8 +3,6 @@ import { Statement } from "../core/Statement";
 import { Thing, ThingWritable } from "../core/Thing";
 import { TypeIndexRegistration } from "./TypeIndexRegistration";
 
-
-
 export interface TypeIndexStatement extends Statement {
     isForClass(forClass: string): boolean;
     isForInstance(instance: string): boolean;
@@ -29,21 +27,21 @@ export interface WithWriteOperations {
     createRegistrationForInstance(forClass: string, instance: string, nameHintOrUri?: string): TypeIndexRegistration;
     createRegistrationForInstanceContainer(forClass: string, instanceContainer: string, nameHintOrUri?: string): TypeIndexRegistration;
 
-    addForClass(registration: string | TypeIndexRegistration, forClass: string): TypeIndexRegistration;
-    addInstance(registration: string | TypeIndexRegistration, instance: string): TypeIndexRegistration;
-    addInstanceContainer(registration: string | TypeIndexRegistration, instanceContainer: string):  TypeIndexRegistration;
+    addForClassToRegistration(registration: string | TypeIndexRegistration, forClass: string): TypeIndexRegistration;
+    addInstanceToRegistration(registration: string | TypeIndexRegistration, instance: string): TypeIndexRegistration;
+    addInstanceContainerToRegistration(registration: string | TypeIndexRegistration, instanceContainer: string):  TypeIndexRegistration;
     
-    setForClass(registration: string | TypeIndexRegistration, forClass: string, oldValue?: string): TypeIndexRegistration;
-    setInstance(registration: string | TypeIndexRegistration, instance: string, oldValue?: string): TypeIndexRegistration;
-    setInstanceContainer(registration: string | TypeIndexRegistration, instanceContainer: string, oldValue?: string): TypeIndexRegistration;
+    setForClassOfRegistration(registration: string | TypeIndexRegistration, forClass: string, oldValue?: string): TypeIndexRegistration;
+    setInstanceOfRegistration(registration: string | TypeIndexRegistration, instance: string, oldValue?: string): TypeIndexRegistration;
+    setInstanceContainerOfRegistration(registration: string | TypeIndexRegistration, instanceContainer: string, oldValue?: string): TypeIndexRegistration;
     
-    removeForClass(registration: string | TypeIndexRegistration, ...forClass: string[]): TypeIndexRegistration;
-    removeInstance(registration: string | TypeIndexRegistration, ...instance: string[]): TypeIndexRegistration;
-    removeInstanceContainer(registration: string | TypeIndexRegistration, ...instanceContainer: string[]): TypeIndexRegistration;
+    removeForClassOfRegistration(registration: string | TypeIndexRegistration, ...forClass: string[]): TypeIndexRegistration;
+    removeInstanceOfRegistration(registration: string | TypeIndexRegistration, ...instance: string[]): TypeIndexRegistration;
+    removeInstanceContainerOfRegistration(registration: string | TypeIndexRegistration, ...instanceContainer: string[]): TypeIndexRegistration;
     
-    removeForClassAll(registration: string | TypeIndexRegistration): TypeIndexRegistration;
-    removeInstanceAll(registration: string | TypeIndexRegistration): TypeIndexRegistration;
-    removeInstanceContainerAll(registration: string | TypeIndexRegistration): TypeIndexRegistration; 
+    removeForClassAllOfRegistration(registration: string | TypeIndexRegistration): TypeIndexRegistration;
+    removeInstanceAllOfRegistration(registration: string | TypeIndexRegistration): TypeIndexRegistration;
+    removeInstanceContainerAllOfRegistration(registration: string | TypeIndexRegistration): TypeIndexRegistration; 
 }
 
 export type TypeIndex = Document<TypeIndexRegistration> & WithReadOperations;

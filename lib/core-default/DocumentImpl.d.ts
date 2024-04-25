@@ -26,8 +26,8 @@ export declare class DocumentImpl<ContainedThing extends ThingWritable<any>, Sel
     setStatementAboutSelf(property: string, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): StatementOf<SelfDescribingThing>;
     setThing(thing: ContainedThing, uri?: string): ContainedThing;
     setThingAt(index: number, thing: ContainedThing): ContainedThing;
-    deleteThing(thingOrUri: string | Resource): boolean;
-    deleteStatement(statement: Statement): boolean;
+    removeThing(thingOrUri: string | Resource): boolean;
+    removeStatement(statement: Statement): boolean;
     pop(): ContainedThing | undefined;
     reverse(): void;
     shift(): ContainedThing | undefined;
@@ -35,11 +35,11 @@ export declare class DocumentImpl<ContainedThing extends ThingWritable<any>, Sel
     splice(start: number, deleteCount?: number): ContainedThing[];
     splice(start: number, deleteCount: number, ...items: ContainedThing[]): ContainedThing[];
     private _getThing;
-    getThing(about: string | Resource): ContainedThing | undefined;
-    getThingAboutSelf(): SelfDescribingThing | undefined;
+    getThing(about: string | Resource): ContainedThing;
+    getThingAboutSelf(): SelfDescribingThing;
     hasThing(about: string | Resource): boolean;
     hasThingAboutSelf(): boolean;
-    getStatement(about: string | Resource, property: string, language?: string | undefined): StatementOf<ContainedThing> | undefined;
+    getStatement(about: string | Resource, property: string, language?: string | undefined): StatementOf<ContainedThing>;
     getStatementAll(about: string | Resource, property?: string | undefined, language?: string | undefined): StatementOf<ContainedThing>[];
     getStatementAboutSelf(property: string, language?: string | undefined): StatementOf<SelfDescribingThing> | undefined;
     getStatementAboutSelfAll(property?: string | undefined, language?: string | undefined): StatementOf<SelfDescribingThing>[];

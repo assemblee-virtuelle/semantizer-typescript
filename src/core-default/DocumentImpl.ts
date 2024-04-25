@@ -96,10 +96,10 @@ export class DocumentImpl<
         return this.splice(index, 1, thing)[0]; // Warning here!
     }
 
-    deleteThing(thingOrUri: string | Resource): boolean {
+    removeThing(thingOrUri: string | Resource): boolean {
         throw new Error("Method not implemented.");
     }
-    deleteStatement(statement: Statement): boolean {
+    removeStatement(statement: Statement): boolean {
         throw new Error("Method not implemented.");
     }
     pop(): ContainedThing | undefined {
@@ -132,12 +132,15 @@ export class DocumentImpl<
         return this.getContainedThingsInternal().find(t => t.getUri() === uri);
     }
 
-    public getThing(about: string | Resource): ContainedThing | undefined {
+    public getThing(about: string | Resource): ContainedThing {
         let thing = this._getThing(about);
-        return thing? thing.toCopy() as ContainedThing: undefined;
+        if (thing) {
+            return thing.toCopy() as ContainedThing;
+        }
+        throw new Error(`Unable to get the thing.`); // TODO: log the thing
     }
 
-    getThingAboutSelf(): SelfDescribingThing | undefined {
+    getThingAboutSelf(): SelfDescribingThing {
         throw new Error("Method not implemented.");
     }
     hasThing(about: string | Resource): boolean {
@@ -146,7 +149,7 @@ export class DocumentImpl<
     hasThingAboutSelf(): boolean {
         throw new Error("Method not implemented.");
     }
-    getStatement(about: string | Resource, property: string, language?: string | undefined): StatementOf<ContainedThing> | undefined {
+    getStatement(about: string | Resource, property: string, language?: string | undefined): StatementOf<ContainedThing> {
         throw new Error("Method not implemented.");
     }
     getStatementAll(about: string | Resource, property?: string | undefined, language?: string | undefined): StatementOf<ContainedThing>[] {

@@ -24,8 +24,8 @@ export declare function DocumentWithChangelogMixin<TBase extends DocumentWritabl
         setThingAt(index: number, thing: any): any;
         setStatement(about: string | Resource, property: string, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): Statement;
         setStatementAboutSelf(property: string, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): Statement;
-        deleteThing(thingOrUri: string | Resource): boolean;
-        deleteStatement(statement: Statement): boolean;
+        removeThing(thingOrUri: string | Resource): boolean;
+        removeStatement(statement: Statement): boolean;
         pop(): any;
         reverse(): void;
         shift(): any;
@@ -36,7 +36,7 @@ export declare function DocumentWithChangelogMixin<TBase extends DocumentWritabl
         getThingAboutSelf(): any;
         hasThing(about: string | Resource): boolean;
         hasThingAboutSelf(): boolean;
-        getStatement(about: string | Resource, property: string, language?: string | undefined): Statement | undefined;
+        getStatement(about: string | Resource, property: string, language?: string | undefined): Statement;
         getStatementAll(about: string | Resource, property?: string | undefined, language?: string | undefined): Statement[];
         getStatementAboutSelf(property: string, language?: string | undefined): Statement | undefined;
         getStatementAboutSelfAll(property?: string | undefined, language?: string | undefined): Statement[];

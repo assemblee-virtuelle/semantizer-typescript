@@ -51,6 +51,7 @@ const reg2 = typeIndexWithChangelog.createRegistrationForInstanceContainer("dfc-
 reg2.setForClass("dfc-b:Enterprise");
 typeIndexWithChangelog.setThing(reg2);
 typeIndexWithChangelog.forEach(t => console.log(t));
+typeIndexWithChangelog
 
 // console.log("-------");
 

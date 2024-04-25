@@ -9,11 +9,11 @@ export type DocumentConstructor<ContainedThing extends Thing<any> = Thing, SelfD
 export type DocumentWritableConstructor<ContainedThing extends Thing<any> = Thing, SelfDescribingThing extends Thing<any> = Thing> = new (...args: any[]) => DocumentWritable<ContainedThing, SelfDescribingThing>;
 export type Constructed<Constructor extends new (...args: any[]) => any> = Constructor extends new (...args: any[]) => infer R ? R : never;
 export interface Document<ContainedThing extends Thing<any> = Thing, SelfDescribingThing extends Thing<any> = Thing> extends Resource, WithContext, Comparable, Copyable {
-    getThing(about: string | Resource): ContainedThing | undefined;
-    getThingAboutSelf(): SelfDescribingThing | undefined;
+    getThing(about: string | Resource): ContainedThing;
+    getThingAboutSelf(): SelfDescribingThing;
     hasThing(about: string | Resource): boolean;
     hasThingAboutSelf(): boolean;
-    getStatement(about: string | Resource, property: string, language?: string): StatementOf<ContainedThing> | undefined;
+    getStatement(about: string | Resource, property: string, language?: string): StatementOf<ContainedThing>;
     getStatementAll(about: string | Resource, property?: string, language?: string): StatementOf<ContainedThing>[];
     getStatementAboutSelf(property: string, language?: string): StatementOf<SelfDescribingThing> | undefined;
     getStatementAboutSelfAll(property?: string, language?: string): StatementOf<SelfDescribingThing>[];
@@ -55,8 +55,8 @@ export interface DocumentWritable<ContainedThing extends Thing<any> = Thing, Sel
     setThingAt(index: number, thing: ContainedThing): ContainedThing;
     setStatement(about: string | Resource, property: string, value: string, oldValue?: string, datatype?: string, language?: string): StatementOf<ContainedThing>;
     setStatementAboutSelf(property: string, value: string, oldValue?: string, datatype?: string, language?: string): StatementOf<SelfDescribingThing>;
-    deleteThing(thingOrUri: string | Resource): boolean;
-    deleteStatement(statement: Statement): boolean;
+    removeThing(thingOrUri: string | Resource): boolean;
+    removeStatement(statement: Statement): boolean;
     pop(): ContainedThing | undefined;
     reverse(): void;
     shift(): ContainedThing | undefined;

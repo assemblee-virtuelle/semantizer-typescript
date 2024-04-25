@@ -28,8 +28,8 @@ export declare function DocumentLocalMixin<TBase extends DocumentLocalConstructo
         setThingAt(index: number, thing: any): any;
         setStatement(about: string | import("../core/Common.js").Resource, property: string, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): import("../core/Statement.js").Statement;
         setStatementAboutSelf(property: string, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): import("../core/Statement.js").Statement;
-        deleteThing(thingOrUri: string | import("../core/Common.js").Resource): boolean;
-        deleteStatement(statement: import("../core/Statement.js").Statement): boolean;
+        removeThing(thingOrUri: string | import("../core/Common.js").Resource): boolean;
+        removeStatement(statement: import("../core/Statement.js").Statement): boolean;
         pop(): any;
         reverse(): void;
         shift(): any;
@@ -40,7 +40,7 @@ export declare function DocumentLocalMixin<TBase extends DocumentLocalConstructo
         getThingAboutSelf(): any;
         hasThing(about: string | import("../core/Common.js").Resource): boolean;
         hasThingAboutSelf(): boolean;
-        getStatement(about: string | import("../core/Common.js").Resource, property: string, language?: string | undefined): import("../core/Statement.js").Statement | undefined;
+        getStatement(about: string | import("../core/Common.js").Resource, property: string, language?: string | undefined): import("../core/Statement.js").Statement;
         getStatementAll(about: string | import("../core/Common.js").Resource, property?: string | undefined, language?: string | undefined): import("../core/Statement.js").Statement[];
         getStatementAboutSelf(property: string, language?: string | undefined): import("../core/Statement.js").Statement | undefined;
         getStatementAboutSelfAll(property?: string | undefined, language?: string | undefined): import("../core/Statement.js").Statement[];
@@ -98,8 +98,8 @@ export declare function DocumentDistantMixin<TBase extends DocumentLocalConstruc
         setThingAt(index: number, thing: any): any;
         setStatement(about: string | import("../core/Common.js").Resource, property: string, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): import("../core/Statement.js").Statement;
         setStatementAboutSelf(property: string, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): import("../core/Statement.js").Statement;
-        deleteThing(thingOrUri: string | import("../core/Common.js").Resource): boolean;
-        deleteStatement(statement: import("../core/Statement.js").Statement): boolean;
+        removeThing(thingOrUri: string | import("../core/Common.js").Resource): boolean;
+        removeStatement(statement: import("../core/Statement.js").Statement): boolean;
         pop(): any;
         reverse(): void;
         shift(): any;
@@ -110,7 +110,7 @@ export declare function DocumentDistantMixin<TBase extends DocumentLocalConstruc
         getThingAboutSelf(): any;
         hasThing(about: string | import("../core/Common.js").Resource): boolean;
         hasThingAboutSelf(): boolean;
-        getStatement(about: string | import("../core/Common.js").Resource, property: string, language?: string | undefined): import("../core/Statement.js").Statement | undefined;
+        getStatement(about: string | import("../core/Common.js").Resource, property: string, language?: string | undefined): import("../core/Statement.js").Statement;
         getStatementAll(about: string | import("../core/Common.js").Resource, property?: string | undefined, language?: string | undefined): import("../core/Statement.js").Statement[];
         getStatementAboutSelf(property: string, language?: string | undefined): import("../core/Statement.js").Statement | undefined;
         getStatementAboutSelfAll(property?: string | undefined, language?: string | undefined): import("../core/Statement.js").Statement[];
