@@ -99,9 +99,14 @@ export class DocumentImpl<
     removeThing(thingOrUri: string | Resource): boolean {
         throw new Error("Method not implemented.");
     }
-    removeStatement(statement: Statement): boolean {
+
+    public removeStatement(statement: Statement): boolean;
+    public removeStatement(about: string | Resource, property: string, value: string, language?: string): boolean;
+    public removeStatement(...params: any[]): boolean {
+        const [ aboutOrstatement, property, value, language ] = params;
         throw new Error("Method not implemented.");
     }
+
     pop(): ContainedThing | undefined {
         throw new Error("Method not implemented.");
     }

@@ -4,7 +4,7 @@ import StatementImpl from './core-default/StatementImpl.js';
 import ThingImpl, { ThingImplDefault } from './core-default/ThingImpl.js';
 import { Thing, ThingWritable } from './core/Thing.js';
 import { DocumentLocalMixin } from './synchronized/DocumentSynchronizedImpl.js';
-import { TypeIndex, TypeIndexStatement, TypeIndexWritable } from './type-index/TypeIndex.js';
+import { TypeIndex, TypeIndexStatement, TypeIndexWritable, WithWriteOperations } from './type-index/TypeIndex.js';
 import { TypeIndexMixin } from './type-index/TypeIndexImpl.js';
 import { TypeIndexRegistration } from './type-index/TypeIndexRegistration.js';
 import TypeIndexRegistrationMixin from './type-index/TypeIndexRegistrationImpl.js';
@@ -51,7 +51,8 @@ const reg2 = typeIndexWithChangelog.createRegistrationForInstanceContainer("dfc-
 reg2.setForClass("dfc-b:Enterprise");
 typeIndexWithChangelog.setThing(reg2);
 typeIndexWithChangelog.forEach(t => console.log(t));
-typeIndexWithChangelog
+
+let a = typeIndexWithChangelog as WithWriteOperations;
 
 // console.log("-------");
 

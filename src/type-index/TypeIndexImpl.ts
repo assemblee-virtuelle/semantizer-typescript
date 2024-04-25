@@ -60,21 +60,20 @@ export function TypeIndexMixin<
         }
 
         public removeForClassOfRegistration(registration: string | TypeIndexRegistration, ...forClasses: string[]): TypeIndexRegistration {
-            forClasses.forEach(forClass => {
-                const statement = this.getStatementForClass(registration, forClass);
-                if (statement) {
-                    this.removeStatement(statement);
-                }
-            });
+            forClasses.forEach(forClass => this.removeStatement(registration, TYPE_INDEX.forClass, forClass));
             return this.getThing(registration);
         }
 
-        removeInstanceOfRegistration(registration: string | TypeIndexRegistration, ...instance: string[]): TypeIndexRegistration {
-            throw new Error("Method not implemented.");
+        public removeInstanceOfRegistration(registration: string | TypeIndexRegistration, ...instances: string[]): TypeIndexRegistration {
+            instances.forEach(instance => this.removeStatement(registration, TYPE_INDEX.instance, instance));
+            return this.getThing(registration);
         }
-        removeInstanceContainerOfRegistration(registration: string | TypeIndexRegistration, ...instanceContainer: string[]): TypeIndexRegistration {
-            throw new Error("Method not implemented.");
+        
+        public removeInstanceContainerOfRegistration(registration: string | TypeIndexRegistration, ...instanceContainers: string[]): TypeIndexRegistration {
+            instanceContainers.forEach(instanceContainer => this.removeStatement(registration, TYPE_INDEX.instanceContainer, instanceContainer));
+            return this.getThing(registration);
         }
+        
         removeForClassAllOfRegistration(registration: string | TypeIndexRegistration): TypeIndexRegistration {
             throw new Error("Method not implemented.");
         }
