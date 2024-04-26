@@ -1,4 +1,3 @@
-import { Document } from "../core/Document";
 
 export interface DocumentSynchronized {
     isLocal(): boolean;

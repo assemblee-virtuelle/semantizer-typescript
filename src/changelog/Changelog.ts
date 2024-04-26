@@ -1,5 +1,11 @@
-import { Document } from "../core/Document";
+import { Document, DocumentWritable } from "../core/Document";
 import { Statement } from "../core/Statement";
+import { Thing } from "../core/Thing";
+
+export type DocumentWithChangelogConstructor<
+    ContainedThing extends Thing<any> = Thing, 
+    SelfDescribingThing extends Thing<any> = Thing,
+> = new (...args: any[]) => DocumentWritable<ContainedThing, SelfDescribingThing> & WithChangelog;
 
 export interface WithChangelog<
     StatementType extends Statement = Statement,

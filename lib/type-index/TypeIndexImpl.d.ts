@@ -18,8 +18,8 @@ export declare function TypeIndexMixin<TBase extends DocumentWritableConstructor
         setInstanceOfRegistration(registration: string | TypeIndexRegistration, instance: string, oldValue?: string): TypeIndexRegistration;
         setInstanceContainerOfRegistration(registration: string | TypeIndexRegistration, instanceContainer: string, oldValue?: string): TypeIndexRegistration;
         removeForClassOfRegistration(registration: string | TypeIndexRegistration, ...forClasses: string[]): TypeIndexRegistration;
-        removeInstanceOfRegistration(registration: string | TypeIndexRegistration, ...instance: string[]): TypeIndexRegistration;
-        removeInstanceContainerOfRegistration(registration: string | TypeIndexRegistration, ...instanceContainer: string[]): TypeIndexRegistration;
+        removeInstanceOfRegistration(registration: string | TypeIndexRegistration, ...instances: string[]): TypeIndexRegistration;
+        removeInstanceContainerOfRegistration(registration: string | TypeIndexRegistration, ...instanceContainers: string[]): TypeIndexRegistration;
         removeForClassAllOfRegistration(registration: string | TypeIndexRegistration): TypeIndexRegistration;
         removeInstanceAllOfRegistration(registration: string | TypeIndexRegistration): TypeIndexRegistration;
         removeInstanceContainerAllOfRegistration(registration: string | TypeIndexRegistration): TypeIndexRegistration;
@@ -44,6 +44,7 @@ export declare function TypeIndexMixin<TBase extends DocumentWritableConstructor
         setStatementAboutSelf(property: string, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): TypeIndexStatement;
         removeThing(thingOrUri: string | import("../core/Common").Resource): boolean;
         removeStatement(statement: import("../core/Statement").Statement): boolean;
+        removeStatement(about: string | import("../core/Common").Resource, property: string, value: string, language?: string | undefined): boolean;
         pop(): TypeIndexRegistration | undefined;
         reverse(): void;
         shift(): TypeIndexRegistration | undefined;

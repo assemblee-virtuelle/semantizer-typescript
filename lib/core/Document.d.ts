@@ -57,6 +57,7 @@ export interface DocumentWritable<ContainedThing extends Thing<any> = Thing, Sel
     setStatementAboutSelf(property: string, value: string, oldValue?: string, datatype?: string, language?: string): StatementOf<SelfDescribingThing>;
     removeThing(thingOrUri: string | Resource): boolean;
     removeStatement(statement: Statement): boolean;
+    removeStatement(about: string | Resource, property: string, value: string, language?: string): boolean;
     pop(): ContainedThing | undefined;
     reverse(): void;
     shift(): ContainedThing | undefined;

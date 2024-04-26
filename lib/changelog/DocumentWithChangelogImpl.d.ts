@@ -26,6 +26,7 @@ export declare function DocumentWithChangelogMixin<TBase extends DocumentWritabl
         setStatementAboutSelf(property: string, value: string, oldValue?: string | undefined, datatype?: string | undefined, language?: string | undefined): Statement;
         removeThing(thingOrUri: string | Resource): boolean;
         removeStatement(statement: Statement): boolean;
+        removeStatement(about: string | Resource, property: string, value: string, language?: string | undefined): boolean;
         pop(): any;
         reverse(): void;
         shift(): any;

@@ -28,6 +28,7 @@ export declare class DocumentImpl<ContainedThing extends ThingWritable<any>, Sel
     setThingAt(index: number, thing: ContainedThing): ContainedThing;
     removeThing(thingOrUri: string | Resource): boolean;
     removeStatement(statement: Statement): boolean;
+    removeStatement(about: string | Resource, property: string, value: string, language?: string): boolean;
     pop(): ContainedThing | undefined;
     reverse(): void;
     shift(): ContainedThing | undefined;

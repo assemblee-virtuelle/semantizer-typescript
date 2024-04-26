@@ -26,9 +26,9 @@ export interface WithWriteOperations {
     setForClassOfRegistration(registration: string | TypeIndexRegistration, forClass: string, oldValue?: string): TypeIndexRegistration;
     setInstanceOfRegistration(registration: string | TypeIndexRegistration, instance: string, oldValue?: string): TypeIndexRegistration;
     setInstanceContainerOfRegistration(registration: string | TypeIndexRegistration, instanceContainer: string, oldValue?: string): TypeIndexRegistration;
-    removeForClassOfRegistration(registration: string | TypeIndexRegistration, ...forClass: string[]): TypeIndexRegistration;
-    removeInstanceOfRegistration(registration: string | TypeIndexRegistration, ...instance: string[]): TypeIndexRegistration;
-    removeInstanceContainerOfRegistration(registration: string | TypeIndexRegistration, ...instanceContainer: string[]): TypeIndexRegistration;
+    removeForClassOfRegistration(registration: string | TypeIndexRegistration, ...forClasses: string[]): TypeIndexRegistration;
+    removeInstanceOfRegistration(registration: string | TypeIndexRegistration, ...instances: string[]): TypeIndexRegistration;
+    removeInstanceContainerOfRegistration(registration: string | TypeIndexRegistration, ...instanceContainers: string[]): TypeIndexRegistration;
     removeForClassAllOfRegistration(registration: string | TypeIndexRegistration): TypeIndexRegistration;
     removeInstanceAllOfRegistration(registration: string | TypeIndexRegistration): TypeIndexRegistration;
     removeInstanceContainerAllOfRegistration(registration: string | TypeIndexRegistration): TypeIndexRegistration;

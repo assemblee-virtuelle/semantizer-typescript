@@ -1,26 +1,25 @@
-import { WithChangelog } from "../changelog/Changelog.js";
-import { DocumentWritable } from "../core/Document.js";
-import { Thing } from "../core/Thing.js";
+import { DocumentWithChangelogConstructor } from "../changelog/Changelog.js";
 import { DistantDocument, LocalDocument } from "./DocumentSynchronized.js";
 
-export type DocumentLocalConstructor<
-    ContainedThing extends Thing<any> = Thing, 
-    SelfDescribingThing extends Thing<any> = Thing,
-> = new (...args: any[]) => DocumentWritable<ContainedThing, SelfDescribingThing> & WithChangelog;
-
 export function DocumentLocalMixin<
-    TBase extends DocumentLocalConstructor<any, any>
+    TBase extends DocumentWithChangelogConstructor<any, any>
 >(Base: TBase) {
     return class DocumentLocalImpl extends Base implements LocalDocument {
         
-        async saveUpdate(): Promise<void> {
+        public async saveUpdate(): Promise<void> {
             this.getChangelog().getAdded();
+            // convert the changelog in N3 + serialisation
+            // make a PATCH fetch request with authent
+            // -> Faire un mixin pour la gestion de la sauvegarde / IO
+            // ou synchronized-solid
             console.log("saveUpdate in DocumentLocalImpl")
         }
-        async saveNew(uri: string): Promise<void> {
+        
+        public async saveNew(uri: string): Promise<void> {
             throw new Error("Method not implemented.");
         }
-        async saveOverwrite(): Promise<void> {
+        
+        public async saveOverwrite(): Promise<void> {
             throw new Error("Method not implemented.");
         }
         
@@ -44,7 +43,7 @@ export function DocumentLocalMixin<
 }
 
 export function DocumentDistantMixin<
-    TBase extends DocumentLocalConstructor<any, any>
+    TBase extends DocumentWithChangelogConstructor<any, any>
 >(Base: TBase) {
     return class DocumentDistantImpl extends Base implements DistantDocument {
       

@@ -95,17 +95,17 @@ export function TypeIndexMixin<
         }
 
         public createRegistrationForInstance(forClass: string, instance: string, nameHintOrUri?: string): TypeIndexRegistration {
-            const thing = this.createThing(nameHintOrUri);
-            this.createStatement(thing, TYPE_INDEX.forClass, forClass);
-            this.createStatement(thing, TYPE_INDEX.instance, instance);
-            return this.getThing(thing);
+            const registration = this.createThing(nameHintOrUri);
+            this.createStatement(registration, TYPE_INDEX.forClass, forClass);
+            this.createStatement(registration, TYPE_INDEX.instance, instance);
+            return this.getThing(registration);
         }
 
         public createRegistrationForInstanceContainer(forClass: string, instanceContainer: string, nameHintOrUri?: string): TypeIndexRegistration {
-            const thing = this.createThing(nameHintOrUri);
-            this.createStatement(thing, TYPE_INDEX.forClass, forClass);
-            this.createStatement(thing, TYPE_INDEX.instanceContainer, instanceContainer);
-            return this.getThing(thing);
+            const registration = this.createThing(nameHintOrUri);
+            this.createStatement(registration, TYPE_INDEX.forClass, forClass);
+            this.createStatement(registration, TYPE_INDEX.instanceContainer, instanceContainer);
+            return this.getThing(registration);
         }
     }
 }
