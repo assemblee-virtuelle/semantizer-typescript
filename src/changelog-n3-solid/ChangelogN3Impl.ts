@@ -7,6 +7,7 @@ export function DocumentWithChangelogN3Mixin<
     return class DocumentWithChangelogN3Impl extends Base implements N3Serializable {
 
         public toN3(): string {
+            // Use a dedicated module with a vocabulary?
             this.getChangelog().getAdded();
             throw new Error("Method not implemented.");
         }
