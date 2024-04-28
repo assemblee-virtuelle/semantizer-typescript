@@ -127,9 +127,11 @@ export class ThingImpl<
     findIndex(predicate: (value: StatementType, index?: number | undefined, obj?: StatementType[] | undefined) => unknown, thisArg?: any): number {
         throw new Error("Method not implemented.");
     }
-    forEach(callbackfn: (value: StatementType, index?: number | undefined, array?: StatementType[] | undefined) => void, thisArg?: any): void {
-        throw new Error("Method not implemented.");
+    
+    public forEach(callbackfn: (value: StatementType, index?: number | undefined, array?: StatementType[] | undefined) => void, thisArg?: any): void {
+        this._getStatementsInternal().forEach(callbackfn);
     }
+
     includes(searchElement: StatementType, fromIndex?: number | undefined): boolean {
         throw new Error("Method not implemented.");
     }

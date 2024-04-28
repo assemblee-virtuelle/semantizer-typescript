@@ -2,7 +2,7 @@ import { Changelog, WithChangelog } from "../changelog/Changelog";
 import { DocumentWritable } from "../core/Document";
 import { Statement } from "../core/Statement";
 import { Thing } from "../core/Thing";
-import { N3Serializable } from "../n3/N3";
+import { N3Serializable } from "../core/Serializable";
 
 export type ChangelogN3<
     StatementType extends Statement = Statement,

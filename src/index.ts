@@ -3,6 +3,7 @@ import DocumentImpl, { DocumentImplDefault } from './core-default/DocumentImpl.j
 import StatementImpl from './core-default/StatementImpl.js';
 import ThingImpl, { ThingImplDefault } from './core-default/ThingImpl.js';
 import { Thing, ThingWritable } from './core/Thing.js';
+import { RdfjsJsonLdSerializer } from './document-serializer-rdfjs/RdfjsSerializer.js';
 import { DocumentLocalMixin } from './synchronized/DocumentSynchronizedImpl.js';
 import { TypeIndex, TypeIndexStatement, TypeIndexWritable, WithWriteOperations } from './type-index/TypeIndex.js';
 import { TypeIndexMixin } from './type-index/TypeIndexImpl.js';
@@ -51,6 +52,9 @@ const reg2 = typeIndexWithChangelog.createRegistrationForInstanceContainer("dfc-
 reg2.setForClass("dfc-b:Enterprise");
 typeIndexWithChangelog.setThing(reg2);
 typeIndexWithChangelog.forEach(t => console.log(t));
+
+const serializer = new RdfjsJsonLdSerializer();
+serializer.serialize(typeIndexWithChangelog).then(json => console.log(json));
 
 let a = typeIndexWithChangelog as WithWriteOperations;
 

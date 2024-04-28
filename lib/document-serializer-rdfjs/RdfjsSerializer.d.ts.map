@@ -1,0 +1,1 @@
+{"version":3,"file":"RdfjsSerializer.d.ts","sourceRoot":"","sources":["../../src/document-serializer-rdfjs/RdfjsSerializer.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,kBAAkB,EAAsB,MAAM,sBAAsB,CAAC;AAG9E,OAAO,EAAE,QAAQ,EAAE,MAAM,kBAAkB,CAAC;AAK5C,qBAAa,qBAAsB,YAAW,kBAAkB;IAE/C,SAAS,CAAC,QAAQ,EAAE,QAAQ,CAAC,GAAG,EAAE,GAAG,CAAC,GAAG,OAAO,CAAC,MAAM,CAAC;CAmCxE"}
