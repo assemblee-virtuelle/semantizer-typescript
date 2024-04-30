@@ -1,8 +1,8 @@
 import { Context, Resource } from "../core/Common.js";
-import { Document, DocumentWritable, StatementOf } from "../core/Document.js";
+import { DocumentWithNonDestructiveOperations, Document, StatementOf } from "../core/Document.js";
 import { Statement } from "../core/Statement.js";
-import { Thing, ThingConstructor, ThingWritable } from "../core/Thing.js";
-export declare class DocumentImpl<ContainedThing extends ThingWritable<any>, SelfDescribingThing extends ThingWritable<any>> implements DocumentWritable<ContainedThing, SelfDescribingThing> {
+import { ThingWithNonDestructiveOperations, ThingConstructor, Thing } from "../core/Thing.js";
+export declare class DocumentImpl<ContainedThing extends Thing<any>, SelfDescribingThing extends Thing<any>> implements Document<ContainedThing, SelfDescribingThing> {
     private _containedThings;
     private _selfDescribingThing;
     private _containedThingImpl;
@@ -12,10 +12,10 @@ export declare class DocumentImpl<ContainedThing extends ThingWritable<any>, Sel
     protected getSelfDescribingThingInternal(): SelfDescribingThing[];
     createThing(uriOrNameHint?: string | Resource): ContainedThing;
     createThingAboutSelf(): SelfDescribingThing;
-    addThing(other: Thing): ContainedThing;
-    addThingAll(others: Iterable<Thing>): ContainedThing[];
-    addThingAboutSelf(other: Thing): SelfDescribingThing;
-    addThingAboutSelfAll(others: Iterable<Thing>): SelfDescribingThing[];
+    addThing(other: ThingWithNonDestructiveOperations): ContainedThing;
+    addThingAll(others: Iterable<ThingWithNonDestructiveOperations>): ContainedThing[];
+    addThingAboutSelf(other: ThingWithNonDestructiveOperations): SelfDescribingThing;
+    addThingAboutSelfAll(others: Iterable<ThingWithNonDestructiveOperations>): SelfDescribingThing[];
     createStatement(about: string | Resource, property: string, value: string, datatype?: string | undefined, language?: string | undefined): StatementOf<ContainedThing>;
     createStatementAboutSelf(property: string, value: string, datatype?: string | undefined, language?: string | undefined): StatementOf<SelfDescribingThing>;
     addStatement(other: Statement): StatementOf<ContainedThing>;
@@ -47,7 +47,7 @@ export declare class DocumentImpl<ContainedThing extends ThingWritable<any>, Sel
     hasStatement(about: string | Resource, property?: string | undefined, language?: string | undefined): boolean;
     hasStatementAboutSelf(property?: string | undefined, language?: string | undefined): boolean;
     at(index: number): ContainedThing | undefined;
-    contains(other: Document<any, Thing>): boolean;
+    contains(other: DocumentWithNonDestructiveOperations<any, ThingWithNonDestructiveOperations>): boolean;
     count(): number;
     every(predicate: (value: ContainedThing, index?: number | undefined, array?: ContainedThing[] | undefined) => boolean, thisArg?: any): boolean;
     filter(predicate: (value: ContainedThing, index?: number | undefined, array?: ContainedThing[] | undefined) => boolean): ContainedThing[];
@@ -60,7 +60,7 @@ export declare class DocumentImpl<ContainedThing extends ThingWritable<any>, Sel
     indexOf(searchElement: ContainedThing, fromIndex?: number | undefined): number;
     keys(): IterableIterator<number>;
     map(callbackfn: (value: ContainedThing, index?: number | undefined, array?: ContainedThing[] | undefined) => unknown, thisArg?: any): unknown[];
-    reduce(callbackfn: (previousValue: ContainedThing, currentValue: ContainedThing, currentIndex: number, array: ContainedThing[]) => Thing): ContainedThing;
+    reduce(callbackfn: (previousValue: ContainedThing, currentValue: ContainedThing, currentIndex: number, array: ContainedThing[]) => ThingWithNonDestructiveOperations): ContainedThing;
     slice(start?: number | undefined, end?: number | undefined): ThisType<this>;
     some(predicate: (value: ContainedThing, index?: number | undefined, array?: ContainedThing[] | undefined) => unknown, thisArg?: any): boolean;
     [Symbol.iterator](): Iterator<ContainedThing>;
@@ -73,7 +73,7 @@ export declare class DocumentImpl<ContainedThing extends ThingWritable<any>, Sel
     deleteContext(): void;
     setContext(context: Context): void;
 }
-export declare class DocumentImplDefault extends DocumentImpl<ThingWritable<Statement>, ThingWritable<Statement>> {
+export declare class DocumentImplDefault extends DocumentImpl<Thing<Statement>, Thing<Statement>> {
     constructor();
 }
 export default DocumentImpl;

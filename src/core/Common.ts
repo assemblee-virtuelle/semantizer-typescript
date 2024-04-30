@@ -1,4 +1,4 @@
-import { Document } from "./Document";
+import { DocumentWithNonDestructiveOperations } from "./Document";
 
 export interface Resource {
     getUri(): string;

@@ -15,6 +15,8 @@ export declare class StatementImpl implements Statement {
     private _language?;
     constructor(other: Statement);
     constructor(params: ConstructorParams);
+    getUri(): string;
+    hasUri(): boolean;
     setProperty(property: string): ThisType<this>;
     getProperty(): string;
     setValue(value: string): this;

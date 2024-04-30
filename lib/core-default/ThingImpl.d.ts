@@ -1,12 +1,12 @@
 import { Context } from "../core/Common.js";
 import { Statement, StatementConstructor } from "../core/Statement.js";
-import { Thing, ThingWritable } from "../core/Thing.js";
+import { ThingWithNonDestructiveOperations, Thing } from "../core/Thing.js";
 export declare enum ThingType {
     ForDescribing = 0,
     Regular = 1,
     Anonymous = 2
 }
-export declare class ThingImpl<StatementType extends Statement = Statement> implements ThingWritable {
+export declare class ThingImpl<StatementType extends Statement = Statement> implements Thing {
     private _uri;
     private _statementImpl;
     private _statements;
@@ -29,7 +29,7 @@ export declare class ThingImpl<StatementType extends Statement = Statement> impl
     getStatementAll(property?: string | undefined, language?: string | undefined): StatementType[];
     hasStatement(property?: string | undefined, language?: string | undefined): boolean;
     at(index: number): StatementType | undefined;
-    contains(other: Thing): boolean;
+    contains(other: ThingWithNonDestructiveOperations): boolean;
     count(): number;
     every(predicate: (value: StatementType, index?: number | undefined, array?: StatementType[] | undefined) => boolean, thisArg?: any): boolean;
     filter(predicate: (value: StatementType, index?: number | undefined, array?: StatementType[] | undefined) => boolean): StatementType[];
@@ -41,7 +41,7 @@ export declare class ThingImpl<StatementType extends Statement = Statement> impl
     keys(): IterableIterator<number>;
     map(callbackfn: (value: StatementType, index?: number | undefined, array?: StatementType[] | undefined) => unknown, thisArg?: any): unknown[];
     reduce(callbackfn: (previousValue: StatementType, currentValue: StatementType, currentIndex: number, array: StatementType[]) => StatementType): StatementType;
-    slice(start?: number | undefined, end?: number | undefined): Thing;
+    slice(start?: number | undefined, end?: number | undefined): ThingWithNonDestructiveOperations;
     some(predicate: (value: StatementType, index?: number | undefined, array?: StatementType[] | undefined) => unknown, thisArg?: any): boolean;
     [Symbol.iterator](): Iterator<StatementType>;
     getUri(): string;

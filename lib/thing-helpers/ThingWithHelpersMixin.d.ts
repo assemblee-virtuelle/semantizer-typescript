@@ -1,10 +1,10 @@
 import { Resource } from "../core/Common";
-import { Thing } from "../core/Thing";
+import { ThingWithNonDestructiveOperations } from "../core/Thing";
 type Constructor<T = {}> = new (...args: any[]) => T;
-export declare function ThingWithHelpersMixin<TBase extends Constructor<Thing<any>>>(Base: TBase): {
+export declare function ThingWithHelpersMixin<TBase extends Constructor<ThingWithNonDestructiveOperations<any>>>(Base: TBase): {
     new (...args: any[]): {
         addStatement(about: string, value: string | Resource, datatype?: string, language?: string): any;
-        addStatementFrom(source: Thing<any>): any;
+        addStatementFrom(source: ThingWithNonDestructiveOperations<any>): any;
         addRdfTypeStatement(value: string): any;
         addBooleanStatement(about: string, value: boolean): any;
         addStringStatement(about: string, value: string, locale?: string): any;
@@ -47,11 +47,17 @@ export declare function ThingWithHelpersMixin<TBase extends Constructor<Thing<an
         removeDateStatement(about: string, value: Date): any;
         removeDatetimeStatement(about: string, value: Date): any;
         removeTimeStatement(about: string, value: Date): any;
+        getUri(): string;
+        hasUri(): boolean;
+        getContext(): import("../core/Common").Context | undefined;
+        equals(other: ThisType<any>): boolean;
+        difference(other: ThisType<any>): ThisType<any>;
+        toCopy(): ThisType<any>;
         getStatement(property: string, language?: string | undefined): any;
         getStatementAll(property?: string | undefined, language?: string | undefined): any[];
         hasStatement(property?: string | undefined, language?: string | undefined): boolean;
         at(index: number): any;
-        contains(other: Thing<import("../core/Statement").Statement>): boolean;
+        contains(other: ThingWithNonDestructiveOperations<import("../core/Statement").StatementWithDestructiveOperations>): boolean;
         count(): number;
         every(predicate: (value: any, index?: number | undefined, array?: any[] | undefined) => boolean, thisArg?: any): boolean;
         filter(predicate: (value: any, index?: number | undefined, array?: any[] | undefined) => boolean): any[];
@@ -63,15 +69,9 @@ export declare function ThingWithHelpersMixin<TBase extends Constructor<Thing<an
         keys(): IterableIterator<number>;
         map(callbackfn: (value: any, index?: number | undefined, array?: any[] | undefined) => unknown, thisArg?: any): unknown[];
         reduce(callbackfn: (previousValue: any, currentValue: any, currentIndex: number, array: any[]) => any): any;
-        slice(start?: number | undefined, end?: number | undefined): Thing<import("../core/Statement").Statement>;
+        slice(start?: number | undefined, end?: number | undefined): ThingWithNonDestructiveOperations<import("../core/Statement").StatementWithDestructiveOperations>;
         some(predicate: (value: any, index?: number | undefined, array?: any[] | undefined) => unknown, thisArg?: any): boolean;
         [Symbol.iterator](): Iterator<any, any, undefined>;
-        getUri(): string;
-        hasUri(): boolean;
-        getContext(): import("../core/Common").Context | undefined;
-        equals(other: ThisType<any>): boolean;
-        difference(other: ThisType<any>): ThisType<any>;
-        toCopy(): ThisType<any>;
     };
 } & TBase;
 export default ThingWithHelpersMixin;

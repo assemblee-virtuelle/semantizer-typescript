@@ -1,4 +1,4 @@
-import { Document } from "./Document";
+import { DocumentWithNonDestructiveOperations } from "./Document";
 export interface N3Serializable {
     toN3(): string;
 }
@@ -9,6 +9,6 @@ export interface JsonLdSerializable {
     toJsonLd(): string;
 }
 export interface DocumentSerializer {
-    serialize(document: Document<any, any>): Promise<string>;
+    serialize(document: DocumentWithNonDestructiveOperations<any, any>): Promise<string>;
 }
 //# sourceMappingURL=Serializable.d.ts.map

@@ -2,14 +2,11 @@ import { DocumentWithChangelogMixin } from './changelog/DocumentWithChangelogImp
 import DocumentImpl, { DocumentImplDefault } from './core-default/DocumentImpl.js';
 import StatementImpl from './core-default/StatementImpl.js';
 import ThingImpl, { ThingImplDefault } from './core-default/ThingImpl.js';
-import { Thing, ThingWritable } from './core/Thing.js';
+import { ThingWithNonDestructiveOperations, Thing } from './core/Thing.js';
 import { RdfjsJsonLdSerializer } from './document-serializer-rdfjs/RdfjsSerializer.js';
 import { DocumentLocalMixin } from './synchronized/DocumentSynchronizedImpl.js';
-import { TypeIndex, TypeIndexStatement, TypeIndexWritable, WithWriteOperations } from './type-index/TypeIndex.js';
-import { TypeIndexMixin } from './type-index/TypeIndexImpl.js';
-import { TypeIndexRegistration } from './type-index/TypeIndexRegistration.js';
-import TypeIndexRegistrationMixin from './type-index/TypeIndexRegistrationImpl.js';
-import { TypeIndexRegistrationStatementMixin } from './type-index/TypeIndexRegistrationStatement.js';
+import { TypeIndex, TypeIndexStatement, TypeIndexWritable, TypeIndexDestructiveOperations } from './type-index/types.js';
+import { TypeIndexMixin, TypeIndexRegistrationMixin } from './type-index/impl.js';
 
 export { default as Semantizer } from './Semantizer.js';
 
@@ -56,7 +53,7 @@ typeIndexWithChangelog.forEach(t => console.log(t));
 const serializer = new RdfjsJsonLdSerializer();
 serializer.serialize(typeIndexWithChangelog).then(json => console.log(json));
 
-let a = typeIndexWithChangelog as WithWriteOperations;
+let a = typeIndexWithChangelog as TypeIndexDestructiveOperations;
 
 // console.log("-------");
 

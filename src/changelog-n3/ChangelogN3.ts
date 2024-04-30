@@ -1,7 +1,7 @@
 import { Changelog, WithChangelog } from "../changelog/Changelog";
-import { DocumentWritable } from "../core/Document";
+import { Document } from "../core/Document";
 import { Statement } from "../core/Statement";
-import { Thing } from "../core/Thing";
+import { ThingWithNonDestructiveOperations } from "../core/Thing";
 import { N3Serializable } from "../core/Serializable";
 
 export type ChangelogN3<
@@ -9,9 +9,9 @@ export type ChangelogN3<
 > = Changelog<StatementType> & N3Serializable;
 
 export type DocumentWithChangelogN3Constructor<
-    ContainedThing extends Thing<any> = Thing, 
-    SelfDescribingThing extends Thing<any> = Thing,
-> = new (...args: any[]) => DocumentWritable<ContainedThing, SelfDescribingThing> & WithChangelogN3;
+    ContainedThing extends ThingWithNonDestructiveOperations<any> = ThingWithNonDestructiveOperations, 
+    SelfDescribingThing extends ThingWithNonDestructiveOperations<any> = ThingWithNonDestructiveOperations,
+> = new (...args: any[]) => Document<ContainedThing, SelfDescribingThing> & WithChangelogN3;
 
 export interface WithChangelogN3<
     StatementType extends Statement = Statement,

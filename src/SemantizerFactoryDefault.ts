@@ -1,7 +1,7 @@
 import Semantizer from "./Semantizer.js";
 import SemantizerFactory from "./SemantizerFactory.js";
 import { Context } from "./core/Common.js";
-import { Document } from "./core/Document.js";
+import { DocumentWithNonDestructiveOperations } from "./core/Document.js";
 
 export default class SemantizerFactoryDefault implements SemantizerFactory {
 
@@ -11,11 +11,11 @@ export default class SemantizerFactoryDefault implements SemantizerFactory {
         this._semantizer = semantizer;
     }
 
-    public loadDocument(uri: string): Document<any, any> {
+    public loadDocument(uri: string): DocumentWithNonDestructiveOperations<any, any> {
         throw new Error("Method not implemented.");
     }
 
-    public createDocument(uri?: string, context?: Context): Document<any, any> {
+    public createDocument(uri?: string, context?: Context): DocumentWithNonDestructiveOperations<any, any> {
         throw new Error("Method not implemented.");
     }
 

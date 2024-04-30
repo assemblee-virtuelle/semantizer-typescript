@@ -1,6 +1,6 @@
 import { Context } from "../core/Common.js";
 import { Statement, StatementConstructor } from "../core/Statement.js";
-import { Thing, ThingWritable } from "../core/Thing.js";
+import { ThingWithNonDestructiveOperations, Thing } from "../core/Thing.js";
 import StatementImpl from "./StatementImpl.js";
 
 export enum ThingType {
@@ -19,7 +19,7 @@ export enum ThingType {
 
 export class ThingImpl<
     StatementType extends Statement = Statement
-> implements ThingWritable { 
+> implements Thing { 
 
     private _uri: string;
     private _statementImpl: StatementConstructor<StatementType>;
@@ -109,7 +109,7 @@ export class ThingImpl<
     at(index: number): StatementType | undefined {
         throw new Error("Method not implemented.");
     }
-    contains(other: Thing): boolean {
+    contains(other: ThingWithNonDestructiveOperations): boolean {
         throw new Error("Method not implemented.");
     }
     count(): number {
@@ -147,7 +147,7 @@ export class ThingImpl<
     reduce(callbackfn: (previousValue: StatementType, currentValue: StatementType, currentIndex: number, array: StatementType[]) => StatementType): StatementType {
         throw new Error("Method not implemented.");
     }
-    slice(start?: number | undefined, end?: number | undefined): Thing {
+    slice(start?: number | undefined, end?: number | undefined): ThingWithNonDestructiveOperations {
         throw new Error("Method not implemented.");
     }
     some(predicate: (value: StatementType, index?: number | undefined, array?: StatementType[] | undefined) => unknown, thisArg?: any): boolean {

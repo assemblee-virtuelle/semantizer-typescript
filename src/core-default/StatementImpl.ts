@@ -27,6 +27,13 @@ export class StatementImpl implements Statement {
         this._language = 'subject' in params? params.language: params.getLanguage();
     }
 
+    getUri(): string {
+        throw new Error("Method not implemented.");
+    }
+    hasUri(): boolean {
+        throw new Error("Method not implemented.");
+    }
+
     public setProperty(property: string): ThisType<this> {
         this._property = property;
         return this;

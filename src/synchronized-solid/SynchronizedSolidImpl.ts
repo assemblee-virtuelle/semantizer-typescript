@@ -14,6 +14,8 @@ export function LocalSolidDocumentMixin<
         }
         
         public async saveNew(uri: string): Promise<void> {
+            // const documentAsTurtle = serialize the document to turtle;
+            // const request = await fetch(uri, { method: 'POST', body: documentAsTurtle });
             throw new Error("Method not implemented.");
         }
         

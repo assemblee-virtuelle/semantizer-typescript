@@ -1,6 +1,6 @@
-import { Document, DocumentWritable } from "../core/Document";
+import { DocumentWithNonDestructiveOperations, Document } from "../core/Document";
 import { Statement } from "../core/Statement";
-import { ThingWritable } from "../core/Thing";
+import { Thing } from "../core/Thing";
 import { TypeIndexRegistration } from "./TypeIndexRegistration";
 export interface TypeIndexStatement extends Statement {
     isForClass(forClass: string): boolean;
@@ -8,12 +8,10 @@ export interface TypeIndexStatement extends Statement {
     isForInstanceContainer(instanceContainer: string): boolean;
 }
 export interface WithReadOperations {
-    getStatementForClass(registration: string | TypeIndexRegistration, forClass: string): TypeIndexStatement | undefined;
-    getStatementForInstance(registration: string | TypeIndexRegistration, instance: string): TypeIndexStatement | undefined;
-    getStatementForInstanceContainer(registration: string | TypeIndexRegistration, instanceContainer: string): TypeIndexStatement | undefined;
-    getStatementAllForClass(registration: string | TypeIndexRegistration, forClass: string): TypeIndexStatement[];
-    getStatementAllForInstance(registration: string | TypeIndexRegistration, instance: string): TypeIndexStatement[];
-    getStatementAllForInstanceContainer(registration: string | TypeIndexRegistration, instanceContainer: string): TypeIndexStatement[];
+    getForClassAll(): string[];
+    getRegistrationAllForClass(forClass: string): TypeIndexRegistration[];
+    getRegistrationAllForInstance(instance: string): TypeIndexRegistration[];
+    getRegistrationAllForInstanceContainer(instanceContainer: string): TypeIndexRegistration[];
     forEachOfClass(forClass: string, callbackfn: (value: TypeIndexRegistration, index?: number, array?: TypeIndexRegistration[]) => void, thisArg?: any): void;
 }
 export interface WithWriteOperations {
@@ -33,6 +31,6 @@ export interface WithWriteOperations {
     removeInstanceAllOfRegistration(registration: string | TypeIndexRegistration): TypeIndexRegistration;
     removeInstanceContainerAllOfRegistration(registration: string | TypeIndexRegistration): TypeIndexRegistration;
 }
-export type TypeIndex = Document<TypeIndexRegistration> & WithReadOperations;
-export type TypeIndexWritable = DocumentWritable<TypeIndexRegistration, ThingWritable<TypeIndexStatement>> & WithReadOperations & WithWriteOperations;
+export type TypeIndex = DocumentWithNonDestructiveOperations<TypeIndexRegistration> & WithReadOperations;
+export type TypeIndexWritable = Document<TypeIndexRegistration, Thing<TypeIndexStatement>> & WithReadOperations & WithWriteOperations;
 //# sourceMappingURL=TypeIndex.d.ts.map

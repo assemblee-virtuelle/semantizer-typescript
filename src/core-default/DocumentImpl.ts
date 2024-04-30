@@ -1,13 +1,13 @@
 import { Context, Resource } from "../core/Common.js";
-import { Document, DocumentWritable, StatementOf } from "../core/Document.js";
+import { DocumentWithNonDestructiveOperations, Document, StatementOf } from "../core/Document.js";
 import { Statement } from "../core/Statement.js";
-import { Thing, ThingConstructor, ThingWithWriteOperations, ThingWritable } from "../core/Thing.js";
+import { ThingWithNonDestructiveOperations, ThingConstructor, ThingDesctructiveOperations, Thing } from "../core/Thing.js";
 import ThingImpl from "./ThingImpl.js";
 
 export class DocumentImpl<
-    ContainedThing extends ThingWritable<any>, 
-    SelfDescribingThing extends ThingWritable<any>
-> implements DocumentWritable<ContainedThing, SelfDescribingThing> {
+    ContainedThing extends Thing<any>, 
+    SelfDescribingThing extends Thing<any>
+> implements Document<ContainedThing, SelfDescribingThing> {
     
     // protected _uri: string;
     // protected _selfDescribingThing?: SelfDescribingThingOf<DocumentType>;
@@ -44,16 +44,16 @@ export class DocumentImpl<
     createThingAboutSelf(): SelfDescribingThing {
         throw new Error("Method not implemented.");
     }
-    addThing(other: Thing): ContainedThing {
+    addThing(other: ThingWithNonDestructiveOperations): ContainedThing {
         throw new Error("Method not implemented.");
     }
-    addThingAll(others: Iterable<Thing>): ContainedThing[] {
+    addThingAll(others: Iterable<ThingWithNonDestructiveOperations>): ContainedThing[] {
         throw new Error("Method not implemented.");
     }
-    addThingAboutSelf(other: Thing): SelfDescribingThing {
+    addThingAboutSelf(other: ThingWithNonDestructiveOperations): SelfDescribingThing {
         throw new Error("Method not implemented.");
     }
-    addThingAboutSelfAll(others: Iterable<Thing>): SelfDescribingThing[] {
+    addThingAboutSelfAll(others: Iterable<ThingWithNonDestructiveOperations>): SelfDescribingThing[] {
         throw new Error("Method not implemented.");
     }
     
@@ -175,7 +175,7 @@ export class DocumentImpl<
     at(index: number): ContainedThing | undefined {
         throw new Error("Method not implemented.");
     }
-    contains(other: Document<any, Thing>): boolean {
+    contains(other: DocumentWithNonDestructiveOperations<any, ThingWithNonDestructiveOperations>): boolean {
         throw new Error("Method not implemented.");
     }
     count(): number {
@@ -217,7 +217,7 @@ export class DocumentImpl<
     map(callbackfn: (value: ContainedThing, index?: number | undefined, array?: ContainedThing[] | undefined) => unknown, thisArg?: any): unknown[] {
         throw new Error("Method not implemented.");
     }
-    reduce(callbackfn: (previousValue: ContainedThing, currentValue: ContainedThing, currentIndex: number, array: ContainedThing[]) => Thing): ContainedThing {
+    reduce(callbackfn: (previousValue: ContainedThing, currentValue: ContainedThing, currentIndex: number, array: ContainedThing[]) => ThingWithNonDestructiveOperations): ContainedThing {
         throw new Error("Method not implemented.");
     }
     slice(start?: number | undefined, end?: number | undefined): ThisType<this> {
@@ -258,7 +258,7 @@ export class DocumentImpl<
 
 }
 
-export class DocumentImplDefault extends DocumentImpl<ThingWritable<Statement>, ThingWritable<Statement>> {
+export class DocumentImplDefault extends DocumentImpl<Thing<Statement>, Thing<Statement>> {
 
     public constructor() {
         super(ThingImpl, ThingImpl);

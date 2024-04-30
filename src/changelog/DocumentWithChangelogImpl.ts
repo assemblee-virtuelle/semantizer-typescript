@@ -1,12 +1,12 @@
 import { Resource } from "../core/Common";
-import { Constructed, ContainedThingOf, DocumentWritable, DocumentWritableConstructor, StatementOf } from "../core/Document";
+import { Constructed, ContainedThingOf, Document, DocumentWithDestructiveOperationsConstructor, StatementOf } from "../core/Document";
 import { Statement } from "../core/Statement";
-import { Thing } from "../core/Thing";
+import { ThingWithNonDestructiveOperations } from "../core/Thing";
 import { Changelog, WithChangelog } from "./Changelog";
 import { ChangelogImpl } from "./ChangelogImpl.js";
 
 export function DocumentWithChangelogMixin<
-    TBase extends DocumentWritableConstructor<any, any>
+    TBase extends DocumentWithDestructiveOperationsConstructor<any, any>
 >(Base: TBase) {
     return class DocumentWithChangelogImpl extends Base implements WithChangelog {
 

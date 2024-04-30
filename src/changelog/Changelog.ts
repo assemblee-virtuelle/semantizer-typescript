@@ -1,11 +1,11 @@
-import { Document, DocumentWritable } from "../core/Document";
+import { DocumentWithNonDestructiveOperations, Document } from "../core/Document";
 import { Statement } from "../core/Statement";
-import { Thing } from "../core/Thing";
+import { ThingWithNonDestructiveOperations } from "../core/Thing";
 
 export type DocumentWithChangelogConstructor<
-    ContainedThing extends Thing<any> = Thing, 
-    SelfDescribingThing extends Thing<any> = Thing,
-> = new (...args: any[]) => DocumentWritable<ContainedThing, SelfDescribingThing> & WithChangelog;
+    ContainedThing extends ThingWithNonDestructiveOperations<any> = ThingWithNonDestructiveOperations, 
+    SelfDescribingThing extends ThingWithNonDestructiveOperations<any> = ThingWithNonDestructiveOperations,
+> = new (...args: any[]) => Document<ContainedThing, SelfDescribingThing> & WithChangelog;
 
 export interface WithChangelog<
     StatementType extends Statement = Statement,
@@ -30,7 +30,7 @@ export interface WithWriteOperations<
 }
 
 export interface WithCreateOperations<
-    DocumentType extends Document<any, any>
+    DocumentType extends DocumentWithNonDestructiveOperations<any, any>
 > {
     applyTo(document: DocumentType): DocumentType;
 }
