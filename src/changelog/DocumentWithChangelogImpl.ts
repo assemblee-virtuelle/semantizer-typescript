@@ -1,7 +1,5 @@
 import { Resource } from "../core/Common";
-import { Constructed, ContainedThingOf, Document, DocumentWithDestructiveOperationsConstructor, StatementOf } from "../core/Document";
-import { Statement } from "../core/Statement";
-import { ThingWithNonDestructiveOperations } from "../core/Thing";
+import { Constructed, ContainedThingOf, DocumentWithDestructiveOperationsConstructor, StatementOf } from "../core/Document";
 import { Changelog, WithChangelog } from "./Changelog";
 import { ChangelogImpl } from "./ChangelogImpl.js";
 

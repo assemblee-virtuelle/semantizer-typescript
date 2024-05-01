@@ -1,7 +1,10 @@
 import { DocumentWithDestructiveOperationsConstructor } from "../core/Document.js";
 import { Thing, ThingConstructor } from "../core/Thing.js";
-import { TypeIndexRegistration, TypeIndexStatement } from "./types.js";
+import { TypeIndexRegistration, TypeIndexStatement, TypeIndex } from "./types.js";
 import { Statement, StatementConstructor } from "../core/Statement.js";
+export declare class TypeIndexFactory {
+    static createTypeIndex<T extends TypeIndex = TypeIndex>(DocumentImpl: DocumentWithDestructiveOperationsConstructor<TypeIndexRegistration, Thing<TypeIndexStatement>>, ContainedThingImpl: ThingConstructor<Thing<TypeIndexStatement>>, SelfDescribingThingImpl: ThingConstructor, StatementImpl: StatementConstructor<Statement>): T;
+}
 export declare function TypeIndexMixin<TBase extends DocumentWithDestructiveOperationsConstructor<TypeIndexRegistration, Thing<TypeIndexStatement>>>(Base: TBase): {
     new (...args: any[]): {
         getForClassAll(): string[];
@@ -25,6 +28,10 @@ export declare function TypeIndexMixin<TBase extends DocumentWithDestructiveOper
         createThing(uriOrNameHint?: string): TypeIndexRegistration;
         createRegistrationForInstance(forClass: string, instance: string, nameHintOrUri?: string): TypeIndexRegistration;
         createRegistrationForInstanceContainer(forClass: string, instanceContainer: string, nameHintOrUri?: string): TypeIndexRegistration;
+        getThingAboutSelf(): Thing<TypeIndexStatement> | undefined;
+        getThingAllIterator(): Iterator<Thing<import("../core/Statement.js").StatementWithDestructiveOperations>, any, undefined>;
+        getStatementAllIterator(): Iterator<import("../core/Statement.js").StatementWithDestructiveOperations, any, undefined>;
+        [Symbol.iterator](): Iterator<TypeIndexRegistration, any, undefined>;
         getUri(): string;
         hasUri(): boolean;
         getContext(): import("../core/Common.js").Context | undefined;
@@ -32,7 +39,6 @@ export declare function TypeIndexMixin<TBase extends DocumentWithDestructiveOper
         difference(other: ThisType<any>): ThisType<any>;
         toCopy(): ThisType<any>;
         getThing(about: string | import("../core/Common.js").Resource): TypeIndexRegistration;
-        getThingAboutSelf(): Thing<TypeIndexStatement>;
         hasThing(about: string | import("../core/Common.js").Resource): boolean;
         hasThingAboutSelf(): boolean;
         getStatement(about: string | import("../core/Common.js").Resource, property: string, language?: string | undefined): TypeIndexStatement;
@@ -58,7 +64,6 @@ export declare function TypeIndexMixin<TBase extends DocumentWithDestructiveOper
         reduce(callbackfn: (previousValue: TypeIndexRegistration, currentValue: TypeIndexRegistration, currentIndex: number, array: TypeIndexRegistration[]) => import("../core/Thing.js").ThingWithNonDestructiveOperations<import("../core/Statement.js").StatementWithDestructiveOperations>): TypeIndexRegistration;
         slice(start?: number | undefined, end?: number | undefined): ThisType<any>;
         some(predicate: (value: TypeIndexRegistration, index?: number | undefined, array?: TypeIndexRegistration[] | undefined) => unknown, thisArg?: any): boolean;
-        [Symbol.iterator](): Iterator<TypeIndexRegistration, any, undefined>;
         createThingAboutSelf(): Thing<TypeIndexStatement>;
         addThing(other: import("../core/Thing.js").ThingWithNonDestructiveOperations<import("../core/Statement.js").StatementWithDestructiveOperations>): TypeIndexRegistration;
         addThingAll(others: Iterable<import("../core/Thing.js").ThingWithNonDestructiveOperations<import("../core/Statement.js").StatementWithDestructiveOperations>>): TypeIndexRegistration[];
@@ -108,6 +113,7 @@ export declare function TypeIndexRegistrationMixin<TStatementImpl extends Statem
         removeInstanceAll(): this;
         removeInstanceContainerAll(): this;
         toCopy(): ThisType<any>;
+        [Symbol.iterator](): Iterator<import("../core/Statement.js").StatementWithDestructiveOperations, any, undefined>;
         getUri(): string;
         hasUri(): boolean;
         getContext(): import("../core/Common.js").Context | undefined;
@@ -131,7 +137,6 @@ export declare function TypeIndexRegistrationMixin<TStatementImpl extends Statem
         reduce(callbackfn: (previousValue: TypeIndexStatement, currentValue: TypeIndexStatement, currentIndex: number, array: TypeIndexStatement[]) => TypeIndexStatement): TypeIndexStatement;
         slice(start?: number | undefined, end?: number | undefined): import("../core/Thing.js").ThingWithNonDestructiveOperations<import("../core/Statement.js").StatementWithDestructiveOperations>;
         some(predicate: (value: TypeIndexStatement, index?: number | undefined, array?: TypeIndexStatement[] | undefined) => unknown, thisArg?: any): boolean;
-        [Symbol.iterator](): Iterator<TypeIndexStatement, any, undefined>;
         createStatement(property: string, value: string, datatype?: string | undefined, language?: string | undefined): TypeIndexStatement;
         addStatement(other: import("../core/Statement.js").StatementWithDestructiveOperations): TypeIndexStatement;
         addStatementAll(others: Iterable<import("../core/Statement.js").StatementWithDestructiveOperations>): TypeIndexStatement[];

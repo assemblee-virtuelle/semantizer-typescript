@@ -9,6 +9,10 @@ export declare function DocumentLocalMixin<TBase extends DocumentWithChangelogCo
         isDistant(): boolean;
         getDistantUri(): string | undefined;
         getDistantUriAll(): string[];
+        getThingAboutSelf(): any;
+        getThingAllIterator(): Iterator<import("../core/Thing.js").Thing<import("../core/Statement.js").StatementWithDestructiveOperations>, any, undefined>;
+        getStatementAllIterator(): Iterator<import("../core/Statement.js").StatementWithDestructiveOperations, any, undefined>;
+        [Symbol.iterator](): Iterator<any, any, undefined>;
         getUri(): string;
         hasUri(): boolean;
         getContext(): import("../core/Common.js").Context | undefined;
@@ -16,7 +20,6 @@ export declare function DocumentLocalMixin<TBase extends DocumentWithChangelogCo
         difference(other: ThisType<any>): ThisType<any>;
         toCopy(): ThisType<any>;
         getThing(about: string | import("../core/Common.js").Resource): any;
-        getThingAboutSelf(): any;
         hasThing(about: string | import("../core/Common.js").Resource): boolean;
         hasThingAboutSelf(): boolean;
         getStatement(about: string | import("../core/Common.js").Resource, property: string, language?: string | undefined): import("../core/Common.js").Resource & import("../core/Common.js").Copyable & import("../core/Statement.js").StatementNonDestructiveOperations & import("../core/Statement.js").StatementDestructiveOperations;
@@ -42,7 +45,6 @@ export declare function DocumentLocalMixin<TBase extends DocumentWithChangelogCo
         reduce(callbackfn: (previousValue: any, currentValue: any, currentIndex: number, array: any[]) => import("../core/Thing.js").ThingWithNonDestructiveOperations<import("../core/Statement.js").StatementWithDestructiveOperations>): any;
         slice(start?: number | undefined, end?: number | undefined): ThisType<any>;
         some(predicate: (value: any, index?: number | undefined, array?: any[] | undefined) => unknown, thisArg?: any): boolean;
-        [Symbol.iterator](): Iterator<any, any, undefined>;
         createThing(uriOrNameHint?: string | import("../core/Common.js").Resource | undefined): any;
         createThingAboutSelf(): any;
         addThing(other: import("../core/Thing.js").ThingWithNonDestructiveOperations<import("../core/Statement.js").StatementWithDestructiveOperations>): any;
@@ -78,6 +80,10 @@ export declare function DocumentDistantMixin<TBase extends DocumentWithChangelog
         toLocalCopy(): LocalDocument;
         getDistantUri(): string | undefined;
         getDistantUriAll(): string[];
+        getThingAboutSelf(): any;
+        getThingAllIterator(): Iterator<import("../core/Thing.js").Thing<import("../core/Statement.js").StatementWithDestructiveOperations>, any, undefined>;
+        getStatementAllIterator(): Iterator<import("../core/Statement.js").StatementWithDestructiveOperations, any, undefined>;
+        [Symbol.iterator](): Iterator<any, any, undefined>;
         getUri(): string;
         hasUri(): boolean;
         getContext(): import("../core/Common.js").Context | undefined;
@@ -85,7 +91,6 @@ export declare function DocumentDistantMixin<TBase extends DocumentWithChangelog
         difference(other: ThisType<any>): ThisType<any>;
         toCopy(): ThisType<any>;
         getThing(about: string | import("../core/Common.js").Resource): any;
-        getThingAboutSelf(): any;
         hasThing(about: string | import("../core/Common.js").Resource): boolean;
         hasThingAboutSelf(): boolean;
         getStatement(about: string | import("../core/Common.js").Resource, property: string, language?: string | undefined): import("../core/Common.js").Resource & import("../core/Common.js").Copyable & import("../core/Statement.js").StatementNonDestructiveOperations & import("../core/Statement.js").StatementDestructiveOperations;
@@ -111,7 +116,6 @@ export declare function DocumentDistantMixin<TBase extends DocumentWithChangelog
         reduce(callbackfn: (previousValue: any, currentValue: any, currentIndex: number, array: any[]) => import("../core/Thing.js").ThingWithNonDestructiveOperations<import("../core/Statement.js").StatementWithDestructiveOperations>): any;
         slice(start?: number | undefined, end?: number | undefined): ThisType<any>;
         some(predicate: (value: any, index?: number | undefined, array?: any[] | undefined) => unknown, thisArg?: any): boolean;
-        [Symbol.iterator](): Iterator<any, any, undefined>;
         createThing(uriOrNameHint?: string | import("../core/Common.js").Resource | undefined): any;
         createThingAboutSelf(): any;
         addThing(other: import("../core/Thing.js").ThingWithNonDestructiveOperations<import("../core/Statement.js").StatementWithDestructiveOperations>): any;

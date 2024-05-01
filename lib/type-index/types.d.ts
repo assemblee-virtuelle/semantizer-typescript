@@ -1,5 +1,5 @@
 import { DocumentWithNonDestructiveOperations, Document } from "../core/Document";
-import { Statement, StatementWithDestructiveOperations } from "../core/Statement";
+import { Statement, StatementWithNonDestructiveOperations } from "../core/Statement";
 import { ThingWithNonDestructiveOperations, Thing } from "../core/Thing";
 export interface TypeIndexNonDestructiveOperations {
     getForClassAll(): string[];
@@ -49,10 +49,10 @@ export interface TypeIndexStatementNonDestructiveOperations {
     isForInstance(instance: string): boolean;
     isForInstanceContainer(instanceContainer: string): boolean;
 }
-export type TypeIndexStatementWithNonDestructiveOperations = StatementWithDestructiveOperations & TypeIndexStatementNonDestructiveOperations;
+export type TypeIndexStatementWithNonDestructiveOperations = StatementWithNonDestructiveOperations & TypeIndexStatementNonDestructiveOperations;
 export type TypeIndexStatement = Statement & TypeIndexStatementNonDestructiveOperations;
 export type TypeIndexRegistrationWithNonDestructiveOperations = ThingWithNonDestructiveOperations<TypeIndexStatement> & TypeIndexRegistrationNonDestructiveOperations;
 export type TypeIndexRegistration = Thing<TypeIndexStatement> & TypeIndexRegistrationNonDestructiveOperations & TypeIndexRegistrationDestructiveOperations;
-export type TypeIndex = DocumentWithNonDestructiveOperations<TypeIndexRegistration> & TypeIndexNonDestructiveOperations;
-export type TypeIndexWritable = Document<TypeIndexRegistration, Thing<TypeIndexStatement>> & TypeIndexNonDestructiveOperations & TypeIndexDestructiveOperations;
+export type TypeIndexWithNonDestructiveOperations = DocumentWithNonDestructiveOperations<TypeIndexRegistrationWithNonDestructiveOperations> & TypeIndexNonDestructiveOperations;
+export type TypeIndex = Document<TypeIndexRegistration, Thing<TypeIndexStatement>> & TypeIndexNonDestructiveOperations & TypeIndexDestructiveOperations;
 //# sourceMappingURL=types.d.ts.map

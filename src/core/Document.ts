@@ -1,6 +1,6 @@
 import { Comparable, Copyable, Resource, WithContext } from "./Common";
 import { Statement } from "./Statement";
-import { ThingWithNonDestructiveOperations } from "./Thing";
+import { Thing, IterableThing, ThingWithNonDestructiveOperations } from "./Thing";
 
 type ContainedThingOfDocument<T extends DocumentWithNonDestructiveOperations<any, any>> = T extends DocumentWithNonDestructiveOperations<infer TypeArg, any> ? TypeArg : never;
 type ContainedThingOfDocumentWritable<T extends Document<any, any>> = T extends Document<infer TypeArg, any> ? TypeArg : never;
@@ -45,7 +45,6 @@ export interface DocumentNonDestructiveOperations<
     SelfDescribingThing extends ThingWithNonDestructiveOperations<any> = ThingWithNonDestructiveOperations
 > {
     getThing(about: string | Resource): ContainedThing;
-    getThingAboutSelf(): SelfDescribingThing;
 
     hasThing(about: string | Resource): boolean;
     hasThingAboutSelf(): boolean;
@@ -58,8 +57,6 @@ export interface DocumentNonDestructiveOperations<
 
     hasStatement(about: string | Resource, property?: string, language?: string): boolean;
     hasStatementAboutSelf(property?: string, language?: string): boolean;
-
-    [Symbol.iterator](): Iterator<ContainedThing>;
 
     at(index: number): ContainedThing | undefined;
     contains(other: DocumentWithNonDestructiveOperations<any>): boolean;
@@ -86,6 +83,7 @@ export interface DocumentDestructiveOperations<
 > {
     createThing(uriOrNameHint?: string | Resource): ContainedThing;
     createThingAboutSelf(): SelfDescribingThing;
+    // TODO: createThingWithoutUri(uriOrNameHint?: string | Resource): ContainedThing;
     addThing(other: ThingWithNonDestructiveOperations): ContainedThing;
     addThingAll(others: Iterable<ThingWithNonDestructiveOperations>): ContainedThing[];
     addThingAboutSelf(other: ThingWithNonDestructiveOperations): SelfDescribingThing;
@@ -117,10 +115,20 @@ export interface DocumentDestructiveOperations<
     splice(start: number, deleteCount: number, ...items: ContainedThing[]): ContainedThing[];
 }
 
+export interface IterableDocument<
+    ContainedThing extends IterableThing<any>,
+    SelfDescribingThing extends IterableThing<any>
+> extends Iterable<ContainedThing> {
+    [Symbol.iterator](): Iterator<ContainedThing>;
+    getThingAboutSelf(): SelfDescribingThing | undefined;
+    getThingAllIterator(): Iterator<Thing<Statement>>;
+    getStatementAllIterator(): Iterator<Statement>;
+}
+
 export type DocumentBase<
     ContainedThing extends ThingWithNonDestructiveOperations<any> = ThingWithNonDestructiveOperations,
     SelfDescribingThing extends ThingWithNonDestructiveOperations<any> = ThingWithNonDestructiveOperations
-> = Resource & WithContext & Comparable & Copyable;
+> = IterableDocument<ContainedThing, SelfDescribingThing> & Resource & WithContext & Comparable & Copyable;
 
 export type DocumentWithNonDestructiveOperations<
     ContainedThing extends ThingWithNonDestructiveOperations<any> = ThingWithNonDestructiveOperations,

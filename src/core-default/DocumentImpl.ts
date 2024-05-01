@@ -1,6 +1,6 @@
 import { Context, Resource } from "../core/Common.js";
 import { DocumentWithNonDestructiveOperations, Document, StatementOf } from "../core/Document.js";
-import { Statement } from "../core/Statement.js";
+import { Statement, StatementWithDestructiveOperations } from "../core/Statement.js";
 import { ThingWithNonDestructiveOperations, ThingConstructor, ThingDesctructiveOperations, Thing } from "../core/Thing.js";
 import ThingImpl from "./ThingImpl.js";
 
@@ -16,22 +16,29 @@ export class DocumentImpl<
     // protected _factory: Factory<DocumentType>; //DocumentImpl<Document<DocumentType, DocumentTypeReadonly>>>;
 
     private _containedThings: ContainedThing[];
-    private _selfDescribingThing: SelfDescribingThing[];
+    private _selfDescribingThing: SelfDescribingThing | undefined;
     private _containedThingImpl: ThingConstructor<ContainedThing>;
     private _selfDescribingThingImpl: ThingConstructor<SelfDescribingThing>;
 
     public constructor(containedThingImpl: ThingConstructor<ContainedThing>, selfDescribingThingImpl: ThingConstructor<SelfDescribingThing>) {
         this._containedThings = [];
-        this._selfDescribingThing = [];
+        this._selfDescribingThing = undefined;
         this._containedThingImpl = containedThingImpl;
         this._selfDescribingThingImpl = selfDescribingThingImpl;
+    }
+    
+    getThingAllIterator(): Iterator<Thing<StatementWithDestructiveOperations>, any, undefined> {
+        throw new Error("Method not implemented.");
+    }
+    getStatementAllIterator(): Iterator<StatementWithDestructiveOperations, any, undefined> {
+        throw new Error("Method not implemented.");
     }
 
     protected getContainedThingsInternal(): ContainedThing[] {
         return this._containedThings;
     }
 
-    protected getSelfDescribingThingInternal(): SelfDescribingThing[] {
+    protected getSelfDescribingThingInternal(): SelfDescribingThing | undefined {
         return this._selfDescribingThing;
     }
 
@@ -41,9 +48,15 @@ export class DocumentImpl<
         return thing.toCopy() as ContainedThing;
     }
 
-    createThingAboutSelf(): SelfDescribingThing {
-        throw new Error("Method not implemented.");
+    public createThingAboutSelf(): SelfDescribingThing {
+        let result = this.getThingAboutSelf();
+        if (!result) {
+            this._selfDescribingThing = new this._selfDescribingThingImpl();
+            result = this._selfDescribingThing;
+        }
+        return this.getThingAboutSelf()!;
     }
+
     addThing(other: ThingWithNonDestructiveOperations): ContainedThing {
         throw new Error("Method not implemented.");
     }
@@ -64,9 +77,11 @@ export class DocumentImpl<
         return thing? thing.createStatement(property, value, datatype, language): undefined; // weard
     }
 
-    createStatementAboutSelf(property: string, value: string, datatype?: string | undefined, language?: string | undefined): StatementOf<SelfDescribingThing> {
-        throw new Error("Method not implemented.");
+    public createStatementAboutSelf(property: string, value: string, datatype?: string | undefined, language?: string | undefined): StatementOf<SelfDescribingThing> {
+        this.createThingAboutSelf();
+        return this.getSelfDescribingThingInternal()!.createStatement(property, value, datatype, language);
     }
+
     addStatement(other: Statement): StatementOf<ContainedThing> {
         throw new Error("Method not implemented.");
     }
@@ -145,9 +160,10 @@ export class DocumentImpl<
         throw new Error(`Unable to get the thing.`); // TODO: log the thing
     }
 
-    getThingAboutSelf(): SelfDescribingThing {
-        throw new Error("Method not implemented.");
+    public getThingAboutSelf(): SelfDescribingThing | undefined {
+        return this.getSelfDescribingThingInternal()?.toCopy() as SelfDescribingThing;
     }
+
     hasThing(about: string | Resource): boolean {
         throw new Error("Method not implemented.");
     }

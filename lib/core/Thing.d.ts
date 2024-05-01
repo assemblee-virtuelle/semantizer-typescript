@@ -1,11 +1,10 @@
 import { Comparable, Copyable, Resource, WithContext } from "./Common";
 import { Statement } from "./Statement";
-export type ThingConstructor<ThingType extends ThingWithNonDestructiveOperations<any> = ThingWithNonDestructiveOperations> = new (...args: any[]) => ThingType;
+export type ThingConstructor<ThingType extends ThingWithNonDestructiveOperations<any> = ThingWithNonDestructiveOperations<Statement>> = new (...args: any[]) => ThingType;
 export interface ThingNonDesctructiveOperations<StatementType extends Statement = Statement> {
     getStatement(property: string, language?: string): StatementType | undefined;
     getStatementAll(property?: string, language?: string): StatementType[];
     hasStatement(property?: string, language?: string): boolean;
-    [Symbol.iterator](): Iterator<StatementType>;
     at(index: number): StatementType | undefined;
     contains(other: ThingWithNonDestructiveOperations): boolean;
     count(): number;
@@ -34,7 +33,10 @@ export interface ThingDesctructiveOperations<StatementType extends Statement = S
     sort(compareFn?: (a: StatementType, b: StatementType) => number): ThisType<this>;
     splice(start: number, deleteCount?: number, ...items: StatementType[]): ThisType<this>;
 }
-export type ThingBase = Resource & WithContext & Comparable & Copyable;
+export interface IterableThing<StatementType extends Statement = Statement> {
+    [Symbol.iterator](): Iterator<StatementType>;
+}
+export type ThingBase<StatementType extends Statement = Statement> = IterableThing<StatementType> & Resource & WithContext & Comparable & Copyable;
 export type ThingWithNonDestructiveOperations<StatementType extends Statement = Statement> = ThingBase & ThingNonDesctructiveOperations<StatementType>;
 export type ThingWithDestructiveOperations<StatementType extends Statement = Statement> = ThingBase & ThingNonDesctructiveOperations<StatementType> & ThingDesctructiveOperations<StatementType>;
 export type Thing<StatementType extends Statement = Statement> = ThingWithDestructiveOperations<StatementType>;

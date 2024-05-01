@@ -1,6 +1,5 @@
 import { Resource } from "../core/Common";
 import { Constructed, ContainedThingOf, DocumentWithDestructiveOperationsConstructor, StatementOf } from "../core/Document";
-import { ThingWithNonDestructiveOperations } from "../core/Thing";
 import { Changelog } from "./Changelog";
 import { ChangelogImpl } from "./ChangelogImpl.js";
 export declare function DocumentWithChangelogMixin<TBase extends DocumentWithDestructiveOperationsConstructor<any, any>>(Base: TBase): {
@@ -8,6 +7,10 @@ export declare function DocumentWithChangelogMixin<TBase extends DocumentWithDes
         _changelog: ChangelogImpl;
         createStatement(about: string | Resource, property: string, value: string, datatype?: string, language?: string): StatementOf<ContainedThingOf<Constructed<TBase>>>;
         getChangelog(): Changelog;
+        getThingAboutSelf(): any;
+        getThingAllIterator(): Iterator<import("../core/Thing").Thing<import("../core/Statement").StatementWithDestructiveOperations>, any, undefined>;
+        getStatementAllIterator(): Iterator<import("../core/Statement").StatementWithDestructiveOperations, any, undefined>;
+        [Symbol.iterator](): Iterator<any, any, undefined>;
         getUri(): string;
         hasUri(): boolean;
         getContext(): import("../core/Common").Context | undefined;
@@ -15,7 +18,6 @@ export declare function DocumentWithChangelogMixin<TBase extends DocumentWithDes
         difference(other: ThisType<any>): ThisType<any>;
         toCopy(): ThisType<any>;
         getThing(about: string | Resource): any;
-        getThingAboutSelf(): any;
         hasThing(about: string | Resource): boolean;
         hasThingAboutSelf(): boolean;
         getStatement(about: string | Resource, property: string, language?: string | undefined): Resource & import("../core/Common").Copyable & import("../core/Statement").StatementNonDestructiveOperations & import("../core/Statement").StatementDestructiveOperations;
@@ -25,7 +27,7 @@ export declare function DocumentWithChangelogMixin<TBase extends DocumentWithDes
         hasStatement(about: string | Resource, property?: string | undefined, language?: string | undefined): boolean;
         hasStatementAboutSelf(property?: string | undefined, language?: string | undefined): boolean;
         at(index: number): any;
-        contains(other: import("../core/Document").DocumentWithNonDestructiveOperations<any, ThingWithNonDestructiveOperations<import("../core/Statement").StatementWithDestructiveOperations>>): boolean;
+        contains(other: import("../core/Document").DocumentWithNonDestructiveOperations<any, import("../core/Thing").ThingWithNonDestructiveOperations<import("../core/Statement").StatementWithDestructiveOperations>>): boolean;
         count(): number;
         every(predicate: (value: any, index?: number | undefined, array?: any[] | undefined) => boolean, thisArg?: any): boolean;
         filter(predicate: (value: any, index?: number | undefined, array?: any[] | undefined) => boolean): any[];
@@ -38,16 +40,15 @@ export declare function DocumentWithChangelogMixin<TBase extends DocumentWithDes
         indexOf(searchElement: any, fromIndex?: number | undefined): number;
         keys(): IterableIterator<number>;
         map(callbackfn: (value: any, index?: number | undefined, array?: any[] | undefined) => unknown, thisArg?: any): unknown[];
-        reduce(callbackfn: (previousValue: any, currentValue: any, currentIndex: number, array: any[]) => ThingWithNonDestructiveOperations<import("../core/Statement").StatementWithDestructiveOperations>): any;
+        reduce(callbackfn: (previousValue: any, currentValue: any, currentIndex: number, array: any[]) => import("../core/Thing").ThingWithNonDestructiveOperations<import("../core/Statement").StatementWithDestructiveOperations>): any;
         slice(start?: number | undefined, end?: number | undefined): ThisType<any>;
         some(predicate: (value: any, index?: number | undefined, array?: any[] | undefined) => unknown, thisArg?: any): boolean;
-        [Symbol.iterator](): Iterator<any, any, undefined>;
         createThing(uriOrNameHint?: string | Resource | undefined): any;
         createThingAboutSelf(): any;
-        addThing(other: ThingWithNonDestructiveOperations<import("../core/Statement").StatementWithDestructiveOperations>): any;
-        addThingAll(others: Iterable<ThingWithNonDestructiveOperations<import("../core/Statement").StatementWithDestructiveOperations>>): any[];
-        addThingAboutSelf(other: ThingWithNonDestructiveOperations<import("../core/Statement").StatementWithDestructiveOperations>): any;
-        addThingAboutSelfAll(others: Iterable<ThingWithNonDestructiveOperations<import("../core/Statement").StatementWithDestructiveOperations>>): any[];
+        addThing(other: import("../core/Thing").ThingWithNonDestructiveOperations<import("../core/Statement").StatementWithDestructiveOperations>): any;
+        addThingAll(others: Iterable<import("../core/Thing").ThingWithNonDestructiveOperations<import("../core/Statement").StatementWithDestructiveOperations>>): any[];
+        addThingAboutSelf(other: import("../core/Thing").ThingWithNonDestructiveOperations<import("../core/Statement").StatementWithDestructiveOperations>): any;
+        addThingAboutSelfAll(others: Iterable<import("../core/Thing").ThingWithNonDestructiveOperations<import("../core/Statement").StatementWithDestructiveOperations>>): any[];
         createStatementAboutSelf(property: string, value: string, datatype?: string | undefined, language?: string | undefined): Resource & import("../core/Common").Copyable & import("../core/Statement").StatementNonDestructiveOperations & import("../core/Statement").StatementDestructiveOperations;
         addStatement(other: import("../core/Statement").StatementWithDestructiveOperations): Resource & import("../core/Common").Copyable & import("../core/Statement").StatementNonDestructiveOperations & import("../core/Statement").StatementDestructiveOperations;
         addStatementAll(others: Iterable<import("../core/Statement").StatementWithDestructiveOperations>): (Resource & import("../core/Common").Copyable & import("../core/Statement").StatementNonDestructiveOperations & import("../core/Statement").StatementDestructiveOperations)[];

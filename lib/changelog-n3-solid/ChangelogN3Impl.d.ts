@@ -2,6 +2,10 @@ import { DocumentWithChangelogConstructor } from "../changelog/Changelog";
 export declare function DocumentWithChangelogN3Mixin<TBase extends DocumentWithChangelogConstructor<any, any>>(Base: TBase): {
     new (...args: any[]): {
         toN3(): string;
+        getThingAboutSelf(): any;
+        getThingAllIterator(): Iterator<import("../core/Thing").Thing<import("../core/Statement").StatementWithDestructiveOperations>, any, undefined>;
+        getStatementAllIterator(): Iterator<import("../core/Statement").StatementWithDestructiveOperations, any, undefined>;
+        [Symbol.iterator](): Iterator<any, any, undefined>;
         getUri(): string;
         hasUri(): boolean;
         getContext(): import("../core/Common").Context | undefined;
@@ -9,7 +13,6 @@ export declare function DocumentWithChangelogN3Mixin<TBase extends DocumentWithC
         difference(other: ThisType<any>): ThisType<any>;
         toCopy(): ThisType<any>;
         getThing(about: string | import("../core/Common").Resource): any;
-        getThingAboutSelf(): any;
         hasThing(about: string | import("../core/Common").Resource): boolean;
         hasThingAboutSelf(): boolean;
         getStatement(about: string | import("../core/Common").Resource, property: string, language?: string | undefined): import("../core/Common").Resource & import("../core/Common").Copyable & import("../core/Statement").StatementNonDestructiveOperations & import("../core/Statement").StatementDestructiveOperations;
@@ -35,7 +38,6 @@ export declare function DocumentWithChangelogN3Mixin<TBase extends DocumentWithC
         reduce(callbackfn: (previousValue: any, currentValue: any, currentIndex: number, array: any[]) => import("../core/Thing").ThingWithNonDestructiveOperations<import("../core/Statement").StatementWithDestructiveOperations>): any;
         slice(start?: number | undefined, end?: number | undefined): ThisType<any>;
         some(predicate: (value: any, index?: number | undefined, array?: any[] | undefined) => unknown, thisArg?: any): boolean;
-        [Symbol.iterator](): Iterator<any, any, undefined>;
         createThing(uriOrNameHint?: string | import("../core/Common").Resource | undefined): any;
         createThingAboutSelf(): any;
         addThing(other: import("../core/Thing").ThingWithNonDestructiveOperations<import("../core/Statement").StatementWithDestructiveOperations>): any;

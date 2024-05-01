@@ -22,7 +22,7 @@ import { Statement } from "./Statement";
 // > = new (c: DocumentWritableConstructor<ContainedStatement, SelfDescribingStatement>) => DocumentWritable<ContainedStatement, SelfDescribingStatement>;
 
 export type ThingConstructor<
-    ThingType extends ThingWithNonDestructiveOperations<any> = ThingWithNonDestructiveOperations
+    ThingType extends ThingWithNonDestructiveOperations<any> = ThingWithNonDestructiveOperations<Statement>
 > = new (...args: any[]) => ThingType;
 
 // export interface WithNotifications {
@@ -38,8 +38,6 @@ export interface ThingNonDesctructiveOperations<
     getStatementAll(property?: string, language?: string): StatementType[];
 
     hasStatement(property?: string, language?: string): boolean;
-
-    [Symbol.iterator](): Iterator<StatementType>;
 
     at(index: number): StatementType | undefined;
     contains(other: ThingWithNonDestructiveOperations): boolean;
@@ -73,7 +71,15 @@ export interface ThingDesctructiveOperations<
     splice(start: number, deleteCount?: number, ...items: StatementType[]): ThisType<this>;
 }
 
-export type ThingBase = Resource & WithContext & Comparable & Copyable;
+export interface IterableThing<
+    StatementType extends Statement = Statement
+> {
+    [Symbol.iterator](): Iterator<StatementType>;
+}
+
+export type ThingBase<
+    StatementType extends Statement = Statement
+> = IterableThing<StatementType> & Resource & WithContext & Comparable & Copyable;
 
 export type ThingWithNonDestructiveOperations<
     StatementType extends Statement = Statement

@@ -1,14 +1,31 @@
 import { DocumentWithDestructiveOperationsConstructor } from "../core/Document.js";
 import { Thing, ThingConstructor } from "../core/Thing.js";
-import { TypeIndexRegistration, TypeIndexStatement, TypeIndexWritable } from "./types.js";
+import { TypeIndexRegistration, TypeIndexStatement, TypeIndex } from "./types.js";
 import { TYPE_INDEX } from "./voc.js";
 import { Statement, StatementConstructor } from "../core/Statement.js";
+import { RDF } from "../core/voc.js";
+
+export class TypeIndexFactory {
+
+    public static createTypeIndex<T extends TypeIndex = TypeIndex>(DocumentImpl: DocumentWithDestructiveOperationsConstructor<TypeIndexRegistration, Thing<TypeIndexStatement>>, ContainedThingImpl: ThingConstructor<Thing<TypeIndexStatement>>, SelfDescribingThingImpl: ThingConstructor, StatementImpl: StatementConstructor<Statement>): T {
+        const TypeIndexImpl = TypeIndexMixin(DocumentImpl);
+        const TypeIndexRegistrationImpl = TypeIndexRegistrationMixin(ContainedThingImpl, StatementImpl);
+        return new TypeIndexImpl(TypeIndexRegistrationImpl, SelfDescribingThingImpl) as T;
+    }
+
+}
 
 // DocumentWritableConstructor<TypeIndexRegistration, Thing> ThingWritable<TypeIndexStatement>
 export function TypeIndexMixin<
     TBase extends DocumentWithDestructiveOperationsConstructor<TypeIndexRegistration, Thing<TypeIndexStatement>>
 >(Base: TBase) {
-    return class TypeIndexImpl extends Base implements TypeIndexWritable {
+    return class TypeIndexImpl extends Base implements TypeIndex {
+
+        public constructor(...args: any[]) {
+            super(...args);
+            this.createStatementAboutSelf(RDF.TYPE, TYPE_INDEX.TypeIndex);
+            //this.createStatementAboutSelf("rdf:type", TYPE_INDEX.ListedDocument);
+        }
 
         getForClassAll(): string[] {
             throw new Error("Method not implemented.");
@@ -107,7 +124,7 @@ export function TypeIndexMixin<
 
         public createThing(uriOrNameHint?: string): TypeIndexRegistration {
             const registration = super.createThing(uriOrNameHint);
-            this.createStatement(registration, "rdf:type", TYPE_INDEX.TypeRegistration);
+            this.createStatement(registration, RDF.TYPE, TYPE_INDEX.TypeRegistration);
             return this.getThing(registration);
         }
 

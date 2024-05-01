@@ -47,6 +47,7 @@ export declare function ThingWithHelpersMixin<TBase extends Constructor<ThingWit
         removeDateStatement(about: string, value: Date): any;
         removeDatetimeStatement(about: string, value: Date): any;
         removeTimeStatement(about: string, value: Date): any;
+        [Symbol.iterator](): Iterator<import("../core/Statement").StatementWithDestructiveOperations, any, undefined>;
         getUri(): string;
         hasUri(): boolean;
         getContext(): import("../core/Common").Context | undefined;
@@ -71,7 +72,6 @@ export declare function ThingWithHelpersMixin<TBase extends Constructor<ThingWit
         reduce(callbackfn: (previousValue: any, currentValue: any, currentIndex: number, array: any[]) => any): any;
         slice(start?: number | undefined, end?: number | undefined): ThingWithNonDestructiveOperations<import("../core/Statement").StatementWithDestructiveOperations>;
         some(predicate: (value: any, index?: number | undefined, array?: any[] | undefined) => unknown, thisArg?: any): boolean;
-        [Symbol.iterator](): Iterator<any, any, undefined>;
     };
 } & TBase;
 export default ThingWithHelpersMixin;

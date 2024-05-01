@@ -1,6 +1,6 @@
 import { Context, Resource } from "../core/Common.js";
 import { DocumentWithNonDestructiveOperations, Document, StatementOf } from "../core/Document.js";
-import { Statement } from "../core/Statement.js";
+import { Statement, StatementWithDestructiveOperations } from "../core/Statement.js";
 import { ThingWithNonDestructiveOperations, ThingConstructor, Thing } from "../core/Thing.js";
 export declare class DocumentImpl<ContainedThing extends Thing<any>, SelfDescribingThing extends Thing<any>> implements Document<ContainedThing, SelfDescribingThing> {
     private _containedThings;
@@ -8,8 +8,10 @@ export declare class DocumentImpl<ContainedThing extends Thing<any>, SelfDescrib
     private _containedThingImpl;
     private _selfDescribingThingImpl;
     constructor(containedThingImpl: ThingConstructor<ContainedThing>, selfDescribingThingImpl: ThingConstructor<SelfDescribingThing>);
+    getThingAllIterator(): Iterator<Thing<StatementWithDestructiveOperations>, any, undefined>;
+    getStatementAllIterator(): Iterator<StatementWithDestructiveOperations, any, undefined>;
     protected getContainedThingsInternal(): ContainedThing[];
-    protected getSelfDescribingThingInternal(): SelfDescribingThing[];
+    protected getSelfDescribingThingInternal(): SelfDescribingThing | undefined;
     createThing(uriOrNameHint?: string | Resource): ContainedThing;
     createThingAboutSelf(): SelfDescribingThing;
     addThing(other: ThingWithNonDestructiveOperations): ContainedThing;
@@ -37,7 +39,7 @@ export declare class DocumentImpl<ContainedThing extends Thing<any>, SelfDescrib
     splice(start: number, deleteCount: number, ...items: ContainedThing[]): ContainedThing[];
     private _getThing;
     getThing(about: string | Resource): ContainedThing;
-    getThingAboutSelf(): SelfDescribingThing;
+    getThingAboutSelf(): SelfDescribingThing | undefined;
     hasThing(about: string | Resource): boolean;
     hasThingAboutSelf(): boolean;
     getStatement(about: string | Resource, property: string, language?: string | undefined): StatementOf<ContainedThing>;

@@ -13,7 +13,7 @@ export interface WithChangelog<
     getChangelog(): Changelog<StatementType>;
 }
 
-export interface WithReadOperations<
+export interface ChangelogNonDestructiveOperations<
     StatementType extends Statement = Statement,
 > {
     getAdded(): StatementType[];
@@ -21,7 +21,7 @@ export interface WithReadOperations<
     getDeleted(): StatementType[];
 }
 
-export interface WithWriteOperations<
+export interface ChangelogDestructiveOperations<
     StatementType extends Statement = Statement,
 > {
     registerAdded(statement: StatementType): Changelog<StatementType>;
@@ -29,17 +29,21 @@ export interface WithWriteOperations<
     registerDeleted(statement: StatementType): Changelog<StatementType>;
 }
 
-export interface WithCreateOperations<
-    DocumentType extends DocumentWithNonDestructiveOperations<any, any>
-> {
-    applyTo(document: DocumentType): DocumentType;
+export interface ChangelogAppliableToDocument {
+    applyTo<DocumentType extends DocumentWithNonDestructiveOperations<any, any>>(document: DocumentType): DocumentType;
 }
+
+export type ChangelogWithNonDestructiveOperations<
+    StatementType extends Statement = Statement,
+> = ChangelogNonDestructiveOperations<StatementType> & 
+    ChangelogAppliableToDocument;
+
+export type ChangelogWithDestructiveOperations<
+    StatementType extends Statement = Statement,
+> = ChangelogNonDestructiveOperations<StatementType> & 
+    ChangelogDestructiveOperations<StatementType> & 
+    ChangelogAppliableToDocument;
 
 export type Changelog<
     StatementType extends Statement = Statement,
-> = WithReadOperations<StatementType>;
-
-export type ChangelogWritable<
-    StatementType extends Statement = Statement,
-> = WithReadOperations<StatementType> & 
-    WithWriteOperations<StatementType>;
+> = ChangelogWithDestructiveOperations<StatementType>;

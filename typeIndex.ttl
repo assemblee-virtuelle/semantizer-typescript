@@ -1,0 +1,15 @@
+@prefix solid: <http://www.w3.org/ns/solid/terms#>.
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#>.
+@prefix bk: <http://www.w3.org/2002/01/bookmark#>.
+
+<>
+    a solid:TypeIndex;
+    a solid:ListedDocument.
+
+<#ab09fd> a solid:TypeRegistration;
+    solid:forClass vcard:AddressBook;
+    solid:instance </public/contacts/myPublicAddressBook.ttl>.
+
+<#bq1r5e> a solid:TypeRegistration;
+    solid:forClass bk:Bookmark;
+    solid:instanceContainer </public/myBookmarks/>.
