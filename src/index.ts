@@ -31,13 +31,16 @@ const TypeIndexRegistrationImpl = TypeIndexRegistrationMixin(ThingImpl<TypeIndex
 
 const TypeIndexWithChangelog = TypeIndexMixin(DocumentWithChangelogMixin(DocumentImpl)); //DocumentWithChangelogMixin(TypeIndexMixin(DocumentImpl)); //DocumentWithChangelogMixin(TypeIndexImpl);
 const typeIndexWithChangelog = new TypeIndexWithChangelog(TypeIndexRegistrationImpl, ThingImplDefault); //new TypeIndexImpl(new DocumentImpl<TypeIndexStatement>()));
-typeIndexWithChangelog.createRegistrationForInstanceContainer("http://www.example.org/types#Catalog", "https://example.org/catalogs", "http://example.org/#reg1");
+typeIndexWithChangelog.createRegistrationForInstanceContainer("http://www.example.org/types#Catalog", "https://example.org/catalogs", "#reg1");
 typeIndexWithChangelog.createRegistrationForInstanceContainer("http://example.org/types/CatalogItems", "https://example.org/catalogItems", "http://example.org/#reg2");
+typeIndexWithChangelog.createRegistrationForInstanceContainer("http://www.example.org/types#Catalog", "https://example.org/catalogs2", "#reg3");
 
 typeIndexWithChangelog.forEach(t => console.log(t));
 
 const serializer = new RdfjsJsonLdSerializer();
 serializer.serialize(typeIndexWithChangelog).then(json => console.log(json));
+
+console.log(typeIndexWithChangelog.getRegistrationAllForClass("http://www.example.org/types#Catalog"));
 
 // const serializer = new SerializerJsonld({ compact: true });
 // const input = new Readable({

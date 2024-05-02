@@ -100,9 +100,12 @@ export class ThingImpl<
         return this._getStatementsInternal().find(s => s.getProperty() === property);
     }
 
-    getStatementAll(property?: string | undefined, language?: string | undefined): StatementType[] {
-        throw new Error("Method not implemented.");
+    public getStatementAll(property?: string | undefined, language?: string | undefined): StatementType[] {
+        const results: StatementType[] = [];
+        this._getStatementsInternal().forEach(s => results.push(s.toCopy() as StatementType));
+        return results;
     }
+
     hasStatement(property?: string | undefined, language?: string | undefined): boolean {
         throw new Error("Method not implemented.");
     }

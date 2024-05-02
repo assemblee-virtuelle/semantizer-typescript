@@ -173,9 +173,11 @@ export class DocumentImpl<
     getStatement(about: string | Resource, property: string, language?: string | undefined): StatementOf<ContainedThing> {
         throw new Error("Method not implemented.");
     }
-    getStatementAll(about: string | Resource, property?: string | undefined, language?: string | undefined): StatementOf<ContainedThing>[] {
-        throw new Error("Method not implemented.");
+    
+    public getStatementAll(about: string | Resource, property?: string | undefined, language?: string | undefined): StatementOf<ContainedThing>[] {
+        return this.getThing(about).getStatementAll(property, language);
     }
+
     getStatementAboutSelf(property: string, language?: string | undefined): StatementOf<SelfDescribingThing> | undefined {
         throw new Error("Method not implemented.");
     }
@@ -200,14 +202,17 @@ export class DocumentImpl<
     every(predicate: (value: ContainedThing, index?: number | undefined, array?: ContainedThing[] | undefined) => boolean, thisArg?: any): boolean {
         throw new Error("Method not implemented.");
     }
-    filter(predicate: (value: ContainedThing, index?: number | undefined, array?: ContainedThing[] | undefined) => boolean): ContainedThing[] {
-        throw new Error("Method not implemented.");
+    
+    public filter(predicate: (value: ContainedThing, index?: number | undefined, array?: ContainedThing[] | undefined) => boolean): ContainedThing[] {
+        return this.getContainedThingsInternal().filter(predicate);
     }
+
     filterContainedStatement(predicate: (value: StatementOf<ContainedThing>, index?: number | undefined, array?: StatementOf<ContainedThing>[] | undefined) => boolean): StatementOf<ContainedThing>[] {
         throw new Error("Method not implemented.");
     }
-    find(predicate: (value: ContainedThing, index?: number | undefined, obj?: ContainedThing[] | undefined) => boolean, thisArg?: any): ContainedThing | undefined {
-        throw new Error("Method not implemented.");
+
+    public find(predicate: (value: ContainedThing, index?: number | undefined, obj?: ContainedThing[] | undefined) => boolean, thisArg?: any): ContainedThing | undefined {
+        return this.getContainedThingsInternal().find(predicate);
     }
     
     public findIndex(predicate: (value: ContainedThing, index?: number | undefined, obj?: ContainedThing[] | undefined) => unknown, thisArg?: any): number {

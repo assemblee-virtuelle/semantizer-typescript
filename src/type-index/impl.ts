@@ -24,21 +24,23 @@ export function TypeIndexMixin<
         public constructor(...args: any[]) {
             super(...args);
             this.createStatementAboutSelf(RDF.TYPE, TYPE_INDEX.TypeIndex);
-            //this.createStatementAboutSelf("rdf:type", TYPE_INDEX.ListedDocument);
+            this.createStatementAboutSelf(RDF.TYPE, TYPE_INDEX.ListedDocument);
         }
 
         getForClassAll(): string[] {
             throw new Error("Method not implemented.");
         }
 
-        getRegistrationAllForClass(forClass: string): TypeIndexRegistration[] {
-            throw new Error("Method not implemented.");
+        public getRegistrationAllForClass(forClass: string): TypeIndexRegistration[] {
+            return this.filter(t => t.isForClass(forClass));
         }
-        getRegistrationAllForInstance(instance: string): TypeIndexRegistration[] {
-            throw new Error("Method not implemented.");
+
+        public getRegistrationAllForInstance(instance: string): TypeIndexRegistration[] {
+            return this.filter(t => t.getInstanceAll().includes(instance));
         }
-        getRegistrationAllForInstanceContainer(instanceContainer: string): TypeIndexRegistration[] {
-            throw new Error("Method not implemented.");
+
+        public getRegistrationAllForInstanceContainer(instanceContainer: string): TypeIndexRegistration[] {
+            return this.filter(t => t.getInstanceContainerAll().includes(instanceContainer));
         }
 
         // public getStatementForClass(registration: string | TypeIndexRegistration): TypeIndexStatement | undefined {
@@ -202,7 +204,7 @@ export function TypeIndexRegistrationMixin<
         }
 
         public getForClassAll(): string[] {
-            return []// this.getAll("solid:forClass");
+            return this.getStatementAll(TYPE_INDEX.forClass).map(t => t.getValue());
         }
 
         public getInstance(): string | null {
