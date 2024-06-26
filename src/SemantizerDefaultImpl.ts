@@ -1,6 +1,6 @@
-import { Context } from "./core/Common.js";
-import { ContextDefault } from "./core/ContextImpl.js";
-import { DocumentWithNonDestructiveOperations } from "./core/Document.js";
+import { Context } from "./core/src/Common.js";
+import { ContextDefault } from "./core/src/ContextImpl.js";
+import { DocumentWithNonDestructiveOperations } from "./core/src/Document.js";
 import { Semantizer, ImportFormat, ResourceCreationParameters } from "./Semantizer.js";
 import SemantizerFactory from "./SemantizerFactory.js";
 import SemantizerFactoryDefault from "./SemantizerFactoryDefault.js";

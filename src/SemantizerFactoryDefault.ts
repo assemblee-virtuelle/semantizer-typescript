@@ -1,7 +1,7 @@
 import Semantizer from "./Semantizer.js";
 import SemantizerFactory from "./SemantizerFactory.js";
-import { Context } from "./core/Common.js";
-import { DocumentWithNonDestructiveOperations } from "./core/Document.js";
+import { Context } from "./core/src/Common.js";
+import { DocumentWithNonDestructiveOperations } from "./core/src/Document.js";
 
 export default class SemantizerFactoryDefault implements SemantizerFactory {
 

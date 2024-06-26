@@ -1,1 +1,0 @@
-{"version":3,"file":"InsertDeletePatch.d.ts","sourceRoot":"","sources":["../../src/solid-insert-delete-patch/InsertDeletePatch.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAE,MAAM,mBAAmB,CAAC;AAE9C,MAAM,WAAW,iBAAiB;IAC9B,QAAQ,IAAI,SAAS,EAAE,CAAC;IACxB,UAAU,IAAI,SAAS,EAAE,CAAC;IAC1B,UAAU,IAAI,SAAS,EAAE,CAAC;IAE1B,QAAQ,CAAC,SAAS,EAAE,SAAS,GAAG,IAAI,CAAC;CACxC"}

@@ -1,5 +1,5 @@
-import { Context } from "./core/Common";
-import { DocumentWithNonDestructiveOperations } from "./core/Document";
+import { Context } from "./core/src/Common";
+import { DocumentWithNonDestructiveOperations } from "./core/src/Document";
 
 export enum ImportFormat {
     JSON_LD = "jsonld"
