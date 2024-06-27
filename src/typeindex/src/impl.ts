@@ -4,7 +4,8 @@ import {
     ThingConstructor,
     Statement,
     StatementConstructor,
-    Factory
+    Factory,
+    DocumentConstructor
 } from "@semantizer/types";
 import { TypeIndexRegistration, TypeIndexStatement, TypeIndex } from "./types.js";
 import { TYPE_INDEX } from "./voc.js";
@@ -25,22 +26,15 @@ const RDF = {
 
 export class TypeIndexFactory implements Factory<TypeIndex> {
 
-    private _DocumentImpl: DocumentWithDestructiveOperationsConstructor<TypeIndexRegistration, Thing<TypeIndexStatement>>;
-    private _ContainedThingImpl: ThingConstructor<Thing<TypeIndexStatement>>;
-    private _SelfDescribingThingImpl: ThingConstructor;
-    private _StatementImpl: StatementConstructor<Statement>;
+    private _DocumentImpl: DocumentConstructor<TypeIndexRegistration, Thing<TypeIndexStatement>>;
 
-    constructor(DocumentImpl: DocumentWithDestructiveOperationsConstructor<TypeIndexRegistration, Thing<TypeIndexStatement>>, ContainedThingImpl: ThingConstructor<Thing<TypeIndexStatement>>, SelfDescribingThingImpl: ThingConstructor, StatementImpl: StatementConstructor<Statement>) {
+    constructor(DocumentImpl: DocumentConstructor<TypeIndexRegistration, Thing<TypeIndexStatement>>) {
         this._DocumentImpl = DocumentImpl;
-        this._ContainedThingImpl = ContainedThingImpl;
-        this._SelfDescribingThingImpl = SelfDescribingThingImpl;
-        this._StatementImpl = StatementImpl;
     }
 
     public create(): TypeIndex {
         const TypeIndexImpl = TypeIndexMixin(this._DocumentImpl);
-        const TypeIndexRegistrationImpl = TypeIndexRegistrationMixin(this._ContainedThingImpl, this._StatementImpl);
-        return new TypeIndexImpl(TypeIndexRegistrationImpl, this._SelfDescribingThingImpl);
+        return new TypeIndexImpl();
     }
 
 } 

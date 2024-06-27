@@ -35,12 +35,12 @@ export class ThingImpl<
         this._uri = uri ?? "";
     }
 
-    getTypes(): string[] {
-        throw new Error("Method not implemented.");
+    public getTypes(): string[] {
+        return this._getStatementAll("http://www.w3.org/1999/02/22-rdf-syntax-ns#type").map(s => s.getValue());
     }
 
-    isTypeOf(type: string, ...others: string[]): boolean {
-        throw new Error("Method not implemented.");
+    public isTypeOf(type: string, ...others: string[]): boolean {
+        return [type, ...others].every(t => this.getTypes().includes(t));
     }
 
     protected _getStatementsInternal(): StatementType[] {
@@ -112,9 +112,16 @@ export class ThingImpl<
         return this._getStatementsInternal().find(s => s.getProperty() === property);
     }
 
+    private _getStatementAll(property?: string | undefined, language?: string | undefined): StatementType[] {
+        return this._getStatementsInternal().filter(s => s.getProperty() === property);
+    }
+
     public getStatementAll(property?: string | undefined, language?: string | undefined): StatementType[] {
         const results: StatementType[] = [];
-        this._getStatementsInternal().forEach(s => results.push(s.toCopy() as StatementType));
+        this._getStatementsInternal().forEach(s => {
+            if (s.getProperty() === property)
+                results.push(s.toCopy() as StatementType)
+        });
         return results;
     }
 

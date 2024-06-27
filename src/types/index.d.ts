@@ -27,6 +27,7 @@ export {
     DocumentWithNonDestructiveOperations, 
     DocumentWithDestructiveOperations, 
     Document,
+    DocumentConstructor,
     StatementOf,
     Constructed,
 } from "./lib/Document.js";

@@ -1,4 +1,4 @@
-import { DocumentWithDestructiveOperationsConstructor, Thing, ThingConstructor, StatementConstructor, Statement, Factory } from "@semantizer/types";
+import { DocumentWithDestructiveOperationsConstructor, Thing, ThingConstructor, StatementConstructor, Statement, Factory, Document, DocumentConstructor } from "@semantizer/types";
 import { WebIdProfile } from "./types";
 
 export function WebIdProfileMixin<
@@ -10,11 +10,11 @@ export function WebIdProfileMixin<
             super(...args);
         }
 
-        getMaker(): Thing {
+        public getMaker(): Thing {
             throw new Error("Method not implemented.");
         }
 
-        getPrimaryTopic(): Thing {
+        public getPrimaryTopic(): Thing {
             throw new Error("Method not implemented.");
         }
 
@@ -24,19 +24,15 @@ export function WebIdProfileMixin<
 
 export class WebIdProfileFactory implements Factory<WebIdProfile> {
 
-    private _DocumentImpl: DocumentWithDestructiveOperationsConstructor<Thing, Thing>;
-    private _ThingImpl: ThingConstructor<Thing>;
-    private _StatementImpl: StatementConstructor<Statement>;
+    private _DocumentImpl: DocumentConstructor<Thing, Thing>;
 
-    constructor(DocumentImpl: DocumentWithDestructiveOperationsConstructor<Thing, Thing>, ThingImpl: ThingConstructor<Thing>, StatementImpl: StatementConstructor<Statement>) { 
+    constructor(DocumentImpl: DocumentConstructor<Thing, Thing>) {
         this._DocumentImpl = DocumentImpl;
-        this._ThingImpl = ThingImpl;
-        this._StatementImpl = StatementImpl;
     }
 
     public create(): WebIdProfile {
         const WebIdProfileImpl = WebIdProfileMixin(this._DocumentImpl);
-        return new WebIdProfileImpl(this._ThingImpl, this._ThingImpl, this._StatementImpl);
+        return new WebIdProfileImpl();
     }
 
 } 

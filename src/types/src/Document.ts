@@ -26,6 +26,11 @@ export type ContainedThingOf<T extends DocumentWithNonDestructiveOperations<any,
 
 export type StatementOf<T extends ThingWithNonDestructiveOperations<any>> = T extends ThingWithNonDestructiveOperations<infer StatementType>? StatementType: never;
 
+export type DocumentConstructor<
+    ContainedThing extends ThingWithNonDestructiveOperations<any> = ThingWithNonDestructiveOperations,
+    SelfDescribingThing extends ThingWithNonDestructiveOperations<any> = ThingWithNonDestructiveOperations
+> = new () => Document<ContainedThing, SelfDescribingThing>;
+
 export type DocumentWithNonDestructiveOperationsConstructor<
     ContainedThing extends ThingWithNonDestructiveOperations<any> = ThingWithNonDestructiveOperations,
     SelfDescribingThing extends ThingWithNonDestructiveOperations<any> = ThingWithNonDestructiveOperations
