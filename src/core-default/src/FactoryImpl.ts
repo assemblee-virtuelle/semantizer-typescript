@@ -1,23 +1,17 @@
-import { Document, DocumentFactory, Semantizer, Thing } from "@semantizer/types";
-import DocumentImpl from "./DocumentImpl.js";
-import ThingImpl from "./ThingImpl.js";
+import { Document, DocumentFactory, Loader, Statement, Thing } from "@semantizer/types";
+import DocumentImpl, { DocumentImplFactoryImpl } from "./DocumentImpl.js";
 import StatementImpl from "./StatementImpl.js";
+import ThingImpl from "./ThingImpl.js";
 
 export class FactoryImpl implements DocumentFactory<Document<Thing, Thing>> {
 
-    private _semantizer: Semantizer;
-
-    constructor(semantizer: Semantizer) { 
-        this._semantizer = semantizer
-    }
-    
-    public getSemantizer(): Semantizer {
-        return this._semantizer;
-    }
-
     public create(): Document<Thing, Thing> {
-        throw new Error("Not implemented");
-        // return new DocumentImpl<Thing, Thing>(ThingImpl, ThingImpl, StatementImpl);
+        const factory = new DocumentImplFactoryImpl(ThingImpl, ThingImpl, StatementImpl);
+        return new DocumentImpl<Thing, Thing>(factory);
+    }
+
+    public async load(uri: string, loader: Loader): Promise<Document<Thing<Statement>, Thing<Statement>>> {
+        return loader.load<Document<Thing<Statement>, Thing<Statement>>>(uri, this);
     }
 
 }

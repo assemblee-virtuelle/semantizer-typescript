@@ -1,13 +1,13 @@
-import { Document, DocumentConstructor, DocumentImplFactory, DocumentWithDestructiveOperationsConstructor, Loader, Thing } from "@semantizer/types";
+import { Document, DocumentConstructor, DocumentImplFactory, DocumentWithDestructiveOperationsConstructor, Loader, Statement, StatementConstructor, Thing, ThingConstructor, ThingConstructorMixin } from "@semantizer/types";
 
-export type Catalog = Document<Thing, Thing> & CatalogOperations;
+export type Catalog = Thing<Statement> & CatalogOperations;
 
 export interface CatalogOperations {
     getName(): string | undefined;
 }
 
 export function CatalogMixin<
-    TBase extends DocumentWithDestructiveOperationsConstructor
+    TBase extends ThingConstructorMixin<Thing<Statement>>
 >(Base: TBase) {
 
     return class CatalogMixinImpl extends Base implements CatalogOperations {
@@ -17,8 +17,7 @@ export function CatalogMixin<
         }
 
         public getName(): string | undefined {
-            // return this.getStatementAboutSelf("https://github.com/datafoodconsortium/ontology/releases/latest/download/DFC_BusinessOntology.owl#name")?.getValue();
-            return this.getStatement("http://localhost:8000/lecoqlibre/enterprise/catalogs/index#catalog1", "https://github.com/datafoodconsortium/ontology/releases/latest/download/DFC_BusinessOntology.owl#name")?.getValue();
+            return this.getStatement("https://github.com/datafoodconsortium/ontology/releases/latest/download/DFC_BusinessOntology.owl#name")?.getValue();
         }
 
     }
@@ -27,21 +26,17 @@ export function CatalogMixin<
 
 export class CatalogFactory {
     
-    private _DocumentImpl: DocumentConstructor<Thing, Thing>;
-    private _documentImplFactory: DocumentImplFactory;
+    private _ThingImpl: ThingConstructor<Thing, Statement>;
+    private _StatementImpl: StatementConstructor<Statement>;
 
-    constructor(DocumentImpl: DocumentConstructor<Thing, Thing>, documentImplFactory: DocumentImplFactory) { 
-        this._DocumentImpl = DocumentImpl;
-        this._documentImplFactory = documentImplFactory;
+    constructor(ThingImpl: ThingConstructor<Thing, Statement>, StatementImpl: StatementConstructor<Statement>) { 
+        this._ThingImpl = ThingImpl;
+        this._StatementImpl = StatementImpl;
     }
 
-    public create(): Catalog {
-        const CatalogImpl = CatalogMixin(this._DocumentImpl);
-        return new CatalogImpl(this._documentImplFactory);
-    }
-
-    public async load(uri: string, loader: Loader): Promise<Catalog> {
-        return loader.load<Catalog>(uri, this);
+    public create(uri: string): Catalog {
+        const CatalogImpl = CatalogMixin(this._ThingImpl);
+        return new CatalogImpl(this._StatementImpl, uri);
     }
 
 }

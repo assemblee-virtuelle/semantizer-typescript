@@ -9,7 +9,7 @@ export type StatementConstructorParams = {
 }
 
 export type StatementConstructor<
-    StatementType extends StatementWithNonDestructiveOperations = Statement
+    StatementType extends StatementWithDestructiveOperations = Statement
 > = new (params: StatementType | StatementConstructorParams) => StatementType;
 
 export type StatementConstructorMixin<

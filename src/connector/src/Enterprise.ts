@@ -1,4 +1,4 @@
-import { DocumentImpl, DocumentImplFactoryImpl, StatementImpl, ThingImpl } from "@semantizer/core-default";
+import { FactoryImpl, StatementImpl, ThingImpl } from "@semantizer/core-default";
 import { LoaderRdfjs } from "@semantizer/loader-rdfjs";
 import { DocumentConstructor, DocumentImplFactory, Loader, Thing } from "@semantizer/types";
 import { WebIdProfile, WebIdProfileConstructor, WebIdProfileMixin } from "@semantizer/webid";
@@ -27,9 +27,17 @@ export function EnterpriseMixin<
         }
 
         public getMaintainedCatalogs(): Promise<Catalog>[] {
+            const maintains = "https://github.com/datafoodconsortium/ontology/releases/latest/download/DFC_BusinessOntology.owl#maintains";
             const loader = new LoaderRdfjs();
-            const factory = new CatalogFactory(DocumentImpl, new DocumentImplFactoryImpl(ThingImpl, ThingImpl, StatementImpl));
-            return this.getPrimaryTopic().getStatementAll("https://github.com/datafoodconsortium/ontology/releases/latest/download/DFC_BusinessOntology.owl#maintains").map(s => factory.load(s.getValue(), loader));
+            const documentFactory = new FactoryImpl();
+            const catalogFactory = new CatalogFactory(ThingImpl, StatementImpl);
+            return this.getPrimaryTopic().getStatementAll(maintains).map(async (s) => {
+                const document = await documentFactory.load(s.getValue(), loader);
+                const thing = document.getThing(s.getValue());
+                const catalog = catalogFactory.create(s.getValue());
+                catalog.addStatementAll(thing);
+                return catalog;
+            });
         }
 
         public getMaintainedCatalogsUri(): string[] {

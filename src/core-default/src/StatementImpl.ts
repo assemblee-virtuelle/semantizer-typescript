@@ -8,8 +8,8 @@ export class StatementImpl implements Statement {
     private _datatype?: string;
     private _language?: string;
 
-    public constructor(other: Statement);
-    public constructor(params: StatementConstructorParams);
+    // public constructor(other: Statement);
+    // public constructor(params: StatementConstructorParams);
     public constructor(params: Statement | StatementConstructorParams) {
         this._subject = 'subject' in params? params.subject: params.getSubject();
         this._property = 'subject' in params? params.property: params.getProperty();
