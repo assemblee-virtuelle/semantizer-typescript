@@ -1,18 +1,43 @@
-import { 
+import {
     Context,
-    Resource,
-    DocumentWithNonDestructiveOperations,
     Document,
-    StatementOf,
+    DocumentImplFactory,
+    DocumentWithNonDestructiveOperations,
+    Loader,
+    Resource,
     Statement,
+    StatementConstructor,
+    StatementOf,
     StatementWithDestructiveOperations,
-    ThingWithNonDestructiveOperations,
-    ThingConstructor,
     Thing,
-    StatementConstructor
+    ThingConstructor,
+    ThingWithNonDestructiveOperations
 } from "@semantizer/types";
-import ThingImpl from "./ThingImpl.js";
-import StatementImpl from "./StatementImpl.js";
+
+export class DocumentImplFactoryImpl<
+    ContainedThing extends Thing<any> = Thing<Statement>,
+    SelfDescribingThing extends Thing<any> = Thing<Statement>,
+> implements DocumentImplFactory<ContainedThing, SelfDescribingThing> {
+
+    private _ctc: ThingConstructor<ContainedThing>;
+    private _sdtc: ThingConstructor<SelfDescribingThing>;
+    private _sc: StatementConstructor<any>;
+
+    constructor(ctc: ThingConstructor<ContainedThing>, sdtc: ThingConstructor<SelfDescribingThing>, sc: StatementConstructor<any>) {
+        this._ctc = ctc;
+        this._sdtc = sdtc;
+        this._sc = sc;
+    }
+
+    public createContainedThing(uri: string): ContainedThing {
+        return new this._ctc(this._sc, uri);
+    }
+
+    public createSelfDescribingThing(): SelfDescribingThing {
+        return new this._sdtc(this._sc, "");
+    }
+
+}
 
 export class DocumentImpl<
     ContainedThing extends Thing<any>, 
@@ -25,18 +50,25 @@ export class DocumentImpl<
     // protected _context?: Context;
     // protected _factory: Factory<DocumentType>; //DocumentImpl<Document<DocumentType, DocumentTypeReadonly>>>;
 
+    private _factory: DocumentImplFactory<ContainedThing, SelfDescribingThing>; //ConcreateDocumentConfig;
     private _containedThings: ContainedThing[];
     private _selfDescribingThing: SelfDescribingThing | undefined;
-    private _containedThingImpl: ThingConstructor<ContainedThing>;
-    private _selfDescribingThingImpl: ThingConstructor<SelfDescribingThing>;
-    private _statementImpl: StatementConstructor<Statement>;
 
-    public constructor(containedThingImpl: ThingConstructor<ContainedThing>, selfDescribingThingImpl: ThingConstructor<SelfDescribingThing>, statementImpl: StatementConstructor<Statement>) {
+    // private _containedThingImpl: ThingConstructor<ContainedThing>;
+    // private _selfDescribingThingImpl: ThingConstructor<SelfDescribingThing>;
+    // private _statementImpl: StatementConstructor<Statement>;
+
+    public constructor(factory: DocumentImplFactory<ContainedThing, SelfDescribingThing>) { //containedThingImpl: ThingConstructor<ContainedThing>, selfDescribingThingImpl: ThingConstructor<SelfDescribingThing>, statementImpl: StatementConstructor<Statement>) {
+        this._factory = factory;
         this._containedThings = [];
         this._selfDescribingThing = undefined;
-        this._containedThingImpl = containedThingImpl;
-        this._selfDescribingThingImpl = selfDescribingThingImpl;
-        this._statementImpl = statementImpl;
+        // this._containedThingImpl = containedThingImpl;
+        // this._selfDescribingThingImpl = selfDescribingThingImpl;
+        // this._statementImpl = statementImpl;
+    }
+
+    public getConcreateDocumentConfig(): DocumentImplFactory<ContainedThing, SelfDescribingThing> {
+        return this._factory;
     }
     
     getThingAllIterator(): Iterator<Thing<StatementWithDestructiveOperations>, any, undefined> {
@@ -50,25 +82,32 @@ export class DocumentImpl<
         return this._containedThings;
     }
 
-    protected getSelfDescribingThingInternal(): SelfDescribingThing | undefined {
+    protected _getThingAboutSelf(): SelfDescribingThing | undefined {
         return this._selfDescribingThing;
     }
 
-    public _createThing(uriOrNameHint?: string | Resource): ContainedThing {
-        const thing = new this._containedThingImpl(this._statementImpl, uriOrNameHint); // miss StatementImpl
+    private _createThing(uriOrNameHint: string | Resource): ContainedThing {
+        // const thingImpl = this._config.getThingImplementation<ContainedThing>();
+        // const statementImpl = this._config.getStatementImplementation()
+        // const thing = new thingImpl(statementImpl, uriOrNameHint); // miss StatementImpl
+        const uri = typeof uriOrNameHint === 'string'? uriOrNameHint: uriOrNameHint.getUri();
+        const thing = this._factory.createContainedThing(uri);
         this.getContainedThingsInternal().push(thing);
         return thing;
     }
 
     public createThing(uriOrNameHint?: string | Resource): ContainedThing {
+        uriOrNameHint = uriOrNameHint? uriOrNameHint: "createdThing";
         const thing = this._createThing(uriOrNameHint);
         return thing.toCopy() as ContainedThing;
     }
 
     public createThingAboutSelf(): SelfDescribingThing {
         let result = this.getThingAboutSelf();
+        // const thingImpl = this._config.getThingImplementation<SelfDescribingThing>();
+        // const statementImpl = this._config.getStatementImplementation()
         if (!result) {
-            this._selfDescribingThing = new this._selfDescribingThingImpl();
+            this._selfDescribingThing = this._factory.createSelfDescribingThing() ;//new thingImpl(statementImpl);
             result = this._selfDescribingThing;
         }
         return this.getThingAboutSelf()!;
@@ -88,6 +127,9 @@ export class DocumentImpl<
     }
     
     public createStatement(about: string | Resource, property: string, value: string, datatype?: string | undefined, language?: string | undefined): StatementOf<ContainedThing> {
+        const uri = typeof about === 'string'? about: about.getUri();
+        //if (uri === this.getUri())
+        //    throw new Error("To create a statement about the document, use the createStatementAboutSelf method instead.");
         let thing = this._getThing(about);
         if (!thing) {
             thing = this._createThing(about);
@@ -97,7 +139,7 @@ export class DocumentImpl<
 
     public createStatementAboutSelf(property: string, value: string, datatype?: string | undefined, language?: string | undefined): StatementOf<SelfDescribingThing> {
         this.createThingAboutSelf();
-        return this.getSelfDescribingThingInternal()!.createStatement(property, value, datatype, language);
+        return this._getThingAboutSelf()!.createStatement(property, value, datatype, language);
     }
 
     addStatement(other: Statement): StatementOf<ContainedThing> {
@@ -179,7 +221,7 @@ export class DocumentImpl<
     }
 
     public getThingAboutSelf(): SelfDescribingThing | undefined {
-        return this.getSelfDescribingThingInternal()?.toCopy() as SelfDescribingThing;
+        return this._getThingAboutSelf()?.toCopy() as SelfDescribingThing;
     }
 
     hasThing(about: string | Resource): boolean {
@@ -188,17 +230,23 @@ export class DocumentImpl<
     hasThingAboutSelf(): boolean {
         throw new Error("Method not implemented.");
     }
-    getStatement(about: string | Resource, property: string, language?: string | undefined): StatementOf<ContainedThing> {
-        throw new Error("Method not implemented.");
+
+    public async load(loader?: Loader): Promise<void> {
+
+    }
+    
+    public getStatement(about: string | Resource, property: string, language?: string | undefined): StatementOf<ContainedThing> {
+        return this._getThing(about)?.getStatement(property, language);
     }
     
     public getStatementAll(about: string | Resource, property?: string | undefined, language?: string | undefined): StatementOf<ContainedThing>[] {
         return this.getThing(about).getStatementAll(property, language);
     }
 
-    getStatementAboutSelf(property: string, language?: string | undefined): StatementOf<SelfDescribingThing> | undefined {
-        throw new Error("Method not implemented.");
+    public getStatementAboutSelf(property: string, language?: string | undefined): StatementOf<SelfDescribingThing> | undefined {
+        return this._getThingAboutSelf()?.getStatement(property, language);
     }
+
     getStatementAboutSelfAll(property?: string | undefined, language?: string | undefined): StatementOf<SelfDescribingThing>[] {
         throw new Error("Method not implemented.");
     }
@@ -297,13 +345,13 @@ export class DocumentImpl<
 
 }
 
-export class DocumentImplDefault extends DocumentImpl<Thing<Statement>, Thing<Statement>> {
+// export class DocumentImplDefault extends DocumentImpl<Thing<Statement>, Thing<Statement>> {
 
-    public constructor() {
-        super(ThingImpl, ThingImpl, StatementImpl);
-    }
+//     public constructor() {
+//         super(ThingImpl, ThingImpl, StatementImpl);
+//     }
 
-}
+// }
 
     // public constructor(/*factory: Factory<DocumentType> /*TODO: add constraint to this type */) {//documentOrUri?: DocumentBase<ContainedThing<Wrapped>, SelfDescribingThing<Wrapped>> | string, context?: Context) {
     //     this._uri = ""; //typeof documentOrUri === 'string'? documentOrUri ?? '': documentOrUri?.getUri() ?? '';

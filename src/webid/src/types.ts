@@ -6,3 +6,5 @@ export interface WebIdProfileNonDestructiveOperations {
 }
 
 export type WebIdProfile = Document<Thing, Thing> & WebIdProfileNonDestructiveOperations;
+
+export type WebIdProfileConstructor = new (...args: any[]) => WebIdProfile;

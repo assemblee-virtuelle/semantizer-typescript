@@ -12,7 +12,6 @@ export {
     CopyableToWritable,
     Streamable,
     Canonical,
-    Factory,
     Loader,
     DocumentLoadOptions
 } from "./lib/Common.js";
@@ -28,8 +27,11 @@ export {
     DocumentWithDestructiveOperations, 
     Document,
     DocumentConstructor,
+    DocumentConstructorMixin, 
     StatementOf,
     Constructed,
+    DocumentFactory,
+    DocumentImplFactory,
 } from "./lib/Document.js";
 
 export { 
@@ -40,11 +42,14 @@ export {
     ThingWithNonDestructiveOperations, 
     ThingWithDestructiveOperations, 
     Thing,
-    ThingConstructor
+    ThingConstructor,
+    ThingConstructorMixin,
 } from "./lib/Thing.js";
 
 export {
     StatementConstructor,
+    StatementConstructorMixin,
+    StatementConstructorParams,
     StatementNonDestructiveOperations,
     StatementDestructiveOperations,
     StatementBase,
@@ -52,5 +57,9 @@ export {
     StatementWithDestructiveOperations,
     Statement,
 } from "./lib/Statement.js"
+
+export {
+    Semantizer
+} from "./lib/Semantizer.js";
 
 

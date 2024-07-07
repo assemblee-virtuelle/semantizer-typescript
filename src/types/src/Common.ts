@@ -1,4 +1,5 @@
-import { Document } from "./Document";
+import { Document, DocumentFactory } from "./Document";
+import { Semantizer } from "./Semantizer";
 import { Thing } from "./Thing";
 
 export interface Resource {
@@ -104,12 +105,6 @@ export interface DocumentLoadOptions {
     seeAlsoMaxDepth?: number;
 }
 
-export interface Factory<
-    DocumentType extends Document<any, any> = Document<Thing, Thing>
-> {
-    create(): DocumentType;
-}
-
 export interface Loader {
-    load<DocumentType extends Document<any, any> = Document<Thing, Thing>>(uri: string, factory: Factory<DocumentType>, options?: DocumentLoadOptions): Promise<DocumentType>;
+    load<DocumentType extends Document<any, any> = Document<Thing, Thing>>(uri: string, factory: DocumentFactory<DocumentType>, options?: DocumentLoadOptions): Promise<DocumentType>;
 }

@@ -1,6 +1,6 @@
-import { Comparable, Copyable, Resource, WithContext } from "./Common";
-import { Statement } from "./Statement";
-import { Thing, IterableThing, ThingWithNonDestructiveOperations } from "./Thing";
+import { Comparable, Copyable, Loader, Resource, WithContext } from "./Common";
+import { Statement, StatementConstructor, StatementConstructorMixin, StatementWithDestructiveOperations } from "./Statement";
+import { IterableThing, Thing, ThingConstructor, ThingConstructorMixin, ThingWithNonDestructiveOperations } from "./Thing";
 
 type ContainedThingOfDocument<T extends DocumentWithNonDestructiveOperations<any, any>> = T extends DocumentWithNonDestructiveOperations<infer TypeArg, any> ? TypeArg : never;
 type ContainedThingOfDocumentWritable<T extends Document<any, any>> = T extends Document<infer TypeArg, any> ? TypeArg : never;
@@ -27,9 +27,9 @@ export type ContainedThingOf<T extends DocumentWithNonDestructiveOperations<any,
 export type StatementOf<T extends ThingWithNonDestructiveOperations<any>> = T extends ThingWithNonDestructiveOperations<infer StatementType>? StatementType: never;
 
 export type DocumentConstructor<
-    ContainedThing extends ThingWithNonDestructiveOperations<any> = ThingWithNonDestructiveOperations,
-    SelfDescribingThing extends ThingWithNonDestructiveOperations<any> = ThingWithNonDestructiveOperations
-> = new () => Document<ContainedThing, SelfDescribingThing>;
+    ContainedThing extends Thing<any> = Thing,
+    SelfDescribingThing extends Thing<any> = Thing
+> = new (factory: DocumentImplFactory<ContainedThing, SelfDescribingThing>) => Document<ContainedThing, SelfDescribingThing>;
 
 export type DocumentWithNonDestructiveOperationsConstructor<
     ContainedThing extends ThingWithNonDestructiveOperations<any> = ThingWithNonDestructiveOperations,
@@ -45,14 +45,42 @@ export type Constructed<
     Constructor extends new (...args: any[]) => any
 > = Constructor extends new (...args: any[]) => infer R? R: never;
 
+// export interface ConcreateDocumentConfig {
+//     getDocumentImplementation<ContainedThing extends Thing<any>, SelfDescribingThing extends Thing<any>>(): DocumentConstructor<ContainedThing, SelfDescribingThing>;
+//     getThingImplementation<StatementType extends StatementWithDestructiveOperations>(): ThingConstructor<Thing<StatementType>, StatementType>;
+//     getStatementImplementation(): StatementConstructor<Statement>;
+// }
+
+export interface DocumentImplFactory<
+    ContainedThing extends Thing<any> = Thing<Statement>,
+    SelfDescribingThing extends Thing<any> = Thing<Statement>
+> {
+    createContainedThing(uri: string): ContainedThing;
+    createSelfDescribingThing(): SelfDescribingThing;
+}
+
+export interface DocumentFactory<
+    DocumentType extends Document<any, any> = Document<Thing, Thing>
+> {
+    create(): DocumentType;
+}
+
 export interface DocumentNonDestructiveOperations<
     ContainedThing extends ThingWithNonDestructiveOperations<any> = ThingWithNonDestructiveOperations,
     SelfDescribingThing extends ThingWithNonDestructiveOperations<any> = ThingWithNonDestructiveOperations
 > {
+    /**
+     * Find a thing inside the document.
+     * 
+     * @throws Error if the thing is not contained in the document.
+     * @param about The URI of the thing.
+     */
     getThing(about: string | Resource): ContainedThing;
 
     hasThing(about: string | Resource): boolean;
     hasThingAboutSelf(): boolean;
+
+    // getConcreateDocumentConfig(): ConcreateDocumentConfig;
 
     getStatement(about: string | Resource, property: string, language?: string): StatementOf<ContainedThing>;
     getStatementAll(about: string | Resource, property?: string, language?: string): StatementOf<ContainedThing>[];
@@ -62,6 +90,8 @@ export interface DocumentNonDestructiveOperations<
 
     hasStatement(about: string | Resource, property?: string, language?: string): boolean;
     hasStatementAboutSelf(property?: string, language?: string): boolean;
+
+    // setContext(context: any): void;
 
     at(index: number): ContainedThing | undefined;
     contains(other: DocumentWithNonDestructiveOperations<any>): boolean;
@@ -100,6 +130,8 @@ export interface DocumentDestructiveOperations<
     addStatementAll(others: Iterable<Statement>): StatementOf<ContainedThing>[];
     addStatementAboutSelf(other: Statement): StatementOf<SelfDescribingThing>;
     addStatementAboutSelfAll(others: Iterable<Statement>): StatementOf<SelfDescribingThing>[];
+
+    load(loader?: Loader): Promise<void>;
 
     setThing(thing: ContainedThing, uri?: string): ContainedThing;
     setThingAt(index: number, thing: ContainedThing): ContainedThing;

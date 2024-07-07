@@ -4,5 +4,6 @@ export {
 } from "./impl.js";
 
 export {
-    WebIdProfile
+    WebIdProfile,
+    WebIdProfileConstructor
 } from "./types.js";

@@ -1,6 +1,18 @@
 import { Copyable, Resource } from "./Common";
 
+export type StatementConstructorParams = {
+    subject: string;
+    property: string;
+    value: string;
+    datatype?: string;
+    language?: string;
+}
+
 export type StatementConstructor<
+    StatementType extends StatementWithNonDestructiveOperations = Statement
+> = new (params: StatementType | StatementConstructorParams) => StatementType;
+
+export type StatementConstructorMixin<
     StatementType extends StatementWithNonDestructiveOperations = Statement
 > = new (...args: any[]) => StatementType;
 

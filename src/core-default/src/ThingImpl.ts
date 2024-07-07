@@ -47,7 +47,7 @@ export class ThingImpl<
         return this._statements;
     }
 
-    private _createStatementInternalFrom(other: Statement): StatementType {
+    private _createStatementInternalFrom(other: StatementType): StatementType {
         return new this._statementImpl(other);
     }
 
@@ -61,13 +61,13 @@ export class ThingImpl<
         return statement.toCopy() as StatementType;
     }
 
-    public addStatement(other: Statement): StatementType {
+    public addStatement(other: StatementType): StatementType {
         const statement = this._createStatementInternalFrom(other);
         this._getStatementsInternal().push(statement);
         return statement;
     }
     
-    public addStatementAll(others: Iterable<Statement>): StatementType[] {
+    public addStatementAll(others: Iterable<StatementType>): StatementType[] {
         const results: StatementType[] = [];
         for (const other of others) {
             const statement = this.addStatement(other);
@@ -104,8 +104,12 @@ export class ThingImpl<
     splice(start: number, deleteCount?: number | undefined, ...items: StatementType[]): ThisType<this> {
         throw new Error("Method not implemented.");
     }
-    getStatement(property: string, language?: string | undefined): StatementType | undefined {
-        throw new Error("Method not implemented.");
+
+    public getStatement(property: string, language?: string | undefined): StatementType | undefined {
+        const statement = this._getStatementInternal(property, language);
+        if (!statement)
+            throw new Error("Statement does not exist.");
+        return statement.toCopy() as StatementType;
     }
 
     _getStatementInternal(property: string, language?: string | undefined): StatementType | undefined {
@@ -180,9 +184,10 @@ export class ThingImpl<
         return this._statements[Symbol.iterator](); // should make a copy before?
     }
 
-    getUri(): string {
+    public getUri(): string {
         return this._uri;
     }
+
     hasUri(): boolean {
         throw new Error("Method not implemented.");
     }
@@ -204,14 +209,14 @@ export class ThingImpl<
 
 }
 
-export class ThingImplDefault extends ThingImpl<Statement> {
+// export class ThingImplDefault extends ThingImpl<Statement> {
 
-    // public constructor(uri?: string) {
-    public constructor(...args: any[]) {
-        const [ uri ] = args;
-        super(StatementImpl, uri);
-    }
+//     // public constructor(uri?: string) {
+//     public constructor(...args: any[]) {
+//         const [ uri ] = args;
+//         super(StatementImpl, uri);
+//     }
 
-}
+// }
 
 export default ThingImpl;

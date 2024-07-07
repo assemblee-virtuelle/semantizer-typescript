@@ -1,7 +1,7 @@
 import { WithChangelog } from "../changelog/Changelog";
 import { DocumentWithChangelogMixin } from "../changelog/DocumentWithChangelogImpl";
 import DocumentImpl from "../core-default/src/DocumentImpl";
-import { Constructed, Document, DocumentBase, DocumentWithDestructiveOperationsConstructor } from "../core/Document";
+import { Constructed, Document, DocumentBase, DocumentWithDestructiveOperationsConstructor } from "../types/src/Document";
 import { DistantDocument, LocalDocument } from "./DocumentSynchronized";
 import { DocumentDistantMixin } from "./DocumentSynchronizedImpl";
 

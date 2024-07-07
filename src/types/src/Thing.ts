@@ -1,5 +1,5 @@
 import { Comparable, Copyable, Resource, ResourceCollection, WithContext } from "./Common";
-import { Statement } from "./Statement";
+import { Statement, StatementConstructor } from "./Statement";
 
 // type ContainedDocumentOf<T extends Thing<any, any>> = T extends Thing<any, infer TypeArg> ? TypeArg: never;
 // export type StatementOf<T extends Thing<any, any>> = T extends Thing<infer TypeArg, any> ? TypeArg : never;
@@ -22,6 +22,11 @@ import { Statement } from "./Statement";
 // > = new (c: DocumentWritableConstructor<ContainedStatement, SelfDescribingStatement>) => DocumentWritable<ContainedStatement, SelfDescribingStatement>;
 
 export type ThingConstructor<
+    ThingType extends ThingWithNonDestructiveOperations<StatementType>,
+    StatementType extends Statement = Statement
+> = new (statement: StatementConstructor<StatementType>, uri: string) => ThingType;
+
+export type ThingConstructorMixin<
     ThingType extends ThingWithNonDestructiveOperations<any> = ThingWithNonDestructiveOperations<Statement>
 > = new (...args: any[]) => ThingType;
 

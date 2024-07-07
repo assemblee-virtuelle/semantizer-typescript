@@ -1,12 +1,4 @@
-import { Resource, Statement } from "@semantizer/types";
-
-type ConstructorParams = {
-    subject: string;
-    property: string;
-    value: string;
-    datatype?: string;
-    language?: string;
-}
+import { Resource, Statement, StatementConstructorParams } from "@semantizer/types";
 
 export class StatementImpl implements Statement { 
 
@@ -17,8 +9,8 @@ export class StatementImpl implements Statement {
     private _language?: string;
 
     public constructor(other: Statement);
-    public constructor(params: ConstructorParams);
-    public constructor(params: Statement | ConstructorParams) {
+    public constructor(params: StatementConstructorParams);
+    public constructor(params: Statement | StatementConstructorParams) {
         this._subject = 'subject' in params? params.subject: params.getSubject();
         this._property = 'subject' in params? params.property: params.getProperty();
         this._value = 'subject' in params? params.value: params.getValue();
