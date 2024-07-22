@@ -1,11 +1,10 @@
-import { Document, Thing } from "@semantizer/types";
-import { WebIdProfileConstructor } from "@semantizer/webid";
+import { WebIdProfile, WebIdProfileConstructor } from "@semantizer/webid";
 
 export interface SolidWebIdProfileNonDestructiveOperations {
     getPublicTypeIndexUri(): string | undefined;
 }
 
-export type SolidWebIdProfile = Document<Thing, Thing> & SolidWebIdProfileNonDestructiveOperations;
+export type SolidWebIdProfile = WebIdProfile & SolidWebIdProfileNonDestructiveOperations;
 export type SolidWebIdProfileConstructor = new (...args: any[]) => SolidWebIdProfile;
 
 const context = {
