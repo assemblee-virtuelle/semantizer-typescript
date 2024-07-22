@@ -1,13 +1,14 @@
-import { Document, DocumentConstructor, DocumentImplFactory, DocumentWithDestructiveOperationsConstructor, Loader, Statement, StatementConstructor, Thing, ThingConstructor, ThingConstructorMixin } from "@semantizer/types";
+import { DocumentWithDestructiveOperations, DocumentWithDestructiveOperationsConstructor, Thing } from "@semantizer/types";
+import { ConnectorConstructor } from "./Connector.js";
 
-export type Catalog = Thing<Statement> & CatalogOperations;
+export type Catalog = DocumentWithDestructiveOperations<Thing, Thing> & CatalogOperations;
 
 export interface CatalogOperations {
     getName(): string | undefined;
 }
 
 export function CatalogMixin<
-    TBase extends ThingConstructorMixin<Thing<Statement>>
+    TBase extends DocumentWithDestructiveOperationsConstructor<Thing, Thing> & ConnectorConstructor
 >(Base: TBase) {
 
     return class CatalogMixinImpl extends Base implements CatalogOperations {
@@ -17,26 +18,9 @@ export function CatalogMixin<
         }
 
         public getName(): string | undefined {
-            return this.getStatement("https://github.com/datafoodconsortium/ontology/releases/latest/download/DFC_BusinessOntology.owl#name")?.getValue();
+            return this.getThingAboutSelf()?.getStatement("https://github.com/datafoodconsortium/ontology/releases/latest/download/DFC_BusinessOntology.owl#name")?.getValue();
         }
 
-    }
-
-}
-
-export class CatalogFactory {
-    
-    private _ThingImpl: ThingConstructor<Thing, Statement>;
-    private _StatementImpl: StatementConstructor<Statement>;
-
-    constructor(ThingImpl: ThingConstructor<Thing, Statement>, StatementImpl: StatementConstructor<Statement>) { 
-        this._ThingImpl = ThingImpl;
-        this._StatementImpl = StatementImpl;
-    }
-
-    public create(uri: string): Catalog {
-        const CatalogImpl = CatalogMixin(this._ThingImpl);
-        return new CatalogImpl(this._StatementImpl, uri);
     }
 
 }

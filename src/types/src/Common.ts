@@ -1,5 +1,4 @@
-import { Document, DocumentFactory } from "./Document";
-import { Semantizer } from "./Semantizer";
+import { Document, DocumentConstructor, DocumentFactory, DocumentWithDestructiveOperations, DocumentWithDestructiveOperationsConstructor } from "./Document";
 import { Thing } from "./Thing";
 
 export interface Resource {
@@ -105,6 +104,14 @@ export interface DocumentLoadOptions {
     seeAlsoMaxDepth?: number;
 }
 
+export type AnyFunction<A = any> = (...input: any[]) => A;
+export type AnyConstructor<A = object> = new (...input: any[]) => A;
+export type Mixin<T extends AnyFunction> = InstanceType<ReturnType<T>>;
+
+export interface MixinFactory {
+    create<T extends DocumentWithDestructiveOperations>(uri: string, callback: (impl: DocumentConstructor) => AnyConstructor<T>): T;
+}
+
 export interface Loader {
-    load<DocumentType extends Document<any, any> = Document<Thing, Thing>>(uri: string, factory: DocumentFactory<DocumentType>, options?: DocumentLoadOptions): Promise<DocumentType>;
+    load<T extends DocumentWithDestructiveOperations>(uri: string, factory: MixinFactory, callback: (impl: DocumentConstructor) => AnyConstructor<T>, options?: DocumentLoadOptions): Promise<T>;
 }

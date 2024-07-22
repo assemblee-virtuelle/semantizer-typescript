@@ -10,9 +10,9 @@ export class FactoryImpl implements DocumentFactory<Document<Thing, Thing>> {
         return new DocumentImpl<Thing, Thing>(factory);
     }
 
-    public async load(uri: string, loader: Loader): Promise<Document<Thing<Statement>, Thing<Statement>>> {
-        return loader.load<Document<Thing<Statement>, Thing<Statement>>>(uri, this);
-    }
+    // public async load(uri: string, loader: Loader): Promise<Document<Thing<Statement>, Thing<Statement>>> {
+    //     return loader.load<Document<Thing<Statement>, Thing<Statement>>>(uri, this);
+    // }
 
 }
 

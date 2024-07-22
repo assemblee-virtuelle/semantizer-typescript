@@ -1,8 +1,6 @@
-import { FactoryImpl, StatementImpl, ThingImpl } from "@semantizer/core-default";
-import { LoaderRdfjs } from "@semantizer/loader-rdfjs";
-import { DocumentConstructor, DocumentImplFactory, Loader, Thing } from "@semantizer/types";
-import { WebIdProfile, WebIdProfileConstructor, WebIdProfileMixin } from "@semantizer/webid";
-import { Catalog, CatalogFactory } from "./Catalog.js";
+import { WebIdProfile, WebIdProfileConstructor } from "@semantizer/webid";
+import { Catalog } from "./Catalog.js";
+import { ConnectorConstructor } from "./Connector.js";
 
 export type Enterprise = WebIdProfile & EnterpriseOperations;
 
@@ -13,7 +11,7 @@ export interface EnterpriseOperations {
 }
 
 export function EnterpriseMixin<
-    TBase extends WebIdProfileConstructor
+    TBase extends WebIdProfileConstructor & ConnectorConstructor
 >(Base: TBase) {
 
     return class EnterpriseMixinImpl extends Base implements EnterpriseOperations {
@@ -28,16 +26,7 @@ export function EnterpriseMixin<
 
         public getMaintainedCatalogs(): Promise<Catalog>[] {
             const maintains = "https://github.com/datafoodconsortium/ontology/releases/latest/download/DFC_BusinessOntology.owl#maintains";
-            const loader = new LoaderRdfjs();
-            const documentFactory = new FactoryImpl();
-            const catalogFactory = new CatalogFactory(ThingImpl, StatementImpl);
-            return this.getPrimaryTopic().getStatementAll(maintains).map(async (s) => {
-                const document = await documentFactory.load(s.getValue(), loader);
-                const thing = document.getThing(s.getValue());
-                const catalog = catalogFactory.create(s.getValue());
-                catalog.addStatementAll(thing);
-                return catalog;
-            });
+            return this.getPrimaryTopic().getStatementAll(maintains).map(s => this.loadCatalog(s.getValue()));
         }
 
         public getMaintainedCatalogsUri(): string[] {
@@ -46,24 +35,4 @@ export function EnterpriseMixin<
 
     }
 
-}
-
-export class EnterpriseFactory {
-    
-    private _DocumentImpl: DocumentConstructor<Thing, Thing>;
-    private _documentImplFactory: DocumentImplFactory;
-
-    constructor(DocumentImpl: DocumentConstructor<Thing, Thing>, documentImplFactory: DocumentImplFactory) { 
-        this._DocumentImpl = DocumentImpl;
-        this._documentImplFactory = documentImplFactory;
-    }
-
-    public create(): Enterprise {
-        const EnterpriseImpl = EnterpriseMixin(WebIdProfileMixin(this._DocumentImpl));
-        return new EnterpriseImpl(this._documentImplFactory);
-    }
-
-    public async load(uri: string, loader: Loader): Promise<Enterprise> {
-        return loader.load<Enterprise>(uri, this);
-    }
 }

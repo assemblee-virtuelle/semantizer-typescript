@@ -1,4 +1,4 @@
-import { DocumentConstructor, DocumentFactory, DocumentImplFactory, DocumentWithDestructiveOperationsConstructor, Loader, Thing } from "@semantizer/types";
+import { DocumentWithDestructiveOperationsConstructor, Thing } from "@semantizer/types";
 import { WebIdProfile } from "./types";
 
 export function WebIdProfileMixin<
@@ -22,27 +22,3 @@ export function WebIdProfileMixin<
     }
 
 }
-
-export class WebIdProfileFactory implements DocumentFactory<WebIdProfile> {
-
-    private _DocumentImpl: DocumentConstructor<Thing, Thing>;
-    private _documentImplFactory: DocumentImplFactory;
-
-    constructor(DocumentImpl: DocumentConstructor<Thing, Thing>, documentImplFactory: DocumentImplFactory) { 
-        this._DocumentImpl = DocumentImpl;
-        this._documentImplFactory = documentImplFactory;
-    }
-    
-    public create(): WebIdProfile {
-        const WebIdProfileImpl = WebIdProfileMixin(this._DocumentImpl);
-        return new WebIdProfileImpl(this._documentImplFactory);
-    }
-
-    public async load(webId: string, loader?: Loader): Promise<WebIdProfile> {
-        // const loaderDefault = loader? loader: this._semantizer.getDefaultLoader();
-        if (!loader)
-            throw new Error;
-        return loader.load<WebIdProfile>(webId, this);
-    }
-
-} 

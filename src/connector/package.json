@@ -14,7 +14,8 @@
   "dependencies": {
     "@semantizer/core-default": "^1.0.0",
     "@semantizer/loader-rdfjs": "^1.0.0",
-    "@semantizer/webid": "^1.0.0"
+    "@semantizer/webid": "^1.0.0",
+    "@semantizer/mixins": "^1.0.0"
   },
   "devDependencies": {
     "@semantizer/types": "^1.0.0",

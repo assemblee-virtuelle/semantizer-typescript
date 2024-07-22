@@ -12,6 +12,10 @@ export {
     CopyableToWritable,
     Streamable,
     Canonical,
+    AnyFunction,
+    AnyConstructor,
+    Mixin,
+    MixinFactory,
     Loader,
     DocumentLoadOptions
 } from "./lib/Common.js";
