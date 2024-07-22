@@ -1,0 +1,18 @@
+{
+  "name": "@semantizer/mixins",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Maxime Lecoq-Gaillard",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.5.2",
+    "@semantizer/types": "^1.0.0"
+  }
+}
