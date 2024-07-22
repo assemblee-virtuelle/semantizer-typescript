@@ -1,43 +1,17 @@
-import { 
+import {
     DocumentWithDestructiveOperationsConstructor,
-    Thing,
-    ThingConstructor,
     Statement,
-    StatementConstructor,
-    Factory,
-    DocumentConstructor
+    StatementConstructorMixin,
+    Thing,
+    ThingConstructorMixin
 } from "@semantizer/types";
-import { TypeIndexRegistration, TypeIndexStatement, TypeIndex } from "./types.js";
+import { TypeIndex, TypeIndexRegistration, TypeIndexStatement } from "./types.js";
 import { TYPE_INDEX } from "./voc.js";
 
 const RDF = {
-    TYPE: ""
+    TYPE: "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
 }
 
-// export class TypeIndexFactory {
-
-//     public static createTypeIndex<T extends TypeIndex = TypeIndex>(DocumentImpl: DocumentWithDestructiveOperationsConstructor<TypeIndexRegistration, Thing<TypeIndexStatement>>, ContainedThingImpl: ThingConstructor<Thing<TypeIndexStatement>>, SelfDescribingThingImpl: ThingConstructor, StatementImpl: StatementConstructor<Statement>): T {
-//         const TypeIndexImpl = TypeIndexMixin(DocumentImpl);
-//         const TypeIndexRegistrationImpl = TypeIndexRegistrationMixin(ContainedThingImpl, StatementImpl);
-//         return new TypeIndexImpl(TypeIndexRegistrationImpl, SelfDescribingThingImpl) as T;
-//     }
-
-// }
-
-export class TypeIndexFactory implements Factory<TypeIndex> {
-
-    private _DocumentImpl: DocumentConstructor<TypeIndexRegistration, Thing<TypeIndexStatement>>;
-
-    constructor(DocumentImpl: DocumentConstructor<TypeIndexRegistration, Thing<TypeIndexStatement>>) {
-        this._DocumentImpl = DocumentImpl;
-    }
-
-    public create(): TypeIndex {
-        const TypeIndexImpl = TypeIndexMixin(this._DocumentImpl);
-        return new TypeIndexImpl();
-    }
-
-} 
 
 // DocumentWritableConstructor<TypeIndexRegistration, Thing> ThingWritable<TypeIndexStatement>
 export function TypeIndexMixin<
@@ -51,7 +25,7 @@ export function TypeIndexMixin<
             this.createStatementAboutSelf(RDF.TYPE, TYPE_INDEX.ListedDocument);
         }
 
-        getForClassAll(): string[] {
+        public getForClassAll(): string[] {
             throw new Error("Method not implemented.");
         }
 
@@ -171,21 +145,16 @@ export function TypeIndexMixin<
 }
 
 export function TypeIndexRegistrationMixin<
-    TStatementImpl extends StatementConstructor<Statement>,
-    TBase extends ThingConstructor<Thing<TypeIndexStatement>>
->(Base: TBase, StatementImpl: TStatementImpl) {
+    TBase extends ThingConstructorMixin<Thing<TypeIndexStatement>>
+>(Base: TBase) {
     return class TypeIndexRegistrationImpl extends Base implements TypeIndexRegistration {
 
-        // constructor(document: TypeIndex, uri?: string) {
-            // super(document); //, ThingType.Regular, uri);
-        // }
+        public constructor(...args: any[]) {
+            super(...args);
+        }
 
         public toString() : string {
             return `TypeIndexRegistration <${this.getUri()}>`;
-        }
-
-        public constructor(...args: any[]) {
-            super(TypeIndexRegistrationStatementMixin(StatementImpl), ...args); 
         }
 
         getInstanceAndInstanceContainerAll(): string[] {
@@ -298,10 +267,14 @@ export function TypeIndexRegistrationMixin<
 }
 
 export function TypeIndexRegistrationStatementMixin<
-    TBase extends StatementConstructor<Statement>
+    TBase extends StatementConstructorMixin<Statement>
 >(Base: TBase) {
  
     return class TypeIndexRegistrationStatementImpl extends Base implements TypeIndexStatement {
+
+        public constructor(...args: any[]) {
+            super(...args);
+        }
 
         public isForClass(forClass: string): boolean {
             throw new Error("Method not implemented");
