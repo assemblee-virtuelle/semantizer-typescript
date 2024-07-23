@@ -108,10 +108,16 @@ export type AnyFunction<A = any> = (...input: any[]) => A;
 export type AnyConstructor<A = object> = new (...input: any[]) => A;
 export type Mixin<T extends AnyFunction> = InstanceType<ReturnType<T>>;
 
-export interface MixinFactory {
-    create<T extends DocumentWithDestructiveOperations>(uri: string, callback: (impl: DocumentConstructor) => AnyConstructor<T>): T;
+export interface MixinFactory<
+    ContainedThing extends Thing<any> = Thing,
+    SelfDescribingThing extends Thing<any> = Thing
+>  {
+    create<T extends DocumentWithDestructiveOperations<ContainedThing, SelfDescribingThing>>(uri: string, callback: (impl: DocumentConstructor<ContainedThing, SelfDescribingThing>) => AnyConstructor<T>): T;
 }
 
-export interface Loader {
-    load<T extends DocumentWithDestructiveOperations>(uri: string, factory: MixinFactory, callback: (impl: DocumentConstructor) => AnyConstructor<T>, options?: DocumentLoadOptions): Promise<T>;
+export interface Loader<
+    ContainedThing extends Thing<any> = Thing,
+    SelfDescribingThing extends Thing<any> = Thing
+> {
+    load<T extends DocumentWithDestructiveOperations<ContainedThing, SelfDescribingThing>>(uri: string, factory: MixinFactory<ContainedThing, SelfDescribingThing>, callback: (impl: DocumentConstructor<ContainedThing, SelfDescribingThing>) => AnyConstructor<T>, options?: DocumentLoadOptions): Promise<T>;
 }

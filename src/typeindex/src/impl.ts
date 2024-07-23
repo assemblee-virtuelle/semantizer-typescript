@@ -170,8 +170,8 @@ export function TypeIndexRegistrationMixin<
         //     return typeof stringOrResource === 'string'? stringOrResource: stringOrResource.getUri();
         // }
 
-        public getFirstElementOrNull(collection: string[]): string | null {
-            return collection.length > 0? collection[0]: null;
+        public getFirstElementOrNull(collection: string[]): string | undefined {
+            return collection.length > 0? collection[0]: undefined;
         }
 
         public addForClass(forClass: string): this {
@@ -192,7 +192,7 @@ export function TypeIndexRegistrationMixin<
             return this;
         }
 
-        public getForClass(): string | null {
+        public getForClass(): string | undefined {
             return this.getFirstElementOrNull(this.getForClassAll());
         }
 
@@ -200,15 +200,15 @@ export function TypeIndexRegistrationMixin<
             return this.getStatementAll(TYPE_INDEX.forClass).map(t => t.getValue());
         }
 
-        public getInstance(): string | null {
+        public getInstance(): string | undefined {
             return this.getFirstElementOrNull(this.getInstanceAll());
         }
 
         public getInstanceAll(): string[] {
-            return []// this.getAll("solid:instance");
+            return this.getStatementAll(TYPE_INDEX.instance).map(t => t.getValue());
         }
 
-        public getInstanceContainer(): string | null {
+        public getInstanceContainer(): string | undefined {
             return this.getFirstElementOrNull(this.getInstanceContainerAll());
         }
 

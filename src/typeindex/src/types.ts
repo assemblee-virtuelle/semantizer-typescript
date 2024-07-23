@@ -52,6 +52,7 @@ export interface TypeIndexRegistrationNonDestructiveOperations {
     isForClass(forClass: string): boolean;
     toString(): string;
 
+    getInstance(): string | undefined;
     getInstanceAll(): string[];
     getInstanceContainerAll(): string[];
     getInstanceAndInstanceContainerAll(): string[];

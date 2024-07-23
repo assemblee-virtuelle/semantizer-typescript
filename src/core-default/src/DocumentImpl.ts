@@ -15,15 +15,17 @@ import {
 } from "@semantizer/types";
 
 export class DocumentImplFactoryImpl<
-    ContainedThing extends Thing<any> = Thing<Statement>,
-    SelfDescribingThing extends Thing<any> = Thing<Statement>,
+    ContainedThingStatement extends Statement = Statement,
+    ContainedThing extends Thing<any> = Thing<ContainedThingStatement>,
+    SelfDescribingThingStatement extends Statement = Statement,
+    SelfDescribingThing extends Thing<any> = Thing<SelfDescribingThingStatement>,
 > implements DocumentImplFactory<ContainedThing, SelfDescribingThing> {
 
-    private _ctc: ThingConstructor<ContainedThing>;
-    private _sdtc: ThingConstructor<SelfDescribingThing>;
+    private _ctc: ThingConstructor<ContainedThing, ContainedThingStatement>;
+    private _sdtc: ThingConstructor<SelfDescribingThing, SelfDescribingThingStatement>;
     private _sc: StatementConstructor<any>;
 
-    constructor(ctc: ThingConstructor<ContainedThing>, sdtc: ThingConstructor<SelfDescribingThing>, sc: StatementConstructor<any>) {
+    constructor(ctc: ThingConstructor<ContainedThing, ContainedThingStatement>, sdtc: ThingConstructor<SelfDescribingThing, SelfDescribingThingStatement>, sc: StatementConstructor<any>) {
         this._ctc = ctc;
         this._sdtc = sdtc;
         this._sc = sc;

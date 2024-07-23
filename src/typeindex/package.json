@@ -2,9 +2,9 @@
   "name": "@semantizer/typeindex",
   "version": "1.0.0",
   "description": "",
-  "main": "",
+  "main": "./lib/index.js",
   "type": "module",
-  "types": "index.d.ts",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "build": "tsc -p .",
     "test": "echo \"Error: no test specified\" && exit 1"
