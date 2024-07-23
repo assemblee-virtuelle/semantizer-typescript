@@ -118,13 +118,15 @@ export interface DocumentDestructiveOperations<
 > {
     createThing(uriOrNameHint?: string | Resource): ContainedThing;
     createThingAboutSelf(): SelfDescribingThing;
-    // TODO: createThingWithoutUri(uriOrNameHint?: string | Resource): ContainedThing;
+    // TODO: createThingAnonymous(nameHint?: string): ContainedThing;
+    // createThingAnonymous<T extends ThingWithNonDestructiveOperations<any> = ContainedThing>(nameHint?: string): T;
     addThing(other: ThingWithNonDestructiveOperations): ContainedThing;
     addThingAll(others: Iterable<ThingWithNonDestructiveOperations>): ContainedThing[];
     addThingAboutSelf(other: ThingWithNonDestructiveOperations): SelfDescribingThing;
     addThingAboutSelfAll(others: Iterable<ThingWithNonDestructiveOperations>): SelfDescribingThing[];
 
     createStatement(about: string | Resource, property: string, value: string, datatype?: string, language?: string): StatementOf<ContainedThing>;
+    // createStatementAnonymous(about: string | Resource, nameHint: string, property: string, value: string, datatype?: string, language?: string): StatementOf<ContainedThing>;
     createStatementAboutSelf(property: string, value: string, datatype?: string, language?: string): StatementOf<SelfDescribingThing>;
     addStatement(other: Statement): StatementOf<ContainedThing>;
     addStatementAll(others: Iterable<Statement>): StatementOf<ContainedThing>[];

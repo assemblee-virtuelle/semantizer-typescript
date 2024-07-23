@@ -1,6 +1,6 @@
 import rdfjsFetch from '@rdfjs/fetch';
 import { DatasetCore, Quad } from "@rdfjs/types";
-import { Document, DocumentLoadOptions, DocumentFactory, Loader, Thing, AnyFunction, MixinFactory, Mixin, DocumentWithDestructiveOperations, DocumentConstructor, AnyConstructor, DocumentWithDestructiveOperationsConstructor } from "@semantizer/types";
+import { AnyConstructor, DocumentConstructor, DocumentLoadOptions, DocumentWithDestructiveOperations, Loader, MixinFactory, Thing } from "@semantizer/types";
 
 export class LoaderRdfjs<
     ContainedThing extends Thing<any> = Thing,

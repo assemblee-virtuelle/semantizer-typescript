@@ -88,18 +88,32 @@ export class DocumentImpl<
         return this._selfDescribingThing;
     }
 
-    private _createThing(uriOrNameHint: string | Resource): ContainedThing {
-        // const thingImpl = this._config.getThingImplementation<ContainedThing>();
-        // const statementImpl = this._config.getStatementImplementation()
-        // const thing = new thingImpl(statementImpl, uriOrNameHint); // miss StatementImpl
-        const uri = typeof uriOrNameHint === 'string'? uriOrNameHint: uriOrNameHint.getUri();
+    private _getUriOfThing(uriOrNameHint: string | Resource): string {
+        if (typeof uriOrNameHint === 'string') {
+            if (uriOrNameHint === "") 
+                throw new Error("The name of the thing is empty. To create a thing about self, use the dedicated method. To generated a name for the thing, pass undefined.");
+            return uriOrNameHint;
+        }
+        return uriOrNameHint.getUri();
+    }
+
+    private _createUriOfThing(): string {
+        return "createdThing";
+    }
+
+    private _getOrCreateUriOfThing(uriOrNameHint?: string | Resource): string {
+        return uriOrNameHint? this._getUriOfThing(uriOrNameHint): this._createUriOfThing();
+    }
+
+    private _createThing(uriOrNameHint?: string | Resource): ContainedThing {
+        const uri = this._getOrCreateUriOfThing(uriOrNameHint);
         const thing = this._factory.createContainedThing(uri);
         this.getContainedThingsInternal().push(thing);
         return thing;
     }
 
     public createThing(uriOrNameHint?: string | Resource): ContainedThing {
-        uriOrNameHint = uriOrNameHint? uriOrNameHint: "createdThing";
+        //uriOrNameHint = uriOrNameHint? uriOrNameHint: "createdThing";
         const thing = this._createThing(uriOrNameHint);
         return thing.toCopy() as ContainedThing;
     }
@@ -129,13 +143,10 @@ export class DocumentImpl<
     }
     
     public createStatement(about: string | Resource, property: string, value: string, datatype?: string | undefined, language?: string | undefined): StatementOf<ContainedThing> {
-        const uri = typeof about === 'string'? about: about.getUri();
+        //const uri = typeof about === 'string'? about: about.getUri();
         //if (uri === this.getUri())
         //    throw new Error("To create a statement about the document, use the createStatementAboutSelf method instead.");
-        let thing = this._getThing(about);
-        if (!thing) {
-            thing = this._createThing(about);
-        }
+        const thing = this._getThing(about) ?? this._createThing(about);
         return thing.createStatement(property, value, datatype, language);
     }
 
