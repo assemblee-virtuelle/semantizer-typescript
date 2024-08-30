@@ -102,4 +102,4 @@ export type ThingWithDestructiveOperations<
 
 export type Thing<
     StatementType extends Statement = Statement
-> = ThingWithDestructiveOperations<StatementType>;
+> = ThingWithDestructiveOperations<Statement>;

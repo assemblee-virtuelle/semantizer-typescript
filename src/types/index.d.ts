@@ -59,11 +59,18 @@ export {
     StatementBase,
     StatementWithNonDestructiveOperations,
     StatementWithDestructiveOperations,
-    Statement,
+    
 } from "./lib/Statement.js"
 
 export {
     Semantizer
 } from "./lib/Semantizer.js";
+
+export {
+    DatasetConstructor,
+    QuadConstructor,
+    Dataset,
+    Statement,
+} from "./lib/Dataset.js";
 
 

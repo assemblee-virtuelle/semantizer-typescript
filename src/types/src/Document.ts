@@ -185,4 +185,4 @@ export type DocumentWithDestructiveOperations<
 export type Document<
     ContainedThing extends ThingWithNonDestructiveOperations<any> = ThingWithNonDestructiveOperations,
     SelfDescribingThing extends ThingWithNonDestructiveOperations<any> = ThingWithNonDestructiveOperations
-> = DocumentWithDestructiveOperations<ContainedThing, SelfDescribingThing>;
+> = DocumentWithDestructiveOperations<ThingWithNonDestructiveOperations, ThingWithNonDestructiveOperations>;
