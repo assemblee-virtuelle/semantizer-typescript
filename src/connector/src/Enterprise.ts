@@ -1,7 +1,7 @@
+import { Semantizer } from "@semantizer/types";
 import { SolidWebIdProfile, SolidWebIdProfileConstructor, SolidWebIdProfileMixin } from "@semantizer/solid-webid";
 import { Catalog, CatalogFactory } from "./Catalog.js";
 import { DatasetCore } from "@rdfjs/types"; // PB if deleted
-import { Dataset, Semantizer } from "@semantizer/types";
 import WebIdProfileMixin from "@semantizer/webid";
 
 export type Enterprise = SolidWebIdProfile & EnterpriseOperations;

@@ -1,7 +1,7 @@
+import { Semantizer } from "@semantizer/types";
 import { SolidWebIdProfile, SolidWebIdProfileConstructor, SolidWebIdProfileMixin, SolidWebIdProfileFactory } from "@semantizer/solid-webid";
 import { Enterprise, EnterpriseFactory } from "./Enterprise.js";
 import { DatasetCore } from "@rdfjs/types"; // PB if deleted
-import { Dataset, Semantizer } from "@semantizer/types";
 import { WebIdProfileMixin } from "@semantizer/webid";
 
 export type Person = SolidWebIdProfile & PersonOperations;
@@ -14,7 +14,7 @@ export interface PersonOperations {
 }
 
 export function PersonMixin<
-    TBase extends SolidWebIdProfileConstructor //& ConnectorConstructor
+    TBase extends SolidWebIdProfileConstructor
 >(Base: TBase) {
 
     return class PersonMixinImpl extends Base implements PersonOperations {

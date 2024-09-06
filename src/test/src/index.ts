@@ -7,7 +7,7 @@ import { SolidWebIdProfileFactory } from "@semantizer/solid-webid";
 // - use a DatasetExt ?
 // - loader VS fetcher ?
 // - in mixins, use the loader from semantizer and accept an overload
-// - TO CHECK: construct the person from a profileDocument or profile?
+// - Ensure the person is builded from a profileDocument.
 // - add a lastLoaded atribute in dataset ?
 // - add loadAndGet() methods? like loadAndGetPrimaryTopic()?
 // - add a param (factory: Factory) to get specific concrete types returned from getters (ex: getPrimaryTopic() => Person);
