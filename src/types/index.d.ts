@@ -43,6 +43,7 @@ export {
 
 export {
     Dataset,
+    DatasetSemantizer,
     DatasetConstructor,
     QuadConstructor,
 } from "./lib/Dataset.js";

@@ -1,5 +1,5 @@
 import { SolidWebIdProfile, SolidWebIdProfileConstructor, SolidWebIdProfileMixin, SolidWebIdProfileFactory } from "@semantizer/solid-webid";
-import { Enterprise } from "./Enterprise.js";
+import { Enterprise, EnterpriseFactory } from "./Enterprise.js";
 import { DatasetCore } from "@rdfjs/types"; // PB if deleted
 import { Dataset, Semantizer } from "@semantizer/types";
 import { WebIdProfileMixin } from "@semantizer/webid";
@@ -10,7 +10,7 @@ const DFC = 'https://github.com/datafoodconsortium/ontology/releases/latest/down
 
 export interface PersonOperations {
     getName(): string | undefined;
-    getAffiliatedEnterprises(): Dataset[]; //Enterprise[];
+    getAffiliatedEnterprises(): Enterprise[];
 }
 
 export function PersonMixin<
@@ -23,36 +23,15 @@ export function PersonMixin<
             return this.getLiteral(this.getUri()!, DFC + 'name'); // getPrimaryTopic ?
         }
 
-        public getAffiliatedEnterprises(): Dataset[] {
-            return this.getObjectAll(DFC + 'affiliatedBy');
+        public getAffiliatedEnterprises(): Enterprise[] {
+            return this.getObjectAll(DFC + 'affiliatedBy').map(d => EnterpriseFactory(this.getSemantizer()).build(d));
         }
 
     }
 
 }
 
-// export class PersonFactory {
-
-//     // public static async load(resource: string, loader: Loader, impl: WebIdProfileConstructor): Promise<SolidWebIdProfile> {
-//     //     const dataset = this.build(impl, await loader.load(resource));
-//     //     dataset.setUri(resource);
-//     //     return dataset;
-//     // }
-
-//     // public static mixIn(impl: SolidWebIdProfileConstructor, dataset?: Dataset): Person {
-//     //     const MixinImpl = PersonMixin(SolidWebIdProfileMixin(impl));
-//     //     const person = new MixinImpl(dataset);
-//     //     if (dataset && dataset.getUri())
-//     //         person.setUri(dataset.getUri()!);
-//     //     return person;
-//     // }
-
-// }
-
 export function PersonFactory(semantizer: Semantizer) {
     const _DatasetImpl = semantizer.getDatasetImpl();
-    // return semantizer.getFactory(SolidWebIdProfileMixin, WebIdProfileMixin(_DatasetImpl));
     return semantizer.getFactory(PersonMixin, SolidWebIdProfileMixin(WebIdProfileMixin(_DatasetImpl)));
 }
-
-export default PersonFactory;

@@ -8,12 +8,13 @@ import Semantizer from "@semantizer/core-default";
 // - add a rdfs-seeAlso mixin
 // - use a DatasetExt ?
 // - loader VS fetcher ?
-// - add a Semantizer at the Dataset level, to get access to the loader?
+// - in mixins, use the loader from semantizer and accept an overload
 // - add a core package and use the core-default as a pre-configured installation
 // - TO CHECK: construct the person from a profileDocument or profile?
 // - add a lastLoaded atribute in dataset ?
 // - add loadAndGet() methods? like loadAndGetPrimaryTopic()?
 // - add a param (factory: Factory) to get specific concrete types returned from getters (ex: getPrimaryTopic() => Person);
+// - [x] add a Semantizer at the Dataset level, to get access to the loader?
 // - [x] add a Semantizer class to host the config (loader, DatasetImpl, etc)
 // - [x] add a load() method to load the object itself
 const test = async () => {
@@ -33,10 +34,10 @@ const test = async () => {
         console.log(person.getName());
         for (const enterprise of person.getAffiliatedEnterprises()) {
             await enterprise.load(loader);
-            console.log(enterprise.getLiteral(enterprise.getUri()!, DFC + 'name'));
-            for (const catalog of enterprise.getObjectAll(DFC + 'maintains')) {
+            console.log(enterprise.getName());
+            for (const catalog of enterprise.getMaintainedCatalogs()) {
                 await catalog.load(loader);
-                console.log(catalog.getLiteral(catalog.getUri()!, DFC + 'name'));
+                console.log(catalog.getName());
             }
         }
     // }

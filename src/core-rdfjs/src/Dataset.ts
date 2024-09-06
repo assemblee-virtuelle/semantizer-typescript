@@ -1,17 +1,23 @@
 import dataFactory from '@rdfjs/data-model';
 import datasetFactory from '@rdfjs/dataset';
 import { DatasetCore, NamedNode, Quad, Term } from "@rdfjs/types";
-import { Dataset, DatasetConstructor, Loader } from '@semantizer/types';
+import { Dataset, DatasetConstructor, DatasetSemantizer, Loader, Semantizer } from '@semantizer/types';
 
-export class DatasetImpl implements DatasetCore<Quad, Quad> {
+export class DatasetImpl implements DatasetSemantizer, DatasetCore<Quad, Quad> {
 
+    private _semantizer: Semantizer;
     private _dataset: DatasetCore<Quad, Quad>;
     public size: number;
 
-    public constructor(quads?: Iterable<Quad>) {
+    public constructor(semantizer: Semantizer, quads?: Iterable<Quad>) {
+        this._semantizer = semantizer;
         const quadArray = quads? Array.from(quads) : undefined;
         this._dataset = datasetFactory.dataset(quadArray);
         this.size = this._dataset.size;
+    }
+    
+    public getSemantizer(): Semantizer {
+        return this._semantizer;
     }
 
     public add(quad: Quad): this {
@@ -120,7 +126,7 @@ export function DatasetMixin<
             //const thing = this.getThing(thingUri);
             const datasetCore = this.match(undefined, dataFactory.namedNode(predicate));
             const DatasetMixinImpl = DatasetMixin(DatasetImpl)
-            const dataset = new DatasetMixinImpl(datasetCore);
+            const dataset = new DatasetMixinImpl(this.getSemantizer(), datasetCore);
             dataset.setUri(thingUri)
             return dataset;
         }
@@ -163,7 +169,7 @@ export function DatasetMixin<
             for (const quad of things) {
                 const datasetCore = this.match(quad.object);
                 const DatasetMixinImpl = DatasetMixin(DatasetImpl)
-                const dataset = new DatasetMixinImpl(datasetCore);
+                const dataset = new DatasetMixinImpl(this.getSemantizer(), datasetCore);
                 dataset.setUri(quad.object.value); // TODO: only when NamedNode
                 datasets.push(dataset);
             }
@@ -173,20 +179,25 @@ export function DatasetMixin<
     }
 }
 
-export class DatasetRdfjsFactory {
-
-    public static async load(resource: string, loader: Loader): Promise<Dataset> {
-        const dataset = this.build(await loader.load(resource));
-        dataset.setUri(resource);
-        return dataset;
-    }
-
-    public static build(datasetCore?: DatasetCore): Dataset {
-        const DatasetMixinImpl = DatasetMixin(DatasetImpl);
-        return new DatasetMixinImpl(datasetCore);
-    }
-
+export function DatasetRdfjsFactory(semantizer: Semantizer) {
+    const _DatasetImpl = semantizer.getDatasetImpl();
+    return semantizer.getFactory(DatasetMixin, _DatasetImpl);
 }
+
+// export class DatasetRdfjsFactory {
+
+//     public static async load(resource: string, loader: Loader): Promise<Dataset> {
+//         const dataset = this.build(await loader.load(resource));
+//         dataset.setUri(resource);
+//         return dataset;
+//     }
+
+//     public static build(datasetCore?: DatasetCore): Dataset {
+//         const DatasetMixinImpl = DatasetMixin(DatasetImpl);
+//         return new DatasetMixinImpl(datasetCore);
+//     }
+
+// }
 
 // export const DatasetRdfjsFactory = {
 //     build: (datasetCore?: DatasetCore): Dataset => {

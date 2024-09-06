@@ -13,13 +13,13 @@ export class MixinFactoryImpl<TBase extends Constructor, TMixin extends Dataset>
 
     public async load(resource: string): Promise<TMixin> {
         const datasetCore = await this._semantizer.getLoader().load(resource);
-        const dataset = new (this._semantizer.getDatasetImpl())(datasetCore);
+        const dataset = new (this._semantizer.getDatasetImpl())(this._semantizer, datasetCore); // pass the parameters of the constructor of the dataset implementation (eg: core-rdfs/DatasetImpl)
         return this.build(dataset);
     }
 
     // public build(...args: ConstructorParameters<TBase>): TMixin {
     public build(sourceDataset?: Dataset): TMixin {
-        const dataset = new this._mixedClass(sourceDataset);
+        const dataset = new this._mixedClass(this._semantizer, sourceDataset); // pass the parameters of the constructor of the dataset implementation (eg: core-rdfs/DatasetImpl)
         if (sourceDataset && sourceDataset.getUri()) 
             dataset.setUri(sourceDataset.getUri()!);
         return dataset;

@@ -4,9 +4,14 @@ import dataFactory from '@rdfjs/data-model';
 import datasetFactory from '@rdfjs/dataset';
 import { DatasetCore as DatasetRdfjs, NamedNode, Quad } from "@rdfjs/types";
 import { Loader } from './Common';
+import { Semantizer } from './Semantizer';
 
-export interface Dataset extends DatasetRdfjs {
+export interface DatasetSemantizer extends DatasetRdfjs {
     [Symbol.iterator](): Iterator<Quad>;
+    getSemantizer(): Semantizer;
+}
+
+export interface Dataset extends DatasetSemantizer {
     getThing(uri: string): Dataset;
     getStatements(thingUri: string, predicate: string): Dataset;
     getObject(predicate: string, thingUri?: string): Dataset;
@@ -56,7 +61,7 @@ export interface Dataset extends DatasetRdfjs {
 }
 
 export type QuadConstructor = new (...args: any[]) => Quad;
-export type DatasetConstructor = new (...args: any[]) => DatasetRdfjs;
+export type DatasetConstructor = new (...args: any[]) => DatasetSemantizer;
 
 const datasetCore = datasetFactory.dataset();
 

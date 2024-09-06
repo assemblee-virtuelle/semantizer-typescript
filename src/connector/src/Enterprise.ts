@@ -1,38 +1,37 @@
-import { SolidWebIdProfile, SolidWebIdProfileConstructor } from "@semantizer/solid-webid";
-import { Catalog } from "./Catalog.js";
+import { SolidWebIdProfile, SolidWebIdProfileConstructor, SolidWebIdProfileMixin } from "@semantizer/solid-webid";
+import { Catalog, CatalogFactory } from "./Catalog.js";
 import { DatasetCore } from "@rdfjs/types"; // PB if deleted
+import { Dataset, Semantizer } from "@semantizer/types";
+import WebIdProfileMixin from "@semantizer/webid";
 
 export type Enterprise = SolidWebIdProfile & EnterpriseOperations;
 
+const DFC = 'https://github.com/datafoodconsortium/ontology/releases/latest/download/DFC_BusinessOntology.owl#';
+
 export interface EnterpriseOperations {
     getName(): string | undefined;
-    getMaintainedCatalogs(): Promise<Catalog>[];
-    getMaintainedCatalogsUri(): string[];
+    getMaintainedCatalogs(): Catalog[];
 }
 
 export function EnterpriseMixin<
-    TBase extends SolidWebIdProfileConstructor // & ConnectorConstructor
+    TBase extends SolidWebIdProfileConstructor
 >(Base: TBase) {
 
     return class EnterpriseMixinImpl extends Base implements EnterpriseOperations {
 
-        // public constructor(...args: any[]) {
-        //     super(...args);
-        // }
-
         public getName(): string | undefined {
-            return this.getPrimaryTopic().getStatement("https://github.com/datafoodconsortium/ontology/releases/latest/download/DFC_BusinessOntology.owl#name")?.getValue();
+            return this.getLiteral(this.getUri()!, DFC + 'name');
         }
 
-        public getMaintainedCatalogs(): Promise<Catalog>[] {
-            const maintains = "https://github.com/datafoodconsortium/ontology/releases/latest/download/DFC_BusinessOntology.owl#maintains";
-            return this.getPrimaryTopic().getStatementAll(maintains).map(s => this.loadCatalog(s.getValue()));
-        }
-
-        public getMaintainedCatalogsUri(): string[] {
-            return this.getPrimaryTopic().getStatementAll("https://github.com/datafoodconsortium/ontology/releases/latest/download/DFC_BusinessOntology.owl#maintains").map(s => s.getValue());
+        public getMaintainedCatalogs(): Catalog[] {
+            return this.getObjectAll(DFC + 'maintains').map(d => CatalogFactory(this.getSemantizer()).build(d));
         }
 
     }
 
+}
+
+export function EnterpriseFactory(semantizer: Semantizer) {
+    const _DatasetImpl = semantizer.getDatasetImpl();
+    return semantizer.getFactory(EnterpriseMixin, SolidWebIdProfileMixin(WebIdProfileMixin(_DatasetImpl)));
 }
