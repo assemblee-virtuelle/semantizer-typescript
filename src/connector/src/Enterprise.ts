@@ -1,8 +1,8 @@
-import { WebIdProfile, WebIdProfileConstructor } from "@semantizer/webid";
+import { SolidWebIdProfile, SolidWebIdProfileConstructor } from "@semantizer/solid-webid";
 import { Catalog } from "./Catalog.js";
-import { ConnectorConstructor } from "./Connector.js";
+import { DatasetCore } from "@rdfjs/types"; // PB if deleted
 
-export type Enterprise = WebIdProfile & EnterpriseOperations;
+export type Enterprise = SolidWebIdProfile & EnterpriseOperations;
 
 export interface EnterpriseOperations {
     getName(): string | undefined;
@@ -11,14 +11,14 @@ export interface EnterpriseOperations {
 }
 
 export function EnterpriseMixin<
-    TBase extends WebIdProfileConstructor & ConnectorConstructor
+    TBase extends SolidWebIdProfileConstructor // & ConnectorConstructor
 >(Base: TBase) {
 
     return class EnterpriseMixinImpl extends Base implements EnterpriseOperations {
 
-        public constructor(...args: any[]) {
-            super(...args);
-        }
+        // public constructor(...args: any[]) {
+        //     super(...args);
+        // }
 
         public getName(): string | undefined {
             return this.getPrimaryTopic().getStatement("https://github.com/datafoodconsortium/ontology/releases/latest/download/DFC_BusinessOntology.owl#name")?.getValue();

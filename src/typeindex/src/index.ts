@@ -1,11 +1,11 @@
 export {
     TypeIndex,
-    TypeIndexRegistration,
-    TypeIndexStatement
+    // TypeIndexRegistration,
+    // TypeIndexStatement
 } from "./types";
 
 export {
     TypeIndexMixin,
-    TypeIndexRegistrationMixin,
-    TypeIndexRegistrationStatementMixin
+    // TypeIndexRegistrationMixin,
+    // TypeIndexRegistrationStatementMixin
 } from "./impl.js";

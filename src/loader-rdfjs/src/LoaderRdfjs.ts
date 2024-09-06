@@ -1,23 +1,22 @@
 import rdfjsFetch from '@rdfjs/fetch';
 import { DatasetCore, Quad } from "@rdfjs/types";
-import { AnyConstructor, DocumentConstructor, DocumentLoadOptions, DocumentWithDestructiveOperations, Loader, MixinFactory, Thing } from "@semantizer/types";
+import { Loader } from "@semantizer/types";
 
-export class LoaderRdfjs<
-    ContainedThing extends Thing<any> = Thing,
-    SelfDescribingThing extends Thing<any> = Thing
-> implements Loader<ContainedThing, SelfDescribingThing> {
+export class LoaderRdfjs implements Loader {
 
-    public async load<T extends DocumentWithDestructiveOperations<ContainedThing, SelfDescribingThing>>(uri: string, factory: MixinFactory<ContainedThing, SelfDescribingThing>, callback: (impl: DocumentConstructor<ContainedThing, SelfDescribingThing>) => AnyConstructor<T>, options?: DocumentLoadOptions): Promise<T> {
+    public async load(uri: string): Promise<DatasetCore<Quad, Quad>> {
         console.log("[LoaderRdfjs] loading", uri);
         const response = await rdfjsFetch<DatasetCore<Quad>, Quad, Quad>(uri);
-        const dataset: DatasetCore<Quad> = await response.dataset();
-        const document = factory.create<T>(uri, callback);
-        for (const quad of dataset) {
-            if (quad.subject.value === uri.split('#')[0])
-                document.createStatementAboutSelf(quad.predicate.value, quad.object.value);
-            else document.createStatement(quad.subject.value, quad.predicate.value, quad.object.value);
-        }
-        return document;
+        return await response.dataset();
+        // const dataset: DatasetCore<Quad> = await response.dataset();
+        // const document = factory.create<T>(uri, callback);
+        // for (const quad of dataset) {
+        //     if (quad.subject.value === uri.split('#')[0])
+        //         document.createStatementAboutSelf(quad.predicate.value, quad.object.value);
+        //     else document.createStatement(quad.subject.value, quad.predicate.value, quad.object.value);
+        //     // document.createStatementAnonymous(quad.subject.value, "b0", )
+        // }
+        // return document;
     }
 
 }

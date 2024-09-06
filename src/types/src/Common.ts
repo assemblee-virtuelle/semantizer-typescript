@@ -1,5 +1,5 @@
-import { Document, DocumentConstructor, DocumentFactory, DocumentWithDestructiveOperations, DocumentWithDestructiveOperationsConstructor } from "./Document";
-import { Thing } from "./Thing";
+import { DatasetCore, Quad } from "@rdfjs/types";
+import { Dataset } from "./Dataset";
 
 export interface Resource {
     getUri(): string;
@@ -108,16 +108,14 @@ export type AnyFunction<A = any> = (...input: any[]) => A;
 export type AnyConstructor<A = object> = new (...input: any[]) => A;
 export type Mixin<T extends AnyFunction> = InstanceType<ReturnType<T>>;
 
-export interface MixinFactory<
-    ContainedThing extends Thing<any> = Thing,
-    SelfDescribingThing extends Thing<any> = Thing
->  {
-    create<T extends DocumentWithDestructiveOperations<ContainedThing, SelfDescribingThing>>(uri: string, callback: (impl: DocumentConstructor<ContainedThing, SelfDescribingThing>) => AnyConstructor<T>): T;
-}
+// export interface MixinFactory<
+//     ContainedThing extends Thing<any> = Thing,
+//     SelfDescribingThing extends Thing<any> = Thing
+// >  {
+//     create<T extends DocumentWithDestructiveOperations<ContainedThing, SelfDescribingThing>>(uri: string, callback: (impl: DocumentConstructor<ContainedThing, SelfDescribingThing>) => AnyConstructor<T>): T;
+// }
 
-export interface Loader<
-    ContainedThing extends Thing<any> = Thing,
-    SelfDescribingThing extends Thing<any> = Thing
-> {
-    load<T extends DocumentWithDestructiveOperations<ContainedThing, SelfDescribingThing>>(uri: string, factory: MixinFactory<ContainedThing, SelfDescribingThing>, callback: (impl: DocumentConstructor<ContainedThing, SelfDescribingThing>) => AnyConstructor<T>, options?: DocumentLoadOptions): Promise<T>;
+export interface Loader {
+    // , options?: DocumentLoadOptions
+    load(uri: string): Promise<DatasetCore<Quad, Quad>>;
 }

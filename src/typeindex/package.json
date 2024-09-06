@@ -12,7 +12,11 @@
   "author": "Maxime Lecoq-Gaillard",
   "license": "MIT",
   "devDependencies": {
+    "@rdfjs/types": "^1.1.0",
     "@semantizer/types": "^1.0.0",
     "typescript": "^5.5.2"
+  },
+  "dependencies": {
+    "@rdfjs/data-model": "^2.0.2"
   }
 }

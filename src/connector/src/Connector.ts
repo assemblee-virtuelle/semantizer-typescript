@@ -1,7 +1,6 @@
-import { DocumentImpl, DocumentImplFactoryImpl, StatementImpl, ThingImpl } from "@semantizer/core-default";
 import { LoaderRdfjs } from "@semantizer/loader-rdfjs";
 import { MixinFactory as MixinFactoryImpl } from "@semantizer/mixins";
-import { DocumentWithDestructiveOperationsConstructor, Loader, Mixin, MixinFactory, Thing } from "@semantizer/types";
+import { Loader, Mixin, MixinFactory, Thing } from "@semantizer/types";
 import { Catalog, CatalogMixin } from "./Catalog.js";
 import { Enterprise, EnterpriseMixin } from "./Enterprise.js";
 import { Person, PersonMixin } from "./Person.js";

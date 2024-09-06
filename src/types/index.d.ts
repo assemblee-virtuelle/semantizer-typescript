@@ -15,62 +15,36 @@ export {
     AnyFunction,
     AnyConstructor,
     Mixin,
-    MixinFactory,
     Loader,
     DocumentLoadOptions
 } from "./lib/Common.js";
 
 export { 
-    ContainedThingOfDocument,
-    ContainedThingOfDocumentWritable,
-    ContainedThingOf,
-    DocumentWithNonDestructiveOperationsConstructor,
-    DocumentWithDestructiveOperationsConstructor,
-    DocumentBase, 
-    DocumentWithNonDestructiveOperations, 
-    DocumentWithDestructiveOperations, 
     Document,
     DocumentConstructor,
-    DocumentConstructorMixin, 
-    StatementOf,
-    Constructed,
-    DocumentFactory,
-    DocumentImplFactory,
 } from "./lib/Document.js";
 
 export { 
-    ThingNonDesctructiveOperations, 
-    ThingDesctructiveOperations, 
-    IterableThing, 
-    ThingBase, 
-    ThingWithNonDestructiveOperations, 
-    ThingWithDestructiveOperations, 
     Thing,
     ThingConstructor,
-    ThingConstructorMixin,
 } from "./lib/Thing.js";
 
 export {
+    Statement,
     StatementConstructor,
-    StatementConstructorMixin,
-    StatementConstructorParams,
-    StatementNonDestructiveOperations,
-    StatementDestructiveOperations,
-    StatementBase,
-    StatementWithNonDestructiveOperations,
-    StatementWithDestructiveOperations,
     
 } from "./lib/Statement.js"
 
 export {
-    Semantizer
+    Semantizer,
+    MixinFactory,
+    Constructor,
 } from "./lib/Semantizer.js";
 
 export {
+    Dataset,
     DatasetConstructor,
     QuadConstructor,
-    Dataset,
-    Statement,
 } from "./lib/Dataset.js";
 
 

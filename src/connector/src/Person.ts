@@ -1,38 +1,58 @@
-import { WebIdProfile, WebIdProfileConstructor } from "@semantizer/webid";
-import { ConnectorConstructor } from "./Connector.js";
+import { SolidWebIdProfile, SolidWebIdProfileConstructor, SolidWebIdProfileMixin, SolidWebIdProfileFactory } from "@semantizer/solid-webid";
 import { Enterprise } from "./Enterprise.js";
+import { DatasetCore } from "@rdfjs/types"; // PB if deleted
+import { Dataset, Semantizer } from "@semantizer/types";
+import { WebIdProfileMixin } from "@semantizer/webid";
 
-export type Person = WebIdProfile & PersonOperations;
+export type Person = SolidWebIdProfile & PersonOperations;
+
+const DFC = 'https://github.com/datafoodconsortium/ontology/releases/latest/download/DFC_BusinessOntology.owl#';
 
 export interface PersonOperations {
     getName(): string | undefined;
-    getAffiliatedEnterprises(): Promise<Enterprise>[];
-    getAffiliatedEnterprisesUri(): string[];
+    getAffiliatedEnterprises(): Dataset[]; //Enterprise[];
 }
 
 export function PersonMixin<
-    TBase extends WebIdProfileConstructor & ConnectorConstructor
+    TBase extends SolidWebIdProfileConstructor //& ConnectorConstructor
 >(Base: TBase) {
 
     return class PersonMixinImpl extends Base implements PersonOperations {
 
-        public constructor(...args: any[]) {
-            super(...args);
-        }
-
         public getName(): string | undefined {
-            return this.getPrimaryTopic().getStatement("https://github.com/datafoodconsortium/ontology/releases/latest/download/DFC_BusinessOntology.owl#name")?.getValue();
+            return this.getLiteral(this.getUri()!, DFC + 'name'); // getPrimaryTopic ?
         }
 
-        public getAffiliatedEnterprises(): Promise<Enterprise>[] {
-            const prefix = "https://github.com/datafoodconsortium/ontology/releases/latest/download/DFC_BusinessOntology.owl#";
-            return this.getPrimaryTopic().getStatementAll(prefix + "affiliatedBy").map(s => this.loadEnterprise(s.getValue()));
-        }
-
-        public getAffiliatedEnterprisesUri(): string[] {
-            return this.getPrimaryTopic().getStatementAll("https://github.com/datafoodconsortium/ontology/releases/latest/download/DFC_BusinessOntology.owl#affiliatedBy").map(s => s.getValue());
+        public getAffiliatedEnterprises(): Dataset[] {
+            return this.getObjectAll(DFC + 'affiliatedBy');
         }
 
     }
 
 }
+
+// export class PersonFactory {
+
+//     // public static async load(resource: string, loader: Loader, impl: WebIdProfileConstructor): Promise<SolidWebIdProfile> {
+//     //     const dataset = this.build(impl, await loader.load(resource));
+//     //     dataset.setUri(resource);
+//     //     return dataset;
+//     // }
+
+//     // public static mixIn(impl: SolidWebIdProfileConstructor, dataset?: Dataset): Person {
+//     //     const MixinImpl = PersonMixin(SolidWebIdProfileMixin(impl));
+//     //     const person = new MixinImpl(dataset);
+//     //     if (dataset && dataset.getUri())
+//     //         person.setUri(dataset.getUri()!);
+//     //     return person;
+//     // }
+
+// }
+
+export function PersonFactory(semantizer: Semantizer) {
+    const _DatasetImpl = semantizer.getDatasetImpl();
+    // return semantizer.getFactory(SolidWebIdProfileMixin, WebIdProfileMixin(_DatasetImpl));
+    return semantizer.getFactory(PersonMixin, SolidWebIdProfileMixin(WebIdProfileMixin(_DatasetImpl)));
+}
+
+export default PersonFactory;

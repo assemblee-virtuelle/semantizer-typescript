@@ -12,7 +12,8 @@
   "author": "Maxime Lecoq-Gaillard",
   "license": "MIT",
   "devDependencies": {
-    "typescript": "^5.5.2",
-    "@semantizer/types": "^1.0.0"
+    "@rdfjs/types": "^1.1.0",
+    "@semantizer/types": "^1.0.0",
+    "typescript": "^5.5.2"
   }
 }
