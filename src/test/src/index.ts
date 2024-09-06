@@ -20,7 +20,6 @@ import Semantizer from "@semantizer/core-default";
 const test = async () => {
     const loader = new LoaderRdfjs();
     const semantizer = new Semantizer(DatasetMixin(DatasetImpl), loader); // can pass a DatasetFactory instead?
-    const DFC = 'https://github.com/datafoodconsortium/ontology/releases/latest/download/DFC_BusinessOntology.owl#';
 
     const webId = "http://localhost:8000/lecoqlibre/profile/card#me";
 
@@ -30,7 +29,7 @@ const test = async () => {
     await solidProfile.load(loader); // if primary topic is located elsewhere
     
     // if (solidProfile.isTypeOf(connector.TYPES.PERSON)) {
-        const person = PersonFactory(semantizer).build(solidProfile);
+        const person = PersonFactory(semantizer).build(solidProfileDocument); // WARNING HERE : MUST PASS A DOCUMENT!
         console.log(person.getName());
         for (const enterprise of person.getAffiliatedEnterprises()) {
             await enterprise.load(loader);
