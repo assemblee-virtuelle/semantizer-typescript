@@ -1,6 +1,6 @@
-import { SemantizerImpl } from "./SemantizerImpl.js";
+import SemantizerImpl from "@semantizer/core";
+import { DatasetMixin, DatasetImpl } from "@semantizer/core-rdfjs";
+import { LoaderRdfjs } from "@semantizer/loader-rdfjs";
 
-export { SemantizerImpl } from "./SemantizerImpl.js";
-export { MixinFactoryImpl } from "./MixinFactoryImpl.js";
-
-export default SemantizerImpl;
+const Semantizer = new SemantizerImpl(DatasetMixin(DatasetImpl), new LoaderRdfjs());
+export default Semantizer;

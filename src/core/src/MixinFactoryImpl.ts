@@ -1,4 +1,3 @@
-import { DatasetCore } from "@rdfjs/types";
 import { Constructor, Dataset, Semantizer } from "@semantizer/types";
 
 export class MixinFactoryImpl<TBase extends Constructor, TMixin extends Dataset> {

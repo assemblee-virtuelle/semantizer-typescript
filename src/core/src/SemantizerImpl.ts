@@ -1,6 +1,5 @@
 import { Constructor, Dataset, Loader, MixinFactory, Semantizer } from "@semantizer/types";
 import { MixinFactoryImpl } from "./MixinFactoryImpl.js";
-import { DatasetCore } from "@rdfjs/types";
 
 export class SemantizerImpl implements Semantizer {
 

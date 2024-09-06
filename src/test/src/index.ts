@@ -1,25 +1,22 @@
+import semantizer from "@semantizer/core-default";
 import { PersonFactory } from "@datafoodconsortium/connector-test";
-import { DatasetRdfjsFactory, DatasetMixin, DatasetImpl } from "@semantizer/core-rdfjs";
-import { LoaderRdfjs } from "@semantizer/loader-rdfjs";
 import { SolidWebIdProfileFactory } from "@semantizer/solid-webid";
-import Semantizer from "@semantizer/core-default";
 
 // TODO: 
 // - add a rdfs-seeAlso mixin
 // - use a DatasetExt ?
 // - loader VS fetcher ?
 // - in mixins, use the loader from semantizer and accept an overload
-// - add a core package and use the core-default as a pre-configured installation
 // - TO CHECK: construct the person from a profileDocument or profile?
 // - add a lastLoaded atribute in dataset ?
 // - add loadAndGet() methods? like loadAndGetPrimaryTopic()?
 // - add a param (factory: Factory) to get specific concrete types returned from getters (ex: getPrimaryTopic() => Person);
+// - [x] add a core package and use the core-default as a pre-configured installation
 // - [x] add a Semantizer at the Dataset level, to get access to the loader?
 // - [x] add a Semantizer class to host the config (loader, DatasetImpl, etc)
 // - [x] add a load() method to load the object itself
 const test = async () => {
-    const loader = new LoaderRdfjs();
-    const semantizer = new Semantizer(DatasetMixin(DatasetImpl), loader); // can pass a DatasetFactory instead?
+    const loader = semantizer.getLoader();
 
     const webId = "http://localhost:8000/lecoqlibre/profile/card#me";
 
