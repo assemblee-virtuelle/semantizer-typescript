@@ -1,7 +1,7 @@
 import dataFactory from '@rdfjs/data-model';
 import datasetFactory from '@rdfjs/dataset';
 import { DatasetCore, NamedNode, Quad, Term } from "@rdfjs/types";
-import { Dataset, DatasetConstructor, DatasetSemantizer, Loader, Semantizer } from '@semantizer/types';
+import { Dataset, DatasetConstructor, DatasetLoadOptions, DatasetSemantizer, Loader, Semantizer } from '@semantizer/types';
 
 export class DatasetImpl implements DatasetSemantizer, DatasetCore<Quad, Quad> {
 
@@ -69,8 +69,9 @@ export function DatasetMixin<
         }
     
         // uri: string | Dataset | NamedNode
-        public async load(loader: Loader, resource?: string | Dataset | NamedNode): Promise<void> {
+        public async load(resource?: string | Dataset | NamedNode, options?: DatasetLoadOptions): Promise<void> {
             let loaded, resourceUri = "";
+            const loader = options && options.loader? options.loader: this.getSemantizer().getLoader();
 
             resource = resource? resource: this;
 
@@ -155,7 +156,7 @@ export function DatasetMixin<
             const things = this.match(subject, dataFactory.namedNode(predicate));
             for (const quad of things) {
                 const datasetCore = this.match(quad.object);
-                const dataset = new DatasetMixinImpl(datasetCore);
+                const dataset = new DatasetMixinImpl(this.getSemantizer(), datasetCore); // WARNING: no params check!
                 dataset.setUri(quad.object.value); // TODO: only when NamedNode
                 return dataset;
             }

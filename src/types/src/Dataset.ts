@@ -11,6 +11,10 @@ export interface DatasetSemantizer extends DatasetRdfjs {
     getSemantizer(): Semantizer;
 }
 
+export interface DatasetLoadOptions {
+    loader?: Loader
+}
+
 export interface Dataset extends DatasetSemantizer {
     getThing(uri: string): Dataset;
     getStatements(thingUri: string, predicate: string): Dataset;
@@ -19,7 +23,7 @@ export interface Dataset extends DatasetSemantizer {
     // getStatement(thingUri, predicateUri: string): Statement;
     getLiteral(thingUri: string, predicateUri: string, language?: string): string;
     isEmpty(): boolean;
-    load(loader: Loader, resource?: string | Dataset | NamedNode): Promise<void>;
+    load(resource?: string | Dataset | NamedNode, options?: DatasetLoadOptions): Promise<void>;
     getUri(): string | undefined;
     setUri(uri: string): void;
 

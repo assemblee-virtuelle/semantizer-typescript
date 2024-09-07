@@ -43,6 +43,7 @@ export {
 
 export {
     Dataset,
+    DatasetLoadOptions,
     DatasetSemantizer,
     DatasetConstructor,
     QuadConstructor,

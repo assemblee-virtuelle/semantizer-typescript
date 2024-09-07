@@ -8,7 +8,7 @@ type DatasetConstructor = new (...args: any[]) => Dataset;
 export interface SolidWebIdProfileNonDestructiveOperations {
     getPublicTypeIndex(): Dataset; // TypeIndex | undefined;
     getSeeAlso(): Dataset; // SolidWebIdProfile;
-    loadExtendedProfile(loader: Loader): Promise<void>;
+    loadExtendedProfile(loader?: Loader): Promise<void>;
 }
 
 export type SolidWebIdProfile = WebIdProfile & SolidWebIdProfileNonDestructiveOperations;
@@ -34,8 +34,8 @@ export function SolidWebIdProfileMixin<
             return this.getObject('http://www.w3.org/2000/01/rdf-schema#seeAlso');
         }
 
-        public async loadExtendedProfile(loader: Loader): Promise<void> {
-            await this.load(loader, this.getSeeAlso());
+        public async loadExtendedProfile(loader?: Loader): Promise<void> {
+            await this.load(this.getSeeAlso(), { loader });
         }
 
     }

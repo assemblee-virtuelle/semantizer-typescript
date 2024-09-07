@@ -6,58 +6,39 @@ import { SolidWebIdProfileFactory } from "@semantizer/solid-webid";
 // - add a rdfs-seeAlso mixin
 // - use a DatasetExt ?
 // - loader VS fetcher ?
-// - in mixins, use the loader from semantizer and accept an overload
+// - type check the constructor params of datasets (Dataset.getObject, MixinFactory)
 // - Ensure the person is builded from a profileDocument.
 // - add a lastLoaded atribute in dataset ?
 // - add loadAndGet() methods? like loadAndGetPrimaryTopic()?
 // - add a param (factory: Factory) to get specific concrete types returned from getters (ex: getPrimaryTopic() => Person);
+// - [x] in mixins, use the loader from semantizer and accept an overload
 // - [x] add a core package and use the core-default as a pre-configured installation
 // - [x] add a Semantizer at the Dataset level, to get access to the loader?
 // - [x] add a Semantizer class to host the config (loader, DatasetImpl, etc)
 // - [x] add a load() method to load the object itself
 const test = async () => {
-    const loader = semantizer.getLoader();
-
     const webId = "http://localhost:8000/lecoqlibre/profile/card#me";
 
     const solidProfileDocument = await SolidWebIdProfileFactory(semantizer).load(webId);
-    await solidProfileDocument.loadExtendedProfile(loader);
+    await solidProfileDocument.loadExtendedProfile();
     const solidProfile = solidProfileDocument.getPrimaryTopic(); // if load() returns this, can be done on a single line
-    await solidProfile.load(loader); // if primary topic is located elsewhere
+    await solidProfile.load(); // if primary topic is located elsewhere
     
     // if (solidProfile.isTypeOf(connector.TYPES.PERSON)) {
         const person = PersonFactory(semantizer).build(solidProfileDocument); // WARNING HERE : MUST PASS A DOCUMENT!
         console.log(person.getName());
         for (const enterprise of person.getAffiliatedEnterprises()) {
-            await enterprise.load(loader);
+            await enterprise.load();
+            // await enterprise.load(loader, enterprise.getPrimaryTopic()); // load the enterprise profile if located elsewhere
+            // await enterprise.loadExtendedProfile(loader); // load the enterprise extended profile if located elsewhere
             console.log(enterprise.getName());
             for (const catalog of enterprise.getMaintainedCatalogs()) {
-                await catalog.load(loader);
+                await catalog.load();
                 console.log(catalog.getName());
             }
         }
     // }
 
-    /*
-    if (extentedProfile.isTypeOf(connector.TYPES.PERSON)) {
-        const person = PersonFactory.build(extendedProfile);
-        console.log(person.getName());
-
-        for (const enterprise of person.getAffiliatedEnterprises()) {
-            // can be in enterprise.autoload()?
-            await enterprise.load(enterprise.getDatasetUri(), loader); // load the enterprise if located elsewhere
-            await enterprise.load(enterprise.getPrimaryTopic().getDatasetUri(), loader); // load the enterprise profile if located elsewhere
-            await enterprise.load(enterprise.getPrimaryTopic().getSeeAlso().getDatasetUri(), loader); // load the enterprise extended profile if located elsewhere
-            console.log(enterprise.getName());
-
-            for (const catalog of enterprise.getMaintainedCatalogs()) {
-                await catalog.load(catalog.getDatasetUri(), loader);
-                console.log(catalog.getName());
-            }
-        }
-
-    }
-    */
 }
 
 test();
