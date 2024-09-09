@@ -6,9 +6,13 @@ import { SolidWebIdProfileFactory } from "@semantizer/solid-webid";
 // - add a rdfs-seeAlso mixin
 // - use a DatasetExt ?
 // - loader VS fetcher ?
+// - move the DatasetImpl class to the core package
+// - Add Semantizer:load and Semantizer:build methods
 // - type check the constructor params of datasets (Dataset.getObject, MixinFactory)
 // - Ensure the person is builded from a profileDocument.
 // - add a lastLoaded atribute in dataset ?
+// - add a SPARQL mixin
+// - implements access rights   
 // - add loadAndGet() methods? like loadAndGetPrimaryTopic()?
 // - add a param (factory: Factory) to get specific concrete types returned from getters (ex: getPrimaryTopic() => Person);
 // - [x] in mixins, use the loader from semantizer and accept an overload
@@ -29,8 +33,8 @@ const test = async () => {
         console.log(person.getName());
         for (const enterprise of person.getAffiliatedEnterprises()) {
             await enterprise.load();
+            await enterprise.loadExtendedProfile(); // load the enterprise extended profile if located elsewhere
             // await enterprise.load(loader, enterprise.getPrimaryTopic()); // load the enterprise profile if located elsewhere
-            // await enterprise.loadExtendedProfile(loader); // load the enterprise extended profile if located elsewhere
             console.log(enterprise.getName());
             for (const catalog of enterprise.getMaintainedCatalogs()) {
                 await catalog.load();
@@ -43,51 +47,7 @@ const test = async () => {
 
 test();
 
-    // const solidProfileDocument = await SolidWebIdProfileFactory.load(webId, loader, WebIdMixinImpl); // Should pass a DatasetImpl instead
-    // semantizer.load(webId, )
-    //const solidProfileDocument = await SolidWebIdProfileFactory.loadFrom(webId, loader, DatasetImpl); // 
-
-// ----> pass a DatasetImpl => and get a MixinImpl like WebIdPofileMixin(DatasetMixin(DatasetImpl));
-
-// const DatasetMixinImpl = DatasetMixin(DatasetImpl);
-// const WebIdMixinImpl = WebIdProfileMixin(DatasetMixinImpl);
-// const SolidWebIdProfileMixinImpl = SolidWebIdProfileMixin(WebIdProfileMixin(DatasetMixin(DatasetImpl)));
-
-// const SolidWebIdProfileMixinImpl = SolidWebIdProfileMixin(WebIdMixinImpl);
-
-// type SolidWebIdMixin<TBase extends WebIdProfileConstructor> = (Base: TBase) => SolidWebIdProfile
-
-// const semantizer = new Semantizer(new LoaderRdfjs); // from @semantizer/core-rdfjs
-
-// import semantizer from "@semantizer/config";
-// semantizer.setLoader(new LoaderRdfjs());
-// semantizer.setDatasetImpl(DatesetImpl);
-
-// import semantizer
-
-// faire un package factory en plus pour chaque package comme @semantizer/solid-webid-factory-rdfjs
-
-// avoir un constructeur de factory
-// const factoryBuilder = new FactoryBuilder(new LoaderRdfjs, DatasetImpl);
-// const SolidWebIdProfileFactory = factoryBuilder.build()
-
-// const SolidWebIdProfileFactory = semantizer.makeFactory(WebIdProfileMixin(DatasetMixin(DatasetImpl)), SolidWebIdProfileMixin)
-// const SolidWebIdProfileFactory = semantizer.makeFactory(SolidWebIdProfileMixin)
-
-// const enterpriseProfileDocument: Dataset = await loadWithoutSeeAlso(webId, WebIdFactory);
-    // const enterpriseProfile: Dataset = await enterpriseProfileDocument.getPrimaryTopic(loadWithSeeAlso, SolidWebIdProfileFactory); // consolidated document / document set / dataset
-    // const catalogs = enterpriseProfile.getMaintainedCatalogs(loader, CatalogFactory)
-    
-    // const profileDocument = await loader.load<WebIdProfile>(webId, new WebIdProfileFactory(DocumentImpl));
-    //const webIdProfileFactory = new WebIdProfileFactory(DocumentImpl<Thing, Thing>, new DocumentImplFactoryImpl(ThingImpl, ThingImpl, StatementImpl));
-    // const profileDocument = await webIdProfileFactory.load(webId, loader);
-
-    // const mixinFactory = new MixinFactory(DocumentImpl<Thing, Thing>, new DocumentImplFactoryImpl(ThingImpl, ThingImpl, StatementImpl));
-    // const profileDocument = await mixinFactory.load<WebIdProfile>(webId, (impl) => WebIdProfileMixin(impl), loader);
-    // const profile = profileDocument.getPrimaryTopic(); //getThing(webId);
-
-
-    /*
+/*
 PREFIX ex: <http://example.org/>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>

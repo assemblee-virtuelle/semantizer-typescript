@@ -1,5 +1,6 @@
 import { Dataset, Semantizer } from "@semantizer/types";
 import { DatasetCore } from "@rdfjs/types"; // PB if deleted
+import { CatalogItem, CatalogItemFactory } from "./CatalogItem";
 
 export type Catalog = Dataset & CatalogOperations;
 
@@ -7,6 +8,7 @@ const DFC = 'https://github.com/datafoodconsortium/ontology/releases/latest/down
 
 export interface CatalogOperations {
     getName(): string | undefined;
+    getCatalogItems(): CatalogItem[];
 }
 
 export function CatalogMixin<
@@ -17,6 +19,10 @@ export function CatalogMixin<
 
         public getName(): string | undefined {
             return this.getLiteral(this.getUri()!, DFC + 'name');
+        }
+
+        public getCatalogItems(): CatalogItem[] {
+            return this.getObjectAll(DFC + 'lists').map(d => CatalogItemFactory(this.getSemantizer()).build(d));
         }
 
     }
