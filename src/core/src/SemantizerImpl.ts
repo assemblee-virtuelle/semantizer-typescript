@@ -1,5 +1,6 @@
 import { Constructor, Dataset, Loader, MixinFactory, Semantizer } from "@semantizer/types";
 import { MixinFactoryImpl } from "./MixinFactoryImpl.js";
+import { DatasetCore } from "@rdfjs/types";
 
 export class SemantizerImpl implements Semantizer {
 
@@ -23,8 +24,12 @@ export class SemantizerImpl implements Semantizer {
         return new MixinFactoryImpl(this, mixin, baseClass);
     }
 
-    // public async load<TBase extends Constructor, TMixin extends Dataset>(resource: string, factory: (semantizer: Semantizer) => MixinFactory<TBase, TMixin>): Promise<InstanceType<ReturnType<TMixin>>> {
-    //     return await factory(this).load(resource);
-    // }
+    public async load<TBase extends Constructor, TMixin extends Dataset>(resource: string, factory: (semantizer: Semantizer) => MixinFactory<TBase, TMixin>): Promise<TMixin> {
+        return await factory(this).load(resource);
+    }
+
+    public build<TBase extends Constructor, TMixin extends Dataset>(factory: (semantizer: Semantizer) => MixinFactory<TBase, TMixin>, datasetCore?: DatasetCore): TMixin {
+        return factory(this).build(datasetCore);
+    }
 
 }

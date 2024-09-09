@@ -1,6 +1,6 @@
 import { Dataset, Semantizer } from "@semantizer/types";
 import { DatasetCore } from "@rdfjs/types"; // PB if deleted
-import { CatalogItem, CatalogItemFactory } from "./CatalogItem";
+import { CatalogItem, CatalogItemFactory } from "./CatalogItem.js";
 
 export type Catalog = Dataset & CatalogOperations;
 

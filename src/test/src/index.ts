@@ -7,7 +7,6 @@ import { SolidWebIdProfileFactory } from "@semantizer/solid-webid";
 // - use a DatasetExt ?
 // - loader VS fetcher ?
 // - move the DatasetImpl class to the core package
-// - Add Semantizer:load and Semantizer:build methods
 // - type check the constructor params of datasets (Dataset.getObject, MixinFactory)
 // - Ensure the person is builded from a profileDocument.
 // - add a lastLoaded atribute in dataset ?
@@ -15,6 +14,7 @@ import { SolidWebIdProfileFactory } from "@semantizer/solid-webid";
 // - implements access rights   
 // - add loadAndGet() methods? like loadAndGetPrimaryTopic()?
 // - add a param (factory: Factory) to get specific concrete types returned from getters (ex: getPrimaryTopic() => Person);
+// - [x] Add Semantizer:load and Semantizer:build methods
 // - [x] in mixins, use the loader from semantizer and accept an overload
 // - [x] add a core package and use the core-default as a pre-configured installation
 // - [x] add a Semantizer at the Dataset level, to get access to the loader?
@@ -23,13 +23,13 @@ import { SolidWebIdProfileFactory } from "@semantizer/solid-webid";
 const test = async () => {
     const webId = "http://localhost:8000/lecoqlibre/profile/card#me";
 
-    const solidProfileDocument = await SolidWebIdProfileFactory(semantizer).load(webId);
+    const solidProfileDocument = await semantizer.load(webId, SolidWebIdProfileFactory);
     await solidProfileDocument.loadExtendedProfile();
     const solidProfile = solidProfileDocument.getPrimaryTopic(); // if load() returns this, can be done on a single line
     await solidProfile.load(); // if primary topic is located elsewhere
     
     // if (solidProfile.isTypeOf(connector.TYPES.PERSON)) {
-        const person = PersonFactory(semantizer).build(solidProfileDocument); // WARNING HERE : MUST PASS A DOCUMENT!
+        const person = semantizer.build(PersonFactory, solidProfileDocument); // WARNING HERE : MUST PASS A DOCUMENT!
         console.log(person.getName());
         for (const enterprise of person.getAffiliatedEnterprises()) {
             await enterprise.load();
