@@ -8,6 +8,7 @@ const DFC = 'https://github.com/datafoodconsortium/ontology/releases/latest/down
 
 export interface CatalogOperations {
     getName(): string | undefined;
+    getDescription(): string | undefined;
     getCatalogItems(): CatalogItem[];
 }
 
@@ -19,6 +20,10 @@ export function CatalogMixin<
 
         public getName(): string | undefined {
             return this.getLiteral(this.getUri()!, DFC + 'name');
+        }
+
+        public getDescription(): string | undefined {
+            return this.getLiteral(this.getUri()!, DFC + 'description');
         }
 
         public getCatalogItems(): CatalogItem[] {
