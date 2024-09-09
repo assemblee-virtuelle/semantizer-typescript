@@ -18,5 +18,5 @@ export interface Semantizer {
 
 export interface MixinFactory<TBase extends Constructor, TMixin extends Dataset> {
     load(resource: string): Promise<TMixin>;
-    build(datasetCore?: DatasetCore): TMixin;
+    build(dataset?: Dataset): TMixin;
 }

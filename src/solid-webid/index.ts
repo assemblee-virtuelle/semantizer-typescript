@@ -2,11 +2,12 @@ import { DatasetCore } from "@rdfjs/types";
 import { Dataset, Loader, Semantizer } from "@semantizer/types";
 import WebIdProfileMixin, { WebIdProfile, WebIdProfileConstructor } from "@semantizer/webid";
 import { DatasetMixin } from "@semantizer/core-rdfjs";
+import { TypeIndex, TypeIndexFactory } from "@semantizer/typeindex";
 
 type DatasetConstructor = new (...args: any[]) => Dataset;
 
 export interface SolidWebIdProfileNonDestructiveOperations {
-    getPublicTypeIndex(): Dataset; // TypeIndex | undefined;
+    getPublicTypeIndex(): TypeIndex; // | undefined;
     getSeeAlso(): Dataset; // SolidWebIdProfile;
     loadExtendedProfile(loader?: Loader): Promise<void>;
 }
@@ -26,8 +27,9 @@ export function SolidWebIdProfileMixin<
 >(Base: TBase) {
     return class SolidWebIdProfileImpl extends Base implements SolidWebIdProfile {
 
-        public getPublicTypeIndex(): Dataset {
-            return this.getObject(context.solid + "publicTypeIndex");
+        public getPublicTypeIndex(): TypeIndex {
+            const dataset = this.getObject(context.solid + "publicTypeIndex");
+            return this.getSemantizer().build(TypeIndexFactory, dataset);
         }
 
         public getSeeAlso(): Dataset {

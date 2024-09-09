@@ -12,7 +12,8 @@
   "author": "Maxime Lecoq-Gaillard",
   "license": "MIT",
   "dependencies": {
-    "@semantizer/webid": "^1.0.0"
+    "@semantizer/webid": "^1.0.0",
+    "@semantizer/typeindex": "^1.0.0"
   },
   "devDependencies": {
     "@semantizer/types": "^1.0.0",

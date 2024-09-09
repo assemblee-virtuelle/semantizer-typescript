@@ -1,4 +1,4 @@
-import { Dataset } from "@semantizer/types";
+import { Dataset, Semantizer } from "@semantizer/types";
 import { TypeIndex } from "./types.js";
 import { TYPE_INDEX } from "./voc.js";
 import dataFactory from "@rdfjs/data-model";
@@ -22,7 +22,8 @@ export function TypeIndexMixin<
                 dataFactory.namedNode(forClass)
             );
             for (const q of datasetCore) {
-                return new TypeIndexImpl(this.getThing(q.subject.value));
+                const dataset = this.getThing(q.subject.value);
+                return this.getSemantizer().build(TypeIndexFactory, dataset);
             }
             throw new Error("Registration not found");
         }
@@ -33,6 +34,11 @@ export function TypeIndexMixin<
         }
 
     }
+}
+
+export function TypeIndexFactory(semantizer: Semantizer) {
+    const _DatasetImpl = semantizer.getDatasetImpl();
+    return semantizer.getFactory(TypeIndexMixin, _DatasetImpl);
 }
 
 // export function TypeIndexRegistrationMixin<

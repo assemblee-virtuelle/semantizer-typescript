@@ -28,8 +28,8 @@ export class SemantizerImpl implements Semantizer {
         return await factory(this).load(resource);
     }
 
-    public build<TBase extends Constructor, TMixin extends Dataset>(factory: (semantizer: Semantizer) => MixinFactory<TBase, TMixin>, datasetCore?: DatasetCore): TMixin {
-        return factory(this).build(datasetCore);
+    public build<TBase extends Constructor, TMixin extends Dataset>(factory: (semantizer: Semantizer) => MixinFactory<TBase, TMixin>, dataset?: Dataset): TMixin {
+        return factory(this).build(dataset);
     }
 
 }

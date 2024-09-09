@@ -126,16 +126,22 @@ export function DatasetMixin<
         public getStatements(thingUri: string, predicate: string): Dataset {
             //const thing = this.getThing(thingUri);
             const datasetCore = this.match(undefined, dataFactory.namedNode(predicate));
-            const DatasetMixinImpl = DatasetMixin(DatasetImpl)
-            const dataset = new DatasetMixinImpl(this.getSemantizer(), datasetCore);
+            const DatasetMixinImpl = DatasetMixin(DatasetImpl); // TODO: can be deleted?
+
+            // The line below use the constructor directly because the factory takes a Dataset and not a DatasetCore (to get the uri)
+            const dataset = new DatasetMixinImpl(this.getSemantizer(), datasetCore); // WARNING: no params check!
+            
             dataset.setUri(thingUri)
             return dataset;
         }
 
         public getThing(uri: string): Dataset {
             const thing = this.match(dataFactory.namedNode(uri));
-            const dataset = new DatasetMixinImpl(thing);
-            dataset.setUri(this.getUri());
+            
+            // The line below use the constructor directly because the factory takes a Dataset and not a DatasetCore (to get the uri)
+            const dataset = new DatasetMixinImpl(this.getSemantizer(), thing); // WARNING: no params check!
+            
+            dataset.setUri(uri); //this.getUri());
             return dataset;
         }
 
@@ -156,7 +162,10 @@ export function DatasetMixin<
             const things = this.match(subject, dataFactory.namedNode(predicate));
             for (const quad of things) {
                 const datasetCore = this.match(quad.object);
+
+                // The line below use the constructor directly because the factory takes a Dataset and not a DatasetCore (to get the uri)
                 const dataset = new DatasetMixinImpl(this.getSemantizer(), datasetCore); // WARNING: no params check!
+                
                 dataset.setUri(quad.object.value); // TODO: only when NamedNode
                 return dataset;
             }
@@ -169,8 +178,11 @@ export function DatasetMixin<
             const things = this.match(subject, dataFactory.namedNode(predicate));
             for (const quad of things) {
                 const datasetCore = this.match(quad.object);
-                const DatasetMixinImpl = DatasetMixin(DatasetImpl)
-                const dataset = new DatasetMixinImpl(this.getSemantizer(), datasetCore);
+                const DatasetMixinImpl = DatasetMixin(DatasetImpl); // TODO: can be deleted?
+                
+                // The line below use the constructor directly because the factory takes a Dataset and not a DatasetCore (to get the uri)
+                const dataset = new DatasetMixinImpl(this.getSemantizer(), datasetCore); // WARNING: no params check!
+                
                 dataset.setUri(quad.object.value); // TODO: only when NamedNode
                 datasets.push(dataset);
             }
@@ -180,6 +192,7 @@ export function DatasetMixin<
     }
 }
 
+// TODO: Is this really useful?
 export function DatasetRdfjsFactory(semantizer: Semantizer) {
     const _DatasetImpl = semantizer.getDatasetImpl();
     return semantizer.getFactory(DatasetMixin, _DatasetImpl);

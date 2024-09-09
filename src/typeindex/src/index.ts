@@ -6,6 +6,7 @@ export {
 
 export {
     TypeIndexMixin,
+    TypeIndexFactory,
     // TypeIndexRegistrationMixin,
     // TypeIndexRegistrationStatementMixin
 } from "./impl.js";

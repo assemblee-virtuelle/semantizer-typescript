@@ -2,6 +2,7 @@ import { Semantizer } from "@semantizer/types";
 import { SolidWebIdProfile, SolidWebIdProfileConstructor, SolidWebIdProfileMixin, SolidWebIdProfileFactory } from "@semantizer/solid-webid";
 import { Enterprise, EnterpriseFactory } from "./Enterprise.js";
 import { DatasetCore } from "@rdfjs/types"; // PB if deleted
+import { TypeIndex } from "@semantizer/typeindex"; // PB if deleted
 import { WebIdProfileMixin } from "@semantizer/webid";
 
 export type Person = SolidWebIdProfile & PersonOperations;
