@@ -1,6 +1,6 @@
 import semantizer from "@semantizer/core-default";
 import dataFactory from "@rdfjs/data-model";
-import { SolidWebIdProfileFactory } from "@semantizer/solid-webid";
+import { SolidWebIdProfileFactory } from "@semantizer/solid-webid/mixins/solid-webid";
 import indexFactory, { indexEntryFactory, indexShapeFactory } from "@semantizer/index";
 
 /*

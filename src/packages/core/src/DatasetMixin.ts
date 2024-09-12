@@ -145,19 +145,19 @@ export function DatasetMixin<
         //     throw new Error("Thing not found.");
         // }
 
-        public getObject(predicate: string, thingUri?: string): Dataset {
-            const subject = thingUri? dataFactory.namedNode(thingUri): undefined;
-            const things = this.match(subject, dataFactory.namedNode(predicate));
+        public getObject(predicate: NamedNode, thing?: NamedNode | BlankNode): Dataset | undefined {
+            const things = this.match(thing, predicate);
             for (const quad of things) {
-                const datasetCore = this.match(quad.object);
+                // return this.match(quad.object);
+                const objectDataset = this.match(quad.object);
 
                 // The line below use the constructor directly because the factory takes a Dataset and not a DatasetCore (to get the uri)
-                const dataset = new DatasetMixinImpl(this.getSemantizer(), datasetCore); // WARNING: no params check!
+                const dataset = new DatasetMixinImpl(this.getSemantizer(), objectDataset); // WARNING: no params check!
                 
                 dataset.setUri(quad.object.value); // TODO: only when NamedNode
                 return dataset;
             }
-            return new DatasetMixinImpl(this.getSemantizer()); // TODO: nor params check
+            return undefined;
         }
 
         public getObjectAll(predicate: string, thingUri?: string): Dataset[] {

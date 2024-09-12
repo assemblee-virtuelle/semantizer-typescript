@@ -1,4 +1,4 @@
-import { Changelog, WithChangelog } from "../changelog/Changelog";
+import { Changelog, WithChangelog } from "../mixins/changelog/Changelog";
 import { Document } from "../core/Document";
 import { Statement } from "../core/Statement";
 import { ThingWithNonDestructiveOperations } from "../core/Thing";

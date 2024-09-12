@@ -29,7 +29,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/src/test/lib/index.js",
+            "program": "${workspaceFolder}/src/packages/test/lib/index.js",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
@@ -41,7 +41,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/src/sib-test/lib/index.js",
+            "program": "${workspaceFolder}/src/packages/sib-test/lib/index.js",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]

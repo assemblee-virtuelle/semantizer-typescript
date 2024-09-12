@@ -1,5 +1,5 @@
-import { WithChangelog } from "../changelog/Changelog";
-import { DocumentWithChangelogMixin } from "../changelog/DocumentWithChangelogImpl";
+import { WithChangelog } from "../mixins/changelog/Changelog";
+import { DocumentWithChangelogMixin } from "../mixins/changelog/DocumentWithChangelogImpl";
 import DocumentImpl from "../core-default/src/DocumentImpl";
 import { Constructed, Document, DocumentBase, DocumentWithDestructiveOperationsConstructor } from "../types/src/Document";
 import { DistantDocument, LocalDocument } from "./DocumentSynchronized";

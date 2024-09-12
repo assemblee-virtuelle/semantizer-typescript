@@ -1,4 +1,4 @@
-import { DocumentWithChangelogConstructor } from "../changelog/Changelog.js";
+import { DocumentWithChangelogConstructor } from "../mixins/changelog/Changelog.js";
 import { DistantDocument, LocalDocument } from "./DocumentSynchronized.js";
 
 export function DocumentLocalMixin<

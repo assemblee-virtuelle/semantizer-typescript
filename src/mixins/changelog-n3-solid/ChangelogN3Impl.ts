@@ -1,4 +1,4 @@
-import { DocumentWithChangelogConstructor } from "../changelog/Changelog";
+import { DocumentWithChangelogConstructor } from "../mixins/changelog/Changelog";
 import { N3Serializable } from "../core/Serializable";
 
 export function DocumentWithChangelogN3Mixin<

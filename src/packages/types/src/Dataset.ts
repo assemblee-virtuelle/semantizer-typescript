@@ -6,6 +6,7 @@ import { Semantizer } from './Semantizer';
 
 export interface DatasetSemantizer extends DatasetRdfjs {
     getSemantizer(): Semantizer;
+    // toRdfjsDataset(): DatasetRdfjs;
 }
 
 export interface DatasetLoadOptions {
@@ -16,7 +17,7 @@ export interface Dataset extends DatasetSemantizer {
     addObject(predicate: NamedNode, value: NamedNode | Literal | BlankNode, thing?: NamedNode): void;
     getThing(uri: string): Dataset;
     getStatements(thingUri: string, predicate: string): Dataset;
-    getObject(predicate: string, thingUri?: string): Dataset;
+    getObject(predicate: NamedNode, thing?: NamedNode | BlankNode): Dataset | undefined;
     getObjectAll(predicate: string, thingUri?: string): Dataset[];
     // getStatement(thingUri, predicateUri: string): Statement;
     getLiteral(thingUri: string, predicateUri: string, language?: string): string;

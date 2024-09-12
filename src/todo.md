@@ -1,22 +1,24 @@
 TODO: 
-- Add construct parameters
-- [ ] Re-export tpes from @rdfjs/types (NamedNode, BlankNode, etc)
-- [ ] return undefined in getObject
-- [ ] In core-default, re-export dataFactory, datasetFactory
-- [ ] add a rdfs-seeAlso mixin
-- [ ] loader VS fetcher ?
-- [ ] type check the constructor params of datasets (Dataset.getObject, MixinFactory)
+- [ ] Add a new dataset layer as base.
+- [ ] Return undefined in getObject
+- [ ] Add construct parameters
+- [ ] Re-export types from @rdfjs/types (NamedNode, BlankNode, etc)?
+- [ ] In core-default, re-export dataFactory, datasetFactory?
+- [ ] Add a rdfs-seeAlso mixin
+- [ ] Loader VS fetcher ?
+- [ ] Type check the constructor params of datasets (Dataset.getObject, MixinFactory)
 - [ ] Ensure the person is builded from a profileDocument.
-- [ ] add a lastLoaded atribute in dataset ?
-- [ ] add a SPARQL mixin
-- [ ] implements access rights   
-- [ ] add loadAndGet() methods? like loadAndGetPrimaryTopic()?
-- [ ] add a param (factory: Factory) to get specific concrete types returned from getters (ex: getPrimaryTopic() => Person);
-- [x] use a DatasetExt ?
-- [x] move the DatasetImpl class to the core package
+- [ ] Add a lastLoaded atribute in dataset ?
+- [ ] Add a SPARQL mixin
+- [ ] Implements access rights   
+- [ ] Add loadAndGet() methods? like loadAndGetPrimaryTopic()?
+- [ ] Add a param (factory: Factory) to get specific concrete types returned from getters (ex: getPrimaryTopic() => Person);
+- [x] Reorganize source with two folders: packages and mixins
+- [x] Use a DatasetExt ?
+- [x] Move the DatasetImpl class to the core package
 - [x] Add Semantizer:load and Semantizer:build methods
-- [x] in mixins, use the loader from semantizer and accept an overload
-- [x] add a core package and use the core-default as a pre-configured installation
-- [x] add a Semantizer at the Dataset level, to get access to the loader?
-- [x] add a Semantizer class to host the config (loader, DatasetImpl, etc)
-- [x] add a load() method to load the object itself
+- [x] In mixins, use the loader from semantizer and accept an overload
+- [x] Add a core package and use the core-default as a pre-configured installation
+- [x] Add a Semantizer at the Dataset level, to get access to the loader?
+- [x] Add a Semantizer class to host the config (loader, DatasetImpl, etc)
+- [x] Add a load() method to load the object itself
