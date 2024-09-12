@@ -1,5 +1,5 @@
 {
-  "name": "@semantizer/core-rdfjs",
+  "name": "@semantizer/rdfjs-dataset",
   "version": "1.0.0",
   "description": "",
   "main": "./lib/index.js",
@@ -12,12 +12,14 @@
   "author": "Maxime Lecoq-Gaillard",
   "license": "MIT",
   "dependencies": {
-    "@rdfjs/data-model": "^2.0.2",
-    "@semantizer/rdfjs-dataset": "^1.0.0"
+    "@rdfjs/dataset": "^2.0.2",
+    "@rdfjs/normalize": "^2.0.3",
+    "@rdfjs/to-ntriples": "^3.0.1"
   },
   "devDependencies": {
     "@rdfjs/types": "^1.1.0",
-    "@semantizer/types": "^1.0.0",
-    "@types/rdfjs__data-model": "^2.0.8"
+    "@types/rdfjs__dataset": "^2.0.7",
+    "@types/rdfjs__fetch": "^3.0.7",
+    "@types/rdfjs__to-ntriples": "^3.0.0"
   }
 }
