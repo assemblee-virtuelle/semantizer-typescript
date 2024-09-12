@@ -21,7 +21,7 @@ export function PersonMixin<
     return class PersonMixinImpl extends Base implements PersonOperations {
 
         public getName(): string | undefined {
-            return this.getLiteral(this.getUri()!, DFC + 'name'); // getPrimaryTopic ?
+            return this.getLiteral(this.getUri()!, DFC + 'name');
         }
 
         public getAffiliatedEnterprises(): Enterprise[] {

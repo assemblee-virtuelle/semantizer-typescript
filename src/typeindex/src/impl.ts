@@ -28,7 +28,7 @@ export function TypeIndexMixin<
             throw new Error("Registration not found");
         }
         
-        public getInstanceForClass(forClass: string): Dataset {
+        public getRegisteredInstanceForClass(forClass: string): Dataset {
             const registration = this.getRegistrationForClass(forClass);
             return registration.getObject(TYPE_INDEX.instance);
         }

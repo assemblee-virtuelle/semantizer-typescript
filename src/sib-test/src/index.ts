@@ -1,5 +1,7 @@
 import semantizer from "@semantizer/core-default";
+import dataFactory from "@rdfjs/data-model";
 import { SolidWebIdProfileFactory } from "@semantizer/solid-webid";
+import indexFactory, { indexEntryFactory, indexShapeFactory } from "@semantizer/index";
 
 /*
 TODO:
@@ -8,22 +10,48 @@ TODO:
 */
 
 const test = async () => {
-    const webId = "https://api.test-inria-index.startinblox.com/fedex/profile#me";
+    const webIdUri = "https://api.test-inria-index.startinblox.com/fedex/profile#me";
 
     // 1. Load the WebId of the instance
-    const solidProfileDocument = await semantizer.load(webId, SolidWebIdProfileFactory);
-    await solidProfileDocument.loadExtendedProfile();
-    const solidProfile = solidProfileDocument.getPrimaryTopic(); // if load() returns this, can be done on a single line
-    await solidProfile.load(); // if primary topic is located elsewhere
+    const profileDocument = await semantizer.load(webIdUri, SolidWebIdProfileFactory);
+    await profileDocument.loadExtendedProfile();
+    const webId = profileDocument.getPrimaryTopic(); // if load() returns this, can be done on a single line
+    const solidWebId = semantizer.build(SolidWebIdProfileFactory, webId);
 
     // 2. Get the public type index
-    const publicTypeIndex = solidProfileDocument.getPublicTypeIndex(); // should be solidProfile instead of solidProfileDocument
+    const publicTypeIndex = solidWebId.getPublicTypeIndex(); // should be solidProfile instead of solidProfileDocument
     await publicTypeIndex.load();
 
-    // 3. Find the meta meta-index(es)
-    const metaMetaIndex = publicTypeIndex.getInstanceForClass('https://ns.inria.fr/idx/terms#Index');
-    await metaMetaIndex.load();
-    console.log(metaMetaIndex);
+    // 3. Find the index from the TypeIndex
+    const indexDataset = publicTypeIndex.getRegisteredInstanceForClass('https://ns.inria.fr/idx/terms#Index');
+    await indexDataset.load();
+    console.log(indexDataset);
+
+    // Expliciter la forme des shapes => doivent être ultra contraintes 1 path + 1 value (pas forcément valuée)
+    // Soit aucune contrainte sur la valeur, soit une valeur précise
+    // Rajouter les regex plus tard
+    const shape = semantizer.build(indexShapeFactory);
+    shape.addProperty(dataFactory.namedNode("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), dataFactory.namedNode("https://cdn.startinblox.com/owl#User"));
+    shape.addProperty(dataFactory.namedNode("https://cdn.startinblox.com/owl#skills"), dataFactory.namedNode("https://api.test-inria2.startinblox.com/skills/1/"));
+
+    // const shape2 = semantizer.build(indexShapeFactory);
+    // shape.addProperty(dataFactory.namedNode("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), dataFactory.namedNode("https://cdn.startinblox.com/owl#User"));
+    // shape.addProperty(dataFactory.namedNode("https://cdn.startinblox.com/owl#city"), dataFactory.literal("Paris"));
+
+    // console.log(shape);
+
+    const index = semantizer.build(indexFactory, indexDataset);
+    // index.forEachThing(t => {
+    //     const entry = semantizer.build(indexEntryFactory, t);
+    //     console.log(entry.getUri(), entry.validateShape(shape2, 1));
+    // }, 'https://ns.inria.fr/idx/terms#IndexEntry');
+
+    await index.findTargetsRecursively(shape, (t) => console.log(t.getUri()), 5);
+
+
+
+
+
 
     // const metaMetaIndexMixin = new IndexMixinImpl(metaMetaIndex);
 

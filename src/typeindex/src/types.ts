@@ -18,7 +18,7 @@ export interface TypeIndexNonDestructiveOperations {
     // // Add other forEach like: forEachOfInstance, forEachOfInstanceContainer?
     // forEachOfClass(forClass: string, callbackfn: (value: TypeIndexRegistration, index?: number, array?: TypeIndexRegistration[]) => void, thisArg?: any): void;
 
-    getInstanceForClass(forClass: string): Dataset; // TODO: check arity: onlyOne or Many?
+    getRegisteredInstanceForClass(forClass: string): Dataset; // TODO: check arity: onlyOne or Many?
 }
 
 export interface TypeIndexDestructiveOperations {

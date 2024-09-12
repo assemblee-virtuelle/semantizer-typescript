@@ -1,8 +1,20 @@
+import { indexFactory } from "./impl.js";
+
 export {
-    IndexMixin
+    IndexMixin,
+    indexFactory,
+    indexEntryFactory,
+    IndexShapeMixin,
+    indexShapeFactory,
+    indexShapePropertyFactory,
+    IndexShapePropertyMixin
 } from "./impl.js";
 
 export { 
     Index,
-    Property
+    IndexEntry,
+    IndexShape,
+    IndexShapeProperty
 } from "./types.js";
+
+export default indexFactory;

@@ -1,6 +1,6 @@
 import dataFactory from '@rdfjs/data-model';
 import datasetFactory from '@rdfjs/dataset';
-import { DatasetCore, NamedNode, Quad, Term } from "@rdfjs/types";
+import { DatasetCore, NamedNode, Quad, Term, Literal, BlankNode } from "@rdfjs/types";
 import { Dataset, DatasetConstructor, DatasetLoadOptions, DatasetSemantizer, Loader, Semantizer } from '@semantizer/types';
 
 export class DatasetImpl implements DatasetSemantizer, DatasetCore<Quad, Quad> {
@@ -52,6 +52,10 @@ export function DatasetMixin<
 
         public isEmpty(): boolean {
             return this.size === 0;
+        }
+
+        public addObject(predicate: NamedNode, value: NamedNode | Literal | BlankNode, thing?: NamedNode): void {
+            throw new Error("Not implemented")
         }
     
         public getUriOfResource(resource: string | Dataset | NamedNode): string {
@@ -143,6 +147,31 @@ export function DatasetMixin<
             
             dataset.setUri(uri); //this.getUri());
             return dataset;
+        }
+
+        // TODO: clean
+        public isTypeOf(type: string | NamedNode, thing?: string | NamedNode): boolean {
+            const thingUri: NamedNode = thing ? (typeof thing === "string"? dataFactory.namedNode(thing): thing) : dataFactory.namedNode(this.getUri());
+            return this.match(thingUri, dataFactory.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), typeof type === "string"? dataFactory.namedNode(type): type).size > 0;
+        }
+
+        public forEachThing(callbackfn: (value: Dataset, index?: number, array?: Dataset[]) => void, thingType?: string | NamedNode): void {
+            const subjects: string[] = [];
+            let index = 0;
+            for (const q of this) {
+                const uri = q.subject.value;
+                if (!subjects.includes(uri)) {
+                    subjects.push(uri); // mark quad as "already treated"
+                    const thing = this.getThing(uri);
+
+                    if (thingType && !thing.isTypeOf(thingType, uri)) {
+                        continue;
+                    }
+                    
+                    callbackfn(thing, index);
+                }
+                index++;
+            }
         }
 
         // public getThing(uri: string): Dataset {

@@ -3,6 +3,10 @@ import { PersonFactory } from "@datafoodconsortium/connector-test";
 import { SolidWebIdProfileFactory } from "@semantizer/solid-webid";
 
 // TODO: 
+// - Add construct parameters
+// - Re-export tpes from @rdfjs/types (NamedNode, BlankNode, etc)
+// - return undefined in getObject
+// - In core-default, re-export dataFactory, datasetFactory
 // - add a rdfs-seeAlso mixin
 // - use a DatasetExt ?
 // - loader VS fetcher ?
@@ -25,8 +29,8 @@ const test = async () => {
 
     const solidProfileDocument = await semantizer.load(webId, SolidWebIdProfileFactory);
     await solidProfileDocument.loadExtendedProfile();
-    const solidProfile = solidProfileDocument.getPrimaryTopic(); // if load() returns this, can be done on a single line
-    await solidProfile.load(); // if primary topic is located elsewhere
+    const solidWebId = solidProfileDocument.getPrimaryTopic(); // if load() returns this, can be done on a single line
+    await solidWebId.load(); // if primary topic is located elsewhere
     
     // if (solidProfile.isTypeOf(connector.TYPES.PERSON)) {
         const person = semantizer.build(PersonFactory, solidProfileDocument); // WARNING HERE : MUST PASS A DOCUMENT!

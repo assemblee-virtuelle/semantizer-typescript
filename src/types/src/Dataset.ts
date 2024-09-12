@@ -2,7 +2,7 @@
 
 import dataFactory from '@rdfjs/data-model';
 import datasetFactory from '@rdfjs/dataset';
-import { DatasetCore as DatasetRdfjs, NamedNode, Quad } from "@rdfjs/types";
+import { DatasetCore as DatasetRdfjs, NamedNode, Quad, Literal, BlankNode } from "@rdfjs/types";
 import { Loader } from './Common';
 import { Semantizer } from './Semantizer';
 
@@ -16,6 +16,7 @@ export interface DatasetLoadOptions {
 }
 
 export interface Dataset extends DatasetSemantizer {
+    addObject(predicate: NamedNode, value: NamedNode | Literal | BlankNode, thing?: NamedNode): void;
     getThing(uri: string): Dataset;
     getStatements(thingUri: string, predicate: string): Dataset;
     getObject(predicate: string, thingUri?: string): Dataset;
@@ -26,6 +27,9 @@ export interface Dataset extends DatasetSemantizer {
     load(resource?: string | Dataset | NamedNode, options?: DatasetLoadOptions): Promise<void>;
     getUri(): string | undefined;
     setUri(uri: string): void;
+
+    isTypeOf(type: string | NamedNode, thing?: string | NamedNode): boolean;
+    forEachThing(callbackfn: (value: Dataset, index?: number, array?: Dataset[]) => void, thingType?: string | NamedNode): void
 
     //loadThing(): Promise<Thing>;
 

@@ -1,37 +1,41 @@
-import { Dataset, Loader } from "@semantizer/types";
+import { BlankNode, NamedNode, Literal } from "@rdfjs/types";
+import { Dataset } from "@semantizer/types";
 
-export interface Property {
-    path: string;
-    value: string;
-}
-
-export interface IndexNonDestructiveOperations {
-    // getEntries(path?: string, value?: string, pattern?: string): IndexEntry[];
-    getTargets(loader: Loader, property: Property, ...properties: Property[]): Promise<Dataset[]>;
+export interface IndexOperations {
+    forEachEntry(callbackfn: (value: IndexEntry, index?: number, array?: IndexEntry[]) => void): void;
+    findTargetsRecursively(shape: IndexShape, callbackfn: (target: Dataset) => void, limit?: number): Promise<void>;
 }
 
 export interface IndexEntryNonDestructiveOperations {
-    // getShape(): IndexEntryShape | undefined;
-    // hasShape(): boolean;
-    // hasProperties(): boolean;
-    // hasProperty(path?: string, value?: string, pattern?: string): boolean;
-    // getSubIndex(): Index | undefined;
-    // getSubIndexUri(): string | undefined;
-    // getPropertiesAll(entry: string | Resource): IndexEntryShapeProperty[];
+    compareShape(shape: IndexShape): number;
+    hasSubIndex(): boolean;
+    getShape(): IndexShape;
+    getTarget(): Dataset;
+    getSubIndex(): Index;
 }
 
-export interface IndexEntryShapeNonDestructiveOperations {
+export interface IndexShapeOperations {
     // isClosed(): boolean;
-    // getPropertiesAll(): IndexEntryShapeProperty[];
+    compares(other: IndexShape): number;
+    getRdfTypeProperty(): IndexShapeProperty;
+    getFilterProperty(): IndexShapeProperty;
+    countProperties(): number;
+    forEachProperty(callbackfn: (value: IndexShapeProperty, index?: number, array?: IndexShapeProperty[]) => void): void;
+    getPropertiesAll(): IndexShapeProperty[];
+    addProperty(path: NamedNode, value: NamedNode | Literal | BlankNode): void;
 }
 
-export interface IndexEntryShapePropertyNonDestructiveOperations {
-    // getPath(): string | undefined;
-    // getValue(): string | undefined;
+export interface IndexShapePropertyOperations {
+    hasSamePath(other: IndexShapeProperty): boolean;
+    hasSameValue(other: IndexShapeProperty): boolean;
+    equals(other: IndexShapeProperty): boolean;
+    compares(other: IndexShapeProperty): number;
+    getPath(): NamedNode;
+    getValue(): NamedNode | Literal | BlankNode;
     // getPattern(): string | undefined;
 }
 
-// export type IndexEntry = Thing & IndexEntryNonDestructiveOperations;
-// export type IndexEntryShape = Thing & IndexEntryShapeNonDestructiveOperations;
-// export type IndexEntryShapeProperty = Thing & IndexEntryShapePropertyNonDestructiveOperations;
-export type Index = Dataset & IndexNonDestructiveOperations;
+export type IndexShapeProperty = Dataset & IndexShapePropertyOperations;
+export type IndexShape = Dataset & IndexShapeOperations;
+export type IndexEntry = Dataset & IndexEntryNonDestructiveOperations;
+export type Index = Dataset & IndexOperations;
