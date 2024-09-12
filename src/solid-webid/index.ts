@@ -1,7 +1,6 @@
-import { DatasetCore } from "@rdfjs/types";
+import { DatasetCore } from "@rdfjs/types"; // TODO: pb if deleted
 import { Dataset, Loader, Semantizer } from "@semantizer/types";
 import WebIdProfileMixin, { WebIdProfile, WebIdProfileConstructor } from "@semantizer/webid";
-import { DatasetMixin } from "@semantizer/core-rdfjs";
 import { TypeIndex, TypeIndexFactory } from "@semantizer/typeindex";
 
 type DatasetConstructor = new (...args: any[]) => Dataset;
@@ -50,62 +49,3 @@ export function SolidWebIdProfileFactory(semantizer: Semantizer) {
 }
 
 export default SolidWebIdProfileFactory;
-
-// type Constructor<T> = new (...args: any[]) => T;
-// type DConstructor<T = {}> = new (datasetCore?: DatasetCore) => T;
-// type Constructor<T = {}> = new (...args: any[]) => T;
-// type Constructor<T extends Dataset> = new (...args: any[]) => T;
-
-// type Implements<M extends Constructor<M>> = InstanceType<
-//   ReturnType<typeof M>
-// >;
-
-// type Mixin<T extends Dataset> = (Base: Constructor<T>) => Constructor<T>;
-// type Mixin<TBase extends Dataset, U extends TBase> = (Base: Constructor<TBase>) => Constructor<TBase & U>;
-// type Mixin<TBase extends Dataset> = (Base: Constructor<TBase>) => Constructor<TBase & any>;
-// type Mixin<TBase extends Dataset> = (Base: TBase) => TBase;
-
-// type TBase<M extends Mixin<any>> = InstanceType<ReturnType<M>>;
-
-// export class MixinFactory<
-//     // MixedInType extends Dataset, // WebIdProfile
-//     MixinImpl extends Mixin<any> // SolidWebIdProfileMixin
-// > {
-
-//     private _mixin: Mixin<InstanceType<ReturnType<MixinImpl>>>; //, ReturnedType>;
-//     private _impl: TBase<MixinImpl>;
-
-//     constructor(mixin: Mixin<InstanceType<ReturnType<MixinImpl>>>, impl: TBase<MixinImpl>) { //}, ReturnedType>) {
-//         this._impl = impl;
-//         this._mixin = mixin;
-//     }
-
-//     public async load(resource: string, loader: Loader): Promise<InstanceType<ReturnType<MixinImpl>>> {
-//         const dataset = this.build(await loader.load(resource));
-//         dataset.setUri(resource);
-//         return dataset;
-//     }
-
-//     public build(datasetCore?: DatasetCore): InstanceType<ReturnType<MixinImpl>> {
-//         const DatasetMixinImpl = this._mixin(this._impl);
-//         return new DatasetMixinImpl(datasetCore);
-//     }
-
-// }
-
-// export class SolidWebIdProfileFactory {
-
-//     public async load(resource: string, loader: Loader, impl: WebIdProfileConstructor): Promise<SolidWebIdProfile> {
-//         const dataset = this.build(impl, await loader.load(resource));
-//         dataset.setUri(resource);
-//         return dataset;
-//     }
-
-//     public build(impl: WebIdProfileConstructor, datasetCore?: DatasetCore): SolidWebIdProfile {
-//         const DatasetMixinImpl = SolidWebIdProfileMixin(impl);
-//         return new DatasetMixinImpl(datasetCore);
-//     }
-
-// }
-
-// const SolidWebIdProfileFactory = new MixinFactory()
