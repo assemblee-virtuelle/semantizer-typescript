@@ -1,1 +1,1 @@
-export { DatasetRdfjsFactory, DatasetMixin, DatasetImpl } from "./Dataset.js";
+export { DatasetImpl } from "./Dataset.js";
