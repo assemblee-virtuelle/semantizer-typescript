@@ -1,13 +1,10 @@
 // interface StatementOwner ?
 
-import dataFactory from '@rdfjs/data-model';
-import datasetFactory from '@rdfjs/dataset';
-import { DatasetCore as DatasetRdfjs, NamedNode, Quad, Literal, BlankNode } from "@rdfjs/types";
+import { Dataset as DatasetRdfjs, NamedNode, Quad, Literal, BlankNode } from "@rdfjs/types";
 import { Loader } from './Common';
 import { Semantizer } from './Semantizer';
 
 export interface DatasetSemantizer extends DatasetRdfjs {
-    [Symbol.iterator](): Iterator<Quad>;
     getSemantizer(): Semantizer;
 }
 
@@ -70,130 +67,3 @@ export interface Dataset extends DatasetSemantizer {
 
 export type QuadConstructor = new (...args: any[]) => Quad;
 export type DatasetConstructor = new (...args: any[]) => DatasetSemantizer;
-
-const datasetCore = datasetFactory.dataset();
-
-const blankNode = dataFactory.blankNode();
-
-datasetCore.add(dataFactory.quad(
-    dataFactory.namedNode('http://example.org/webId'),
-    dataFactory.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-    dataFactory.namedNode('http://xmlns.com/foaf/0.1/PersonalProfileDocument'),
-    dataFactory.namedNode('http://example.org/webId')
-));
-
-datasetCore.add(dataFactory.quad(
-    dataFactory.namedNode('http://example.org/webId'),
-    dataFactory.namedNode('http://xmlns.com/foaf/0.1/primaryTopic'),
-    dataFactory.namedNode('http://example.org/otherWebIdDocument#it'),
-    dataFactory.namedNode('http://example.org/webId')
-));
-
-// datasetCore.add(dataFactory.quad(
-//     dataFactory.namedNode('http://example.org/webId'),
-//     dataFactory.namedNode('http://xmlns.com/foaf/0.1/primaryTopic'),
-//     dataFactory.namedNode('http://example.org/webId#it'),
-//     dataFactory.namedNode('http://example.org/webId')
-// ));
-
-// datasetCore.add(dataFactory.quad(
-//     dataFactory.namedNode('http://example.org/webId#it'),
-//     dataFactory.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-//     dataFactory.namedNode('http://xmlns.com/foaf/0.1/Organization'),
-//     dataFactory.namedNode('http://example.org/webId')
-// ));
-
-// datasetCore.add(dataFactory.quad(
-//     dataFactory.namedNode('http://example.org/webId#it'),
-//     dataFactory.namedNode('https://github.com/datafoodconsortium/ontology/releases/latest/download/DFC_BusinessOntology.owl#maintains'),
-//     dataFactory.namedNode('http://example.org/catalog1/index'),
-//     dataFactory.namedNode('http://example.org/webId')
-// ));
-
-// datasetCore.add(dataFactory.quad(
-//     dataFactory.namedNode('http://example.org/webId#it'),
-//     dataFactory.namedNode('http://www.w3.org/2000/01/rdf-schema#seeAlso'),
-//     dataFactory.namedNode('http://example.org/protected'),
-//     dataFactory.namedNode('http://example.org/webId')
-// ));
-
-// datasetCore.add(dataFactory.quad(
-//     dataFactory.namedNode('http://example.org/webId#it'),
-//     dataFactory.namedNode('https://github.com/datafoodconsortium/ontology/releases/latest/download/DFC_BusinessOntology.owl#maintains'),
-//     dataFactory.namedNode('http://example.org/catalog2/index'),
-//     dataFactory.namedNode('http://example.org/protected')
-// ));
-
-datasetCore.add(dataFactory.quad(
-    dataFactory.namedNode('http://example.org/webId'),
-    dataFactory.namedNode('http://xmlns.com/foaf/0.1/primaryTopic'),
-    blankNode,
-    dataFactory.namedNode('http://example.org/webId')
-));
-
-datasetCore.add(dataFactory.quad(
-    blankNode,
-    dataFactory.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-    dataFactory.namedNode('http://xmlns.com/foaf/0.1/Organization'),
-    dataFactory.namedNode('http://example.org/webId')
-));
-
-datasetCore.add(dataFactory.quad(
-    blankNode,
-    dataFactory.namedNode('https://github.com/datafoodconsortium/ontology/releases/latest/download/DFC_BusinessOntology.owl#maintains'),
-    dataFactory.namedNode('http://example.org/catalog1/index'),
-    dataFactory.namedNode('http://example.org/webId')
-));
-
-datasetCore.add(dataFactory.quad(
-    blankNode,
-    dataFactory.namedNode('http://www.w3.org/2000/01/rdf-schema#seeAlso'),
-    dataFactory.namedNode('http://example.org/protected'),
-    dataFactory.namedNode('http://example.org/webId')
-));
-
-datasetCore.add(dataFactory.quad(
-    blankNode, 
-    dataFactory.namedNode('https://github.com/datafoodconsortium/ontology/releases/latest/download/DFC_BusinessOntology.owl#maintains'),
-    dataFactory.namedNode('http://example.org/catalog2/index'),
-    dataFactory.namedNode('http://example.org/protected')
-));
-
-// for (const q of datasetCore) {
-//     console.log(q.graph.value, q.subject.value, q.predicate.value, q.object.value);
-// }
-
-// const DatasetMixinImpl = DatasetMixin(DatasetImpl);
-// const dataset2 = new DatasetMixinImpl(datasetCore);
-
-// const maintainedCatalogs = dataset2.getStatementAll('http://example.org/webId#it', 'https://github.com/datafoodconsortium/ontology/releases/latest/download/DFC_BusinessOntology.owl#maintains');
-// for (const q of maintainedCatalogs) {
-//     console.log(q.object.value, q.graph.value)
-// }
-
-const primaryTopic = datasetCore.match(
-    dataFactory.namedNode('http://example.org/webId'), // undefined, TODO: put the document URI to avoid bugs
-    dataFactory.namedNode('http://xmlns.com/foaf/0.1/primaryTopic')
-);
-
-console.log(primaryTopic);
-
-for (const q of primaryTopic) {
-    const primaryTopicObject = q.object;
-    
-    if (primaryTopicObject.termType === "BlankNode") {
-        console.log("Data loaded from blank node:")
-        const matched = datasetCore.match(primaryTopicObject);
-        console.log(matched)
-    }
-
-    if (primaryTopicObject.termType === 'NamedNode') {
-        const matched = datasetCore.match(primaryTopicObject);
-        if (matched.size === 0) {
-            console.log("The primaryTopic is contained in another document: ", primaryTopicObject.value);
-        } else {
-            console.log("Data loaded from named node:")
-            console.log(matched)
-        }
-    }
-}
