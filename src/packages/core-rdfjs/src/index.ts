@@ -1,1 +1,1 @@
-export { DatasetImpl } from "./Dataset.js";
+export { DatasetCoreRdfjsImpl } from "./Dataset.js";

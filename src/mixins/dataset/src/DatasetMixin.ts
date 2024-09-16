@@ -1,20 +1,139 @@
-import dataFactory from '@rdfjs/data-model';
-import { BlankNode, Literal, NamedNode } from "@rdfjs/types";
-import { Dataset, DatasetConstructor, DatasetLoadOptions, Semantizer } from '@semantizer/types';
+import { BlankNode, DatasetRdfjs, Literal, NamedNode, DatasetLoadOptions, DatasetSemantizer, GraphWithOrigin, NamedGraphWithOrigin, Resource, Semantizer, WithSemantizer, WithOrigin } from '@semantizer/types';
+import { DatasetCore } from "@rdfjs/types"; // PB if deleted
+
+type DatasetSemantizerRdfjsConstructor = new(...args: any[]) => DatasetRdfjs & WithSemantizer & WithOrigin;
 
 export function DatasetMixin<
-    TBase extends DatasetConstructor
+    TBase extends DatasetSemantizerRdfjsConstructor
 >(Base: TBase) {
 
-    return class DatasetMixinImpl extends Base implements Dataset {
+    return class DatasetMixinImpl extends Base implements DatasetSemantizer {
 
-        public uri: string = "";
+        public count(): number {
+            return this.size;
+        }
 
         public isEmpty(): boolean {
             return this.size === 0;
         }
+        
+        public hasNamedGraph(): boolean {
+            for (const quad of this) {
+                if (quad.graph) {
+                    return true;
+                }
+            }
+            return false;
+        }
 
-        public addObject(predicate: NamedNode, value: NamedNode | Literal | BlankNode, thing?: NamedNode): void {
+        countNamedGraph(): number {
+            throw new Error('Method not implemented.');
+        }
+        getNamedGraph(namedGraph: NamedNode): NamedGraphWithOrigin | undefined {
+            throw new Error('Method not implemented.');
+        }
+        getDefaultGraph(): GraphWithOrigin {
+            throw new Error('Method not implemented.');
+        }
+        isDefaultGraphEmpty(): boolean {
+            throw new Error('Method not implemented.');
+        }
+        isNamedGraphEmpty(namedGraph: NamedNode): boolean {
+            throw new Error('Method not implemented.');
+        }
+        getThing(subject: BlankNode | NamedNode, graph?: NamedNode | undefined): GraphWithOrigin | undefined {
+            throw new Error('Method not implemented.');
+        }
+        getThingAll(graph?: NamedNode | undefined): GraphWithOrigin[] {
+            throw new Error('Method not implemented.');
+        }
+        getLiteral(thing: Resource, predicate: Resource, language?: string | undefined, graph?: NamedNode | undefined): Literal | undefined {
+            throw new Error('Method not implemented.');
+        }
+        getLiteralAll(thing: Resource, predicate: Resource, language?: string | undefined, graph?: NamedNode | undefined): Literal[] {
+            throw new Error('Method not implemented.');
+        }
+        
+        public getThingLinked(thingOrDataset: Resource | DatasetSemantizer, predicate: Resource, graph?: NamedNode): DatasetSemantizer | undefined {
+            const thing = 'getOrigin' in thingOrDataset ? thingOrDataset.getOrigin() : thingOrDataset;
+            for (const quad of this.match(thing, predicate, undefined, graph)) {
+                const objectDataset = this.match(quad.object);
+                // const origin = quad.object.termType === 'BlankNode'? this.getOrigin(): quad.object.value;
+                // TODO: add check on the quad.object type (=== NamedNode || BlankNode)
+                // The line below use the constructor directly because the factory takes a Dataset and not a DatasetCore (to get the uri)
+                const dataset = new DatasetMixinImpl(this.getOriginDocument(), objectDataset); // WARNING: no params check!
+                dataset.setOrigin(quad.object as NamedNode | BlankNode);
+                if (thing) {
+                    dataset.setOriginThing(thing);
+                }
+                return dataset;
+            }
+            return undefined;
+        }
+        
+        public getThingLinkedAll(thingOrDataset: Resource | DatasetSemantizer, predicate: Resource, graph?: NamedNode): DatasetSemantizer[] {
+            const things: DatasetSemantizer[] = [];
+            const thing = 'getOrigin' in thingOrDataset ? thingOrDataset.getOrigin() : thingOrDataset;
+            for (const quad of this.match(thing, predicate, undefined, graph)) {
+                const objectDataset = this.match(quad.object);
+                const dataset = new DatasetMixinImpl(this.getOriginDocument(), objectDataset); // WARNING: no params check!
+                dataset.setOrigin(quad.object as NamedNode | BlankNode);
+                if (thing) {
+                    dataset.setOriginThing(thing);
+                }
+                things.push(dataset);
+            }
+            return things;
+        }
+
+        forEachThing(callbackfn: (value: GraphWithOrigin, index?: number | undefined, array?: GraphWithOrigin[] | undefined) => void, graph?: NamedNode | undefined): void {
+            throw new Error('Method not implemented.');
+        }
+
+        // TODO: move to a Utility class
+        public getUriOfResource(resource: string | DatasetSemantizer | NamedNode): string {
+            if (typeof resource === 'string') {
+                return resource;
+            }
+            if ('termType' in resource && resource.termType === 'NamedNode') {
+                return resource.value;
+            }
+            if ('getOrigin' in resource) {
+                if (resource.getOrigin()) {
+                    return resource.getOrigin()!.value;
+                }
+                else throw new Error("Resource origin is undefined.");
+            }
+            throw new Error("Can't find the uri of the resource.");
+        }
+        
+        public async load(resource?: string | DatasetSemantizer | NamedNode, options?: DatasetLoadOptions): Promise<void> {
+            resource = resource? resource: this;
+            if (typeof resource !== 'string' && 'getOrigin' in resource && resource.getOrigin()?.termType === 'NamedNode') { // if the resource to load is a NamedNode (and not a BlankNode which are already loaded)
+                const loader = options && options.loader? options.loader: this.getSemantizer().getConfiguration().getLoader();
+                const resourceUri = this.getUriOfResource(resource);
+                const loaded = await loader.load(resourceUri);
+                for (const quad of loaded) {
+                    if (this.getOrigin() && this.getOrigin()?.value !== resourceUri) { // load in default graph
+                        quad.graph = this.getSemantizer().getConfiguration().getRdfDataModelFactory().namedNode(resourceUri); // TODO: use the factory from Semantizer
+                    }
+                    this.add(quad);
+                }
+            }
+        }
+
+    }
+
+}
+
+// TODO: should be removed as this mixin should be constructed with the DatasetBaseFactory.
+export function datasetFactory(semantizer: Semantizer) {
+    const _DatasetImpl = semantizer.getConfiguration().getDatasetImpl();
+    return semantizer.getMixinFactory(DatasetMixin, _DatasetImpl);
+}
+
+/*
+public addObject(predicate: NamedNode, value: NamedNode | Literal | BlankNode, thing?: NamedNode): void {
             throw new Error("Not implemented")
         }
     
@@ -133,18 +252,6 @@ export function DatasetMixin<
             }
         }
 
-        // public getThing(uri: string): Dataset {
-        //     const things = this.match(undefined, dataFactory.namedNode(uri));
-        //     for (const quad of things) {
-        //         const datasetCore = this.match(quad.object);
-        //         const DatasetMixinImpl = DatasetMixin(DatasetImpl)
-        //         const dataset = new DatasetMixinImpl(datasetCore);
-        //         dataset.setUri(quad.object.value); // TODO: only when NamedNode
-        //         return dataset;
-        //     }
-        //     throw new Error("Thing not found.");
-        // }
-
         public getObject(predicate: NamedNode, thing?: NamedNode | BlankNode): Dataset | undefined {
             const things = this.match(thing, predicate);
             for (const quad of things) {
@@ -175,14 +282,4 @@ export function DatasetMixin<
             }
             return datasets;
         }
-        
-    }
-}
-
-// TODO: Is this really useful?
-export function DatasetRdfjsFactory(semantizer: Semantizer) {
-    const _DatasetImpl = semantizer.getDatasetImpl();
-    return semantizer.getFactory(DatasetMixin, _DatasetImpl);
-}
-
-export default DatasetRdfjsFactory;
+            */

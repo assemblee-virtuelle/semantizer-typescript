@@ -7,17 +7,16 @@
   "type": "module",
   "scripts": {
     "build": "tsc -p .",
+    "dev": "tsc -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Maxime Lecoq-Gaillard",
   "license": "MIT",
   "dependencies": {
-    "@rdfjs/data-model": "^2.0.2",
-    "@semantizer/rdfjs-dataset": "^1.0.0"
+    "@semantizer/rdfjs-dataset-impl": "^1.0.0"
   },
   "devDependencies": {
-    "@rdfjs/types": "^1.1.0",
     "@semantizer/types": "^1.0.0",
-    "@types/rdfjs__data-model": "^2.0.8"
+    "typescript": "^5.5.2"
   }
 }

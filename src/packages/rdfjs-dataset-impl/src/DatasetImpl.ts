@@ -18,7 +18,7 @@ export class DatasetImpl implements Dataset {
         return this._getDatasetCore()[Symbol.iterator]();
     }
     
-    private _create(quads?: Iterable<Quad>): DatasetImpl {
+    protected _create(quads?: Iterable<Quad>): DatasetImpl {
         return new DatasetImpl(quads);
     }
 

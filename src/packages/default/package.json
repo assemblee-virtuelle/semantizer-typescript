@@ -1,5 +1,5 @@
 {
-  "name": "@semantizer/core",
+  "name": "@semantizer/default",
   "version": "1.0.0",
   "description": "",
   "main": "./lib/index.js",
@@ -12,6 +12,13 @@
   },
   "author": "Maxime Lecoq-Gaillard",
   "license": "MIT",
+  "dependencies": {
+    "@rdfjs/data-model": "^2.0.2",
+    "@semantizer/core": "^1.0.0",
+    "@semantizer/core-rdfjs": "^1.0.0",
+    "@semantizer/loader-rdfjs": "^1.0.0",
+    "@semantizer/mixin-dataset": "^1.0.0"
+  },
   "devDependencies": {
     "@semantizer/types": "^1.0.0",
     "typescript": "^5.5.2"

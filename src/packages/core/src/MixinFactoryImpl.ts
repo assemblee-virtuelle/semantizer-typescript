@@ -1,6 +1,12 @@
-import { Constructor, Dataset, Semantizer } from "@semantizer/types";
+import { Constructor, DatasetImplConstructor, DatasetSemantizer, MixinFactory, Semantizer } from "@semantizer/types";
 
-export class MixinFactoryImpl<TBase extends Constructor, TMixin extends Dataset> {
+// (TODO move to default ? or to a dedicated package.)
+// (Add also a MixinFactoryDatasetCore package ?)
+// --> Not necessarily as this does not depend on other packages than types.
+export class MixinFactoryImpl<
+    TBase extends Constructor, 
+    TMixin extends DatasetSemantizer
+> implements MixinFactory<TBase, TMixin> {
 
     private _semantizer: Semantizer;
     private _mixedClass: Constructor<TMixin>;
@@ -10,18 +16,22 @@ export class MixinFactoryImpl<TBase extends Constructor, TMixin extends Dataset>
         this._mixedClass = mixin(baseClass);
     }
 
+    /**
+     * This method creates a base dataset (Dataset mixin) and passes it to the build method 
+     * to get the mixed in resulting dataset.
+     * @param resource 
+     * @returns 
+     */
     public async load(resource: string): Promise<TMixin> {
-        const datasetCore = await this._semantizer.getLoader().load(resource);
-        const dataset = new (this._semantizer.getDatasetImpl())(this._semantizer, datasetCore); // pass the parameters of the constructor of the dataset implementation (eg: core-rdfs/DatasetImpl)
-        dataset.setUri(resource);
+        const datasetCore = await this._semantizer.getConfiguration().getLoader().load(resource);
+        // TODO: resource should be passed below as a URI of a document (without fragment).
+        const dataset = new (this._semantizer.getConfiguration().getDatasetImpl())(this._semantizer, resource, datasetCore);
         return this.build(dataset);
     }
 
-    // public build(...args: ConstructorParameters<TBase>): TMixin {
-    public build(sourceDataset?: Dataset): TMixin {
-        const dataset = new this._mixedClass(this._semantizer, sourceDataset); // pass the parameters of the constructor of the dataset implementation (eg: core-rdfs/DatasetImpl)
-        if (sourceDataset && sourceDataset.getUri()) 
-            dataset.setUri(sourceDataset.getUri()!);
+    public build(sourceDataset?: DatasetSemantizer): TMixin {
+        const origin = sourceDataset? sourceDataset.getOrigin(): undefined;
+        const dataset = new this._mixedClass(this._semantizer, origin, sourceDataset); // warning: no check on params (TS mixin)
         return dataset;
     }
 

@@ -1,9 +1,6 @@
 TODO: 
-- [ ] Move the DatasetMixin into the mixins directory
 - [ ] Add a new dataset layer as base.
-- [ ] Return undefined in getObject
 - [ ] Add construct parameters
-- [ ] Re-export types from @rdfjs/types (NamedNode, BlankNode, etc)?
 - [ ] In core-default, re-export dataFactory, datasetFactory?
 - [ ] Add a rdfs-seeAlso mixin
 - [ ] Loader VS fetcher ?
@@ -14,6 +11,10 @@ TODO:
 - [ ] Implements access rights   
 - [ ] Add loadAndGet() methods? like loadAndGetPrimaryTopic()?
 - [ ] Add a param (factory: Factory) to get specific concrete types returned from getters (ex: getPrimaryTopic() => Person);
+- [x] Add a RDF model factory (and a Rdfjs dataset one?)
+- [x] Move the DatasetMixin into the mixins directory
+- [x] Return undefined in getObject
+- [x] Re-export types from @rdfjs/types (NamedNode, BlankNode, etc)? This would avoid changing client code when rdfjs change
 - [x] Reorganize source with two folders: packages and mixins
 - [x] Use a DatasetExt ?
 - [x] Move the DatasetImpl class to the core package

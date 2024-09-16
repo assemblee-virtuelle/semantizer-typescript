@@ -1,21 +1,17 @@
 {
-  "name": "@semantizer/core-default",
+  "name": "@semantizer/mixin-dataset",
   "version": "1.0.0",
   "description": "",
   "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
   "type": "module",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "build": "tsc -p .",
+    "dev": "tsc -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Maxime Lecoq-Gaillard",
   "license": "MIT",
-  "dependencies": {
-    "@semantizer/core": "^1.0.0",
-    "@semantizer/core-rdfjs": "^1.0.0",
-    "@semantizer/loader-rdfjs": "^1.0.0"
-  },
   "devDependencies": {
     "@semantizer/types": "^1.0.0",
     "typescript": "^5.5.2"

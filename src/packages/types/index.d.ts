@@ -1,5 +1,8 @@
+export { DataFactory, NamedNode, BlankNode, Literal, Quad, DefaultGraph, DatasetCore as DatasetCoreRdfjs, Dataset as DatasetRdfjs  } from "@rdfjs/types";
+
 export {
     Resource, 
+    WithSemantizer,
     ResourceCollection,
     Countable,
     Copyable,
@@ -14,39 +17,31 @@ export {
     Canonical,
     AnyFunction,
     AnyConstructor,
-    Mixin,
     Loader,
     DocumentLoadOptions
 } from "./lib/Common.js";
 
-export { 
-    Document,
-    DocumentConstructor,
-} from "./lib/Document.js";
-
-export { 
-    Thing,
-    ThingConstructor,
-} from "./lib/Thing.js";
-
-export {
-    Statement,
-    StatementConstructor,
-    
-} from "./lib/Statement.js"
-
 export {
     Semantizer,
+    DatasetImplConstructor,
+    DatasetFactoryFunction,
+    MixinFactoryConstructor,
+    Configuration,
     MixinFactory,
+    MixinFactoryFunction,
     Constructor,
 } from "./lib/Semantizer.js";
 
 export {
     Dataset,
-    DatasetLoadOptions,
     DatasetSemantizer,
-    DatasetConstructor,
-    QuadConstructor,
-} from "./lib/Dataset.js";
+    DatasetBaseFactory,
+    Graph,
+    GraphWithOrigin,
+    NamedGraph,
+    NamedGraphWithOrigin,
+    DatasetLoadOptions,
+    WithOrigin
+} from "./lib/Datasets.js";
 
 

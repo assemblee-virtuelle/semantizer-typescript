@@ -1,13 +1,13 @@
 import { BlankNode, NamedNode } from "@rdfjs/types";
 import { Resource } from "./Common";
-import { Dataset } from "./Dataset";
+import { DatasetSemantizer } from "./Datasets";
 import Statement from "./Statement";
 import Thing from "./Thing";
 
 type Uri = string | Resource | NamedNode | BlankNode;
 
 export interface StatementCollection {
-    getStatementAll(thingUri: Uri, property: string, language?: string): Dataset;
+    getStatementAll(thingUri: Uri, property: string, language?: string): DatasetSemantizer;
     hasStatement(statementUri: Uri, property?: string, language?: string): boolean;
     addStatement(statement: Statement): void;
     removeStatement(statement: Statement): void;

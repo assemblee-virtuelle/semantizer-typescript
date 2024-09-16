@@ -1,5 +1,5 @@
 {
-  "name": "@semantizer/rdfjs-dataset",
+  "name": "@semantizer/rdfjs-dataset-impl",
   "version": "1.0.0",
   "description": "",
   "main": "./lib/index.js",
@@ -7,6 +7,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc -p .",
+    "dev": "tsc -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Maxime Lecoq-Gaillard",
@@ -17,6 +18,7 @@
     "@rdfjs/to-ntriples": "^3.0.1"
   },
   "devDependencies": {
+    "typescript": "^5.5.2",
     "@rdfjs/types": "^1.1.0",
     "@types/rdfjs__dataset": "^2.0.7",
     "@types/rdfjs__fetch": "^3.0.7",

@@ -6,18 +6,17 @@
   "type": "module",
   "scripts": {
     "build": "tsc -p .",
+    "dev": "tsc -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Maxime Lecoq-Gaillard",
   "license": "MIT",
   "dependencies": {
-    "@semantizer/core-default": "^1.0.0",
-    "@semantizer/solid-webid": "^1.0.0",
-    "@semantizer/webid": "^1.0.0",
-    "@datafoodconsortium/connector-test": "^1.0.0"
+    "@semantizer/default": "^1.0.0",
+    "@semantizer/mixin-dataset": "^1.0.0"
   },
   "devDependencies": {
-    "@semantizer/types": "^1.0.0",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.2",
+    "@semantizer/types": "^1.0.0"
   }
 }

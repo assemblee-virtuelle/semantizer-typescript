@@ -1,10 +1,17 @@
-import { DatasetCore, Quad } from "@rdfjs/types";
-import { Dataset } from "./Dataset";
+import { BlankNode, DatasetCore, NamedNode, Quad } from "@rdfjs/types";
+import { Semantizer } from "./Semantizer";
 
-export interface Resource {
-    getUri(): string;
-    hasUri(): boolean;
+export type Resource = NamedNode | BlankNode;
+
+export interface WithSemantizer {
+    getSemantizer(): Semantizer;
+    // toRdfjsDataset(): DatasetRdfjs;
 }
+
+// export interface Resource {
+//     getUri(): string;
+//     hasUri(): boolean;
+// }
 
 export interface ResourceCollection<T> extends Iterable<T>, Countable {
     [Symbol.iterator](): Iterator<T>;

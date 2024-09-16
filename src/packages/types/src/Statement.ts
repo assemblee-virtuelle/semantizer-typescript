@@ -1,5 +1,5 @@
 import { Quad, Term } from "@rdfjs/types";
-import { Dataset } from "./Dataset";
+import { DatasetSemantizer } from "./Datasets";
 import Thing from "./Thing";
 
 export interface Statement extends Quad {
@@ -9,7 +9,7 @@ export interface Statement extends Quad {
     getPredicate(): Term;
     getObject(): Term;
     getGraph(): Term;
-    getDataset(): Dataset;
+    getDataset(): DatasetSemantizer;
     getDocument(): Document;
     getThing(): Thing;
 }

@@ -1,6 +1,7 @@
 import { SemantizerImpl } from "./SemantizerImpl.js";
 
-export { DatasetMixin } from "./DatasetMixin.js";
+export { DatasetBaseFactoryImpl } from "./DatasetBaseFactoryImpl.js";
+export { ConfigurationImpl } from "./ConfigurationImpl.js";
 export { SemantizerImpl } from "./SemantizerImpl.js";
 export { MixinFactoryImpl } from "./MixinFactoryImpl.js";
 
