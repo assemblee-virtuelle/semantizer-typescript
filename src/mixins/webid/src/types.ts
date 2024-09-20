@@ -1,11 +1,10 @@
-import { NamedNode } from "@rdfjs/types";
-import { DatasetWithOrigin, Resource } from "@semantizer/types";
+import { DatasetSemantizer, Resource,  NamedNode } from "@semantizer/types";
 
 export interface WebIdProfileNonDestructiveOperations {
-    getMaker(): DatasetWithOrigin | undefined;
-    getPrimaryTopic(thing?: Resource, graph?: string | NamedNode): DatasetWithOrigin | undefined;
+    getMaker(): DatasetSemantizer | undefined;
+    getPrimaryTopic(thing?: Resource, graph?: NamedNode): DatasetSemantizer | undefined;
 }
 
-export type WebIdProfile = DatasetWithOrigin & WebIdProfileNonDestructiveOperations;
+export type WebIdProfile = DatasetSemantizer & WebIdProfileNonDestructiveOperations;
 
 export type WebIdProfileConstructor = new (...args: any[]) => WebIdProfile;

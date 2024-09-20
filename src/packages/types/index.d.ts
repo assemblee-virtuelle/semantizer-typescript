@@ -1,4 +1,4 @@
-export { DataFactory, NamedNode, BlankNode, Literal, Quad, DefaultGraph, DatasetCore as DatasetCoreRdfjs, Dataset as DatasetRdfjs  } from "@rdfjs/types";
+export { Term, DataFactory, NamedNode, BlankNode, Literal, Quad, DefaultGraph, DatasetCore as DatasetCoreRdfjs, Dataset as DatasetRdfjs  } from "@rdfjs/types";
 
 export {
     Resource, 
@@ -36,6 +36,7 @@ export {
     Dataset,
     DatasetSemantizer,
     DatasetBaseFactory,
+    DatasetSemantizerMixinConstructor,
     Graph,
     GraphWithOrigin,
     NamedGraph,

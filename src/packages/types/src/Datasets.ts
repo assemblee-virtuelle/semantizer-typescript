@@ -26,15 +26,15 @@ export interface Dataset extends DatasetRdfjs {
     isDefaultGraphEmpty(): boolean;
     isNamedGraphEmpty(namedGraph: NamedNode): boolean;
 
-    getThing(subject: NamedNode | BlankNode, graph?: NamedNode): GraphWithOrigin | undefined;
-    getThingAll(graph?: NamedNode): GraphWithOrigin[];
+    getNode(subject: NamedNode | BlankNode, graph?: NamedNode): GraphWithOrigin | undefined;
+    getNodeAll(graph?: NamedNode): GraphWithOrigin[];
 
     getLiteral(thing: Resource, predicate: Resource, language?: string, graph?: NamedNode): Literal | undefined;
     getLiteralAll(thing: Resource, predicate: Resource, language?: string, graph?: NamedNode): Literal[];
 
-    getThingLinked(thingOrDataset: Resource | DatasetSemantizer, predicate: Resource, graph?: NamedNode): DatasetSemantizer | undefined;
+    getLinkedObject(predicate: Resource, thingOrDataset?: Resource | DatasetSemantizer, graph?: NamedNode): DatasetSemantizer | undefined;
     // getObject(predicate: Resource, thing?: Resource, graph?: NamedNode): DatasetWithOrigin | undefined;
-    getThingLinkedAll(thingOrDataset: Resource | DatasetSemantizer, predicate: Resource, graph?: NamedNode): DatasetSemantizer[];
+    getLinkedObjectAll(predicate: Resource, thingOrDataset?: Resource | DatasetSemantizer, graph?: NamedNode): DatasetSemantizer[];
 
     forEachThing(callbackfn: (value: GraphWithOrigin, index?: number, array?: GraphWithOrigin[]) => void, graph?: NamedNode): void;
 
@@ -45,8 +45,8 @@ export interface Graph extends DatasetRdfjs {
     count(): number;
     isEmpty(): boolean;
 
-    getThing(subject: NamedNode | BlankNode): GraphWithOrigin | undefined;
-    getThingAll(): GraphWithOrigin[];
+    getNode(subject: NamedNode | BlankNode): GraphWithOrigin | undefined;
+    getNodeAll(): GraphWithOrigin[];
 
     getLiteral(thing: Resource, predicate: Resource, language?: string): Literal | undefined;
     getLiteralAll(thing: Resource, predicate: Resource, language?: string): Literal[];
@@ -73,6 +73,8 @@ export type DatasetSemantizer = Dataset & WithSemantizer & WithOrigin;
 export type GraphWithOrigin = Graph & WithOrigin;
 
 export type NamedGraphWithOrigin = NamedGraph & WithOrigin;
+
+export type DatasetSemantizerMixinConstructor = new (...args: any[]) => DatasetSemantizer;
 
 export interface DatasetLoadOptions {
     loader?: Loader

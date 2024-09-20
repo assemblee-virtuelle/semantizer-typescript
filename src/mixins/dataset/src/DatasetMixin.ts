@@ -1,10 +1,10 @@
-import { BlankNode, DatasetRdfjs, Literal, NamedNode, DatasetLoadOptions, DatasetSemantizer, GraphWithOrigin, NamedGraphWithOrigin, Resource, Semantizer, WithSemantizer, WithOrigin } from '@semantizer/types';
+import { Term, BlankNode, DatasetRdfjs, Literal, NamedNode, DatasetLoadOptions, DatasetSemantizer, GraphWithOrigin, NamedGraphWithOrigin, Resource, Semantizer, WithSemantizer, WithOrigin } from '@semantizer/types';
 import { DatasetCore } from "@rdfjs/types"; // PB if deleted
 
 type DatasetSemantizerRdfjsConstructor = new(...args: any[]) => DatasetRdfjs & WithSemantizer & WithOrigin;
 
 export function DatasetMixin<
-    TBase extends DatasetSemantizerRdfjsConstructor
+    TBase extends DatasetSemantizerRdfjsConstructor // PB: can be impl other than rdfjs
 >(Base: TBase) {
 
     return class DatasetMixinImpl extends Base implements DatasetSemantizer {
@@ -41,10 +41,10 @@ export function DatasetMixin<
         isNamedGraphEmpty(namedGraph: NamedNode): boolean {
             throw new Error('Method not implemented.');
         }
-        getThing(subject: BlankNode | NamedNode, graph?: NamedNode | undefined): GraphWithOrigin | undefined {
+        getNode(subject: BlankNode | NamedNode, graph?: NamedNode | undefined): GraphWithOrigin | undefined {
             throw new Error('Method not implemented.');
         }
-        getThingAll(graph?: NamedNode | undefined): GraphWithOrigin[] {
+        getNodeAll(graph?: NamedNode | undefined): GraphWithOrigin[] {
             throw new Error('Method not implemented.');
         }
         getLiteral(thing: Resource, predicate: Resource, language?: string | undefined, graph?: NamedNode | undefined): Literal | undefined {
@@ -53,15 +53,19 @@ export function DatasetMixin<
         getLiteralAll(thing: Resource, predicate: Resource, language?: string | undefined, graph?: NamedNode | undefined): Literal[] {
             throw new Error('Method not implemented.');
         }
+
+        // build without origin
+        public matchDatasetSemantizer(subject?: Term, predicate?: Term, object?: Term, graph?: Term): DatasetSemantizer {
+            const dataset = this.getSemantizer().getConfiguration().getDatasetBaseFactory().build(this.getSemantizer());
+            const datasetRdfjs = this.match(subject, predicate, object, graph);
+            return dataset.addAll(datasetRdfjs);
+        }
         
-        public getThingLinked(thingOrDataset: Resource | DatasetSemantizer, predicate: Resource, graph?: NamedNode): DatasetSemantizer | undefined {
-            const thing = 'getOrigin' in thingOrDataset ? thingOrDataset.getOrigin() : thingOrDataset;
+        // TODO: handle this != document, get the document first?
+        public getLinkedObject(predicate: Resource, thingOrDataset?: Resource | DatasetSemantizer, graph?: NamedNode): DatasetSemantizer | undefined {
+            const thing = thingOrDataset ? 'getOrigin' in thingOrDataset ? thingOrDataset.getOrigin() : thingOrDataset : undefined;
             for (const quad of this.match(thing, predicate, undefined, graph)) {
-                const objectDataset = this.match(quad.object);
-                // const origin = quad.object.termType === 'BlankNode'? this.getOrigin(): quad.object.value;
-                // TODO: add check on the quad.object type (=== NamedNode || BlankNode)
-                // The line below use the constructor directly because the factory takes a Dataset and not a DatasetCore (to get the uri)
-                const dataset = new DatasetMixinImpl(this.getOriginDocument(), objectDataset); // WARNING: no params check!
+                const dataset = this.matchDatasetSemantizer(quad.object);
                 dataset.setOrigin(quad.object as NamedNode | BlankNode);
                 if (thing) {
                     dataset.setOriginThing(thing);
@@ -71,12 +75,11 @@ export function DatasetMixin<
             return undefined;
         }
         
-        public getThingLinkedAll(thingOrDataset: Resource | DatasetSemantizer, predicate: Resource, graph?: NamedNode): DatasetSemantizer[] {
+        public getLinkedObjectAll(predicate: Resource, thingOrDataset?: Resource | DatasetSemantizer, graph?: NamedNode): DatasetSemantizer[] {
             const things: DatasetSemantizer[] = [];
-            const thing = 'getOrigin' in thingOrDataset ? thingOrDataset.getOrigin() : thingOrDataset;
+            const thing = thingOrDataset ? 'getOrigin' in thingOrDataset ? thingOrDataset.getOrigin() : thingOrDataset : undefined;
             for (const quad of this.match(thing, predicate, undefined, graph)) {
-                const objectDataset = this.match(quad.object);
-                const dataset = new DatasetMixinImpl(this.getOriginDocument(), objectDataset); // WARNING: no params check!
+                const dataset = this.matchDatasetSemantizer(quad.object);
                 dataset.setOrigin(quad.object as NamedNode | BlankNode);
                 if (thing) {
                     dataset.setOriginThing(thing);

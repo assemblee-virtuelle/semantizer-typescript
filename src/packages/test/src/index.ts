@@ -6,7 +6,8 @@ import semantizer from "@semantizer/default";
 // import { DatasetWithOriginImpl } from "@semantizer/dataset-origin-rdfjs";
 // import { DatasetMixin, datasetFactory } from "@semantizer/mixin-dataset";
 import { datasetFactory } from "@semantizer/mixin-dataset";
-
+import { webIdFactory } from "@semantizer/mixin-webid";
+ 
 import dataFactory from "@rdfjs/data-model";
 
 const test = async () => {
@@ -38,15 +39,17 @@ const test = async () => {
     // const DatasetWithOriginType = DatasetWithOriginMixin(DatasetMixin(DatasetWithOriginImpl));
     // const datasetWithOrigin = new DatasetWithOriginType("");
 
-    const solidProfileDocument = await semantizer.load('https://api.test-inria-index.startinblox.com/fedex/indexes/users/index'); //, datasetFactory); //WithOriginFactory);
-    console.log(solidProfileDocument);
+    const index = await semantizer.load('https://api.test-inria-index.startinblox.com/fedex/indexes/users/index'); //, datasetFactory); //WithOriginFactory);
+    // const solidProfileDocument = await semantizer.load('https://api.test-inria-index.startinblox.com/fedex/profile', webIdFactory); //WithOriginFactory);
+    // console.log(solidProfileDocument.getPrimaryTopic());
 
     // http://xmlns.com/foaf/0.1/primaryTopic
-    // const obj = solidProfileDocument.getThingLinked(dataFactory.namedNode('https://api.test-inria-index.startinblox.com/fedex/indexes/users/index#first_name'), dataFactory.namedNode('https://ns.inria.fr/idx/terms#hasShape'));
-    // console.log(obj); // _:b2
+    const obj = index.getLinkedObject(dataFactory.namedNode('https://ns.inria.fr/idx/terms#hasShape'), dataFactory.namedNode('https://api.test-inria-index.startinblox.com/fedex/indexes/users/index#first_name'));
+    console.log(obj); // _:b2
 
-    // const obj2 = obj?.getThingLinkedAll(obj, dataFactory.namedNode('https://www.w3.org/ns/shacl#property'));
-    // console.log(obj2);
+    // const obj2 = obj?.getLinkedObjectAll(dataFactory.namedNode('https://www.w3.org/ns/shacl#property'), obj);
+    const properties = index.getLinkedObjectAll(dataFactory.namedNode('https://www.w3.org/ns/shacl#property'), obj);
+    properties.forEach(o => console.log(o));
 
 }
 

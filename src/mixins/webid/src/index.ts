@@ -1,8 +1,8 @@
-import { webIdProfileFactory } from "./impl.js";
+import { webIdFactory } from "./impl.js";
 
 export {
     WebIdProfileMixin,
-    webIdProfileFactory
+    webIdFactory
 } from "./impl.js";
 
 export {
@@ -10,4 +10,4 @@ export {
     WebIdProfileConstructor
 } from "./types.js";
 
-export default webIdProfileFactory;
+export default webIdFactory;

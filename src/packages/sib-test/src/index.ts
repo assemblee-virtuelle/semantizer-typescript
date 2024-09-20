@@ -13,13 +13,13 @@ const test = async () => {
     const webIdUri = "https://api.test-inria-index.startinblox.com/fedex/profile#me";
 
     // 1. Load the WebId of the instance
-    const profileDocument = await semantizer.load(webIdUri, SolidWebIdProfileFactory);
-    await profileDocument.loadExtendedProfile();
-    const webId = profileDocument.getPrimaryTopic(); // if load() returns this, can be done on a single line
-    const solidWebId = semantizer.build(SolidWebIdProfileFactory, webId);
+    const webIdProfile = await semantizer.load(webIdUri, SolidWebIdProfileFactory);
+    await webIdProfile.loadExtendedProfile();
+    const webId = webIdProfile.getPrimaryTopic(); // if load() returns this, can be done on a single line
+    // const solidWebId = semantizer.build(SolidWebIdProfileFactory, webId);
 
     // 2. Get the public type index
-    const publicTypeIndex = solidWebId.getPublicTypeIndex(); // should be solidProfile instead of solidProfileDocument
+    const publicTypeIndex = webId.getPublicTypeIndex(); // should be solidProfile instead of solidProfileDocument
     await publicTypeIndex.load();
 
     // 3. Find the index from the TypeIndex

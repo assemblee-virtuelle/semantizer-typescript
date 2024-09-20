@@ -27,11 +27,15 @@ export class DatasetImpl implements Dataset {
     }
 
     public add(quad: Quad): this {
-        return this._create(this._getDatasetCore().add(quad)) as this;
+        const resultDataset = this._getDatasetCore().add(quad);
+        this.size = resultDataset.size;
+        return this._create(resultDataset) as this;
     }
 
     public delete(quad: Quad): this {
-        return this._create(this._getDatasetCore().delete(quad)) as this;
+        const resultDataset = this._getDatasetCore().delete(quad);
+        this.size = resultDataset.size;
+        return this._create(resultDataset) as this;
     }
 
     public has(quad: Quad): boolean {
