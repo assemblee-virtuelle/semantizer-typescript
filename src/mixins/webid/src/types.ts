@@ -1,4 +1,4 @@
-import { DatasetSemantizer, Resource,  NamedNode } from "@semantizer/types";
+import { DatasetSemantizer, Resource, NamedNode } from "@semantizer/types";
 
 export interface WebIdProfileNonDestructiveOperations {
     getMaker(): DatasetSemantizer | undefined;

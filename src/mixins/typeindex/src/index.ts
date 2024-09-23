@@ -1,3 +1,5 @@
+import { typeIndexFactory } from "./impl.js";
+
 export {
     TypeIndex,
     // TypeIndexRegistration,
@@ -6,7 +8,9 @@ export {
 
 export {
     TypeIndexMixin,
-    TypeIndexFactory,
+    typeIndexFactory,
     // TypeIndexRegistrationMixin,
     // TypeIndexRegistrationStatementMixin
 } from "./impl.js";
+
+export default typeIndexFactory;

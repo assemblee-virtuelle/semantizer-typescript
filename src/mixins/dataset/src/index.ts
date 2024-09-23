@@ -1,5 +1,5 @@
-import { datasetFactory } from "./DatasetMixin.js";
+// import { datasetFactory } from "./DatasetMixin.js";
 
-export { DatasetMixin, datasetFactory } from "./DatasetMixin.js";
+export { DatasetMixin } from "./DatasetMixin.js";
 
-export default datasetFactory;
+// export default datasetFactory;

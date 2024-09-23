@@ -1,7 +1,6 @@
-import { Dataset, Semantizer } from "@semantizer/types";
+import { Dataset, DatasetSemantizer, DatasetSemantizerMixinConstructor, Semantizer } from "@semantizer/types";
 import { BlankNode, Literal, NamedNode } from "@rdfjs/types";
 import { Index, IndexEntry, IndexShape, IndexShapeProperty } from "./types";
-import dataFactory from "@rdfjs/data-model"; // should not depend here
 import { DatasetCore } from "@rdfjs/types"; // TODO: PB when removed
 
 const namespaces = {
@@ -16,36 +15,61 @@ const context = {
 }
 
 export function IndexMixin<
-    TBase extends new(...args: any[]) => Dataset
+    TBase extends DatasetSemantizerMixinConstructor
 >(Base: TBase) {
 
-    return class IndexImpl extends Base implements Index {
+    return class IndexMixinImpl extends Base implements Index {
 
-        public forEachEntry(callbackfn: (value: IndexEntry, index?: number, array?: IndexEntry[]) => void): void {
-            this.forEachThing(thing => callbackfn(this.getSemantizer().build(indexEntryFactory, thing)), 'https://ns.inria.fr/idx/terms#IndexEntry');
+        public async forEachEntry(callbackfn: (value: IndexEntry, index?: number, array?: IndexEntry[]) => Promise<void>): Promise<void> {
+            const indexEntryType = this.getSemantizer().getConfiguration().getRdfDataModelFactory().namedNode('https://ns.inria.fr/idx/terms#IndexEntry');
+            this.forEachSubGraph(async (subGraph) => {
+                if (subGraph.isRdfTypeOf(indexEntryType)) {
+                    await callbackfn(this.getSemantizer().build(indexEntryFactory, subGraph));
+                }
+            });
         }
 
-        public async findTargetsRecursively(shape: IndexShape, callbackfn: (target: Dataset) => void, limit?: number): Promise<void> {
+        public async findTargetsRecursively(shape: IndexShape, callbackfn: (target: DatasetSemantizer) => void, limit?: number): Promise<void> {
             let foundTargetCount: number = 0;
             const limitCount: number = limit? limit: 30;
 
             // TODO: move to a Strategy pattern?
             const execute = async (index: Index) => {
                 if (foundTargetCount < limitCount - 1) {
-                    index.forEachEntry(async (entry) => {
-                        // await entry.load(entry.getShape());
+                    // await index.load();
+                    await index.forEachEntry(async (entry) => {
+                        if (foundTargetCount < limitCount - 1) {
+                        // for await (const entry of index.forEachEntry(async (entry) => {
+                            const comparisonResult = entry.compareShape(shape);
 
-                        const comparisonResult = entry.compareShape(shape);
+                            if (comparisonResult === 1) {
+                                const target = entry.getTarget();
+                                if (target) {
+                                    callbackfn(target);
+                                    foundTargetCount++;
+                                }
+                                else {
+                                    const subIndex = entry.getSubIndex();
+                                    if (subIndex) {
+                                        try {
+                                            await subIndex.load();
+                                            await execute(subIndex);
+                                        }
+                                        catch(e) { console.error("Error while loading " + subIndex.getOrigin()?.value) }
+                                    } else { console.error("No subIndexFound for potencial result source.") }
+                                }
+                            }
 
-                        if (comparisonResult === 1) {
-                            callbackfn(entry.getTarget());
-                            foundTargetCount++;
-                        }
-
-                        else if (comparisonResult === 0 && entry.hasSubIndex()) {
-                            const subIndex = entry.getSubIndex();
-                            await subIndex.load(); // can be moved line 1: dataset.load()?
-                            await execute(subIndex);
+                            else if (comparisonResult === 0 && entry.hasSubIndex()) {
+                                const subIndex = entry.getSubIndex();
+                                if (subIndex) {
+                                    try {
+                                        await subIndex.load(); // can be moved line 1: dataset.load()?
+                                        await execute(subIndex);
+                                    }
+                                    catch(e) { console.warn("Error while loading " + subIndex.getOrigin()?.value) }
+                                }
+                            }
                         }
                     });
                 }
@@ -59,38 +83,43 @@ export function IndexMixin<
 }
 
 export function indexFactory(semantizer: Semantizer) {
-    const _DatasetImpl = semantizer.getDatasetImpl();
-    return semantizer.getFactory(IndexMixin, _DatasetImpl);
+    return semantizer.getMixinFactory(IndexMixin);
 }
 
 export function IndexEntryMixin<
-    TBase extends new(...args: any[]) => Dataset
+    TBase extends DatasetSemantizerMixinConstructor
 >(Base: TBase) {
 
-    return class IndexEntryImpl extends Base implements IndexEntry {
+    return class IndexEntryMixinImpl extends Base implements IndexEntry {
 
         public compareShape(shape: IndexShape): number {
-            return this.getShape().compares(shape);
+            const thisShape = this.getShape();
+            if (!thisShape)
+                throw new Error("The entry does not have a shape.");
+            return thisShape.compares(shape);
         }
 
         // TODO: rewrite
         public hasSubIndex(): boolean {
-            const subIndex = this.getObject('https://ns.inria.fr/idx/terms#hasSubIndex');
-            return (subIndex.getUri() !== undefined && subIndex.getUri() !== "");
+            const predicate = this.getSemantizer().getConfiguration().getRdfDataModelFactory().namedNode('https://ns.inria.fr/idx/terms#hasSubIndex');
+            return this.getLinkedObject(predicate) !== undefined;
         }
 
-        public getTarget(): Dataset {
-            return this.getObject('https://ns.inria.fr/idx/terms#hasTarget');
+        public getTarget(): DatasetSemantizer | undefined {
+            const predicate = this.getSemantizer().getConfiguration().getRdfDataModelFactory().namedNode('https://ns.inria.fr/idx/terms#hasTarget');
+            return this.getLinkedObject(predicate);
         }
 
-        public getSubIndex(): Index {
-            const dataset = this.getObject('https://ns.inria.fr/idx/terms#hasSubIndex');
-            return this.getSemantizer().build(indexFactory, dataset);
+        public getSubIndex(): Index | undefined {
+            const predicate = this.getSemantizer().getConfiguration().getRdfDataModelFactory().namedNode('https://ns.inria.fr/idx/terms#hasSubIndex');
+            const dataset = this.getLinkedObject(predicate);
+            return dataset ? this.getSemantizer().build(indexFactory, dataset): undefined;
         }
 
-        public getShape(): IndexShape {
-            const dataset = this.getObject('https://ns.inria.fr/idx/terms#hasShape');
-            return this.getSemantizer().build(indexShapeFactory, dataset);
+        public getShape(): IndexShape | undefined {
+            const predicate = this.getSemantizer().getConfiguration().getRdfDataModelFactory().namedNode('https://ns.inria.fr/idx/terms#hasShape');
+            const dataset = this.getLinkedObject(predicate);
+            return dataset ? this.getSemantizer().build(indexShapeFactory, dataset) : undefined;
         }
 
     }
@@ -98,19 +127,19 @@ export function IndexEntryMixin<
 }
 
 export function indexEntryFactory(semantizer: Semantizer) {
-    const _DatasetImpl = semantizer.getDatasetImpl();
-    return semantizer.getFactory(IndexEntryMixin, _DatasetImpl);
+    return semantizer.getMixinFactory(IndexEntryMixin);
 }
 
 export function IndexShapeMixin<
-    TBase extends new(...args: any[]) => Dataset
+    TBase extends DatasetSemantizerMixinConstructor
 >(Base: TBase) {
 
-    return class IndexEntryShapeImpl extends Base implements IndexShape {
+    return class IndexShapeMixinImpl extends Base implements IndexShape {
 
         public getRdfTypeProperty(): IndexShapeProperty {
             for (const p of this.getPropertiesAll()) {
-                if (p.getPath().value === 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type') {
+                const path = p.getPath();
+                if (path && path.value === 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type') {
                     return p;
                 }
             }
@@ -119,7 +148,8 @@ export function IndexShapeMixin<
         
         public getFilterProperty(): IndexShapeProperty {
             for (const p of this.getPropertiesAll()) {
-                if (p.getPath().value !== 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type') {
+                const path = p.getPath();
+                if (path && path.value !== 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type') {
                     return p;
                 }
             }
@@ -150,6 +180,7 @@ export function IndexShapeMixin<
         }
 
         public addProperty(path: NamedNode, value: NamedNode | Literal | BlankNode): void {
+            const dataFactory = this.getSemantizer().getConfiguration().getRdfDataModelFactory();
             const property = dataFactory.blankNode();
             this.add(
                 dataFactory.quad(
@@ -167,14 +198,14 @@ export function IndexShapeMixin<
             );
             this.add(
                 dataFactory.quad(
-                    dataFactory.namedNode(this.getUri()!),
+                    this.getOrigin()!,
                     dataFactory.namedNode('https://www.w3.org/ns/shacl#property'), 
                     property
                 )
             );
             this.add(
                 dataFactory.quad(
-                    dataFactory.namedNode(this.getUri()!),
+                    this.getOrigin()!,
                     dataFactory.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), 
                     dataFactory.namedNode("https://www.w3.org/ns/shacl#NodeShape")
                 )
@@ -182,7 +213,8 @@ export function IndexShapeMixin<
         }
 
         public getPropertiesAll(): IndexShapeProperty[] {
-            const properties = this.getObjectAll('https://www.w3.org/ns/shacl#property');
+            const predicate = this.getSemantizer().getConfiguration().getRdfDataModelFactory().namedNode('https://www.w3.org/ns/shacl#property');
+            const properties = this.getLinkedObjectAll(predicate);
             return properties.map(p => this.getSemantizer().build(indexShapePropertyFactory, p));
         }
 
@@ -191,35 +223,39 @@ export function IndexShapeMixin<
 }
 
 export function indexShapeFactory(semantizer: Semantizer) {
-    const _DatasetImpl = semantizer.getDatasetImpl();
-    return semantizer.getFactory(IndexShapeMixin, _DatasetImpl);
+    return semantizer.getMixinFactory(IndexShapeMixin);
 }
 
 export function IndexShapePropertyMixin<
-    TBase extends new(...args: any[]) => Dataset
+    TBase extends DatasetSemantizerMixinConstructor
 >(Base: TBase) {
 
-    return class IndexEntryShapePropertyImpl extends Base implements IndexShapeProperty {
+    return class IndexShapePropertyMixinImpl extends Base implements IndexShapeProperty {
         
-        public getValue(): BlankNode | Literal | NamedNode {
-            const object = this.getObject("https://www.w3.org/ns/shacl#hasValue")
-            return dataFactory.namedNode(object.getUri()!);
+        public getValue(): BlankNode | Literal | NamedNode | undefined {
+            const predicate = this.getSemantizer().getConfiguration().getRdfDataModelFactory().namedNode('https://www.w3.org/ns/shacl#hasValue');
+            const object = this.getLinkedObject(predicate);
+            return object ? object.getOrigin()! : undefined;
         }
         
-        public getPath(): NamedNode {
-            const object = this.getObject("https://www.w3.org/ns/shacl#path")
-            return dataFactory.namedNode(object.getUri()!);
+        // TODO: check return type (no blank node)
+        public getPath(): NamedNode | undefined {
+            const predicate = this.getSemantizer().getConfiguration().getRdfDataModelFactory().namedNode('https://www.w3.org/ns/shacl#path');
+            const object = this.getLinkedObject(predicate)
+            return object ? object.getOrigin()! as NamedNode : undefined;
         }
 
         public hasSamePath(other: IndexShapeProperty): boolean {
-            return this.getPath() === other.getPath();
+            return this.getPath()?.equals(other.getPath()) ?? false;
         }
         
         public hasSameValue(other: IndexShapeProperty): boolean {
-            return this.getValue() === other.getValue();
+            return this.getValue()?.equals(other.getValue()) ?? false;
         }
 
         public equals(other: IndexShapeProperty): boolean {
+            const path = this.hasSamePath(other);
+            const value = this.hasSameValue(other);
             return this.hasSamePath(other) && this.hasSameValue(other);
         }
         
@@ -239,6 +275,5 @@ export function IndexShapePropertyMixin<
 }
 
 export function indexShapePropertyFactory(semantizer: Semantizer) {
-    const _DatasetImpl = semantizer.getDatasetImpl();
-    return semantizer.getFactory(IndexShapePropertyMixin, _DatasetImpl);
+    return semantizer.getMixinFactory(IndexShapePropertyMixin);
 }

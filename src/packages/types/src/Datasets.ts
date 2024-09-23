@@ -1,16 +1,10 @@
 // interface StatementOwner ?
 
-import { DatasetCore as DatasetCoreRdfjs, Dataset as DatasetRdfjs, NamedNode, Quad, Literal, BlankNode, Term } from "@rdfjs/types";
-import { Loader, Resource, WithSemantizer } from './Common';
+import { BlankNode, Dataset as DatasetRdfjs, Literal, NamedNode } from "@rdfjs/types";
+import { Loader, QuadIterableSemantizer, Resource, WithOrigin, WithSemantizer } from './Common';
 import { Semantizer } from "./Semantizer";
 
-export interface WithOrigin {
-    getOrigin(): NamedNode | BlankNode | undefined;
-    setOrigin(uri: NamedNode | BlankNode): void;
-    getOriginDocument(): NamedNode | undefined;
-    getOriginThing(): NamedNode | BlankNode | undefined;
-    setOriginThing(term: NamedNode | BlankNode): void;
-}
+
 
 // = RDFJS dataset
 export interface Dataset extends DatasetRdfjs {
@@ -20,14 +14,18 @@ export interface Dataset extends DatasetRdfjs {
     hasNamedGraph(): boolean;
     countNamedGraph(): number;
 
-    getNamedGraph(namedGraph: NamedNode): NamedGraphWithOrigin | undefined;
-    getDefaultGraph(): GraphWithOrigin;
+    getDefaultGraph(): DatasetSemantizer;
+    getNamedGraph(namedGraph: NamedNode): DatasetSemantizer | undefined;
+    getNamedGraphAll(namedGraph: NamedNode): DatasetSemantizer[];
+
+    getRdfTypeAll(namedGraph?: NamedNode): NamedNode[];
+    isRdfTypeOf(rdfType: NamedNode, ...otherTypes: NamedNode[]): boolean;
 
     isDefaultGraphEmpty(): boolean;
     isNamedGraphEmpty(namedGraph: NamedNode): boolean;
 
-    getNode(subject: NamedNode | BlankNode, graph?: NamedNode): GraphWithOrigin | undefined;
-    getNodeAll(graph?: NamedNode): GraphWithOrigin[];
+    getSubGraph(subject: NamedNode | BlankNode, namedGraph?: NamedNode): DatasetSemantizer | undefined;
+    getSubGraphAll(namedGraph?: NamedNode): DatasetSemantizer[];
 
     getLiteral(thing: Resource, predicate: Resource, language?: string, graph?: NamedNode): Literal | undefined;
     getLiteralAll(thing: Resource, predicate: Resource, language?: string, graph?: NamedNode): Literal[];
@@ -36,7 +34,12 @@ export interface Dataset extends DatasetRdfjs {
     // getObject(predicate: Resource, thing?: Resource, graph?: NamedNode): DatasetWithOrigin | undefined;
     getLinkedObjectAll(predicate: Resource, thingOrDataset?: Resource | DatasetSemantizer, graph?: NamedNode): DatasetSemantizer[];
 
-    forEachThing(callbackfn: (value: GraphWithOrigin, index?: number, array?: GraphWithOrigin[]) => void, graph?: NamedNode): void;
+    /**
+     * 
+     * @param callbackfn 
+     * @param namedGraph Default is DefaultGraph
+     */
+    forEachSubGraph(callbackfn: (value: DatasetSemantizer, index?: number, array?: DatasetSemantizer[]) => Promise<void>, namedGraph?: NamedNode): Promise<void>;
 
     load(resource?: string | DatasetSemantizer | NamedNode, options?: DatasetLoadOptions): Promise<void>;
 }
@@ -45,23 +48,23 @@ export interface Graph extends DatasetRdfjs {
     count(): number;
     isEmpty(): boolean;
 
-    getNode(subject: NamedNode | BlankNode): GraphWithOrigin | undefined;
-    getNodeAll(): GraphWithOrigin[];
+    getSubGraph(subject: NamedNode | BlankNode): GraphSemantizer | undefined;
+    getSubGraphAll(): GraphSemantizer[];
 
     getLiteral(thing: Resource, predicate: Resource, language?: string): Literal | undefined;
     getLiteralAll(thing: Resource, predicate: Resource, language?: string): Literal[];
 
-    getObject(predicate: Resource, thing?: Resource): DatasetSemantizer | undefined;
-    getObjectAll(predicate: Resource, thing?: Resource): DatasetSemantizer[];
+    getLinkedObject(predicate: Resource, thing?: Resource): DatasetSemantizer | undefined;
+    getLinkedObjectAll(predicate: Resource, thing?: Resource): DatasetSemantizer[];
 
-    forEachThing(callbackfn: (value: GraphWithOrigin, index?: number, array?: GraphWithOrigin[]) => void): void;
+    forEachThing(callbackfn: (value: GraphSemantizer, index?: number, array?: GraphSemantizer[]) => void): void;
 
     load(resource?: string | DatasetSemantizer | NamedNode, options?: DatasetLoadOptions): Promise<void>;
 }
 
 export interface NamedGraph extends Graph {
     getGraphName(): NamedNode | BlankNode;
-    getGraph(): GraphWithOrigin;
+    getGraph(): GraphSemantizer;
 }
 
 // = RDF data model Dataset
@@ -70,11 +73,12 @@ export interface NamedGraph extends Graph {
  */
 export type DatasetSemantizer = Dataset & WithSemantizer & WithOrigin;
 
-export type GraphWithOrigin = Graph & WithOrigin;
+export type GraphSemantizer = Graph & WithSemantizer & WithOrigin;
 
-export type NamedGraphWithOrigin = NamedGraph & WithOrigin;
+export type NamedGraphSemantizer = NamedGraph & WithSemantizer & WithOrigin;
 
 export type DatasetSemantizerMixinConstructor = new (...args: any[]) => DatasetSemantizer;
+export type DatasetSemantizerRdfjsMixinConstructor = new(...args: any[]) => DatasetRdfjs & WithSemantizer & WithOrigin;
 
 export interface DatasetLoadOptions {
     loader?: Loader
@@ -82,7 +86,7 @@ export interface DatasetLoadOptions {
 
 export interface DatasetBaseFactory {
     load(semantizer: Semantizer, resource: string): Promise<DatasetSemantizer>;
-    build(semantizer: Semantizer, sourceDataset?: DatasetSemantizer): DatasetSemantizer;
+    build(semantizer: Semantizer, sourceDataset?: QuadIterableSemantizer): DatasetSemantizer;
 }
 
 // From RDF data model

@@ -1,4 +1,4 @@
-import { Constructor, DatasetImplConstructor, DatasetSemantizer, MixinFactory, Semantizer } from "@semantizer/types";
+import { Constructor, DatasetImplConstructor, DatasetSemantizer, MixinFactory, QuadIterableSemantizer, Semantizer } from "@semantizer/types";
 
 // (TODO move to default ? or to a dedicated package.)
 // (Add also a MixinFactoryDatasetCore package ?)
@@ -29,7 +29,7 @@ export class MixinFactoryImpl<
         return this.build(dataset);
     }
 
-    public build(sourceDataset?: DatasetSemantizer): TMixin {
+    public build(sourceDataset?: QuadIterableSemantizer): TMixin {
         const origin = sourceDataset? sourceDataset.getOrigin(): undefined;
         const dataset = new this._mixedClass(this._semantizer, origin, sourceDataset); // warning: no check on params (TS mixin)
         return dataset;

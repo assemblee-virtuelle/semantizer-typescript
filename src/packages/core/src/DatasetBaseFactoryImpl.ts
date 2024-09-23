@@ -1,4 +1,4 @@
-import { DatasetImplConstructor, DatasetSemantizer, DatasetBaseFactory, Semantizer } from "@semantizer/types";
+import { DatasetImplConstructor, DatasetSemantizer, DatasetBaseFactory, Semantizer, QuadIterableSemantizer } from "@semantizer/types";
 
 // constructs a DatasetRdfjs & WithSemantizer & WithOrigin
 export class DatasetBaseFactoryImpl<
@@ -23,7 +23,7 @@ export class DatasetBaseFactoryImpl<
         return new this._impl(semantizer, resource, datasetCore);
     }
 
-    public build(semantizer: Semantizer, sourceDataset?: DatasetSemantizer): DatasetSemantizer {
+    public build(semantizer: Semantizer, sourceDataset?: QuadIterableSemantizer): DatasetSemantizer {
         const origin = sourceDataset? sourceDataset.getOrigin(): undefined;
         const dataset = new this._impl(semantizer, origin, sourceDataset); // warning: no check on params (TS mixin)
         return dataset;

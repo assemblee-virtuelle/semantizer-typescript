@@ -1,5 +1,5 @@
 {
-  "name": "@semantizer/typeindex",
+  "name": "@semantizer/mixin-typeindex",
   "version": "1.0.0",
   "description": "",
   "main": "./lib/index.js",
@@ -13,7 +13,6 @@
   "author": "Maxime Lecoq-Gaillard",
   "license": "MIT",
   "devDependencies": {
-    "@rdfjs/types": "^1.1.0",
     "@semantizer/types": "^1.0.0",
     "typescript": "^5.5.2"
   },

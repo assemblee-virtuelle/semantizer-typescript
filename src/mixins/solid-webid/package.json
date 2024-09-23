@@ -1,5 +1,5 @@
 {
-  "name": "@semantizer/solid-webid",
+  "name": "@semantizer/mixin-solid-webid",
   "version": "1.0.0",
   "description": "",
   "main": "./lib/index.js",
@@ -13,8 +13,7 @@
   "author": "Maxime Lecoq-Gaillard",
   "license": "MIT",
   "dependencies": {
-    "@semantizer/webid": "^1.0.0",
-    "@semantizer/typeindex": "^1.0.0"
+    "@semantizer/mixin-typeindex": "^1.0.0"
   },
   "devDependencies": {
     "@semantizer/types": "^1.0.0",

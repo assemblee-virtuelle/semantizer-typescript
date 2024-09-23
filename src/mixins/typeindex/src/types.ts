@@ -1,4 +1,4 @@
-import { Dataset } from "@semantizer/types";
+import { Dataset, DatasetSemantizer, GraphSemantizer } from "@semantizer/types";
 
 export interface TypeIndexNonDestructiveOperations {
     // getStatementForClass(registration: string | TypeIndexRegistration): TypeIndexStatement | undefined;
@@ -18,7 +18,7 @@ export interface TypeIndexNonDestructiveOperations {
     // // Add other forEach like: forEachOfInstance, forEachOfInstanceContainer?
     // forEachOfClass(forClass: string, callbackfn: (value: TypeIndexRegistration, index?: number, array?: TypeIndexRegistration[]) => void, thisArg?: any): void;
 
-    getRegisteredInstanceForClass(forClass: string): Dataset; // TODO: check arity: onlyOne or Many?
+    getRegisteredInstanceForClass(forClass: string): DatasetSemantizer | undefined; // TODO: check arity: onlyOne or Many?
 }
 
 export interface TypeIndexDestructiveOperations {

@@ -1,5 +1,5 @@
 import { DataFactory, NamedNode, Quad, BlankNode } from "@rdfjs/types";
-import { Loader } from "./Common";
+import { Loader, QuadIterableSemantizer, WithSemantizer } from "./Common";
 import { DatasetBaseFactory, DatasetSemantizer } from "./Datasets";
 
 export type Constructor<T = {}> = new (...args: any[]) => T;
@@ -20,16 +20,19 @@ export interface Semantizer {
     getConfiguration(): Configuration;
     setConfiguration(configuration: Configuration): void;
     
+    getMixinFactory<TMixin extends DatasetSemantizer>(mixin: (Base: DatasetImplConstructor) => Constructor<TMixin>): MixinFactory<DatasetImplConstructor, TMixin>;
     getMixinFactory<TBase extends Constructor, TMixin extends DatasetSemantizer>(mixin: (Base: TBase) => Constructor<TMixin>, baseClass: TBase): MixinFactory<TBase, TMixin>;
+    getMixinFactory<TBase extends Constructor, TMixin extends DatasetSemantizer>(mixin: (Base: TBase | DatasetImplConstructor) => Constructor<TMixin>, baseClass?: TBase): MixinFactory<DatasetImplConstructor, TMixin> | MixinFactory<TBase, TMixin>;
 
     load<TBase extends Constructor, TMixin extends DatasetSemantizer>(resource: string): Promise<DatasetSemantizer>;
     load<TBase extends Constructor, TMixin extends DatasetSemantizer>(resource: string, mixinFactoryFunction: MixinFactoryFunction<TBase, TMixin>): Promise<TMixin>;
     load<TBase extends Constructor, TMixin extends DatasetSemantizer>(resource: string, mixinFactoryFunction?: MixinFactoryFunction<TBase, TMixin>): Promise<DatasetSemantizer | TMixin>;
 
     build<TBase extends Constructor, TMixin extends DatasetSemantizer>(): DatasetSemantizer;
+    build<TBase extends Constructor, TMixin extends DatasetSemantizer>(fromDataset: QuadIterableSemantizer): DatasetSemantizer;
     build<TBase extends Constructor, TMixin extends DatasetSemantizer>(mixinFactoryFunction: MixinFactoryFunction<TBase, TMixin>): TMixin;
-    build<TBase extends Constructor, TMixin extends DatasetSemantizer>(mixinFactoryFunction: MixinFactoryFunction<TBase, TMixin>, fromDataset?: DatasetSemantizer): TMixin;
-    build<TBase extends Constructor, TMixin extends DatasetSemantizer>(mixinFactoryFunction?: MixinFactoryFunction<TBase, TMixin>, fromDataset?: DatasetSemantizer): DatasetSemantizer | TMixin;
+    build<TBase extends Constructor, TMixin extends DatasetSemantizer>(mixinFactoryFunction: MixinFactoryFunction<TBase, TMixin>, fromDataset?: QuadIterableSemantizer): TMixin;
+    build<TBase extends Constructor, TMixin extends DatasetSemantizer>(mixinFactoryFunctionOrDataset?: MixinFactoryFunction<TBase, TMixin> | QuadIterableSemantizer, fromDataset?: QuadIterableSemantizer): DatasetSemantizer | TMixin;
 
     // TODO: Can be move to another class
     // getContext(): Context | undefined;
@@ -51,7 +54,7 @@ export interface MixinFactory<
     TMixin extends DatasetSemantizer
 > {
     load(resource: string): Promise<TMixin>;
-    build(dataset?: DatasetSemantizer): TMixin;
+    build(dataset?: QuadIterableSemantizer): TMixin;
 }
 
 export type MixinFactoryConstructor<

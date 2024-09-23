@@ -3,6 +3,8 @@ export { Term, DataFactory, NamedNode, BlankNode, Literal, Quad, DefaultGraph, D
 export {
     Resource, 
     WithSemantizer,
+    WithOrigin,
+    QuadIterableSemantizer,
     ResourceCollection,
     Countable,
     Copyable,
@@ -37,10 +39,11 @@ export {
     DatasetSemantizer,
     DatasetBaseFactory,
     DatasetSemantizerMixinConstructor,
+    DatasetSemantizerRdfjsMixinConstructor,
     Graph,
-    GraphWithOrigin,
+    GraphSemantizer,
     NamedGraph,
-    NamedGraphWithOrigin,
+    NamedGraphSemantizer,
     DatasetLoadOptions,
     WithOrigin
 } from "./lib/Datasets.js";

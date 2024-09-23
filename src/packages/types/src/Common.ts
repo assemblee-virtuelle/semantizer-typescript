@@ -8,6 +8,16 @@ export interface WithSemantizer {
     // toRdfjsDataset(): DatasetRdfjs;
 }
 
+export interface WithOrigin {
+    getOrigin(): NamedNode | BlankNode | undefined;
+    setOrigin(uri: NamedNode | BlankNode): void;
+    getOriginDocument(): NamedNode | undefined;
+    getOriginThing(): NamedNode | BlankNode | undefined;
+    setOriginThing(term: NamedNode | BlankNode): void;
+}
+
+export type QuadIterableSemantizer = Iterable<Quad> & WithSemantizer & WithOrigin;
+
 // export interface Resource {
 //     getUri(): string;
 //     hasUri(): boolean;
