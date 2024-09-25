@@ -21,16 +21,17 @@ export function IndexMixin<
 
     return class IndexMixinImpl extends Base implements Index {
 
+        /**
+         * Transforms the quad stream of this dataset into an IndexEntry stream.
+         * @returns A Readable stream of IndexEntry with their linked objects (shape and properties).
+         */
         public async loadEntryStream(): Promise<Readable> {
             const quadStream = await this.loadQuadStream();
 
-            const datasets: DatasetSemantizer[] = [];
-            const shapes: { [key:string]: NamedNode | BlankNode } = {};
-            const properties: { [key:string]: NamedNode | BlankNode } = {};
             const semantizer = this.getSemantizer();
+            const datasets: DatasetSemantizer[] = []; // stores the datasets of the parsed entry, shape or property
 
             const indexEntryType = semantizer.getConfiguration().getRdfDataModelFactory().namedNode('https://ns.inria.fr/idx/terms#IndexEntry');
-            const shapePropertyPredicate = semantizer.getConfiguration().getRdfDataModelFactory().namedNode('https://www.w3.org/ns/shacl#property');
             const hasShapePredicate = semantizer.getConfiguration().getRdfDataModelFactory().namedNode('https://ns.inria.fr/idx/terms#hasShape');
             const hasTargetPredicate = semantizer.getConfiguration().getRdfDataModelFactory().namedNode('https://ns.inria.fr/idx/terms#hasTarget');
             const hasSubIndexPredicate = semantizer.getConfiguration().getRdfDataModelFactory().namedNode('https://ns.inria.fr/idx/terms#hasSubIndex');
@@ -51,21 +52,13 @@ export function IndexMixin<
 
                         dataset.add(quad);
 
-                        if (quad.predicate.equals(hasShapePredicate)) {
-                            shapes[quad.subject.value] = quad.object as NamedNode | BlankNode;
-                        }
-
-                        if (quad.predicate.equals(shapePropertyPredicate)) {
-                            properties[quad.subject.value] = quad.object as NamedNode | BlankNode;
-                        }
-
                         const isEntry = dataset.isRdfTypeOf(indexEntryType);
                         const hasShape = isEntry && dataset.some(q => q.predicate.equals(hasShapePredicate));
                         const hasSubIndex = hasShape && dataset.some(q => q.predicate.equals(hasSubIndexPredicate));
                         const hasTarget = hasShape && !hasSubIndex && dataset.some(q => q.predicate.equals(hasTargetPredicate));
 
                         // This loads the linked objects of the entry. This allows to include the shape and properties 
-                        // into the streamed entry dataset.
+                        // into the streamed entry dataset (we need it to compare).
                         const addLinkedObjects = (d: DatasetSemantizer) => {
                             for (const q of d) {
                                 const object = q.object;
@@ -79,23 +72,28 @@ export function IndexMixin<
                             }
                         }
 
+                        // Here, if we think the entry is complete, we can stream it.
                         if (isEntry && hasShape && (hasSubIndex || hasTarget)) {
-                            // WARNING: in the next line we suppose (no check) we already have parsed the linked objects!
-                            // Maybe we need to enforce the check expecially on the shape properties. If so, we need to 
-                            // check that we have a sh:hasValue for a shape of an entry having an hasTarget. For an entry 
-                            // with a hasSubIndex, we don't need to check we have something for sh:hasValue.
+                            // WARNING: in the next line we suppose (no check) we already have parsed the linked objects
+                            // (shape and properties)! Maybe we need to enforce the check expecially on the shape properties 
+                            // (because these quads could be parsed later - but they should not). 
+                            // If so, we need to check that we have a sh:hasValue for a shape of an entry having an hasTarget. 
+                            // For an entry with a hasSubIndex, we don't need to check we have something for sh:hasValue.
                             addLinkedObjects(dataset); 
 
                             const entry = semantizer.build(indexEntryFactory, dataset);
                             this.push(entry);
+
+                            // TODO: here we might remove the already streamed dataset from the datasets array so we can 
+                            // enhance the next calls to the find() method on this array.
                         }
                     }
-                  callback();
+                  callback(); // not sure if this is necessary?
                 }
             });
 
             // @ts-ignore
-            return quadStream.pipe(entryStream);
+            return quadStream.pipe(entryStream); // WARNING: the pipe method comes from the implementation of the used parser.
         }
 
         public async forEachEntry(callbackfn: (value: IndexEntry, index?: number, array?: IndexEntry[]) => Promise<void>): Promise<void> {
@@ -119,9 +117,9 @@ export function IndexMixin<
 
                         entryStream.on('data', async (entry) => {
                             if (foundTargetCount >= limitCount) {
-                                entryStream.pause(); // if the stream is not paused, the call to destroy() will have no effect
+                                entryStream.pause(); // if the stream is not paused, the call to destroy() would have no effect
                                 entryStream.destroy(); // handled by the 'close' event (see below)
-                                return;
+                                return; // when we have enough results, we should stop the streaming process.
                             }
                             
                             const comparisonResult = entry.compareShape(shape);
