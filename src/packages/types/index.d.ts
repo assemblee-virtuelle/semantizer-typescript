@@ -1,4 +1,15 @@
-export { Term, DataFactory, NamedNode, BlankNode, Literal, Quad, DefaultGraph, DatasetCore as DatasetCoreRdfjs, Dataset as DatasetRdfjs  } from "@rdfjs/types";
+export { 
+    Term, 
+    DataFactory, 
+    NamedNode, 
+    BlankNode, 
+    Literal, 
+    Quad, 
+    Stream, 
+    DefaultGraph, 
+    DatasetCore as DatasetCoreRdfjs, 
+    Dataset as DatasetRdfjs
+} from "@rdfjs/types";
 
 export {
     Resource, 
@@ -19,7 +30,6 @@ export {
     Canonical,
     AnyFunction,
     AnyConstructor,
-    Loader,
     DocumentLoadOptions
 } from "./lib/Common.js";
 
@@ -35,6 +45,11 @@ export {
 } from "./lib/Semantizer.js";
 
 export {
+    Loader,
+    LoaderQuadStream
+} from "./lib/Loader.js";
+
+export {
     Dataset,
     DatasetSemantizer,
     DatasetBaseFactory,
@@ -45,6 +60,7 @@ export {
     NamedGraph,
     NamedGraphSemantizer,
     DatasetLoadOptions,
+    DatasetQuadStreamOptions,
     WithOrigin
 } from "./lib/Datasets.js";
 

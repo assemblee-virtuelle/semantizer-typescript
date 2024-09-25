@@ -38,8 +38,6 @@ const test = async () => {
             throw new Error("Index was not found.");
         }
 
-        await indexDataset.load();
-
         // 4. Build the index mixin
         const index = semantizer.build(indexFactory, indexDataset);
 
@@ -48,7 +46,7 @@ const test = async () => {
         shape.addProperty(dataFactory.namedNode("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), dataFactory.namedNode("http://cdn.startinblox.com/owl/ttl/vocab.ttl#User"));
         shape.addProperty(dataFactory.namedNode("http://cdn.startinblox.com/owl/ttl/vocab.ttl#skills"), dataFactory.namedNode("https://api.test-inria2.startinblox.com/skills/1/"));
 
-        // 6. Execute the query
+        // 6. Execute the query to find targets using streams to read the indexes
         await index.findTargetsRecursively(shape, (t) => console.log("!!! RESULT !!! " + t.getOrigin()?.value), 5);
     }
     

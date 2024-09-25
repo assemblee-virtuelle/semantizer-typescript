@@ -1,7 +1,8 @@
-import { Dataset, DatasetSemantizer, DatasetSemantizerMixinConstructor, Semantizer } from "@semantizer/types";
+import { Dataset, Quad, Term, DatasetSemantizer, DatasetSemantizerMixinConstructor, Semantizer, Stream } from "@semantizer/types";
 import { BlankNode, Literal, NamedNode } from "@rdfjs/types";
 import { Index, IndexEntry, IndexShape, IndexShapeProperty } from "./types";
 import { DatasetCore } from "@rdfjs/types"; // TODO: PB when removed
+import { Transform, Readable } from "stream";
 
 const namespaces = {
     idx: "https://ns.inria.fr/idx/terms#",
@@ -20,6 +21,78 @@ export function IndexMixin<
 
     return class IndexMixinImpl extends Base implements Index {
 
+        public async loadEntryStream(): Promise<Readable> {
+            const quadStream = await this.loadQuadStream();
+            const datasets: DatasetSemantizer[] = [];
+            const shapes: { [key:string]: NamedNode | BlankNode } = {};
+            const properties: { [key:string]: NamedNode | BlankNode } = {};
+            const semantizer = this.getSemantizer();
+
+            const indexEntryType = semantizer.getConfiguration().getRdfDataModelFactory().namedNode('https://ns.inria.fr/idx/terms#IndexEntry');
+            const shapePropertyPredicate = semantizer.getConfiguration().getRdfDataModelFactory().namedNode('https://www.w3.org/ns/shacl#property');
+            const hasShapePredicate = semantizer.getConfiguration().getRdfDataModelFactory().namedNode('https://ns.inria.fr/idx/terms#hasShape');
+            const hasTargetPredicate = semantizer.getConfiguration().getRdfDataModelFactory().namedNode('https://ns.inria.fr/idx/terms#hasTarget');
+            const hasSubIndexPredicate = semantizer.getConfiguration().getRdfDataModelFactory().namedNode('https://ns.inria.fr/idx/terms#hasSubIndex');
+
+            const entryStream = new Transform({
+                objectMode: true,
+
+                transform(quad: Quad, encoding, callback) {
+                    if (quad.subject.termType === 'NamedNode' || quad.subject.termType === 'BlankNode') {
+                        let dataset = datasets.find(d => d.getOrigin()?.equals(quad.subject));
+                        
+                        if (!dataset) {
+                            dataset= semantizer.build();
+                            dataset.setOrigin(quad.subject);
+                            datasets.push(dataset);
+                        }
+
+                        dataset.add(quad);
+
+                        if (quad.predicate.equals(hasShapePredicate)) {
+                            shapes[quad.subject.value] = quad.object as NamedNode | BlankNode;
+                        }
+
+                        if (quad.predicate.equals(shapePropertyPredicate)) {
+                            properties[quad.subject.value] = quad.object as NamedNode | BlankNode;
+                        }
+
+                        // charger les objets liés à l'entry s'ils sont dans le document (named node ou blank node)
+                        // si l'entry a un hasSubIndex, le hasValue n'à pas de valeur
+                        // si l'entry a un hasTarget, le hasValue doit être présent
+
+                        const isEntry = dataset.isRdfTypeOf(indexEntryType);
+                        const hasShape = isEntry && dataset.some(q => q.predicate.equals(hasShapePredicate));
+                        const hasSubIndex = hasShape && dataset.some(q => q.predicate.equals(hasSubIndexPredicate));
+                        const hasTarget = hasShape && !hasSubIndex && dataset.some(q => q.predicate.equals(hasTargetPredicate));
+
+                        const addLinkedObjects = (d: DatasetSemantizer) => {
+                            for (const q of d) {
+                                const object = q.object;
+                                if (object.termType === 'NamedNode' || object.termType === "BlankNode") {
+                                    const objectDataset = datasets.find(d => d.getOrigin()?.equals(object));
+                                    if (objectDataset) {
+                                        dataset.addAll(objectDataset);
+                                        addLinkedObjects(objectDataset);
+                                    }
+                                }
+                            }
+                        }
+
+                        if (isEntry && hasShape && (hasSubIndex || hasTarget)) {
+                            addLinkedObjects(dataset);
+                            const entry = semantizer.build(indexEntryFactory, dataset);
+                            this.push(entry);
+                        }
+                    }
+                  callback();
+                }
+            });
+
+            // @ts-ignore
+            return quadStream.pipe(entryStream);
+        }
+
         public async forEachEntry(callbackfn: (value: IndexEntry, index?: number, array?: IndexEntry[]) => Promise<void>): Promise<void> {
             const indexEntryType = this.getSemantizer().getConfiguration().getRdfDataModelFactory().namedNode('https://ns.inria.fr/idx/terms#IndexEntry');
             this.forEachSubGraph(async (subGraph) => {
@@ -36,41 +109,51 @@ export function IndexMixin<
             // TODO: move to a Strategy pattern?
             const execute = async (index: Index) => {
                 if (foundTargetCount < limitCount - 1) {
-                    // await index.load();
-                    await index.forEachEntry(async (entry) => {
-                        if (foundTargetCount < limitCount - 1) {
-                        // for await (const entry of index.forEachEntry(async (entry) => {
-                            const comparisonResult = entry.compareShape(shape);
+                    const entryStream = await index.loadEntryStream();
 
-                            if (comparisonResult === 1) {
-                                const target = entry.getTarget();
-                                if (target) {
-                                    callbackfn(target);
-                                    foundTargetCount++;
-                                }
-                                else {
-                                    const subIndex = entry.getSubIndex();
-                                    if (subIndex) {
-                                        try {
-                                            await subIndex.load();
-                                            await execute(subIndex);
-                                        }
-                                        catch(e) { console.error("Error while loading " + subIndex.getOrigin()?.value) }
-                                    } else { console.error("No subIndexFound for potencial result source.") }
-                                }
+                    entryStream.on('data', async (entry) => {
+                        if (foundTargetCount >= limitCount) {
+                            entryStream.pause();
+                            return;
+                        }
+                        
+                        const comparisonResult = entry.compareShape(shape);
+
+                        if (comparisonResult === 1) {
+                            const target = entry.getTarget();
+                            if (target) {
+                                callbackfn(target);
+                                foundTargetCount++;
                             }
-
-                            else if (comparisonResult === 0 && entry.hasSubIndex()) {
+                            else {
                                 const subIndex = entry.getSubIndex();
                                 if (subIndex) {
                                     try {
-                                        await subIndex.load(); // can be moved line 1: dataset.load()?
+                                        // await subIndex.load();
+                                        entryStream.pause();
                                         await execute(subIndex);
+                                        // entryStream.resume();
+                                    }
+                                    catch(e) { console.error("Error while loading " + subIndex.getOrigin()?.value + e) }
+                                } else { console.error("No subIndexFound for potencial result source.") }
+                            }
+                        }
+
+                        else if (comparisonResult === 0 && entry.hasSubIndex()) {
+                            if (foundTargetCount < limitCount - 1) {
+                                const subIndex = entry.getSubIndex();
+                                if (subIndex) {
+                                    try {
+                                        // await subIndex.load(); // can be moved line 1: dataset.load()?
+                                        entryStream.pause();
+                                        await execute(subIndex);
+                                        // entryStream.resume();
                                     }
                                     catch(e) { console.warn("Error while loading " + subIndex.getOrigin()?.value) }
                                 }
                             }
                         }
+                        
                     });
                 }
             }
@@ -250,24 +333,30 @@ export function IndexShapePropertyMixin<
         }
         
         public hasSameValue(other: IndexShapeProperty): boolean {
-            return this.getValue()?.equals(other.getValue()) ?? false;
+            if (!this.getValue())
+                throw new Error("This property to compare has no value.");
+            return this.getValue()!.equals(other.getValue()); // this.getValue must be checked before
         }
 
         public equals(other: IndexShapeProperty): boolean {
-            const path = this.hasSamePath(other);
-            const value = this.hasSameValue(other);
             return this.hasSamePath(other) && this.hasSameValue(other);
         }
         
         /**
-         * 
          * @param other 
-         * @returns -1 if both paths and values are different, 0 if paths are the same 
-         * but values are different, and 1 if both paths and values are equals.
+         * @returns -1 if paths are different or if both paths and values are different, 0 if paths are the same 
+         * but `this` property has no value, and 1 if both paths and values are equals.
          */
         public compares(other: IndexShapeProperty): number {
-            const result = this.hasSamePath(other)? 0: -1;
-            return (result === 0 && this.hasSameValue(other))? 1: result;
+            if (!this.hasSamePath(other)) {
+                return -1
+            }
+          
+            if (this.getValue()) {
+                return this.hasSameValue(other) ? 1 : -1;
+            }
+            
+            return 0;
         }
 
     }

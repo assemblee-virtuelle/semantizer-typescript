@@ -1,7 +1,9 @@
 import { BlankNode, NamedNode, Literal } from "@rdfjs/types";
 import { DatasetSemantizer } from "@semantizer/types";
+import { Readable } from "stream";
 
 export interface IndexOperations {
+    loadEntryStream(): Promise<Readable>;
     forEachEntry(callbackfn: (value: IndexEntry, index?: number, array?: IndexEntry[]) => Promise<void>): Promise<void>;
     findTargetsRecursively(shape: IndexShape, callbackfn: (target: DatasetSemantizer) => void, limit?: number): Promise<void>;
 }

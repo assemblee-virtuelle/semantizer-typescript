@@ -1,4 +1,4 @@
-import { Term, BlankNode, DefaultGraph, DatasetRdfjs, Literal, NamedNode, DatasetLoadOptions, DatasetSemantizer, GraphSemantizer, NamedGraphSemantizer, Resource, DatasetSemantizerRdfjsMixinConstructor } from '@semantizer/types';
+import { Term, BlankNode, Quad, Stream, DefaultGraph, DatasetRdfjs, Literal, NamedNode, DatasetLoadOptions, DatasetSemantizer, GraphSemantizer, NamedGraphSemantizer, Resource, DatasetSemantizerRdfjsMixinConstructor, DatasetQuadStreamOptions } from '@semantizer/types';
 import { DatasetCore } from "@rdfjs/types"; // PB if deleted
 
 export function DatasetMixin<
@@ -156,6 +156,13 @@ export function DatasetMixin<
             return things;
         }
 
+        public async loadQuadStream(resource?: string | DatasetSemantizer | NamedNode, options?: DatasetQuadStreamOptions): Promise<Stream<Quad>> {
+            resource = resource? resource: this;
+            const resourceUri = this.getUriOfResource(resource);
+            const loader = options?.quadStreamLoader ? options.quadStreamLoader : this.getSemantizer().getConfiguration().getLoaderQuadStream();
+            return loader.load(resourceUri);
+        }
+
         // TODO: include related blank node into returned dataset
         public async forEachSubGraph(callbackfn: (value: DatasetSemantizer, index?: number, array?: DatasetSemantizer[]) => Promise<void>, namedGraph?: NamedNode): Promise<void> {
             const graphDataset = namedGraph ? this.getNamedGraph(namedGraph) : this.getDefaultGraph();
@@ -205,13 +212,19 @@ export function DatasetMixin<
                 const loader = options && options.loader? options.loader: this.getSemantizer().getConfiguration().getLoader();
                 const resourceUri = this.getUriOfResource(resource);
                 const resourceNamedNode = this.getSemantizer().getConfiguration().getRdfDataModelFactory().namedNode(resourceUri);
+                const startTime = new Date();
                 const loaded = await loader.load(resourceUri);
+                const loadingTime = (new Date().getTime() - startTime.getTime()) / 1000;
+                console.log("HTTP loading done in ", loadingTime.toString(), "sec.");
+                console.log("Start loading in memory of " + resourceUri + "...");
                 for (const quad of loaded) {
                     if (this.getOrigin() && this.getOrigin()?.value !== resourceUri) { // load in default graph
                         quad.graph = resourceNamedNode;
                     }
                     this.add(quad);
                 }
+                const elapsedTime = (new Date().getTime() - startTime.getTime()) / 1000;
+                console.log("Finished loading in memory in " + elapsedTime.toString() + "sec of " + resourceUri);
             }
         }
 

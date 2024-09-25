@@ -1,6 +1,7 @@
-import { DataFactory, NamedNode, Quad, BlankNode } from "@rdfjs/types";
-import { Loader, QuadIterableSemantizer, WithSemantizer } from "./Common";
+import { BlankNode, DataFactory, NamedNode, Quad } from "@rdfjs/types";
+import { QuadIterableSemantizer } from "./Common";
 import { DatasetBaseFactory, DatasetSemantizer } from "./Datasets";
+import { Loader, LoaderQuadStream } from "./Loader";
 
 export type Constructor<T = {}> = new (...args: any[]) => T;
 
@@ -43,6 +44,7 @@ export interface Semantizer {
 
 export interface Configuration {
     getLoader(): Loader;
+    getLoaderQuadStream(): LoaderQuadStream;
     getRdfDataModelFactory(): DataFactory;
     getMixinFactoryImpl(): MixinFactoryConstructor<any, any>;
     getDatasetBaseFactory(): DatasetBaseFactory;

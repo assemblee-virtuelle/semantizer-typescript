@@ -1,8 +1,9 @@
 // interface StatementOwner ?
 
-import { BlankNode, Dataset as DatasetRdfjs, Literal, NamedNode } from "@rdfjs/types";
-import { Loader, QuadIterableSemantizer, Resource, WithOrigin, WithSemantizer } from './Common';
+import { BlankNode, Dataset as DatasetRdfjs, Literal, NamedNode, Quad, Stream } from "@rdfjs/types";
+import { QuadIterableSemantizer, Resource, WithOrigin, WithSemantizer } from './Common';
 import { Semantizer } from "./Semantizer";
+import { Loader, LoaderQuadStream } from "./Loader";
 
 
 
@@ -42,6 +43,7 @@ export interface Dataset extends DatasetRdfjs {
     forEachSubGraph(callbackfn: (value: DatasetSemantizer, index?: number, array?: DatasetSemantizer[]) => Promise<void>, namedGraph?: NamedNode): Promise<void>;
 
     load(resource?: string | DatasetSemantizer | NamedNode, options?: DatasetLoadOptions): Promise<void>;
+    loadQuadStream(resource?: string | DatasetSemantizer | NamedNode, options?: DatasetQuadStreamOptions): Promise<Stream<Quad>>;
 }
 
 export interface Graph extends DatasetRdfjs {
@@ -82,6 +84,10 @@ export type DatasetSemantizerRdfjsMixinConstructor = new(...args: any[]) => Data
 
 export interface DatasetLoadOptions {
     loader?: Loader
+}
+
+export interface DatasetQuadStreamOptions {
+    quadStreamLoader?: LoaderQuadStream;
 }
 
 export interface DatasetBaseFactory {

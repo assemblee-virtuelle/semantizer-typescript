@@ -131,8 +131,3 @@ export type Mixin<T extends AnyFunction> = InstanceType<ReturnType<T>>;
 // >  {
 //     create<T extends DocumentWithDestructiveOperations<ContainedThing, SelfDescribingThing>>(uri: string, callback: (impl: DocumentConstructor<ContainedThing, SelfDescribingThing>) => AnyConstructor<T>): T;
 // }
-
-export interface Loader {
-    // , options?: DocumentLoadOptions
-    load(uri: string): Promise<DatasetCore<Quad, Quad>>;
-}
