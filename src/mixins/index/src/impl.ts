@@ -108,54 +108,61 @@ export function IndexMixin<
 
             // TODO: move to a Strategy pattern?
             const execute = async (index: Index) => {
-                if (foundTargetCount < limitCount - 1) {
-                    const entryStream = await index.loadEntryStream();
+                return new Promise<void>(async (resolve, reject) => {
+                    if (foundTargetCount < limitCount - 1) {
+                        const entryStream = await index.loadEntryStream();
 
-                    entryStream.on('data', async (entry) => {
-                        if (foundTargetCount >= limitCount) {
-                            entryStream.pause();
-                            return;
-                        }
-                        
-                        const comparisonResult = entry.compareShape(shape);
-
-                        if (comparisonResult === 1) {
-                            const target = entry.getTarget();
-                            if (target) {
-                                callbackfn(target);
-                                foundTargetCount++;
+                        entryStream.on('data', async (entry) => {
+                            if (foundTargetCount >= limitCount) {
+                                entryStream.pause();
+                                entryStream.destroy();
+                                return;
                             }
-                            else {
-                                const subIndex = entry.getSubIndex();
-                                if (subIndex) {
-                                    try {
-                                        // await subIndex.load();
-                                        entryStream.pause();
-                                        await execute(subIndex);
-                                        // entryStream.resume();
-                                    }
-                                    catch(e) { console.error("Error while loading " + subIndex.getOrigin()?.value + e) }
-                                } else { console.error("No subIndexFound for potencial result source.") }
-                            }
-                        }
+                            
+                            const comparisonResult = entry.compareShape(shape);
 
-                        else if (comparisonResult === 0 && entry.hasSubIndex()) {
-                            if (foundTargetCount < limitCount - 1) {
-                                const subIndex = entry.getSubIndex();
-                                if (subIndex) {
-                                    try {
-                                        // await subIndex.load(); // can be moved line 1: dataset.load()?
-                                        entryStream.pause();
-                                        await execute(subIndex);
-                                        // entryStream.resume();
-                                    }
-                                    catch(e) { console.warn("Error while loading " + subIndex.getOrigin()?.value) }
+                            if (comparisonResult === 1) {
+                                const target = entry.getTarget();
+                                if (target) {
+                                    callbackfn(target);
+                                    foundTargetCount++;
+                                }
+                                else {
+                                    const subIndex = entry.getSubIndex();
+                                    if (subIndex) {
+                                        try {
+                                            entryStream.pause();
+                                            await execute(subIndex);
+                                            entryStream.resume();
+                                        }
+                                        catch(e) { console.error("Error while loading " + subIndex.getOrigin()?.value + e) }
+                                    } else { console.error("No subIndexFound for potencial result source.") }
                                 }
                             }
-                        }
-                        
-                    });
-                }
+
+                            else if (comparisonResult === 0 && entry.hasSubIndex()) {
+                                if (foundTargetCount < limitCount - 1) {
+                                    const subIndex = entry.getSubIndex();
+                                    if (subIndex) {
+                                        try {
+                                            entryStream.pause();
+                                            await execute(subIndex);
+                                            entryStream.resume();
+                                        }
+                                        catch(e) { console.warn("Error while loading " + subIndex.getOrigin()?.value) }
+                                    }
+                                }
+                            }
+                            
+                        });
+
+                        entryStream.on('close', () => resolve()); // handle the call to destroy()
+                        entryStream.on('error', (error) => reject(error));
+                        entryStream.on('end', () => resolve());
+                    }
+
+                    else resolve();
+                });
             }
 
             await execute(this);
