@@ -61,6 +61,7 @@ export function IndexMixin<
                         }
 
                         // Here, if we think the entry is complete, we can stream it.
+                        // TODO: maybe we can also check the conformance to the targeted shape here?
                         if (isEntry && hasShape && (hasSubIndex || hasTarget)) {
                             // WARNING: in the next line we suppose (no check) we already have parsed the linked objects
                             // (shape and properties)! Maybe we need to enforce the check expecially on the shape properties 
@@ -81,7 +82,7 @@ export function IndexMixin<
             });
 
             // @ts-ignore
-            return quadStream.pipe(entryStream); // WARNING: the pipe method comes from the implementation of the used parser.
+            return quadStream.pipe(entryStream); // WARNING: the pipe method comes from the implementation of the underlying used parser (it can comes from @rdfjs/common-formats if the package loader-rdfjs is used (which uses @rdfjs/fetch)).
         }
 
         public async forEachEntry(callbackfn: (value: IndexEntry, index?: number, array?: IndexEntry[]) => Promise<void>): Promise<void> {
@@ -110,6 +111,7 @@ export function IndexMixin<
                                 return; // when we have enough results, we should stop the streaming process.
                             }
                             
+                            // TODO: maybe the comparison can be checked directly into the Transform stream (loadEntryStream method)?
                             const comparisonResult = entry.compareShape(shape);
 
                             if (comparisonResult === 1) {
