@@ -28,14 +28,21 @@ export {
 
 export {
     IndexShapePropertyMixin,
-    indexShapePropertyFactory
+    indexShapePropertyValueFactory,
+    indexShapePropertyPatternFactory
 } from "./IndexShapePropertyMixin.js";
 
 export { 
     Index,
     IndexEntry,
     IndexShape,
-    IndexShapeProperty
+    IndexShapeComparisonResult,
+    IndexShapeProperty,
+    IndexStrategy,
+    IndexStrategyFinalIndexes,
+    FinalIndexResult
 } from "./types.js";
+
+export { IndexStrategyFinalIndexesDefaultImpl } from "./IndexStrategyFinalIndexesDefaultImpl.js";
 
 export default indexFactory;

@@ -1,15 +1,19 @@
 import { DatasetSemantizer, DatasetSemantizerMixinConstructor, Semantizer } from "@semantizer/types";
 import { indexFactory } from "./IndexMixin.js";
 import { indexShapeFactory } from "./IndexShapeMixin.js";
-import { Index, IndexEntry, IndexShape } from "./types";
+import { Index, IndexEntry, IndexShape, IndexShapeComparisonResult } from "./types";
 
 export function IndexEntryMixin<
     TBase extends DatasetSemantizerMixinConstructor
 >(Base: TBase) {
 
     return class IndexEntryMixinImpl extends Base implements IndexEntry {
+        
+        public getTargetUri(): string | undefined {
+            throw new Error("Method not implemented.");
+        }
 
-        public compareShape(shape: IndexShape): number {
+        public compareShape(shape: IndexShape): IndexShapeComparisonResult {
             const thisShape = this.getShape();
             if (!thisShape)
                 throw new Error("The entry does not have a shape.");

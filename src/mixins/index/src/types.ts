@@ -1,30 +1,39 @@
-import { BlankNode, NamedNode, Literal } from "@rdfjs/types";
-import { DatasetSemantizer } from "@semantizer/types";
+import { DatasetSemantizer, BlankNode, NamedNode, Literal } from "@semantizer/types";
 import { Readable } from "stream";
 
 export interface IndexOperations {
     loadEntryStream(): Promise<Readable>;
     forEachEntry(callbackfn: (value: IndexEntry, index?: number, array?: IndexEntry[]) => Promise<void>): Promise<void>;
-    findTargetsRecursively(shape: IndexShape, callbackfn: (target: DatasetSemantizer) => void, limit?: number): Promise<void>;
+    findTargetsRecursively(strategy: IndexStrategy, shape: IndexShape, callbackfn: (target: DatasetSemantizer) => void, limit?: number): Promise<void>;
 }
 
-export interface IndexEntryNonDestructiveOperations {
-    compareShape(shape: IndexShape): number;
+export interface IndexEntryOperations {
+    compareShape(shape: IndexShape): IndexShapeComparisonResult;
     hasSubIndex(): boolean;
     getShape(): IndexShape | undefined;
     getTarget(): DatasetSemantizer | undefined;
+    getTargetUri(): string | undefined;
     getSubIndex(): Index | undefined;
 }
 
 export interface IndexShapeOperations {
     // isClosed(): boolean;
-    compares(other: IndexShape): number;
+    hasMultiCriteria(): boolean;
+    compares(other: IndexShape): IndexShapeComparisonResult;
     getRdfTypeProperty(): IndexShapeProperty;
-    getFilterProperty(): IndexShapeProperty;
+    getFilterProperties(): IndexShapeProperty[];
     countProperties(): number;
     forEachProperty(callbackfn: (value: IndexShapeProperty, index?: number, array?: IndexShapeProperty[]) => void): void;
     getPropertiesAll(): IndexShapeProperty[];
-    addProperty(path: NamedNode, value: NamedNode | Literal | BlankNode): void;
+    addTargetRdfType(rdfType: NamedNode): void;
+    addValueProperty(path: NamedNode, value: NamedNode | Literal | BlankNode): void;
+    addPatternProperty(path: NamedNode, value: NamedNode | Literal | BlankNode): void;
+}
+
+export interface IndexShapePropertyBaseOperations {
+    getPredicate(): NamedNode;
+    isPatternProperty(): boolean;
+    isValueProperty(): boolean;
 }
 
 export interface IndexShapePropertyOperations {
@@ -37,7 +46,26 @@ export interface IndexShapePropertyOperations {
     // getPattern(): string | undefined;
 }
 
-export type IndexShapeProperty = DatasetSemantizer & IndexShapePropertyOperations;
+export interface IndexShapeComparisonResult {
+    getResult(): number;
+    getComparedPath(): NamedNode;
+}
+
+export interface IndexStrategy {
+    execute(index: Index, shape: IndexShape, callbackfn: (target: DatasetSemantizer) => void, limit?: number): Promise<void>;
+}
+
+export interface IndexStrategyFinalIndexes {
+    execute(rootIndex: Index, shape: IndexShape, maxFind?: number): Readable;
+}
+
+export interface FinalIndexResult {
+    getIndex(): Index;
+    getPath(): NamedNode;
+}
+
+export type IndexShapePropertyBase = DatasetSemantizer & IndexShapePropertyBaseOperations;
+export type IndexShapeProperty = IndexShapePropertyBase & IndexShapePropertyOperations;
 export type IndexShape = DatasetSemantizer & IndexShapeOperations;
-export type IndexEntry = DatasetSemantizer & IndexEntryNonDestructiveOperations;
+export type IndexEntry = DatasetSemantizer & IndexEntryOperations;
 export type Index = DatasetSemantizer & IndexOperations;

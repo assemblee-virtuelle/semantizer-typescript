@@ -1,7 +1,8 @@
 import semantizer from "@semantizer/default";
-import { typeIndexFactory } from "@semantizer/mixin-typeindex";
+import { DatasetSemantizer } from "@semantizer/types";
 import { solidWebIdProfileFactory } from "@semantizer/mixin-solid-webid";
-import indexFactory, { indexEntryFactory, indexShapeFactory } from "@semantizer/mixin-index";
+import indexFactory, { indexShapeFactory } from "@semantizer/mixin-index";
+import IndexStrategyConjunction from "@semantizer/mixin-index-strategy-conjunction";
 
 /*
 TODO:
@@ -22,7 +23,7 @@ const test = async () => {
         const publicTypeIndex = webId.getPublicTypeIndex();
 
         if (!publicTypeIndex) {
-            throw new Error("TypeIndex was not found.");
+            throw new Error("The TypeIndex was not found.");
         }
 
         await publicTypeIndex.load();
@@ -31,7 +32,7 @@ const test = async () => {
         const indexDataset = publicTypeIndex.getRegisteredInstanceForClass('https://ns.inria.fr/idx/terms#Index');
 
         if (!indexDataset) {
-            throw new Error("Index was not found.");
+            throw new Error("The meta-meta index was not found.");
         }
 
         // 4. Build the index mixin
@@ -40,14 +41,27 @@ const test = async () => {
         // 5. Construct the shape
         const shape = semantizer.build(indexShapeFactory);
         const dataFactory = semantizer.getConfiguration().getRdfDataModelFactory();
-        // shape.setTargetRdfType('http://cdn.startinblox.com/owl/ttl/vocab.ttl#User');
-        shape.addProperty(dataFactory.namedNode("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), dataFactory.namedNode("http://cdn.startinblox.com/owl/ttl/vocab.ttl#User"));
-        // shape.addProperty(dataFactory.namedNode("http://cdn.startinblox.com/owl/ttl/vocab.ttl#skills"), dataFactory.namedNode("https://api.test-inria2.startinblox.com/skills/99/"));
-        shape.addProperty(dataFactory.namedNode("http://cdn.startinblox.com/owl/ttl/vocab.ttl#city"), dataFactory.literal("paris"));
+        shape.addTargetRdfType(dataFactory.namedNode("http://cdn.startinblox.com/owl/ttl/vocab.ttl#User"));
+
+        shape.addPatternProperty(
+            dataFactory.namedNode("http://cdn.startinblox.com/owl/ttl/vocab.ttl#firstName"), 
+            dataFactory.literal("adr.*")
+        );
+        
+        shape.addValueProperty(
+            dataFactory.namedNode("http://cdn.startinblox.com/owl/ttl/vocab.ttl#city"), 
+            dataFactory.literal("paris")
+        );
+        
+        shape.addValueProperty(
+            dataFactory.namedNode("http://cdn.startinblox.com/owl/ttl/vocab.ttl#skills"), 
+            dataFactory.namedNode("https://api.test-inria2.startinblox.com/skills/2/")
+        );
 
         // 6. Execute the query to find targets using streams to read the indexes
-        // TODO: here we should return a stream instead of taking a callback parameter. This way, the querying could be paused and resumed.
-        await index.findTargetsRecursively(shape, (t) => console.log("!!! RESULT !!! " + t.getOrigin()?.value), 5);
+        const strategy = new IndexStrategyConjunction(semantizer);
+        const resultCallback = (user: DatasetSemantizer) => console.log("!!! RESULT !!! ", user.getOrigin()?.value);
+        await index.findTargetsRecursively(strategy, shape, resultCallback, 5);
     }
     
     catch (e) {

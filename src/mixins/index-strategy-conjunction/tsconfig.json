@@ -100,5 +100,5 @@
   },
   "include": [
     "src"
-, "../index-strategy-conjuntion/src/IndexStrategyConjunctionDefaultImpl.ts", "../index-strategy-conjuntion/src/ResultChecker.ts", "../index-strategy-conjuntion/src/ResultCheckerStrategyMultiple.ts", "../index-strategy-conjuntion/src/ResultCheckerStrategySingle.ts"  ]
+  ]
 }

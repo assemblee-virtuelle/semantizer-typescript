@@ -1,16 +1,60 @@
-import { Dataset, Quad, BlankNode, Literal, NamedNode, Term, DatasetSemantizer, DatasetSemantizerMixinConstructor, Semantizer, Stream } from "@semantizer/types";
-import { Index, IndexEntry, IndexShape, IndexShapeProperty } from "./types";
-import { DatasetCore } from "@rdfjs/types"; // TODO: PB when removed
-import { Transform, Readable } from "stream";
+import { BlankNode, DatasetSemantizerMixinConstructor, Literal, NamedNode, Semantizer } from "@semantizer/types";
+import { IndexShapeProperty, IndexShapePropertyBase } from "./types";
+
+export type IndexShapePropertyBaseMixinConstructor = new (...args: any[]) => IndexShapePropertyBase;
+
+export function IndexShapePropertyValueMixin<
+    TBase extends DatasetSemantizerMixinConstructor
+>(Base: TBase) {
+
+    return class IndexShapePropertyValueMixinImpl extends Base implements IndexShapePropertyBase {
+        
+        public isPatternProperty(): boolean {
+            return false;
+        }
+        
+        public isValueProperty(): boolean {
+            return true;
+        }
+  
+        public getPredicate(): NamedNode {
+            return this.getSemantizer().getConfiguration().getRdfDataModelFactory().namedNode('https://www.w3.org/ns/shacl#hasValue');
+        }
+
+    }
+
+}
+
+export function IndexShapePropertyPatternMixin<
+    TBase extends DatasetSemantizerMixinConstructor
+>(Base: TBase) {
+
+    return class IndexShapePropertyValueMixinImpl extends Base implements IndexShapePropertyBase {
+        
+        public isPatternProperty(): boolean {
+            return true;
+        }
+        
+        public isValueProperty(): boolean {
+            return false;
+        }
+  
+        public getPredicate(): NamedNode {
+            return this.getSemantizer().getConfiguration().getRdfDataModelFactory().namedNode('https://www.w3.org/ns/shacl#pattern');
+        }
+
+    }
+
+}
 
 export function IndexShapePropertyMixin<
-    TBase extends DatasetSemantizerMixinConstructor
+    TBase extends IndexShapePropertyBaseMixinConstructor
 >(Base: TBase) {
 
     return class IndexShapePropertyMixinImpl extends Base implements IndexShapeProperty {
         
         public getValue(): BlankNode | Literal | NamedNode | undefined {
-            const predicate = this.getSemantizer().getConfiguration().getRdfDataModelFactory().namedNode('https://www.w3.org/ns/shacl#hasValue');
+            const predicate = this.getPredicate();
             const object = this.getLinkedObject(predicate);
             return object ? object.getOrigin()! : undefined;
         }
@@ -57,6 +101,12 @@ export function IndexShapePropertyMixin<
 
 }
 
-export function indexShapePropertyFactory(semantizer: Semantizer) {
-    return semantizer.getMixinFactory(IndexShapePropertyMixin);
+export function indexShapePropertyValueFactory(semantizer: Semantizer) {
+    const DatasetImpl = semantizer.getConfiguration().getDatasetImpl();
+    return semantizer.getMixinFactory(IndexShapePropertyMixin, IndexShapePropertyValueMixin(DatasetImpl));
+}
+
+export function indexShapePropertyPatternFactory(semantizer: Semantizer) {
+    const DatasetImpl = semantizer.getConfiguration().getDatasetImpl();
+    return semantizer.getMixinFactory(IndexShapePropertyMixin, IndexShapePropertyPatternMixin(DatasetImpl));
 }

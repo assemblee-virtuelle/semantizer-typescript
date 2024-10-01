@@ -1,9 +1,10 @@
 {
-  "name": "@semantizer/sib-test",
+  "name": "@semantizer/mixin-index-strategy-conjunction",
   "version": "1.0.0",
   "description": "",
-  "main": "",
+  "main": "./lib/index.js",
   "type": "module",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "build": "tsc -p .",
     "dev": "tsc -w",
@@ -12,10 +13,7 @@
   "author": "Maxime Lecoq-Gaillard",
   "license": "MIT",
   "dependencies": {
-    "@semantizer/default": "^1.0.0",
-    "@semantizer/mixin-index": "^1.0.0",
-    "@semantizer/mixin-index-strategy-conjunction": "^1.0.0",
-    "@semantizer/mixin-solid-webid": "^1.0.0"
+    "@semantizer/mixin-index": "^1.0.0"
   },
   "devDependencies": {
     "@semantizer/types": "^1.0.0",

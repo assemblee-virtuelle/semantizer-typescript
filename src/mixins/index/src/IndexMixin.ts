@@ -1,7 +1,7 @@
 import { DatasetSemantizer, DatasetSemantizerMixinConstructor, Quad, Semantizer } from "@semantizer/types";
 import { Readable, Transform } from "stream";
 import { indexEntryFactory } from "./IndexEntryMixin.js";
-import { Index, IndexEntry, IndexShape } from "./types";
+import { Index, IndexEntry, IndexShape, IndexStrategy } from "./types";
 
 export function IndexMixin<
     TBase extends DatasetSemantizerMixinConstructor
@@ -83,6 +83,7 @@ export function IndexMixin<
 
             // @ts-ignore
             return quadStream.pipe(entryStream); // WARNING: the pipe method comes from the implementation of the underlying used parser (it can comes from @rdfjs/common-formats if the package loader-rdfjs is used (which uses @rdfjs/fetch)).
+            // TODO: ask @rdfjs/types why the Stream interface does not export a pipe method (and also other methods of streams like pause, resume and destroy).
         }
 
         public async forEachEntry(callbackfn: (value: IndexEntry, index?: number, array?: IndexEntry[]) => Promise<void>): Promise<void> {
@@ -94,71 +95,8 @@ export function IndexMixin<
             });
         }
 
-        public async findTargetsRecursively(shape: IndexShape, callbackfn: (target: DatasetSemantizer) => void, limit?: number): Promise<void> {
-            let foundTargetCount: number = 0;
-            const limitCount: number = limit? limit: 30;
-
-            // TODO: move to a Strategy pattern?
-            const execute = async (index: Index) => {
-                return new Promise<void>(async (resolve, reject) => {
-                    if (foundTargetCount < limitCount - 1) {
-                        const entryStream = await index.loadEntryStream();
-
-                        entryStream.on('data', async (entry) => {
-                            if (foundTargetCount >= limitCount) {
-                                entryStream.pause(); // if the stream is not paused, the call to destroy() would have no effect
-                                entryStream.destroy(); // handled by the 'close' event (see below)
-                                return; // when we have enough results, we should stop the streaming process.
-                            }
-                            
-                            // TODO: maybe the comparison can be checked directly into the Transform stream (loadEntryStream method)?
-                            const comparisonResult = entry.compareShape(shape);
-
-                            if (comparisonResult === 1) {
-                                const target = entry.getTarget();
-                                if (target) {
-                                    callbackfn(target);
-                                    foundTargetCount++;
-                                }
-                                else {
-                                    const subIndex = entry.getSubIndex();
-                                    if (subIndex) {
-                                        try {
-                                            entryStream.pause();
-                                            await execute(subIndex);
-                                            entryStream.resume();
-                                        }
-                                        catch(e) { console.error("Error while loading " + subIndex.getOrigin()?.value + e) }
-                                    } else { console.error("No subIndexFound for potencial result source.") }
-                                }
-                            }
-
-                            else if (comparisonResult === 0 && entry.hasSubIndex()) {
-                                if (foundTargetCount < limitCount - 1) {
-                                    const subIndex = entry.getSubIndex();
-                                    if (subIndex) {
-                                        try {
-                                            entryStream.pause();
-                                            await execute(subIndex);
-                                            entryStream.resume();
-                                        }
-                                        catch(e) { console.warn("Error while loading " + subIndex.getOrigin()?.value) }
-                                    }
-                                }
-                            }
-                            
-                        });
-
-                        entryStream.on('close', () => resolve()); // handle the call to destroy()
-                        entryStream.on('error', (error) => reject(error));
-                        entryStream.on('end', () => resolve());
-                    }
-
-                    else resolve();
-                });
-            }
-
-            await execute(this);
+        public async findTargetsRecursively(strategy: IndexStrategy, shape: IndexShape, callbackfn: (target: DatasetSemantizer) => void, limit?: number): Promise<void> {
+            await strategy.execute(this, shape, callbackfn, limit);
         }
 
     }
