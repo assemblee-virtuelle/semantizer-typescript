@@ -3,6 +3,7 @@ import { DatasetSemantizer } from "@semantizer/types";
 import { solidWebIdProfileFactory } from "@semantizer/mixin-solid-webid";
 import indexFactory, { indexShapeFactory } from "@semantizer/mixin-index";
 import IndexStrategyConjunction from "@semantizer/mixin-index-strategy-conjunction";
+import IndexStrategySparqlComunica from "@semantizer/mixin-index-strategy-sparql-comunica";
 
 /*
 TODO:
@@ -59,9 +60,11 @@ const test = async () => {
         );
 
         // 6. Execute the query to find targets using streams to read the indexes
-        const strategy = new IndexStrategyConjunction(semantizer);
+        const strategy = new IndexStrategyConjunction();
+        const strategyComunica = new IndexStrategySparqlComunica();
         const resultCallback = (user: DatasetSemantizer) => console.log("!!! RESULT !!! ", user.getOrigin()?.value);
-        await index.findTargetsRecursively(strategy, shape, resultCallback, 5);
+
+        await index.findTargetsRecursively(strategyComunica, shape, resultCallback, 5);
     }
     
     catch (e) {

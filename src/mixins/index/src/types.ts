@@ -1,9 +1,19 @@
-import { DatasetSemantizer, BlankNode, NamedNode, Literal } from "@semantizer/types";
+import { DatasetSemantizer, BlankNode, NamedNode, Literal, Semantizer } from "@semantizer/types";
 import { Readable } from "stream";
 
 export interface IndexOperations {
     loadEntryStream(): Promise<Readable>;
     forEachEntry(callbackfn: (value: IndexEntry, index?: number, array?: IndexEntry[]) => Promise<void>): Promise<void>;
+
+    /**
+     * 2024-10-02: We may need to remove the shape parameter to let it be managed by the strategy instead. The reason is that in the future
+     * we should be able to express the shape with a SPARQL query. We would have a strategy that accepts a SPARQL query as input. In a 
+     * first step, if the underlying engine (like Comunica) does not support named graph querying, the passed-in SPARQL query should 
+     * not handle the source selection (find final indexes to query) but let the strategy find the final indexes (the strategy will 
+     * have to parse the SPARQL to understand what shapes it has to find). When named graph querying would be possible with the SPARQL 
+     * engine, the strategy could take a complete SPARQL query and let the engine does all the work (use link traversal to discover 
+     * sources).
+     */
     findTargetsRecursively(strategy: IndexStrategy, shape: IndexShape, callbackfn: (target: DatasetSemantizer) => void, limit?: number): Promise<void>;
 }
 
@@ -43,7 +53,6 @@ export interface IndexShapePropertyOperations {
     compares(other: IndexShapeProperty): number;
     getPath(): NamedNode | undefined;
     getValue(): NamedNode | Literal | BlankNode | undefined;
-    // getPattern(): string | undefined;
 }
 
 export interface IndexShapeComparisonResult {
@@ -52,6 +61,8 @@ export interface IndexShapeComparisonResult {
 }
 
 export interface IndexStrategy {
+    getSemantizer(): Semantizer;
+    setSemantizer(semantizer: Semantizer): void;
     execute(index: Index, shape: IndexShape, callbackfn: (target: DatasetSemantizer) => void, limit?: number): Promise<void>;
 }
 

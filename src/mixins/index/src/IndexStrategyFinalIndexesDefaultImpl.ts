@@ -26,9 +26,7 @@ export class IndexStrategyFinalIndexesDefaultImpl implements IndexStrategyFinalI
     
     public execute(rootIndex: Index, shape: IndexShape, maxFind?: number): Readable {
         let foundFinalIndexCount: number = 0;
-        const streamsCount = shape.countProperties() - 1;
         const promises: Promise<void>[] = [];
-        const processedStreams: Readable[] = [];
 
         const resultStream = new Readable({ objectMode: true });
         resultStream._read = () => {};
@@ -38,7 +36,9 @@ export class IndexStrategyFinalIndexesDefaultImpl implements IndexStrategyFinalI
             if (subIndex) {
                 try {
                     entryStream.pause();
-                    await process(subIndex);
+                    const subIndexPromise = process(subIndex);
+                    promises.push(subIndexPromise);
+                    await subIndexPromise;
                     entryStream.resume();
                 }
                 catch(e) { console.error("Error while loading " + subIndex.getOrigin()?.value + e) }
@@ -49,7 +49,6 @@ export class IndexStrategyFinalIndexesDefaultImpl implements IndexStrategyFinalI
             return new Promise<void>(async (resolve, reject) => {
                 if (maxFind && foundFinalIndexCount < maxFind - 1) {
                     const entryStream = await index.loadEntryStream();
-                    processedStreams.push(entryStream);
 
                     entryStream.on('data', async (entry: IndexEntry) => {
                         if (maxFind && foundFinalIndexCount >= maxFind) {
@@ -75,22 +74,23 @@ export class IndexStrategyFinalIndexesDefaultImpl implements IndexStrategyFinalI
                                 await processSubIndex(entry, entryStream);
                             }
                         }
-                        
                     });
 
-                    entryStream.on('error', (error) => reject(error));
-                    entryStream.on('end', async () => {
-                        await Promise.all(promises);
-                        resolve();
-                        return;
-                    });
+                    entryStream.on('end', () => resolve());
+
+                    promises.push(new Promise<void>((resolveThis, rejectThis) => {
+                        entryStream.on('end', async () => resolveThis());
+                        entryStream.on('error', (error) => rejectThis(error));
+                    }));
                 }
 
                 else resolve();
             });
         }
 
-        process(rootIndex);
+        process(rootIndex).then(() => {
+            Promise.all(promises).then(() => resultStream.push(null));
+        });
 
         return resultStream;
     }

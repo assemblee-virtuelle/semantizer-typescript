@@ -1,17 +1,11 @@
-import { DatasetSemantizer, Semantizer } from "@semantizer/types";
+import { FinalIndexResult, Index, IndexEntry, IndexShape, IndexStrategyBaseImpl, IndexStrategyFinalIndexesDefaultImpl } from "@semantizer/mixin-index";
+import { DatasetSemantizer } from "@semantizer/types";
 import { ResultCheckerDefaultImpl } from "./ResultChecker.js";
-import { FinalIndexResult, Index, IndexEntry, IndexShape, IndexStrategy, IndexStrategyFinalIndexesDefaultImpl } from "@semantizer/mixin-index";
-import { ResultCheckerStrategy } from "./types.js";
 import { ResultCheckerStrategyMultiple } from "./ResultCheckerStrategyMultiple.js";
 import { ResultCheckerStrategySingle } from "./ResultCheckerStrategySingle.js";
+import { ResultCheckerStrategy } from "./types.js";
 
-export class IndexStrategyConjunctionDefaultImpl implements IndexStrategy {
-
-    private _semantizer: Semantizer;
-
-    public constructor(semantizer: Semantizer) {
-        this._semantizer = semantizer;
-    }
+export class IndexStrategyConjunctionDefaultImpl extends IndexStrategyBaseImpl {
 
     public async execute(rootIndex: Index, shape: IndexShape, callbackfn: (target: DatasetSemantizer) => void, limit?: number): Promise<void> {
         let resultCount = 0;
@@ -19,7 +13,7 @@ export class IndexStrategyConjunctionDefaultImpl implements IndexStrategy {
         const strategy: ResultCheckerStrategy = shape.hasMultiCriteria() ? new ResultCheckerStrategyMultiple() : new ResultCheckerStrategySingle();
         const finalIndexesStrategy = new IndexStrategyFinalIndexesDefaultImpl();
         const finalIndexStream = finalIndexesStrategy.execute(rootIndex, shape, limit);
-        const resultChecker = new ResultCheckerDefaultImpl(this._semantizer, shape, strategy);
+        const resultChecker = new ResultCheckerDefaultImpl(this.getSemantizer(), shape, strategy);
 
         resultChecker.on('data', (entry: IndexEntry) => {
             if (resultCount >= limitCount) {

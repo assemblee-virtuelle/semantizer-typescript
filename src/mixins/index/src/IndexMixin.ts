@@ -96,6 +96,7 @@ export function IndexMixin<
         }
 
         public async findTargetsRecursively(strategy: IndexStrategy, shape: IndexShape, callbackfn: (target: DatasetSemantizer) => void, limit?: number): Promise<void> {
+            strategy.setSemantizer(this.getSemantizer());
             await strategy.execute(this, shape, callbackfn, limit);
         }
 

@@ -43,6 +43,8 @@ export { 
     FinalIndexResult
 } from "./types.js";
 
+export { IndexStrategyBaseImpl } from "./IndexStrategyBaseImpl.js";
+
 export { IndexStrategyFinalIndexesDefaultImpl } from "./IndexStrategyFinalIndexesDefaultImpl.js";
 
 export default indexFactory;
