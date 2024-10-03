@@ -59,12 +59,46 @@ const test = async () => {
             dataFactory.namedNode("https://api.test-inria2.startinblox.com/skills/2/")
         );
 
+        const sparqlQuery = `PREFIX idx: <https://ns.inria.fr/idx/terms#>
+            PREFIX sh: <https://www.w3.org/ns/shacl#>
+            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+            PREFIX sib: <http://cdn.startinblox.com/owl/ttl/vocab.ttl#>
+
+            SELECT DISTINCT ?result WHERE {
+                ?prop0 a idx:IndexEntry;
+                    idx:hasShape [
+                        sh:property [
+                            sh:path <http://cdn.startinblox.com/owl/ttl/vocab.ttl#firstName>;
+                            sh:pattern "adr.*"
+                        ]
+                    ];
+                    idx:hasTarget ?result.
+
+                ?prop1 a idx:IndexEntry;
+                idx:hasShape [
+                    sh:property [
+                        sh:path <http://cdn.startinblox.com/owl/ttl/vocab.ttl#city>;
+                        sh:hasValue "paris"
+                    ]
+                ];
+                idx:hasTarget ?result.
+
+                ?prop2 a idx:IndexEntry;
+                idx:hasShape [
+                    sh:property [
+                        sh:path <http://cdn.startinblox.com/owl/ttl/vocab.ttl#skills>;
+                        sh:hasValue <https://api.test-inria2.startinblox.com/skills/2/>
+                    ]
+                ];
+                idx:hasTarget ?result.
+            } LIMIT 5`;
+
         // 6. Execute the query to find targets using streams to read the indexes
-        const strategy = new IndexStrategyConjunction();
-        const strategyComunica = new IndexStrategySparqlComunica();
+        const strategy = new IndexStrategyConjunction(shape);
+        const strategyComunica = new IndexStrategySparqlComunica(sparqlQuery, shape);
         const resultCallback = (user: DatasetSemantizer) => console.log("!!! RESULT !!! ", user.getOrigin()?.value);
 
-        await index.findTargetsRecursively(strategyComunica, shape, resultCallback, 5);
+        await index.findTargetsRecursively(strategyComunica, resultCallback, 5);
     }
     
     catch (e) {

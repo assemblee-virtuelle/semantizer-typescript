@@ -1,19 +1,19 @@
-import { FinalIndexResult, Index, IndexEntry, IndexShape, IndexStrategyBaseImpl, IndexStrategyFinalIndexesDefaultImpl } from "@semantizer/mixin-index";
+import { FinalIndexResult, Index, IndexEntry, IndexStrategyBaseShapeImpl, IndexStrategyFinalIndexesDefaultImpl } from "@semantizer/mixin-index";
 import { DatasetSemantizer } from "@semantizer/types";
 import { ResultCheckerDefaultImpl } from "./ResultChecker.js";
 import { ResultCheckerStrategyMultiple } from "./ResultCheckerStrategyMultiple.js";
 import { ResultCheckerStrategySingle } from "./ResultCheckerStrategySingle.js";
 import { ResultCheckerStrategy } from "./types.js";
 
-export class IndexStrategyConjunctionDefaultImpl extends IndexStrategyBaseImpl {
+export class IndexStrategyConjunctionDefaultImpl extends IndexStrategyBaseShapeImpl {
 
-    public async execute(rootIndex: Index, shape: IndexShape, callbackfn: (target: DatasetSemantizer) => void, limit?: number): Promise<void> {
+    public async execute(rootIndex: Index, callbackfn: (target: DatasetSemantizer) => void, limit?: number): Promise<void> {
         let resultCount = 0;
         const limitCount: number = limit? limit: 30;
-        const strategy: ResultCheckerStrategy = shape.hasMultiCriteria() ? new ResultCheckerStrategyMultiple() : new ResultCheckerStrategySingle();
+        const strategy: ResultCheckerStrategy = this.getShape().hasMultiCriteria() ? new ResultCheckerStrategyMultiple() : new ResultCheckerStrategySingle();
         const finalIndexesStrategy = new IndexStrategyFinalIndexesDefaultImpl();
-        const finalIndexStream = finalIndexesStrategy.execute(rootIndex, shape, limit);
-        const resultChecker = new ResultCheckerDefaultImpl(this.getSemantizer(), shape, strategy);
+        const finalIndexStream = finalIndexesStrategy.execute(rootIndex, this.getShape(), limit);
+        const resultChecker = new ResultCheckerDefaultImpl(this.getSemantizer(), this.getShape(), strategy);
 
         resultChecker.on('data', (entry: IndexEntry) => {
             if (resultCount >= limitCount) {

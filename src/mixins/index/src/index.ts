@@ -45,6 +45,8 @@ export { 
 
 export { IndexStrategyBaseImpl } from "./IndexStrategyBaseImpl.js";
 
+export { IndexStrategyBaseShapeImpl } from "./IndexStrategyBaseShapeImpl.js";
+
 export { IndexStrategyFinalIndexesDefaultImpl } from "./IndexStrategyFinalIndexesDefaultImpl.js";
 
 export default indexFactory;

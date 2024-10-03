@@ -1,52 +1,43 @@
 import { QueryEngine } from "@comunica/query-sparql";
-import { FinalIndexResult, Index, IndexShape, IndexShapeProperty, IndexStrategyBaseImpl, IndexStrategyFinalIndexesDefaultImpl } from "@semantizer/mixin-index";
+import { FinalIndexResult, Index, IndexShape, IndexShapeProperty, IndexStrategyBaseShapeImpl, IndexStrategyFinalIndexesDefaultImpl } from "@semantizer/mixin-index";
 import { BlankNode, DatasetSemantizer, Literal, NamedNode } from "@semantizer/types";
 
-export class IndexStrategySparqlComunica extends IndexStrategyBaseImpl {
+export class IndexStrategySparqlComunica extends IndexStrategyBaseShapeImpl {
 
-    public async execute(rootIndex: Index, shape: IndexShape, callbackfn: (target: DatasetSemantizer) => void, limit?: number): Promise<void> {
+    private _sparqlQuery: string;
+
+    /**
+     * Here a shape param is expected to be able to find the final indexes. It could be removed when 
+     * we will be able to query named graphs with Comunica. If we use the link traversal without the 
+     * named graphs querying ability, the request will be very uneffiscient since all the indexes 
+     * would be queried (because Comunica use all the sources it discovers). 
+     * @param sparqlQuery 
+     * @param shape Needed to find the final indexes to query.
+     */
+    public constructor(sparqlQuery: string, shape: IndexShape) {
+        super(shape);
+        this._sparqlQuery = sparqlQuery;
+    }
+
+    public getSparqlQuery(): string {
+        return this._sparqlQuery;
+    }
+
+    public async execute(rootIndex: Index, callbackfn: (target: DatasetSemantizer) => void, limit?: number): Promise<void> {
         const limitCount: number = limit? limit: 30;
         const finalIndexesStrategy = new IndexStrategyFinalIndexesDefaultImpl();
-        const finalIndexStream = finalIndexesStrategy.execute(rootIndex, shape, limit);
+        const finalIndexStream = finalIndexesStrategy.execute(rootIndex, this.getShape(), limit);
         const finalIndexes: string[] = [];
 
         finalIndexStream.on('data', (result: FinalIndexResult) => finalIndexes.push(result.getIndex().getOrigin()?.value!));
-
-        const propertyPredicateToSparql = (property: IndexShapeProperty): string => {
-            return property.isPatternProperty() ? "sh:pattern" : "sh:hasValue";
-        }
-
-        const valueToSparql = (value: NamedNode | BlankNode | Literal): string => {
-            if (value.termType === 'NamedNode')
-                return `<${value.value}>`;
-            if (value.termType === "Literal")
-                return `"${value.value}"`;
-            throw new Error("Unrecognized value");
-        }
 
         return new Promise((resolve, reject) => {
             finalIndexStream.on('end', async () => {
                 if (finalIndexes.length > 0) {
                     const comunicaEngine = new QueryEngine();
-                    let query = `PREFIX idx: <https://ns.inria.fr/idx/terms#>
-                        PREFIX sh: <https://www.w3.org/ns/shacl#>
-                        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-                        PREFIX sib: <http://cdn.startinblox.com/owl/ttl/vocab.ttl#>
-                        
-                        SELECT DISTINCT ?result WHERE {`;
-                    shape.getFilterProperties().forEach((property, index) => query += `?prop${index} a idx:IndexEntry;
-                        idx:hasShape [
-                            sh:property [
-                                sh:path <${property.getPath()?.value}>;
-                                ${propertyPredicateToSparql(property)} ${valueToSparql(property.getValue()!)}
-                            ]
-                        ];
-                        idx:hasTarget ?result.
-                    `);
-                    query += `} LIMIT ${limitCount}`;
 
                     // @ts-ignore
-                    const bindingsStream = await comunicaEngine.queryBindings(query, { sources: finalIndexes, unionDefaultGraph: true });
+                    const bindingsStream = await comunicaEngine.queryBindings(this.getSparqlQuery(), { sources: finalIndexes, unionDefaultGraph: true });
 
                     bindingsStream.on('data', (binding) => {
                         const namedNode = this.getSemantizer().getConfiguration().getRdfDataModelFactory().namedNode;

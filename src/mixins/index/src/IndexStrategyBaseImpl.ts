@@ -15,6 +15,6 @@ export abstract class IndexStrategyBaseImpl implements IndexStrategy {
         return this._semantizer;
     }
     
-    public abstract execute(index: Index, shape: IndexShape, callbackfn: (target: DatasetSemantizer) => void, limit?: number | undefined): Promise<void>;
+    public abstract execute(index: Index, callbackfn: (target: DatasetSemantizer) => void, limit?: number | undefined): Promise<void>;
 
 }
