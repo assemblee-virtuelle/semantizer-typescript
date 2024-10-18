@@ -96,9 +96,16 @@ export function DatasetMixin<
         public getSubGraphAll(namedGraph?: NamedNode): DatasetSemantizer[] {
             throw new Error('Method not implemented.');
         }
-        getLiteral(thing: Resource, predicate: Resource, language?: string | undefined, graph?: NamedNode | undefined): Literal | undefined {
-            throw new Error('Method not implemented.');
+        
+        public getLiteral(thing: Resource, predicate: Resource, language?: string | undefined, graph?: NamedNode | undefined): Literal | undefined {
+            const literal = this.match(thing, predicate);
+            for (const q of literal) {
+                if (q.object.termType === "Literal")
+                    return q.object;
+            }
+            return undefined;
         }
+        
         getLiteralAll(thing: Resource, predicate: Resource, language?: string | undefined, graph?: NamedNode | undefined): Literal[] {
             throw new Error('Method not implemented.');
         }

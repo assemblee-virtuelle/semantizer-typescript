@@ -1,8 +1,7 @@
+import { SolidWebIdProfile, SolidWebIdProfileConstructor, SolidWebIdProfileMixin } from "@semantizer/mixin-solid-webid";
 import { Semantizer } from "@semantizer/types";
-import { SolidWebIdProfile, SolidWebIdProfileConstructor, SolidWebIdProfileMixin } from "@semantizer/solid-webid";
-import { Catalog, CatalogFactory } from "./Catalog.js";
-import { DatasetCore } from "@rdfjs/types"; // PB if deleted
-import WebIdProfileMixin from "@semantizer/webid";
+import { Catalog, catalogFactory } from "./Catalog.js";
+import { WebIdProfileMixin } from "@semantizer/mixin-webid";
 
 export type Enterprise = SolidWebIdProfile & EnterpriseOperations;
 
@@ -20,18 +19,24 @@ export function EnterpriseMixin<
     return class EnterpriseMixinImpl extends Base implements EnterpriseOperations {
 
         public getName(): string | undefined {
-            return this.getLiteral(this.getUri()!, DFC + 'name');
+            // const webId = this.getPrimaryTopic();
+            const dataFactory = this.getSemantizer().getConfiguration().getRdfDataModelFactory();
+            const predicate = dataFactory.namedNode(DFC + 'name');
+            return this.getLiteral(this.getOrigin()!, predicate)?.value;
         }
 
         public getMaintainedCatalogs(): Catalog[] {
-            return this.getObjectAll(DFC + 'maintains').map(d => CatalogFactory(this.getSemantizer()).build(d));
+            // const webId = this.getPrimaryTopic();
+            const dataFactory = this.getSemantizer().getConfiguration().getRdfDataModelFactory();
+            const predicate = dataFactory.namedNode(DFC + 'maintains');
+            return this.getLinkedObjectAll(predicate).map(d => this.getSemantizer().build(catalogFactory, d));
         }
 
     }
 
 }
 
-export function EnterpriseFactory(semantizer: Semantizer) {
-    const _DatasetImpl = semantizer.getDatasetImpl();
-    return semantizer.getFactory(EnterpriseMixin, SolidWebIdProfileMixin(WebIdProfileMixin(_DatasetImpl)));
+export function enterpriseFactory(semantizer: Semantizer) {
+    const _DatasetImpl = semantizer.getConfiguration().getDatasetImpl();
+    return semantizer.getMixinFactory(EnterpriseMixin, SolidWebIdProfileMixin(WebIdProfileMixin(_DatasetImpl)));
 }

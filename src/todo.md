@@ -1,6 +1,9 @@
 TODO: 
+- [ ] By default, methods work on all the graphs of the dataset. Pass a DefaultGraph params. Or inverse? Define a new Interface { AllGraphs = 'AllGraphs'; DefaultGraph = 'DefaultGraph' }
+- [ ] Allow type string for URI params (resource)
+- [ ] Add method to facilitate quad creation (AddLiteral, AddUrl, etc).
+- [ ] Add construct parameters. Or define methods to create new instances in mixins.
 - [ ] Add a new dataset layer as base.
-- [ ] Add construct parameters
 - [ ] In core-default, re-export dataFactory, datasetFactory?
 - [ ] Add a rdfs-seeAlso mixin
 - [ ] Loader VS fetcher ?
