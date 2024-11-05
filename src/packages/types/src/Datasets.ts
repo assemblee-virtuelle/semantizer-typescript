@@ -5,6 +5,7 @@ import { Loader, LoaderQuadStream } from "./Loader";
 
 // = RDFJS dataset
 export interface Dataset extends DatasetRdfjs, Countable {
+    // addQuad(subject, predicate, object, graph?): void; // graph default is set to DefaultGraph
     hasNamedGraph(): boolean;
     countNamedGraph(): number;
 
