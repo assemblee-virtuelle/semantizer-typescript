@@ -1,4 +1,4 @@
-import { Dataset, DatasetSemantizer, GraphSemantizer } from "@semantizer/types";
+import { Dataset, DatasetSemantizer } from "@semantizer/types";
 
 export interface TypeIndexNonDestructiveOperations {
     // getStatementForClass(registration: string | TypeIndexRegistration): TypeIndexStatement | undefined;

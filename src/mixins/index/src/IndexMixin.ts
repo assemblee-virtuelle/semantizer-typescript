@@ -40,7 +40,7 @@ export function IndexMixin<
 
                         dataset.add(quad);
 
-                        const isEntry = dataset.isRdfTypeOf(indexEntryType);
+                        const isEntry = dataset.isDefaultGraphRdfTypeOf(indexEntryType);
                         const hasShape = isEntry && dataset.some(q => q.predicate.equals(hasShapePredicate));
                         const hasSubIndex = hasShape && dataset.some(q => q.predicate.equals(hasSubIndexPredicate));
                         const hasTarget = hasShape && !hasSubIndex && dataset.some(q => q.predicate.equals(hasTargetPredicate));
@@ -89,7 +89,7 @@ export function IndexMixin<
         public async forEachEntry(callbackfn: (value: IndexEntry, index?: number, array?: IndexEntry[]) => Promise<void>): Promise<void> {
             const indexEntryType = this.getSemantizer().getConfiguration().getRdfDataModelFactory().namedNode('https://ns.inria.fr/idx/terms#IndexEntry');
             this.forEachSubGraph(async (subGraph) => {
-                if (subGraph.isRdfTypeOf(indexEntryType)) {
+                if (subGraph.isDefaultGraphRdfTypeOf(indexEntryType)) {
                     await callbackfn(this.getSemantizer().build(indexEntryFactory, subGraph));
                 }
             });

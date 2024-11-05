@@ -1,4 +1,7 @@
-import { Context } from "./Common";
+export interface Context {
+    expand(uri: string): string;
+    shorten(uri: string): string;
+}
 
 interface Prefix {
     prefix: string;
