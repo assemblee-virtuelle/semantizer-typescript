@@ -49,7 +49,7 @@ export function personFactory(semantizer: Semantizer) {
     return semantizer.getMixinFactory(PersonMixin, SolidWebIdProfileMixin(WebIdProfileMixin(_DatasetImpl)));
 }
 
-function personWithHelperLiteralAddFactory(semantizer: Semantizer) {
+export function personWithHelperLiteralAddFactory(semantizer: Semantizer) {
     const _DatasetImpl = semantizer.getConfiguration().getDatasetImpl();
     return semantizer.getMixinFactory(PersonMixin, LiteralHelperAddMixin(SolidWebIdProfileMixin(WebIdProfileMixin(_DatasetImpl))));
 }
