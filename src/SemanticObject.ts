@@ -277,8 +277,13 @@ export default class SemanticObject implements Semanticable {
         this.addSemanticPropertyReferenceId(property, value, true);
     }
 
-    public setSemanticPropertyLiteral(property: string, value: string | number | boolean): void {
-        this.addSemanticPropertyLiteral(property, value, true);
+    public setSemanticPropertyLiteral(property: string, value: string | number | boolean | (string | number | boolean)[]): void {
+        if (Array.isArray(value)) {
+            this.deleteRdfProperty(property);
+            for (const v of value) {
+                this.addSemanticPropertyLiteral(property, v, false);
+            }
+        } else this.addSemanticPropertyLiteral(property, value, true);
     }
 
     public setSemanticPropertyAnonymous(property: string, anonymous: Semanticable): void {
