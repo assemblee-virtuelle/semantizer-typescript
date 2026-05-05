@@ -86,7 +86,8 @@ export default class SemanticObject implements Semanticable {
     removeSemanticProperty(property: string): void;
     setSemanticPropertyReference(property: string, value: Semanticable): void;
     setSemanticPropertyReferenceId(property: string, value: string): void;
-    setSemanticPropertyLiteral(property: string, value: string | number | boolean | (string | number | boolean)[]): void;
+    setSemanticPropertyLiteral(property: string, value: string | number | boolean): void;
+    setSemanticPropertyLiteralAll(property: string, values: (string | number | boolean)[]): void;
     setSemanticPropertyAnonymous(property: string, anonymous: Semanticable): void;
     setSemanticId(semanticId: string): void;
     setSemanticPropertyAllFromRdfDataset(dataset: DatasetExt): void;

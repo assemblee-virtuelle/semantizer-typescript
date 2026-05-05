@@ -33,6 +33,7 @@ export default interface Semanticable {
     isSemanticTypeOf(type: string): boolean;
     setSemanticPropertyReference(property: string, value: Semanticable): void;
     setSemanticPropertyLiteral(property: string, value: string | number | boolean | (string | number | boolean)[]): void;
+    setSemanticPropertyLiteralAll(property: string, values: (string | number | boolean)[]): void;
     setSemanticPropertyAnonymous(property: string, anonymous: Semanticable): void;
     setSemanticPropertyAllFromRdfDataset(dataset: DatasetExt): void;
     setSemanticId(id: string): void;

@@ -46,18 +46,18 @@ export default class SemanticObject implements Semanticable {
      * Create a new SemanticObject.
      * @param parameters 
      */
-    public constructor(parameters: {semantizer: ISemantizer, semanticId: string, semanticType?: string});
+    public constructor(parameters: { semantizer: ISemantizer, semanticId: string, semanticType?: string });
 
     /**
      * Create a new SemanticObject from an other (copy constructor).
      * The semanticId will be overrided by the one passed as a parameter.
      * @param parameters 
      */
-    public constructor(parameters: {semantizer: ISemantizer, semanticId: string, other: Semanticable});
-    public constructor(parameters: {semantizer: ISemantizer, semanticId?: string, semanticType?: string, other?: Semanticable}) {
+    public constructor(parameters: { semantizer: ISemantizer, semanticId: string, other: Semanticable });
+    public constructor(parameters: { semantizer: ISemantizer, semanticId?: string, semanticType?: string, other?: Semanticable }) {
         this._semantizer = parameters.semantizer;
-        this._semanticId = parameters.other? parameters.other.getSemanticId(): parameters.semanticId!;
-        this._rdfDataset = parameters.other? parameters.other.toRdfDatasetExt(): rdf.dataset();
+        this._semanticId = parameters.other ? parameters.other.getSemanticId() : parameters.semanticId!;
+        this._rdfDataset = parameters.other ? parameters.other.toRdfDatasetExt() : rdf.dataset();
         this.init(parameters.semanticType);
     }
 
@@ -94,7 +94,7 @@ export default class SemanticObject implements Semanticable {
     public addSemanticPropertyReference(property: string, value: Semanticable, replace: boolean = false): void {
         this.addSemanticPropertyReferenceId(property, value.getSemanticId(), replace);
     }
-    
+
     public addSemanticPropertyLiteral(property: string, value: string | number | boolean, replace: boolean = false): void {
         if (replace)
             this.deleteRdfProperty(property);
@@ -166,7 +166,7 @@ export default class SemanticObject implements Semanticable {
 
         if (this._semanticId === other.getSemanticId())
             result = this.hasSameProperties(other);
-        
+
         return result;
     }
 
@@ -178,12 +178,12 @@ export default class SemanticObject implements Semanticable {
         return this._semanticId;
     }
 
-    public getSemanticType(){
+    public getSemanticType() {
         return this.getSemanticProperty('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
     }
 
     public getSemanticProperty(property: string): any {
-        return this.hasSemanticProperty(property)? this.getSemanticPropertyAll(property)[0]: undefined;
+        return this.hasSemanticProperty(property) ? this.getSemanticPropertyAll(property)[0] : undefined;
     }
 
     /**
@@ -193,7 +193,7 @@ export default class SemanticObject implements Semanticable {
      */
     public getSemanticPropertyAll(property: string): any[] {
         const iteratee = (r: any, q: any) => {
-            if (q.predicate.value === this.getSemantizer().expand(property)) 
+            if (q.predicate.value === this.getSemantizer().expand(property))
                 r.push(this.getSemantizer().shorten(q.object.value))
             return r;
         }
@@ -227,16 +227,16 @@ export default class SemanticObject implements Semanticable {
             const otherDataset = other.toRdfDatasetExt();
             for (const quad of this._rdfDataset) {
                 const filter = ((otherQuad: any) => {
-                    const language = quad.object.termType === "Literal"? quad.object.language === otherQuad.object.language: true;
+                    const language = quad.object.termType === "Literal" ? quad.object.language === otherQuad.object.language : true;
                     return quad.subject.value === otherQuad.subject.value &&
-                    quad.predicate.value === otherQuad.predicate.value && 
-                    quad.object.termType === otherQuad.object.termType &&
-                    quad.object.value === otherQuad.object.value && 
-                    language;
+                        quad.predicate.value === otherQuad.predicate.value &&
+                        quad.object.termType === otherQuad.object.termType &&
+                        quad.object.value === otherQuad.object.value &&
+                        language;
                 });
 
                 const otherQuads: any = otherDataset.filter(filter);
-                
+
                 if (otherQuads.size !== 1) {
                     return false;
                 }
@@ -244,7 +244,7 @@ export default class SemanticObject implements Semanticable {
 
             result = true;
         }
-        
+
         return result;
     }
 
@@ -277,13 +277,15 @@ export default class SemanticObject implements Semanticable {
         this.addSemanticPropertyReferenceId(property, value, true);
     }
 
-    public setSemanticPropertyLiteral(property: string, value: string | number | boolean | (string | number | boolean)[]): void {
-        if (Array.isArray(value)) {
-            this.deleteRdfProperty(property);
-            for (const v of value) {
-                this.addSemanticPropertyLiteral(property, v, false);
-            }
-        } else this.addSemanticPropertyLiteral(property, value, true);
+    public setSemanticPropertyLiteral(property: string, value: string | number | boolean): void {
+        this.addSemanticPropertyLiteral(property, value, true);
+    }
+
+    public setSemanticPropertyLiteralAll(property: string, values: (string | number | boolean)[]): void {
+        this.deleteRdfProperty(property);
+        for (const value of values) {
+            this.addSemanticPropertyLiteral(property, value, false);
+        }
     }
 
     public setSemanticPropertyAnonymous(property: string, anonymous: Semanticable): void {
