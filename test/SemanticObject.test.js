@@ -140,14 +140,10 @@ test('equals', () => {
     semanticObject1.addSemanticPropertyLiteral("ex:literal", "literal");
     semanticObject1.addSemanticPropertyLiteral("ex:litera3", "01234");
 
-    console.log(semanticObject1);
-
     const semanticObject2 = new SemanticObject({ semantizer: semantizer, semanticId: id, semanticType: type });
     semanticObject2.addSemanticPropertyLiteral("ex:literal", "literal");
     semanticObject2.addSemanticPropertyLiteral("ex:literal2", "literal2");
     semanticObject2.addSemanticPropertyLiteral("ex:litera3", "01234");
-
-    console.log(semanticObject2);
 
     const semanticObject3 = new SemanticObject({ semantizer: semantizer, semanticId: id + 'differs', semanticType: type });
 
@@ -156,4 +152,27 @@ test('equals', () => {
     expect(semanticObject1.equals(semanticObject2)).toStrictEqual(true);
     expect(semanticObject1.equals(semanticObject3)).toStrictEqual(false);
     expect(semanticObject1.equals(semanticObject4)).toStrictEqual(false);
+});
+
+test('setSemanticPropertyLiteralAll', () => {
+    const semantizer = new Semantizer();
+
+    const id = "http://platform.com/object1";
+
+    const semanticObject = new SemanticObject({ 
+        semantizer: semantizer, 
+        semanticId: id
+    });
+
+    const property = "property";
+    const values1 = ["a", "b", "c"];
+    const values2 = ["d", "e", "f"];
+
+    expect(semanticObject.getSemanticPropertyAll(property)).toStrictEqual([]);
+
+    semanticObject.setSemanticPropertyLiteralAll(property, values1);
+    expect(semanticObject.getSemanticPropertyAll(property)).toStrictEqual(["a", "b", "c"]);
+
+    semanticObject.setSemanticPropertyLiteralAll(property, values2);
+    expect(semanticObject.getSemanticPropertyAll(property)).toStrictEqual(["d", "e", "f"]);
 });

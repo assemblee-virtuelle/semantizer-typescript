@@ -1,1 +1,0 @@
-{"version":3,"file":"Publisher.d.ts","sourceRoot":"","sources":["../../src/notification/Publisher.ts"],"names":[],"mappings":"AAAA,OAAO,UAAU,MAAM,cAAc,CAAC;AAEtC,MAAM,CAAC,OAAO,WAAW,SAAS;IAE9B,SAAS,CAAC,UAAU,EAAE,UAAU,GAAG,IAAI,CAAC;IACxC,WAAW,CAAC,UAAU,EAAE,UAAU,GAAG,IAAI,CAAC;IAC1C,iBAAiB,IAAI,IAAI,CAAC;CAE7B"}

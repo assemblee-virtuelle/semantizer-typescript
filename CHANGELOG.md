@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - None.
 
+## [1.0.0-alpha.4] - 2026-05-06
+
+### Added
+
+- Method `setSemanticPropertyLiteralAll` to set mutilple values (array).
+
+### Removed
+
+- Unused folders in ./lib: changelog, core, handlers, navigator, notification, store.
+
 ## [1.0.0-alpha.3] - 2024-03-22
 
 ### Fixed
@@ -54,7 +64,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[unreleased]: https://github.com/assemblee-virtuelle/semantizer-typescript/compare/v1.0.0-alpha.3...HEAD
+[unreleased]: https://github.com/assemblee-virtuelle/semantizer-typescript/compare/v1.0.0-alpha.4...HEAD
+[1.0.0-alpha.4]: https://github.com/assemblee-virtuelle/semantizer-typescript/compare/v1.0.0-alpha.3...v1.0.0-alpha.4
 [1.0.0-alpha.3]: https://github.com/assemblee-virtuelle/semantizer-typescript/compare/v1.0.0-alpha.2...v1.0.0-alpha.3
 [1.0.0-alpha.2]: https://github.com/assemblee-virtuelle/semantizer-typescript/compare/v1.0.0-alpha.1...v1.0.0-alpha.2
 [1.0.0-alpha.1]: https://github.com/assemblee-virtuelle/semantizer-typescript/compare/v1.0.0-alpha...v1.0.0-alpha.1

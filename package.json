@@ -5,10 +5,10 @@
   "author": "Maxime Lecoq <maxime@lecoqlibre.fr>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/assemblee-virtuelle/semantizer-typescript.git",
+    "url": "git+https://github.com/assemblee-virtuelle/semantizer-typescript.git",
     "directory": "/"
   },
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0-alpha.4",
   "license": "MIT",
   "scripts": {
     "build": "tsc -p .",
